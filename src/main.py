@@ -3,22 +3,28 @@ from src import parameters
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox)
-from PyQt5.QtGui import QIcon,QFont
+from PyQt5.QtGui import QIcon,QFont,QTextCursor
 import serial
 import serial.tools.list_ports
+import serial.threaded
 import threading
 import time
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.InitWindow()
+        self.initWindow()
+        self.initTool()
+        self.initEvent()
         return
 
     def __del__(self):
         return
+    def initTool(self):
+        self.com = serial.Serial()
+        return
 
-    def InitWindow(self):
+    def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
         # main layout
         mainWidget = QWidget()
@@ -36,19 +42,19 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(mainWidget)
 
         # widgets receive and send area
-        receiveArea = QTextEdit()
-        sendArea = QTextEdit()
-        clearReceiveButtion = QPushButton(parameters.strClearReceive)
-        sendButtion = QPushButton(parameters.strSend)
+        self.receiveArea = QTextEdit()
+        self.sendArea = QTextEdit()
+        self.clearReceiveButtion = QPushButton(parameters.strClearReceive)
+        self.sendButtion = QPushButton(parameters.strSend)
         sendHistory = QComboBox()
         sendAreaWidgetsLayout = QHBoxLayout()
         buttonLayout = QVBoxLayout()
-        buttonLayout.addWidget(clearReceiveButtion)
+        buttonLayout.addWidget(self.clearReceiveButtion)
         buttonLayout.addStretch(1)
-        buttonLayout.addWidget(sendButtion)
-        sendAreaWidgetsLayout.addWidget(sendArea)
+        buttonLayout.addWidget(self.sendButtion)
+        sendAreaWidgetsLayout.addWidget(self.sendArea)
         sendAreaWidgetsLayout.addLayout(buttonLayout)
-        sendReceiveLayout.addWidget(receiveArea)
+        sendReceiveLayout.addWidget(self.receiveArea)
         sendReceiveLayout.addLayout(sendAreaWidgetsLayout)
         sendReceiveLayout.addWidget(sendHistory)
         sendReceiveLayout.setStretch(0, 7)
@@ -152,6 +158,64 @@ class MainWindow(QMainWindow):
         self.show()
         return
 
+    def initEvent(self):
+        self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
+        self.sendButtion.clicked.connect(self.sendData)
+        return
+
+    def openCloseSerial(self):
+        try:
+            if self.com.is_open:
+                self.com.close()
+                self.serialOpenCloseButton.setText(parameters.strOpen)
+                self.statusBar().showMessage(parameters.strClosed)
+                self.receiveProgressStop = True
+            else:
+                try:
+                    self.com.baudrate = int(self.serailBaudrateEditText.text())
+                    self.com.port = self.serialPortCombobox.currentText().split(" ")[0]
+                    self.com.bytesize = int(self.serailBytesCombobox.currentText())
+                    self.com.parity = self.serailParityCombobox.currentText()[0]
+                    self.com.stopbits = float(self.serailStopbitsCombobox.currentText())
+                    self.com.timeout = None
+                    self.com.open()
+                    self.serialOpenCloseButton.setText(parameters.strClose)
+                    self.statusBar().showMessage(parameters.strOpenReady)
+                    receiveProcess = threading.Thread(target=self.receiveData)
+                    receiveProcess.setDaemon(True)
+                    receiveProcess.start()
+                except Exception:
+                    self.com.close()
+                    self.receiveProgressStop = True
+                    QMessageBox.information(self, parameters.strOpenFailed, parameters.strOpenFailed)
+        except Exception:
+            pass
+        return
+
+    def sendData(self):
+        try:
+            if self.com.is_open:
+                data = self.sendArea.toPlainText().replace("\n","\r\n").encode()
+                print(data)
+                self.com.write(data)
+        except Exception as e:
+            QMessageBox.information(self, parameters.strWriteError, parameters.strWriteError)
+            print(e)
+        return
+
+    def receiveData(self):
+        self.receiveProgressStop = False
+        while(not self.receiveProgressStop):
+            try:
+                byte = self.com.read(1)
+                self.receiveArea.moveCursor(QTextCursor.End)
+                self.receiveArea.insertPlainText(byte.decode())
+                time.sleep(0.1)
+            except Exception as e:
+                print("receiveData")
+                print(e)
+        return
+
     def MoveToCenter(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -165,17 +229,19 @@ class MainWindow(QMainWindow):
                                      "Are you sure to quit?", QMessageBox.Yes |
                                      QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
+            self.com.close()
+            self.receiveProgressStop = True
             event.accept()
         else:
             event.ignore()
 
     def findSerialPort(self):
-        port_list = list(serial.tools.list_ports.comports())
-        return port_list
+        self.port_list = list(serial.tools.list_ports.comports())
+        return self.port_list
 
     def portChanged(self):
         self.serialPortCombobox.setCurrentIndex(0)
-        self.serialPortCombobox.setToolTip(str(portList[0]))
+        self.serialPortCombobox.setToolTip(str(self.portList[0]))
 
     def detectSerialPort(self):
         self.serialPortCombobox.clear()
@@ -187,6 +253,11 @@ class MainWindow(QMainWindow):
                 self.serialPortCombobox.setCurrentIndex(0)
                 self.serialPortCombobox.setToolTip(str(portList[0]))
                 break
+            time.sleep(1)
+        return
+
+    def test(self):
+        print("test")
         return
 
 
