@@ -1,5 +1,6 @@
 import sys
 from src import parameters
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox)
@@ -11,6 +12,8 @@ import threading
 import time
 
 class MainWindow(QMainWindow):
+    receiveUpdateSignal = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         self.initWindow()
@@ -109,14 +112,15 @@ class MainWindow(QMainWindow):
 
         # serial receive settings
         serialReceiveSettingsGroupBox = QGroupBox(parameters.strSerialReceiveSettings)
-        receiveSettingsAscii = QRadioButton(parameters.strAscii)
-        receiveSettingsHex = QRadioButton(parameters.strHex)
+        self.receiveSettingsAscii = QRadioButton(parameters.strAscii)
+        self.receiveSettingsHex = QRadioButton(parameters.strHex)
+        self.receiveSettingsAscii.setChecked(True)
         receiveSettingsAutoLinefeed = QCheckBox(parameters.strAutoLinefeed)
         receiveSettingsAutoLinefeedTime = QLineEdit(parameters.strAutoLinefeedTime)
         receiveSettingsAutoLinefeed.setMaximumWidth(75)
         receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
-        serialReceiveSettingsLayout.addWidget(receiveSettingsAscii,1,0,1,1)
-        serialReceiveSettingsLayout.addWidget(receiveSettingsHex,1,1,1,1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
         serialReceiveSettingsLayout.addWidget(receiveSettingsAutoLinefeed, 2, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(receiveSettingsAutoLinefeedTime, 2, 1, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
@@ -124,14 +128,15 @@ class MainWindow(QMainWindow):
 
         # serial send settings
         serialSendSettingsGroupBox = QGroupBox(parameters.strSerialSendSettings)
-        sendSettingsAscii = QRadioButton(parameters.strAscii)
-        sendSettingsHex = QRadioButton(parameters.strHex)
+        self.sendSettingsAscii = QRadioButton(parameters.strAscii)
+        self.sendSettingsHex = QRadioButton(parameters.strHex)
+        self.sendSettingsAscii.setChecked(True)
         sendSettingsScheduledLabel = QCheckBox(parameters.strScheduled)
         sendSettingsScheduled = QLineEdit(parameters.strScheduledTime)
         sendSettingsScheduledLabel.setMaximumWidth(75)
         sendSettingsScheduled.setMaximumWidth(75)
-        serialSendSettingsLayout.addWidget(sendSettingsAscii,1,0,1,1)
-        serialSendSettingsLayout.addWidget(sendSettingsHex,1,1,1,1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(sendSettingsScheduledLabel, 2, 0, 1, 1)
         serialSendSettingsLayout.addWidget(sendSettingsScheduled, 2, 1, 1, 1)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
@@ -161,6 +166,8 @@ class MainWindow(QMainWindow):
     def initEvent(self):
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
         self.sendButtion.clicked.connect(self.sendData)
+        self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
+        self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
         return
 
     def openCloseSerial(self):
@@ -196,7 +203,6 @@ class MainWindow(QMainWindow):
         try:
             if self.com.is_open:
                 data = self.sendArea.toPlainText().replace("\n","\r\n").encode()
-                print(data)
                 self.com.write(data)
         except Exception as e:
             QMessageBox.information(self, parameters.strWriteError, parameters.strWriteError)
@@ -207,13 +213,24 @@ class MainWindow(QMainWindow):
         self.receiveProgressStop = False
         while(not self.receiveProgressStop):
             try:
-                byte = self.com.read(1)
-                self.receiveArea.moveCursor(QTextCursor.End)
-                self.receiveArea.insertPlainText(byte.decode())
-                time.sleep(0.1)
+                length = self.com.in_waiting
+                if length>0:
+                    bytes = self.com.read(length)
+                    print(length,bytes)
+                    self.receiveUpdateSignal.emit(bytes.decode())
             except Exception as e:
                 print("receiveData")
                 print(e)
+            time.sleep(0.009)
+        return
+
+    def updateReceivedDataDisplay(self,str):
+        self.receiveArea.moveCursor(QTextCursor.End)
+        self.receiveArea.insertPlainText(str)
+        return
+
+    def clearReceiveBuffer(self):
+        self.receiveArea.clear()
         return
 
     def MoveToCenter(self):
