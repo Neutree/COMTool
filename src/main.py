@@ -1,9 +1,9 @@
 import sys
-from src import parameters
+from src import parameters,Combobox
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox)
+                             QLineEdit,QGroupBox,QScrollBar)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor
 import serial
 import serial.tools.list_ports
@@ -13,6 +13,7 @@ import time
 
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
+    isDetectSerialPort = False
 
     def __init__(self):
         super().__init__()
@@ -74,7 +75,7 @@ class MainWindow(QMainWindow):
         serailBytesLabel = QLabel(parameters.strSerialBytes)
         serailParityLabel = QLabel(parameters.strSerialParity)
         serailStopbitsLabel = QLabel(parameters.strSerialStopbits)
-        self.serialPortCombobox = QComboBox()
+        self.serialPortCombobox = Combobox.Combobox()
         self.serailBaudrateEditText = QLineEdit()
         self.serailBaudrateEditText.setText(parameters.strBaudRateDefault)
         self.serailBytesCombobox = QComboBox()
@@ -168,6 +169,7 @@ class MainWindow(QMainWindow):
         self.sendButtion.clicked.connect(self.sendData)
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
         self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
+        self.serialPortCombobox.clicked.connect(self.portComboboxClicked)
         return
 
     def openCloseSerial(self):
@@ -177,6 +179,11 @@ class MainWindow(QMainWindow):
                 self.serialOpenCloseButton.setText(parameters.strOpen)
                 self.statusBar().showMessage(parameters.strClosed)
                 self.receiveProgressStop = True
+                self.serialPortCombobox.setDisabled(False)
+                self.serailBaudrateEditText.setDisabled(False)
+                self.serailParityCombobox.setDisabled(False)
+                self.serailStopbitsCombobox.setDisabled(False)
+                self.serailBytesCombobox.setDisabled(False)
             else:
                 try:
                     self.com.baudrate = int(self.serailBaudrateEditText.text())
@@ -188,6 +195,11 @@ class MainWindow(QMainWindow):
                     self.com.open()
                     self.serialOpenCloseButton.setText(parameters.strClose)
                     self.statusBar().showMessage(parameters.strOpenReady)
+                    self.serialPortCombobox.setDisabled(True)
+                    self.serailBaudrateEditText.setDisabled(True)
+                    self.serailParityCombobox.setDisabled(True)
+                    self.serailStopbitsCombobox.setDisabled(True)
+                    self.serailBytesCombobox.setDisabled(True)
                     receiveProcess = threading.Thread(target=self.receiveData)
                     receiveProcess.setDaemon(True)
                     receiveProcess.start()
@@ -197,6 +209,10 @@ class MainWindow(QMainWindow):
                     QMessageBox.information(self, parameters.strOpenFailed, parameters.strOpenFailed)
         except Exception:
             pass
+        return
+
+    def portComboboxClicked(self):
+        self.detectSerialPort()
         return
 
     def sendData(self):
@@ -225,8 +241,15 @@ class MainWindow(QMainWindow):
         return
 
     def updateReceivedDataDisplay(self,str):
+        curScrollValue = self.receiveArea.verticalScrollBar().value()
         self.receiveArea.moveCursor(QTextCursor.End)
+        endScrollValue = self.receiveArea.verticalScrollBar().value()
         self.receiveArea.insertPlainText(str)
+        print(curScrollValue,endScrollValue)
+        if curScrollValue < endScrollValue:
+            self.receiveArea.verticalScrollBar().setValue(curScrollValue)
+        else:
+            self.receiveArea.moveCursor(QTextCursor.End)
         return
 
     def clearReceiveBuffer(self):
@@ -261,6 +284,13 @@ class MainWindow(QMainWindow):
         self.serialPortCombobox.setToolTip(str(self.portList[0]))
 
     def detectSerialPort(self):
+        if not self.isDetectSerialPort:
+            self.isDetectSerialPort = True
+            t = threading.Thread(target=mainWindow.detectSerialPortProcess)
+            t.setDaemon(True)
+            t.start()
+
+    def detectSerialPortProcess(self):
         self.serialPortCombobox.clear()
         while(1):
             portList = self.findSerialPort();
@@ -271,6 +301,7 @@ class MainWindow(QMainWindow):
                 self.serialPortCombobox.setToolTip(str(portList[0]))
                 break
             time.sleep(1)
+        self.isDetectSerialPort = False
         return
 
     def test(self):
@@ -281,12 +312,7 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
-    threads = []
-    t1 = threading.Thread(target=mainWindow.detectSerialPort)
-    threads.append(t1)
-    for t in threads:
-        t.setDaemon(True)
-        t.start()
+    mainWindow.detectSerialPort()
     sys.exit(app.exec_())
 
 
