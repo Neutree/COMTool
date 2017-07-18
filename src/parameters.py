@@ -2,6 +2,7 @@ appName = "DebugTools"
 appIcon = "../assets/logo.png"
 
 strSend = "Send"
+strReceive = "Receive"
 strSerialPort = "Port"
 strSerialBaudrate = "Baudrate"
 strSerialBytes = "DataBytes"
@@ -28,3 +29,5 @@ strOpenFailed = "Open Failed"
 strOpenReady = "Open Ready"
 strClosed = "Closed"
 strWriteError = "Send Error"
+strReady = "Ready"
+

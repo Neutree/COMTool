@@ -3,7 +3,7 @@ from src import parameters,Combobox
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QScrollBar)
+                             QLineEdit,QGroupBox,QStatusBar)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor
 import serial
 import serial.tools.list_ports
@@ -156,7 +156,16 @@ class MainWindow(QMainWindow):
         sendFunctionalLayout.addWidget(functionalGroupBox)
 
         # main window
-        self.statusBar().showMessage('Ready')
+        statusBarStauts = QLabel()
+        statusBarStauts.setMinimumWidth(80)
+        statusBarStauts.setText("<font color=%s>%s</font>" %("#008200", parameters.strReady))
+        statusBarSendCount = QLabel(parameters.strSend+"(bytes): "+"0")
+        statusBarReceiveCount = QLabel(parameters.strReceive+"(bytes): "+"0")
+        self.statusBar().addWidget(statusBarStauts)
+        self.statusBar().addWidget(statusBarSendCount,2)
+        self.statusBar().addWidget(statusBarReceiveCount,3)
+        # self.statusBar()
+
         self.resize(800, 500)
         self.MoveToCenter()
         self.setWindowTitle(parameters.appName)
