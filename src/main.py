@@ -16,6 +16,8 @@ import binascii,re
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
     isDetectSerialPort = False
+    receiveCount = 0
+    sendCount = 0
 
     def __init__(self):
         super().__init__()
@@ -158,14 +160,14 @@ class MainWindow(QMainWindow):
         sendFunctionalLayout.addWidget(functionalGroupBox)
 
         # main window
-        statusBarStauts = QLabel()
-        statusBarStauts.setMinimumWidth(80)
-        statusBarStauts.setText("<font color=%s>%s</font>" %("#008200", parameters.strReady))
-        statusBarSendCount = QLabel(parameters.strSend+"(bytes): "+"0")
-        statusBarReceiveCount = QLabel(parameters.strReceive+"(bytes): "+"0")
-        self.statusBar().addWidget(statusBarStauts)
-        self.statusBar().addWidget(statusBarSendCount,2)
-        self.statusBar().addWidget(statusBarReceiveCount,3)
+        self.statusBarStauts = QLabel()
+        self.statusBarStauts.setMinimumWidth(80)
+        self.statusBarStauts.setText("<font color=%s>%s</font>" %("#008200", parameters.strReady))
+        self.statusBarSendCount = QLabel(parameters.strSend+"(bytes): "+"0")
+        self.statusBarReceiveCount = QLabel(parameters.strReceive+"(bytes): "+"0")
+        self.statusBar().addWidget(self.statusBarStauts)
+        self.statusBar().addWidget(self.statusBarSendCount,2)
+        self.statusBar().addWidget(self.statusBarReceiveCount,3)
         # self.statusBar()
 
         self.resize(800, 500)
@@ -188,7 +190,7 @@ class MainWindow(QMainWindow):
             if self.com.is_open:
                 self.com.close()
                 self.serialOpenCloseButton.setText(parameters.strOpen)
-                self.statusBar().showMessage(parameters.strClosed)
+                self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", parameters.strClosed))
                 self.receiveProgressStop = True
                 self.serialPortCombobox.setDisabled(False)
                 self.serailBaudrateEditText.setDisabled(False)
@@ -205,7 +207,7 @@ class MainWindow(QMainWindow):
                     self.com.timeout = None
                     self.com.open()
                     self.serialOpenCloseButton.setText(parameters.strClose)
-                    self.statusBar().showMessage(parameters.strOpenReady)
+                    self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
                     self.serialPortCombobox.setDisabled(True)
                     self.serailBaudrateEditText.setDisabled(True)
                     self.serailParityCombobox.setDisabled(True)
@@ -229,8 +231,29 @@ class MainWindow(QMainWindow):
     def sendData(self):
         try:
             if self.com.is_open:
-                data = self.sendArea.toPlainText().replace("\n","\r\n").encode()
-                self.com.write(data)
+                data = self.sendArea.toPlainText().replace("\n","\r\n")
+                if self.sendSettingsHex.isChecked():
+                    dataList = data.split(" ")
+                    j = 0
+                    for i in dataList:
+                        if len(i)>2:
+                            QMessageBox.information(self, parameters.strWriteFormatError, parameters.strWriteFormatError)
+                            return
+                        elif len(i) ==1:
+                            dataList[j] = "0"+i
+                        j+=1
+                    data = "".join(dataList)
+                    try:
+                        data = list(bytes.fromhex(data))
+                    except Exception:
+                        QMessageBox.information(self, parameters.strWriteFormatError, parameters.strWriteFormatError)
+                    print(data)
+                    self.sendCount += len(data)
+                    self.com.write(data)
+                else:
+                    print(data)
+                    self.sendCount += len(data)
+                    self.com.write(data.encode())
         except Exception as e:
             QMessageBox.information(self, parameters.strWriteError, parameters.strWriteError)
             print(e)
@@ -243,11 +266,12 @@ class MainWindow(QMainWindow):
                 length = self.com.in_waiting
                 if length>0:
                     bytes = self.com.read(length)
+                    self.receiveCount += len(bytes)
                     if self.receiveSettingsHex.isChecked():
                         strReceived = self.asciiB2HexString(bytes)
                         self.receiveUpdateSignal.emit(strReceived)
                     else:
-                        self.receiveUpdateSignal.emit(bytes.decode())
+                        self.receiveUpdateSignal.emit(bytes.decode("utf-8","ignore"))
             except Exception as e:
                 print("receiveData")
                 print(e)
@@ -255,19 +279,24 @@ class MainWindow(QMainWindow):
         return
 
     def updateReceivedDataDisplay(self,str):
-        curScrollValue = self.receiveArea.verticalScrollBar().value()
-        self.receiveArea.moveCursor(QTextCursor.End)
-        endScrollValue = self.receiveArea.verticalScrollBar().value()
-        self.receiveArea.insertPlainText(str)
-        print(curScrollValue,endScrollValue)
-        if curScrollValue < endScrollValue:
-            self.receiveArea.verticalScrollBar().setValue(curScrollValue)
-        else:
+        if str != None:
+            curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
+            endScrollValue = self.receiveArea.verticalScrollBar().value()
+            self.receiveArea.insertPlainText(str)
+            if curScrollValue < endScrollValue:
+                self.receiveArea.verticalScrollBar().setValue(curScrollValue)
+            else:
+                self.receiveArea.moveCursor(QTextCursor.End)
+        self.statusBarSendCount.setText("%s(bytes):%d" %(parameters.strSend ,self.sendCount))
+        self.statusBarReceiveCount.setText("%s(bytes):%d" %(parameters.strReceive ,self.receiveCount))
         return
 
     def clearReceiveBuffer(self):
         self.receiveArea.clear()
+        self.receiveCount = 0;
+        self.sendCount = 0;
+        self.receiveUpdateSignal.emit(None)
         return
 
     def MoveToCenter(self):
@@ -325,6 +354,10 @@ class MainWindow(QMainWindow):
     def asciiB2HexString(self,strB):
         strHex = binascii.b2a_hex(strB).upper()
         return re.sub(r"(?<=\w)(?=(?:\w\w)+$)", " ", strHex.decode())+" "
+
+    def hexStringB2Hex(self):
+
+        return
 
 
 if __name__ == '__main__':

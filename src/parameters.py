@@ -30,4 +30,4 @@ strOpenReady = "Open Ready"
 strClosed = "Closed"
 strWriteError = "Send Error"
 strReady = "Ready"
-
+strWriteFormatError = "format error"
