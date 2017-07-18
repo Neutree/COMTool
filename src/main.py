@@ -10,6 +10,8 @@ import serial.tools.list_ports
 import serial.threaded
 import threading
 import time
+import binascii,re
+
 
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
@@ -241,8 +243,11 @@ class MainWindow(QMainWindow):
                 length = self.com.in_waiting
                 if length>0:
                     bytes = self.com.read(length)
-                    print(length,bytes)
-                    self.receiveUpdateSignal.emit(bytes.decode())
+                    if self.receiveSettingsHex.isChecked():
+                        strReceived = self.asciiB2HexString(bytes)
+                        self.receiveUpdateSignal.emit(strReceived)
+                    else:
+                        self.receiveUpdateSignal.emit(bytes.decode())
             except Exception as e:
                 print("receiveData")
                 print(e)
@@ -316,6 +321,10 @@ class MainWindow(QMainWindow):
     def test(self):
         print("test")
         return
+
+    def asciiB2HexString(self,strB):
+        strHex = binascii.b2a_hex(strB).upper()
+        return re.sub(r"(?<=\w)(?=(?:\w\w)+$)", " ", strHex.decode())+" "
 
 
 if __name__ == '__main__':
