@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
         self.sendArea = QTextEdit()
         self.clearReceiveButtion = QPushButton(parameters.strClearReceive)
         self.sendButtion = QPushButton(parameters.strSend)
-        sendHistory = QComboBox()
+        self.sendHistory = QComboBox()
         sendAreaWidgetsLayout = QHBoxLayout()
         buttonLayout = QVBoxLayout()
         buttonLayout.addWidget(self.clearReceiveButtion)
@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
         sendAreaWidgetsLayout.addLayout(buttonLayout)
         sendReceiveLayout.addWidget(self.receiveArea)
         sendReceiveLayout.addLayout(sendAreaWidgetsLayout)
-        sendReceiveLayout.addWidget(sendHistory)
+        sendReceiveLayout.addWidget(self.sendHistory)
         sendReceiveLayout.setStretch(0, 7)
         sendReceiveLayout.setStretch(1, 2)
         sendReceiveLayout.setStretch(2, 1)
@@ -82,8 +82,14 @@ class MainWindow(QMainWindow):
         serailParityLabel = QLabel(parameters.strSerialParity)
         serailStopbitsLabel = QLabel(parameters.strSerialStopbits)
         self.serialPortCombobox = Combobox.Combobox()
-        self.serailBaudrateEditText = QLineEdit()
-        self.serailBaudrateEditText.setText(parameters.strBaudRateDefault)
+        self.serailBaudrateCombobox = QComboBox()
+        self.serailBaudrateCombobox.addItem("9600")
+        self.serailBaudrateCombobox.addItem("19200")
+        self.serailBaudrateCombobox.addItem("38400")
+        self.serailBaudrateCombobox.addItem("57600")
+        self.serailBaudrateCombobox.addItem("115200")
+        self.serailBaudrateCombobox.setCurrentIndex(4)
+        self.serailBaudrateCombobox.setEditable(True)
         self.serailBytesCombobox = QComboBox()
         self.serailBytesCombobox.addItem("5")
         self.serailBytesCombobox.addItem("6")
@@ -109,7 +115,7 @@ class MainWindow(QMainWindow):
         serialSettingsLayout.addWidget(serailParityLabel, 3, 0)
         serialSettingsLayout.addWidget(serailStopbitsLabel, 4, 0)
         serialSettingsLayout.addWidget(self.serialPortCombobox, 0, 1)
-        serialSettingsLayout.addWidget(self.serailBaudrateEditText, 1, 1)
+        serialSettingsLayout.addWidget(self.serailBaudrateCombobox, 1, 1)
         serialSettingsLayout.addWidget(self.serailBytesCombobox, 2, 1)
         serialSettingsLayout.addWidget(self.serailParityCombobox, 3, 1)
         serialSettingsLayout.addWidget(self.serailStopbitsCombobox, 4, 1)
@@ -191,6 +197,7 @@ class MainWindow(QMainWindow):
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
+        self.sendHistory.currentIndexChanged.connect(self.sendHistoryIndexChanged)
         return
 
     def openCloseSerial(self):
@@ -201,13 +208,13 @@ class MainWindow(QMainWindow):
                 self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", parameters.strClosed))
                 self.receiveProgressStop = True
                 self.serialPortCombobox.setDisabled(False)
-                self.serailBaudrateEditText.setDisabled(False)
+                self.serailBaudrateCombobox.setDisabled(False)
                 self.serailParityCombobox.setDisabled(False)
                 self.serailStopbitsCombobox.setDisabled(False)
                 self.serailBytesCombobox.setDisabled(False)
             else:
                 try:
-                    self.com.baudrate = int(self.serailBaudrateEditText.text())
+                    self.com.baudrate = int(self.serailBaudrateCombobox.currentText())
                     self.com.port = self.serialPortCombobox.currentText().split(" ")[0]
                     self.com.bytesize = int(self.serailBytesCombobox.currentText())
                     self.com.parity = self.serailParityCombobox.currentText()[0]
@@ -217,17 +224,17 @@ class MainWindow(QMainWindow):
                     self.serialOpenCloseButton.setText(parameters.strClose)
                     self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
                     self.serialPortCombobox.setDisabled(True)
-                    self.serailBaudrateEditText.setDisabled(True)
+                    self.serailBaudrateCombobox.setDisabled(True)
                     self.serailParityCombobox.setDisabled(True)
                     self.serailStopbitsCombobox.setDisabled(True)
                     self.serailBytesCombobox.setDisabled(True)
                     receiveProcess = threading.Thread(target=self.receiveData)
                     receiveProcess.setDaemon(True)
                     receiveProcess.start()
-                except Exception:
+                except Exception as e:
                     self.com.close()
                     self.receiveProgressStop = True
-                    self.errorHint( parameters.strOpenFailed)
+                    self.errorHint( parameters.strOpenFailed + str(e))
         except Exception:
             pass
         return
@@ -262,6 +269,9 @@ class MainWindow(QMainWindow):
                 print("send:",data)
                 self.sendCount += len(data)
                 self.com.write(data)
+                self.sendHistoryFindDelete(data.decode())
+                self.sendHistory.insertItem(0,data.decode())
+                self.sendHistory.setCurrentIndex(0)
                 self.receiveUpdateSignal.emit(None)
                 # scheduled send
                 if self.sendSettingsScheduledCheckBox.isChecked():
@@ -346,6 +356,11 @@ class MainWindow(QMainWindow):
         self.sendArea.insertPlainText(data)
         return
 
+    def sendHistoryIndexChanged(self):
+        self.sendArea.clear()
+        self.sendArea.insertPlainText(self.sendHistory.currentText())
+        return
+
     def clearReceiveBuffer(self):
         self.receiveArea.clear()
         self.receiveCount = 0;
@@ -403,6 +418,10 @@ class MainWindow(QMainWindow):
                 break
             time.sleep(1)
         self.isDetectSerialPort = False
+        return
+
+    def sendHistoryFindDelete(self,str):
+        self.sendHistory.removeItem(self.sendHistory.findText(str))
         return
 
     def test(self):
