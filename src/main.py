@@ -15,9 +15,11 @@ import binascii,re
 
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
+    errorSignal = pyqtSignal(str)
     isDetectSerialPort = False
     receiveCount = 0
     sendCount = 0
+    isScheduledSending = False
 
     def __init__(self):
         super().__init__()
@@ -136,16 +138,16 @@ class MainWindow(QMainWindow):
         self.sendSettingsAscii = QRadioButton(parameters.strAscii)
         self.sendSettingsHex = QRadioButton(parameters.strHex)
         self.sendSettingsAscii.setChecked(True)
-        sendSettingsScheduledLabel = QCheckBox(parameters.strScheduled)
-        sendSettingsScheduled = QLineEdit(parameters.strScheduledTime)
-        sendSettingsScheduledLabel.setMaximumWidth(75)
-        sendSettingsScheduled.setMaximumWidth(75)
+        self.sendSettingsScheduledCheckBox = QCheckBox(parameters.strScheduled)
+        self.sendSettingsScheduled = QLineEdit(parameters.strScheduledTime)
+        self.sendSettingsScheduledCheckBox.setMaximumWidth(75)
+        self.sendSettingsScheduled.setMaximumWidth(75)
         self.sendSettingsCFLF = QCheckBox(parameters.strCFLF)
         self.sendSettingsCFLF.setChecked(False)
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
-        serialSendSettingsLayout.addWidget(sendSettingsScheduledLabel, 2, 0, 1, 1)
-        serialSendSettingsLayout.addWidget(sendSettingsScheduled, 2, 1, 1, 1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsScheduled, 2, 1, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsCFLF, 3, 0, 1, 2)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         settingLayout.addWidget(serialSendSettingsGroupBox)
@@ -188,6 +190,7 @@ class MainWindow(QMainWindow):
         self.serialPortCombobox.clicked.connect(self.portComboboxClicked)
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
+        self.errorSignal.connect(self.errorHint)
         return
 
     def openCloseSerial(self):
@@ -224,7 +227,7 @@ class MainWindow(QMainWindow):
                 except Exception:
                     self.com.close()
                     self.receiveProgressStop = True
-                    QMessageBox.information(self, parameters.strOpenFailed, parameters.strOpenFailed)
+                    self.errorHint( parameters.strOpenFailed)
         except Exception:
             pass
         return
@@ -233,29 +236,53 @@ class MainWindow(QMainWindow):
         self.detectSerialPort()
         return
 
+    def getSendData(self):
+        data = self.sendArea.toPlainText()
+        if self.sendSettingsCFLF.isChecked():
+            data = data.replace("\n", "\r\n")
+        if self.sendSettingsHex.isChecked():
+            if self.sendSettingsCFLF.isChecked():
+                data = data.replace("\r\n", " ")
+            else:
+                data = data.replace("\n", " ")
+            data = self.hexStringB2Hex(data)
+            if data == -1:
+                self.errorHint( parameters.strWriteFormatError)
+                return -1
+        else:
+            data = data.encode()
+        return data
+
     def sendData(self):
         try:
             if self.com.is_open:
-                data = self.sendArea.toPlainText()
-                if self.sendSettingsCFLF.isChecked():
-                    data = data.replace("\n","\r\n")
-                if self.sendSettingsHex.isChecked():
-                    if self.sendSettingsCFLF.isChecked():
-                        data = data.replace("\r\n", " ")
-                    else:
-                        data = data.replace("\n"," ")
-                    data = self.hexStringB2Hex(data)
-                    if data == -1:
-                        QMessageBox.information(self, parameters.strWriteFormatError, parameters.strWriteFormatError)
-                        return
-                else:
-                    data = data.encode()
+                data = self.getSendData()
+                if data == -1:
+                    return
                 print("send:",data)
                 self.sendCount += len(data)
                 self.com.write(data)
+                self.receiveUpdateSignal.emit(None)
+                # scheduled send
+                if self.sendSettingsScheduledCheckBox.isChecked():
+                    if not self.isScheduledSending:
+                        t = threading.Thread(target=self.scheduledSend)
+                        t.setDaemon(True)
+                        t.start()
         except Exception as e:
-            QMessageBox.information(self, parameters.strWriteError, parameters.strWriteError)
+            self.errorHint(parameters.strWriteError)
             print(e)
+        return
+
+    def scheduledSend(self):
+        self.isScheduledSending = True
+        while self.sendSettingsScheduledCheckBox.isChecked():
+            self.sendData()
+            try:
+                time.sleep(int(self.sendSettingsScheduled.text().strip())/1000)
+            except Exception:
+                self.errorHint(parameters.strTimeFormatError)
+        self.isScheduledSending = False
         return
 
     def receiveData(self):
@@ -317,6 +344,10 @@ class MainWindow(QMainWindow):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+        return
+
+    def errorHint(self,str):
+        QMessageBox.information(self, str, str)
         return
 
     def closeEvent(self, event):
