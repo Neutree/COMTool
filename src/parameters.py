@@ -34,3 +34,24 @@ strWriteFormatError = "format error"
 strCRLF = "<CRLF>(for Windows)"
 strTimeFormatError = "Time format error"
 
+class ParametersToSave:
+    baudRate = 4
+    dataBytes = 3
+    parity = 0
+    stopBits = 0
+    receiveAscii = True
+    receiveAutoLinefeed = False
+    receiveAutoLindefeedTime = "200"
+    sendAscii = True
+    sendScheduled = False
+    sendScheduledTime = "300"
+    useCRLF = True
+    sendHistoryList = []
+    def __init__(self):
+        return
+
+    def __del__(self):
+        return
+
+
+

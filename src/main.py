@@ -11,7 +11,10 @@ import serial.threaded
 import threading
 import time
 import binascii,re
-
+try:
+  import cPickle as pickle
+except ImportError:
+  import pickle
 
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
@@ -26,6 +29,7 @@ class MainWindow(QMainWindow):
         self.initWindow()
         self.initTool()
         self.initEvent()
+        self.programStartGetSavedParameters()
         return
 
     def __del__(self):
@@ -212,6 +216,7 @@ class MainWindow(QMainWindow):
                 self.serailParityCombobox.setDisabled(False)
                 self.serailStopbitsCombobox.setDisabled(False)
                 self.serailBytesCombobox.setDisabled(False)
+                self.programExitSaveParameters()
             else:
                 try:
                     self.com.baudrate = int(self.serailBaudrateCombobox.currentText())
@@ -387,6 +392,7 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             self.com.close()
             self.receiveProgressStop = True
+            self.programExitSaveParameters()
             event.accept()
         else:
             event.ignore()
@@ -449,9 +455,73 @@ class MainWindow(QMainWindow):
         print(data)
         return data
 
+    def programExitSaveParameters(self):
+        paramObj = parameters.ParametersToSave()
+        paramObj.baudRate = self.serailBaudrateCombobox.currentIndex()
+        paramObj.dataBytes = self.serailBytesCombobox.currentIndex()
+        paramObj.parity = self.serailParityCombobox.currentIndex()
+        paramObj.stopBits = self.serailStopbitsCombobox.currentIndex()
+        if self.receiveSettingsHex.isChecked():
+            paramObj.receiveAscii = False
+        if not self.receiveSettingsAutoLinefeed.isChecked():
+            paramObj.receiveAutoLinefeed = False
+        paramObj.receiveAutoLindefeedTime = self.receiveSettingsAutoLinefeedTime.text()
+        if self.sendSettingsHex.isChecked():
+            paramObj.sendAscii = False
+        if not self.sendSettingsScheduledCheckBox.isChecked():
+            paramObj.sendScheduled = False
+        paramObj.sendScheduledTime = self.sendSettingsScheduled.text()
+        if not self.sendSettingsCFLF.isChecked():
+            paramObj.useCRLF = False
+        for i in range(0,self.sendHistory.count()):
+            paramObj.sendHistoryList.append(self.sendHistory.itemText(i))
+        f = open("settings.config","wb")
+        f.truncate()
+        pickle.dump(paramObj, f)
+        pickle.dump(paramObj.sendHistoryList,f)
+        f.close()
+        return
+
+    def programStartGetSavedParameters(self):
+        paramObj = parameters.ParametersToSave()
+        try:
+            f = open("settings.config", "rb")
+            paramObj = pickle.load( f)
+            paramObj.sendHistoryList = pickle.load(f)
+            f.close()
+        except Exception as e:
+            f = open("settings.config", "wb")
+            f.close()
+        self.serailBaudrateCombobox.setCurrentIndex(paramObj.baudRate)
+        self.serailBytesCombobox.setCurrentIndex(paramObj.dataBytes)
+        self.serailParityCombobox.setCurrentIndex(paramObj.parity)
+        self.serailStopbitsCombobox.setCurrentIndex(paramObj.stopBits)
+        if paramObj.receiveAscii == False:
+            self.receiveSettingsHex.setChecked(True)
+        if paramObj.receiveAutoLinefeed == False:
+            self.receiveSettingsAutoLinefeed.setChecked(False)
+        else:
+            self.receiveSettingsAutoLinefeed.setChecked(True)
+        self.receiveSettingsAutoLinefeedTime.setText(paramObj.receiveAutoLindefeedTime)
+        if paramObj.sendAscii == False:
+            self.sendSettingsHex.setChecked(True)
+        if paramObj.sendScheduled == False:
+            self.sendSettingsScheduledCheckBox.setChecked(False)
+        else:
+            self.sendSettingsScheduledCheckBox.setChecked(True)
+        self.sendSettingsScheduled.setText(paramObj.sendScheduledTime)
+        if paramObj.useCRLF == False:
+            self.sendSettingsCFLF.setChecked(False)
+        else:
+            self.sendSettingsCFLF.setChecked(True)
+        for i in range(0, len(paramObj.sendHistoryList)):
+            str = paramObj.sendHistoryList[i]
+            self.sendHistory.addItem(str)
+        return
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
     mainWindow.detectSerialPort()
+    mainWindow.programExitSaveParameters()
     sys.exit(app.exec_())
