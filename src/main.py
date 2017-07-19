@@ -1,5 +1,5 @@
 import sys
-from src import parameters,Combobox
+from src import parameters,Combobox,helpAbout
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
@@ -167,15 +167,15 @@ class MainWindow(QMainWindow):
         settingLayout.setStretch(2, 2.5)
 
         # right functional layout
-        addButton = QPushButton(parameters.strAdd)
-        self.helpButton = QPushButton(parameters.strHelp)
+        self.addButton = QPushButton(parameters.strAdd)
+        self.settingsButton = QPushButton(parameters.strSettings)
         self.aboutButton = QPushButton(parameters.strAbout)
         menuLayout = QHBoxLayout()
-        menuLayout.addWidget(self.helpButton)
+        menuLayout.addWidget(self.settingsButton)
         menuLayout.addWidget(self.aboutButton)
         functionalGroupBox = QGroupBox(parameters.strFunctionalSend)
         functionalGridLayout = QGridLayout()
-        functionalGridLayout.addWidget(addButton,0,1)
+        functionalGridLayout.addWidget(self.addButton,0,1)
         functionalGroupBox.setLayout(functionalGridLayout)
         sendFunctionalLayout.addLayout(menuLayout)
         sendFunctionalLayout.addWidget(functionalGroupBox)
@@ -208,6 +208,9 @@ class MainWindow(QMainWindow):
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
         self.sendHistory.currentIndexChanged.connect(self.sendHistoryIndexChanged)
+        self.settingsButton.clicked.connect(self.showSettings)
+        self.aboutButton.clicked.connect(self.showAbout)
+        self.addButton.clicked.connect(self.functionAdd)
         return
 
     def openCloseSerial(self):
@@ -524,6 +527,20 @@ class MainWindow(QMainWindow):
             str = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(str)
         return
+
+    def functionAdd(self):
+        QMessageBox.information(self, "On the way", "On the way")
+        return
+
+    def showSettings(self):
+        QMessageBox.information(self,"Settings","On the way")
+        return
+
+    def showAbout(self):
+        QMessageBox.information(self, "About", "V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor)+
+                                "<br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout)
+        return
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

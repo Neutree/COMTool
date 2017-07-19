@@ -35,6 +35,7 @@ strCRLF = "<CRLF>(for Windows)"
 strTimeFormatError = "Time format error"
 strHelp = "HELP"
 strAbout = "ABOUT"
+strSettings = "Settings"
 
 class ParametersToSave:
     baudRate = 4
