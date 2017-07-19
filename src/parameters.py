@@ -31,3 +31,5 @@ strClosed = "Closed"
 strWriteError = "Send Error"
 strReady = "Ready"
 strWriteFormatError = "format error"
+strCFLF = "<CFLF>(for Windows)"
+

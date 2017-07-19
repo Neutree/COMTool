@@ -140,10 +140,13 @@ class MainWindow(QMainWindow):
         sendSettingsScheduled = QLineEdit(parameters.strScheduledTime)
         sendSettingsScheduledLabel.setMaximumWidth(75)
         sendSettingsScheduled.setMaximumWidth(75)
+        self.sendSettingsCFLF = QCheckBox(parameters.strCFLF)
+        self.sendSettingsCFLF.setChecked(False)
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(sendSettingsScheduledLabel, 2, 0, 1, 1)
         serialSendSettingsLayout.addWidget(sendSettingsScheduled, 2, 1, 1, 1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsCFLF, 3, 0, 1, 2)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         settingLayout.addWidget(serialSendSettingsGroupBox)
 
@@ -183,6 +186,8 @@ class MainWindow(QMainWindow):
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
         self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
         self.serialPortCombobox.clicked.connect(self.portComboboxClicked)
+        self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
+        self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         return
 
     def openCloseSerial(self):
@@ -231,29 +236,23 @@ class MainWindow(QMainWindow):
     def sendData(self):
         try:
             if self.com.is_open:
-                data = self.sendArea.toPlainText().replace("\n","\r\n")
+                data = self.sendArea.toPlainText()
+                if self.sendSettingsCFLF.isChecked():
+                    data = data.replace("\n","\r\n")
                 if self.sendSettingsHex.isChecked():
-                    dataList = data.split(" ")
-                    j = 0
-                    for i in dataList:
-                        if len(i)>2:
-                            QMessageBox.information(self, parameters.strWriteFormatError, parameters.strWriteFormatError)
-                            return
-                        elif len(i) ==1:
-                            dataList[j] = "0"+i
-                        j+=1
-                    data = "".join(dataList)
-                    try:
-                        data = list(bytes.fromhex(data))
-                    except Exception:
+                    if self.sendSettingsCFLF.isChecked():
+                        data = data.replace("\r\n", " ")
+                    else:
+                        data = data.replace("\n"," ")
+                    data = self.hexStringB2Hex(data)
+                    if data == -1:
                         QMessageBox.information(self, parameters.strWriteFormatError, parameters.strWriteFormatError)
-                    print(data)
-                    self.sendCount += len(data)
-                    self.com.write(data)
+                        return
                 else:
-                    print(data)
-                    self.sendCount += len(data)
-                    self.com.write(data.encode())
+                    data = data.encode()
+                print("send:",data)
+                self.sendCount += len(data)
+                self.com.write(data)
         except Exception as e:
             QMessageBox.information(self, parameters.strWriteError, parameters.strWriteError)
             print(e)
@@ -290,6 +289,20 @@ class MainWindow(QMainWindow):
                 self.receiveArea.moveCursor(QTextCursor.End)
         self.statusBarSendCount.setText("%s(bytes):%d" %(parameters.strSend ,self.sendCount))
         self.statusBarReceiveCount.setText("%s(bytes):%d" %(parameters.strReceive ,self.receiveCount))
+        return
+
+    def onSendSettingsHexClicked(self):
+        data = self.sendArea.toPlainText().replace("\n","\r\n")
+        data = self.asciiB2HexString(data.encode())
+        self.sendArea.clear()
+        self.sendArea.insertPlainText(data)
+        return
+
+    def onSendSettingsAsciiClicked(self):
+        data = self.sendArea.toPlainText().replace("\n"," ")
+        data = self.hexStringB2Hex(data).decode()
+        self.sendArea.clear()
+        self.sendArea.insertPlainText(data)
         return
 
     def clearReceiveBuffer(self):
@@ -355,9 +368,22 @@ class MainWindow(QMainWindow):
         strHex = binascii.b2a_hex(strB).upper()
         return re.sub(r"(?<=\w)(?=(?:\w\w)+$)", " ", strHex.decode())+" "
 
-    def hexStringB2Hex(self):
-
-        return
+    def hexStringB2Hex(self,hexString):
+        dataList = hexString.split(" ")
+        j = 0
+        for i in dataList:
+            if len(i) > 2:
+                return -1
+            elif len(i) == 1:
+                dataList[j] = "0" + i
+            j += 1
+        data = "".join(dataList)
+        try:
+            data = bytes.fromhex(data)
+        except Exception:
+            return -1
+        print(data)
+        return data
 
 
 if __name__ == '__main__':
