@@ -142,7 +142,7 @@ class MainWindow(QMainWindow):
         self.sendSettingsScheduled = QLineEdit(parameters.strScheduledTime)
         self.sendSettingsScheduledCheckBox.setMaximumWidth(75)
         self.sendSettingsScheduled.setMaximumWidth(75)
-        self.sendSettingsCFLF = QCheckBox(parameters.strCFLF)
+        self.sendSettingsCFLF = QCheckBox(parameters.strCRLF)
         self.sendSettingsCFLF.setChecked(False)
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
