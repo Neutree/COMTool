@@ -168,10 +168,16 @@ class MainWindow(QMainWindow):
 
         # right functional layout
         addButton = QPushButton(parameters.strAdd)
+        self.helpButton = QPushButton(parameters.strHelp)
+        self.aboutButton = QPushButton(parameters.strAbout)
+        menuLayout = QHBoxLayout()
+        menuLayout.addWidget(self.helpButton)
+        menuLayout.addWidget(self.aboutButton)
         functionalGroupBox = QGroupBox(parameters.strFunctionalSend)
         functionalGridLayout = QGridLayout()
         functionalGridLayout.addWidget(addButton,0,1)
         functionalGroupBox.setLayout(functionalGridLayout)
+        sendFunctionalLayout.addLayout(menuLayout)
         sendFunctionalLayout.addWidget(functionalGroupBox)
 
         # main window
@@ -523,5 +529,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
     mainWindow.detectSerialPort()
-    mainWindow.programExitSaveParameters()
     sys.exit(app.exec_())
