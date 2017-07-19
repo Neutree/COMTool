@@ -122,14 +122,14 @@ class MainWindow(QMainWindow):
         self.receiveSettingsAscii = QRadioButton(parameters.strAscii)
         self.receiveSettingsHex = QRadioButton(parameters.strHex)
         self.receiveSettingsAscii.setChecked(True)
-        receiveSettingsAutoLinefeed = QCheckBox(parameters.strAutoLinefeed)
-        receiveSettingsAutoLinefeedTime = QLineEdit(parameters.strAutoLinefeedTime)
-        receiveSettingsAutoLinefeed.setMaximumWidth(75)
-        receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
+        self.receiveSettingsAutoLinefeed = QCheckBox(parameters.strAutoLinefeed)
+        self.receiveSettingsAutoLinefeedTime = QLineEdit(parameters.strAutoLinefeedTime)
+        self.receiveSettingsAutoLinefeed.setMaximumWidth(75)
+        self.receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
-        serialReceiveSettingsLayout.addWidget(receiveSettingsAutoLinefeed, 2, 0, 1, 1)
-        serialReceiveSettingsLayout.addWidget(receiveSettingsAutoLinefeedTime, 2, 1, 1, 1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeed, 2, 0, 1, 1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeedTime, 2, 1, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
         settingLayout.addWidget(serialReceiveSettingsGroupBox)
 
@@ -287,6 +287,7 @@ class MainWindow(QMainWindow):
 
     def receiveData(self):
         self.receiveProgressStop = False
+        self.timeLastReceive = 0
         while(not self.receiveProgressStop):
             try:
                 length = self.com.in_waiting
@@ -298,8 +299,21 @@ class MainWindow(QMainWindow):
                         self.receiveUpdateSignal.emit(strReceived)
                     else:
                         self.receiveUpdateSignal.emit(bytes.decode("utf-8","ignore"))
+                    if self.receiveSettingsAutoLinefeed.isChecked():
+                        if time.time() - self.timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
+                            if self.sendSettingsCFLF.isChecked():
+                                self.receiveCount -=2
+                                self.receiveUpdateSignal.emit("\r\n")
+                            else:
+                                self.receiveCount -= 1
+                                self.receiveUpdateSignal.emit("\n")
+                            self.timeLastReceive = time.time()
             except Exception as e:
-                print("receiveData")
+                print("receiveData error")
+                if self.com.is_open and not self.serialPortCombobox.isEnabled():
+                    self.openCloseSerial()
+                    self.serialPortCombobox.clear()
+                    self.detectSerialPort()
                 print(e)
             time.sleep(0.009)
         return
@@ -422,6 +436,3 @@ if __name__ == '__main__':
     mainWindow = MainWindow()
     mainWindow.detectSerialPort()
     sys.exit(app.exec_())
-
-
-
