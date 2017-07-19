@@ -1,5 +1,5 @@
 import sys
-from src import parameters,Combobox,helpAbout
+from src import parameters,Combobox,helpAbout,autoUpdate
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
@@ -541,9 +541,17 @@ class MainWindow(QMainWindow):
                                 "<br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout)
         return
 
+    def autoUpdateDetect(self):
+        auto = autoUpdate.AutoUpdate()
+        if auto.detectNewVersion():
+            auto.OpenBrowser()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
     mainWindow.detectSerialPort()
+    t = threading.Thread(target=mainWindow.autoUpdateDetect)
+    t.setDaemon(True)
+    t.start()
     sys.exit(app.exec_())
