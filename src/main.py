@@ -482,6 +482,7 @@ class MainWindow(QMainWindow):
         paramObj.sendScheduledTime = self.sendSettingsScheduled.text()
         if not self.sendSettingsCFLF.isChecked():
             paramObj.useCRLF = False
+        paramObj.sendHistoryList.clear()
         for i in range(0,self.sendHistory.count()):
             paramObj.sendHistoryList.append(self.sendHistory.itemText(i))
         f = open("settings.config","wb")
