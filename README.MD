@@ -1,12 +1,9 @@
-DebugTools
+PySerialAssistant
 ========
-Debug tools such as Serial Assistant 、 TCP/UDP debug tool etc.
+Serial debug tools written by python
 
 # Features
 * cross platform
-debug tools as follows:
-
-## Serial assistant
 * port baudrate bytesize parity stopbits settings
 * basic send data (ascii and hex)
 * basic receive data (ascii and hex)
