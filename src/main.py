@@ -531,7 +531,7 @@ class MainWindow(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = True
-        elif event.key() == Qt.Key_Enter:
+        elif event.key() == Qt.Key_Return or event.key()==Qt.Key_Enter:
             if self.keyControlPressed:
                 self.sendData()
         return
