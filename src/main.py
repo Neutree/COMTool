@@ -362,10 +362,15 @@ class MainWindow(QMainWindow):
         return
 
     def onSendSettingsAsciiClicked(self):
-        data = self.sendArea.toPlainText().replace("\n"," ")
-        data = self.hexStringB2Hex(data).decode()
-        self.sendArea.clear()
-        self.sendArea.insertPlainText(data)
+        try:
+            data = self.sendArea.toPlainText().replace("\n"," ").strip()
+            self.sendArea.clear()
+            if data != "":
+                data = self.hexStringB2Hex(data).decode('utf-8','ignore')
+                self.sendArea.insertPlainText(data)
+        except Exception as e:
+            QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
+            self.sendSettingsHex.setChecked(True)
         return
 
     def sendHistoryIndexChanged(self):
