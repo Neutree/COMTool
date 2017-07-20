@@ -370,7 +370,6 @@ class MainWindow(QMainWindow):
                 self.sendArea.insertPlainText(data)
         except Exception as e:
             QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
-            self.sendSettingsHex.setChecked(True)
         return
 
     def sendHistoryIndexChanged(self):
@@ -556,8 +555,8 @@ class MainWindow(QMainWindow):
         return
 
     def showAbout(self):
-        QMessageBox.information(self, "About", "V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor)+
-                                "<br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout)
+        QMessageBox.information(self, "About","<h1 style='color:#f75a5a';margin=10px;>"+parameters.appName+'</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor)+
+                                "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout)
         return
 
     def autoUpdateDetect(self):

@@ -1,4 +1,4 @@
-appName = "DebugTools"
+appName = "PySerialAssistant"
 appIcon = "../assets/logo.png"
 
 strSend = "Send"
