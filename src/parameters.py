@@ -36,6 +36,9 @@ strTimeFormatError = "Time format error"
 strHelp = "HELP"
 strAbout = "ABOUT"
 strSettings = "Settings"
+strNeedUpdate = "Need Update"
+strUpdateNow = "update now?"
+
 
 class ParametersToSave:
     baudRate = 4

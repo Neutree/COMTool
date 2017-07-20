@@ -561,6 +561,7 @@ class MainWindow(QMainWindow):
             auto.OpenBrowser()
 
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
