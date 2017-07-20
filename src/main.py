@@ -1,6 +1,6 @@
 import sys
 from src import parameters,Combobox,helpAbout,autoUpdate
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QStatusBar)
@@ -326,10 +326,8 @@ class MainWindow(QMainWindow):
                     if self.receiveSettingsAutoLinefeed.isChecked():
                         if time.time() - self.timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
                             if self.sendSettingsCFLF.isChecked():
-                                self.receiveCount -=2
                                 self.receiveUpdateSignal.emit("\r\n")
                             else:
-                                self.receiveCount -= 1
                                 self.receiveUpdateSignal.emit("\n")
                             self.timeLastReceive = time.time()
             except Exception as e:
@@ -474,6 +472,8 @@ class MainWindow(QMainWindow):
             paramObj.receiveAscii = False
         if not self.receiveSettingsAutoLinefeed.isChecked():
             paramObj.receiveAutoLinefeed = False
+        else:
+            paramObj.receiveAutoLinefeed = True
         paramObj.receiveAutoLindefeedTime = self.receiveSettingsAutoLinefeedTime.text()
         if self.sendSettingsHex.isChecked():
             paramObj.sendAscii = False
@@ -526,6 +526,19 @@ class MainWindow(QMainWindow):
         for i in range(0, len(paramObj.sendHistoryList)):
             str = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(str)
+        return
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Control:
+            self.keyControlPressed = True
+        elif event.key() == Qt.Key_Enter:
+            if self.keyControlPressed:
+                self.sendData()
+        return
+
+    def keyReleaseEvent(self,event):
+        if event.key() == Qt.Key_Control:
+            self.keyControlPressed = False
         return
 
     def functionAdd(self):
