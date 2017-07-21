@@ -5,7 +5,7 @@ from src import helpAbout,parameters
 from PyQt5.QtWidgets import QMessageBox
 
 class AutoUpdate:
-    updateUrl = "https://github.com/Neutree/PySerialAssist/releases"
+    updateUrl = "https://github.com/Neutree/PyserialAssistant/releases"
     def detectNewVersion(self):
         try:
             page = urllib.request.urlopen(self.updateUrl)
@@ -20,7 +20,8 @@ class AutoUpdate:
                 return False
         except Exception as e:
             print("error:",e)
-        print("Get newest version failed!")
+            return False
+        print("Already latest version!")
         return False
 
     def OpenBrowser(self):

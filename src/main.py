@@ -1,4 +1,4 @@
-import sys
+import sys,os
 from src import parameters,Combobox,helpAbout,autoUpdate
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -193,7 +193,7 @@ class MainWindow(QMainWindow):
 
         self.resize(800, 500)
         self.MoveToCenter()
-        self.setWindowTitle(parameters.appName)
+        self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
         self.setWindowIcon(QIcon(parameters.appIcon))
         self.show()
         return
@@ -563,6 +563,10 @@ class MainWindow(QMainWindow):
         auto = autoUpdate.AutoUpdate()
         if auto.detectNewVersion():
             auto.OpenBrowser()
+
+    def openDevManagement(self):
+        os.system('echo aaaa')
+        os.system('start devmgmt.msc')
 
 
 

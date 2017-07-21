@@ -2,7 +2,7 @@ PySerialAssistant
 ========
 A cross platform serial debug tools written by python
 ![screenshot](./assets/screenshot_V1.0.png)
-> screenshot shows the version 1.0, the newest may not the same totally! But better performance、more easy to use and more elegant
+> screenshot shows the version 1.0, the latest may not the same totally! But better performance、more easy to use and more elegant
 
 ## Features
 
