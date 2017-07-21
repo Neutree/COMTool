@@ -4,7 +4,7 @@ A cross platform serial debug tools written by python
 ![screenshot](./assets/screenshot_V1.0.png)
 > screenshot shows the version 1.0, the newest may not the same totally! But better performance、more easy to use and more elegant
 
-# Features
+## Features
 
 - [x] cross platform
 - [x] port baudrate bytesize parity stopbits settings
@@ -23,27 +23,31 @@ A cross platform serial debug tools written by python
 - [ ] multiple send (order and disorder)
 - [ ] night theme and White theme
 
-# Install
+## Install
 
 ### Windows
 
 * Download the latest bin file at the [release page](https://github.com/Neutree/PyserialAssistant/releases)
+
 * unzip, and run PyserialAssistant.exe
 
 ### Linux
+
 * download and install
 for Ubuntu, use ppa:
 ```
 
 ```
 or download bin file at the [release page](https://github.com/Neutree/PyserialAssistant/releases)
+
 for others, refer to [Development](Development)
+
 * run PySerialAssistant
 
 ### Mac
 Not test yet
 
-# Development
+## Development
 
 1. Install python3.6 and pip
 ```
