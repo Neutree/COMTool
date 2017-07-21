@@ -20,7 +20,8 @@ A cross platform serial debug tools written by python
 - [x] auto save settings
 - [x] <kbd>Ctrl+Enter</kbd> to send
 - [ ] escape character support, like \x \r \n etc.
-- [ ] multiple send (order and disorder)
+- [ ] multiple character encode support
+- [ ] multiple auto send (order and disorder)
 - [ ] night theme and White theme
 
 ## Install

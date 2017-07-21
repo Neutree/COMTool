@@ -1,8 +1,7 @@
 import webbrowser
 import urllib.request
 from bs4 import BeautifulSoup
-from src import helpAbout,parameters
-from PyQt5.QtWidgets import QMessageBox
+import helpAbout,parameters
 
 class AutoUpdate:
     updateUrl = "https://github.com/Neutree/PyserialAssistant/releases"

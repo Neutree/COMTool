@@ -1,9 +1,9 @@
 import sys,os
-from src import parameters,Combobox,helpAbout,autoUpdate
+import parameters,Combobox,helpAbout,autoUpdate
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QStatusBar)
+                             QLineEdit,QGroupBox)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor
 import serial
 import serial.tools.list_ports

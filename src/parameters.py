@@ -1,5 +1,5 @@
 appName = "PySerialAssistant"
-appIcon = "../assets/logo.png"
+appIcon = "logo.png"
 
 strSend = "Send"
 strReceive = "Receive"
