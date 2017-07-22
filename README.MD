@@ -22,6 +22,7 @@ A cross platform serial debug tools written by python
 - [ ] escape character support, like \x \r \n etc.
 - [ ] multiple character encode support
 - [ ] multiple auto send (order and disorder)
+- [ ] unix style terminal color support
 - [ ] night theme and White theme
 
 ## Install
