@@ -1,6 +1,8 @@
-from PySerialAssistant import PySerialAssistant
+
+from PySerialAssistant import Main
 
 
 def PySerialAssistantEntry():
-    PySerialAssistant.main()
+    Main.main()
     return
+

@@ -578,3 +578,4 @@ def main():
     t.setDaemon(True)
     t.start()
     sys.exit(app.exec_())
+
