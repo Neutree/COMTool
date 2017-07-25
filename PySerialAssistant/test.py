@@ -1,7 +1,7 @@
 import unittest
 from PySerialAssistant import Main
 
-class UTest(unittest.TestCase):
+class PyComTest(unittest.TestCase):
 
     def setUp(self):
         print("setup")
@@ -11,9 +11,9 @@ class UTest(unittest.TestCase):
 
     def test_1(self):
         print("test")
+        Main.main()
 
 
 
 if __name__=="__main__":
-    # unittest.main() #执行用例#
-    Main.main()
+    unittest.main() #执行用例#
