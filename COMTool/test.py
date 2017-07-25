@@ -1,7 +1,7 @@
 import unittest
-from PyCom import Main
+from COMTool import Main
 
-class PyComTest(unittest.TestCase):
+class COMTest(unittest.TestCase):
 
     def setUp(self):
         print("setup")

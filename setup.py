@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages
 from codecs import open
 from os import path
-from PyCom import helpAbout
+from COMTool import helpAbout
 
 here = path.abspath(path.dirname(__file__))
 
@@ -11,7 +11,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 
 setup(
-    name='PyCom',
+    name='COMTool',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -22,7 +22,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/Neutree/PyCom',
+    url='https://github.com/Neutree/COMTool',
 
     # Author details
     author='Neucrack',
@@ -88,7 +88,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-        'PyCom': ['assets/logo.ico','assets/logo.png','assets/logo2.png','assets/screenshot_V1.0.png'],
+        'COMTool': ['assets/logo.ico','assets/logo.png','assets/logo2.png','assets/screenshot_V1.0.png'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -105,7 +105,7 @@ setup(
     entry_points={
         # 'console_scripts': [
         'gui_scripts': [
-            'PyCom=PyCom:PyComEntry',
+            'COMTool=COMTool:COMToolEntry',
         ],
     },
 )

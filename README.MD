@@ -1,7 +1,7 @@
-PySerialAssistant
+COMTool
 ========
 A cross platform serial debug tools written by python
-![screenshot](./PySerialAssistant/assets/screenshot_V1.0.png)
+![screenshot](./COMTool/assets/screenshot_V1.0.png)
 > screenshot shows the version 1.0, the latest may not the same totally! But better performance、more easy to use and more elegant
 
 ## Features
@@ -30,21 +30,21 @@ A cross platform serial debug tools written by python
 ### Windows
 
 * 1. download excutable bin file, easiest way for one never used python
-  * Download the latest bin file at the [release page](https://github.com/Neutree/PyserialAssistant/releases)
-  * unzip, and run PyserialAssistant.exe
+  * Download the latest bin file at the [release page](https://github.com/Neutree/COMTool/releases)
+  * unzip, and run COMTool.exe
 * 2. Install Python3 first then install from pypi:
 
   * [dowload python3](https://www.python.org/downloads/)
   * Install by pip, 
 ```
-pip install PySerialAssistant
+pip install COMTool
 ```
   * Or you can download source code, then install from source code
 ```
 python setup.py bdist_wheel
 ```
-PySerialAssistant.exe in dir `C:\Users\yourName\AppData\Local\Programs\Python\Python36-32\Scripts`
-you can click `PySerialAssistant.exe` or run command `pycom or pyserialassistant` to run app
+COMTool.exe in dir `C:\Users\yourName\AppData\Local\Programs\Python\Python36-32\Scripts`
+you can click `COMTool.exe` or run command `pycom or COMTool` to run app
 
 
 ### Linux
@@ -52,16 +52,16 @@ you can click `PySerialAssistant.exe` or run command `pycom or pyserialassistant
 * download and install
 ```
 sudo apt install python3 pip
-pip install pyserialassistant
-pycom (pyserialassistant)
+pip install COMTool
+pycom (COMTool)
 ```
 
 ### macOS
 
 ```
 brew install python3 pip
-pip install pyserialassistant
-pycom (pyserialassistant)
+pip install COMTool
+pycom (COMTool)
 ```
 
 ## Development
@@ -82,7 +82,7 @@ pip install pyserail pyqt5
 
 3. clone project
 ```
-git clone https://github.com/Neutree/PySerialAssistant.git
+git clone https://github.com/Neutree/COMTool.git
 ```
 
 4. code, resolve bugs or add new reatures

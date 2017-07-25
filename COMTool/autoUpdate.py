@@ -1,10 +1,10 @@
 import webbrowser
 import urllib.request
 from bs4 import BeautifulSoup
-from PyCom import helpAbout,parameters
+from COMTool import helpAbout,parameters
 
 class AutoUpdate:
-    updateUrl = "https://github.com/Neutree/PyCom/releases"
+    updateUrl = "https://github.com/Neutree/COMTool/releases"
     def detectNewVersion(self):
         try:
             page = urllib.request.urlopen(self.updateUrl)

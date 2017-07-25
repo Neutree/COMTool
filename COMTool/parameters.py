@@ -1,4 +1,4 @@
-appName = "PyCom"
+appName = "COMTool"
 appIcon = "assets/logo.png"
 
 strSend = "Send"

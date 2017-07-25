@@ -1,5 +1,5 @@
 import sys,os
-from PyCom import parameters,Combobox,helpAbout,autoUpdate
+from COMTool import parameters,Combobox,helpAbout,autoUpdate
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
@@ -555,7 +555,9 @@ class MainWindow(QMainWindow):
         return
 
     def showAbout(self):
-        QMessageBox.information(self, "About","<h1 style='color:#f75a5a';margin=10px;>"+parameters.appName+'</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor)+
+        QMessageBox.information(self, "About","<h1 style='color:#f75a5a';margin=10px;>"+parameters.appName+
+                                '</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+
+                                str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev)+
                                 "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout)
         return
 
