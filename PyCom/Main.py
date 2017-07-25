@@ -1,5 +1,5 @@
 import sys,os
-from PySerialAssistant import parameters,Combobox,helpAbout,autoUpdate
+from PyCom import parameters,Combobox,helpAbout,autoUpdate
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,

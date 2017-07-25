@@ -6,7 +6,7 @@ __pycache__
 bin
 dist
 build
-PySerialAssistant.egg-info
+*.egg-info
 
 
 

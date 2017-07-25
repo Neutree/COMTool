@@ -1,5 +1,5 @@
 import unittest
-from PySerialAssistant import Main
+from PyCom import Main
 
 class PyComTest(unittest.TestCase):
 

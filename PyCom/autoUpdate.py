@@ -1,10 +1,10 @@
 import webbrowser
 import urllib.request
 from bs4 import BeautifulSoup
-from PySerialAssistant import helpAbout,parameters
+from PyCom import helpAbout,parameters
 
 class AutoUpdate:
-    updateUrl = "https://github.com/Neutree/PyserialAssistant/releases"
+    updateUrl = "https://github.com/Neutree/PyCom/releases"
     def detectNewVersion(self):
         try:
             page = urllib.request.urlopen(self.updateUrl)
@@ -15,7 +15,7 @@ class AutoUpdate:
                 version = list(map(int, versionStr[1:].split(".")))
                 if version[0]*10+version[1] > helpAbout.versionMajor*10+helpAbout.versionMinor:
                     return True
-                print("no new version,the newest is %s, now:V%d.%d" %(versionStr,helpAbout.versionMajor,helpAbout.versionMinor))
+                print("no new version,the latest is %s, now:V%d.%d" %(versionStr,helpAbout.versionMajor,helpAbout.versionMinor))
                 return False
         except Exception as e:
             print("error:",e)

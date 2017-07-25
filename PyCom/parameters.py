@@ -1,4 +1,4 @@
-appName = "PySerialAssistant"
+appName = "PyCom"
 appIcon = "assets/logo.png"
 
 strSend = "Send"

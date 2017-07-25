@@ -4,7 +4,7 @@
 # pip install cx-freeze
 
 if [[ $1 == "windows" ]]; then
-    cxfreeze  PySerialAssistant.py --target-dir ../bin  --icon ./assets/logo.ico --base-name=win32gui
+    cxfreeze  PyCom.py --target-dir ../bin  --icon ./assets/logo.ico --base-name=win32gui
 elif [[ $1 == "linux" ]]; then
     echo 'not test on linux yet'
     exit 0
@@ -17,4 +17,4 @@ else
 fi
 
 cp ./assets/logo.png ../bin/logo.png
-echo "bin file in folder PySerialAssistant"
+echo "bin file in folder PyCom"
