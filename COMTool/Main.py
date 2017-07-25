@@ -194,7 +194,7 @@ class MainWindow(QMainWindow):
         self.resize(800, 500)
         self.MoveToCenter()
         self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
-        self.setWindowIcon(QIcon(parameters.appIcon))
+        self.setWindowIcon(QIcon(sys.prefix+"/"+parameters.strDataDirName+"/"+parameters.appIcon))
         self.show()
         return
 

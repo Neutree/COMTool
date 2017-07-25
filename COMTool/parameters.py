@@ -1,6 +1,7 @@
 appName = "COMTool"
-appIcon = "assets/logo.png"
+appIcon = "logo.png"
 
+strDataDirName = "COMToolData/assets"
 strSend = "Send"
 strReceive = "Receive"
 strSerialPort = "Port"

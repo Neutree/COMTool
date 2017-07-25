@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages
 from codecs import open
 from os import path
-from COMTool import helpAbout
+from COMTool import helpAbout,parameters
 
 here = path.abspath(path.dirname(__file__))
 
@@ -57,7 +57,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='Serial Debug Tool ',
+    keywords='Serial Debug Tool Assistant ',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -88,7 +88,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-        'COMTool': ['assets/logo.ico','assets/logo.png','assets/logo2.png','assets/screenshot_V1.0.png'],
+        # 'COMTool': ['assets/logo.ico','assets/logo.png','assets/logo2.png','assets/screenshot_V1.0.png'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -96,7 +96,7 @@ setup(
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     data_files=[
-        # ('my_data', ['data/data_file'])
+         (parameters.strDataDirName, ['COMTool/assets/logo.png','COMTool/assets/logo2.png','COMTool/assets/logo.ico',])
         ],
 
     # To provide executable scripts, use entry points in preference to the

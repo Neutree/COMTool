@@ -1,5 +1,5 @@
-import unittest
-from COMTool import Main
+import unittest,sys
+from COMTool import Main,helpAbout
 
 class COMTest(unittest.TestCase):
 
@@ -10,7 +10,7 @@ class COMTest(unittest.TestCase):
         print("teardown")
 
     def test_1(self):
-        print("test")
+        print("test",helpAbout.strAbout)
         Main.main()
 
 
