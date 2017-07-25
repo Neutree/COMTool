@@ -1,5 +1,5 @@
 import sys,os
-import parameters,Combobox,helpAbout,autoUpdate
+from PySerialAssistant import parameters,Combobox,helpAbout,autoUpdate
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
@@ -419,7 +419,7 @@ class MainWindow(QMainWindow):
     def detectSerialPort(self):
         if not self.isDetectSerialPort:
             self.isDetectSerialPort = True
-            t = threading.Thread(target=mainWindow.detectSerialPortProcess)
+            t = threading.Thread(target=self.detectSerialPortProcess)
             t.setDaemon(True)
             t.start()
 
@@ -570,7 +570,7 @@ class MainWindow(QMainWindow):
 
 
 
-if __name__ == '__main__':
+def main():
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
     mainWindow.detectSerialPort()

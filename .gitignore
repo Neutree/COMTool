@@ -3,6 +3,10 @@ __pycache__
 .idea
 *.config
 
+bin
+dist
+build
+PySerialAssistant.egg-info
 
-PySerialAssistant
-PySerialAssistant.zip
+
+

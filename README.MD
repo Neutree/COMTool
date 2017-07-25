@@ -1,7 +1,7 @@
 PySerialAssistant
 ========
 A cross platform serial debug tools written by python
-![screenshot](./assets/screenshot_V1.0.png)
+![screenshot](./PySerialAssistant/assets/screenshot_V1.0.png)
 > screenshot shows the version 1.0, the latest may not the same totally! But better performance、more easy to use and more elegant
 
 ## Features
@@ -29,45 +29,65 @@ A cross platform serial debug tools written by python
 
 ### Windows
 
-* Download the latest bin file at the [release page](https://github.com/Neutree/PyserialAssistant/releases)
+* 1. download excutable bin file, easiest way for one never used python
+  * Download the latest bin file at the [release page](https://github.com/Neutree/PyserialAssistant/releases)
+  * unzip, and run PyserialAssistant.exe
+* 2. Install Python3 first then install from pypi:
 
-* unzip, and run PyserialAssistant.exe
+  * [dowload python3](https://www.python.org/downloads/)
+  * Install by pip, 
+```
+pip install PySerialAssistant
+```
+  * Or you can download source code, then install from source code
+```
+python setup.py bdist_wheel
+```
+PySerialAssistant.exe in dir `C:\Users\yourName\AppData\Local\Programs\Python\Python36-32\Scripts`
+you can click `PySerialAssistant.exe` or run command `pycom or pyserialassistant` to run app
+
 
 ### Linux
 
 * download and install
-for Ubuntu, use ppa:
+```
+sudo apt install python3 pip
+pip install pyserialassistant
+pycom (pyserialassistant)
 ```
 
+### macOS
+
 ```
-or download bin file at the [release page](https://github.com/Neutree/PyserialAssistant/releases)
-
-for others, refer to [Development](Development)
-
-* run PySerialAssistant
-
-### Mac
-Not test yet
+brew install python3 pip
+pip install pyserialassistant
+pycom (pyserialassistant)
+```
 
 ## Development
 
 1. Install python3.6 and pip
+Linux:
 ```
+sudo apt install python3 pip
 ```
+
+Windows: 
+  [dowload python3](https://www.python.org/downloads/)
 
 2. install pyserial and PyQt5
 ```
+pip install pyserail pyqt5
 ```
 
 3. clone project
 ```
+git clone https://github.com/Neutree/PySerialAssistant.git
 ```
 
 4. code, resolve bugs or add new reatures
-```
-```
+
 
 5. pull request
-```
-```
+
 

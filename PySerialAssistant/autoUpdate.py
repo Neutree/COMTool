@@ -1,7 +1,7 @@
 import webbrowser
 import urllib.request
 from bs4 import BeautifulSoup
-import helpAbout,parameters
+from PySerialAssistant import helpAbout,parameters
 
 class AutoUpdate:
     updateUrl = "https://github.com/Neutree/PyserialAssistant/releases"
