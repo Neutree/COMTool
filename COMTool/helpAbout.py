@@ -3,7 +3,7 @@ from COMTool import parameters
 
 versionMajor = 1
 versionMinor = 1
-versionDev   = 1
+versionDev   = 2
 date = "2017.7.25"
 strAbout = '''\
 Python 3.6.1 + PyQt5<br><br>
