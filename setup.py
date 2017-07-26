@@ -105,7 +105,7 @@ setup(
     entry_points={
         # 'console_scripts': [
         'gui_scripts': [
-            'COMTool=COMTool:COMToolEntry',
+            'comtool=COMTool.Main:main',
         ],
     },
 )

@@ -4,7 +4,7 @@ from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox)
-from PyQt5.QtGui import QIcon,QFont,QTextCursor
+from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
 import serial.tools.list_ports
 import serial.threaded
@@ -15,6 +15,8 @@ try:
   import cPickle as pickle
 except ImportError:
   import pickle
+if sys.platform == "win32":
+    import ctypes
 
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
@@ -194,7 +196,15 @@ class MainWindow(QMainWindow):
         self.resize(800, 500)
         self.MoveToCenter()
         self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
-        self.setWindowIcon(QIcon(sys.prefix+"/"+parameters.strDataDirName+"/"+parameters.appIcon))
+        pythonPathArray = sys.path
+        for i in pythonPathArray:
+            if i.find("site-packages"):
+                pythonPath = i[0:i.find("lib")]
+        icon = QIcon()
+        icon.addPixmap(QPixmap(pythonPath+parameters.strDataDirName+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
+        self.setWindowIcon(icon)
+        if sys.platform == "win32":
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
         self.show()
         return
 
@@ -558,7 +568,7 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, "About","<h1 style='color:#f75a5a';margin=10px;>"+parameters.appName+
                                 '</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+
                                 str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev)+
-                                "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout)
+                                "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout())
         return
 
     def autoUpdateDetect(self):
@@ -580,4 +590,7 @@ def main():
     t.setDaemon(True)
     t.start()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
 

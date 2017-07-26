@@ -10,10 +10,9 @@ class COMTest(unittest.TestCase):
         print("teardown")
 
     def test_1(self):
-        print("test",helpAbout.strAbout)
+        print("test",sys.prefix)
         Main.main()
 
-
-
 if __name__=="__main__":
-    unittest.main() #执行用例#
+    unittest.main()
+

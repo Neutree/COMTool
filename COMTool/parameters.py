@@ -1,5 +1,5 @@
 appName = "COMTool"
-appIcon = "logo.png"
+appIcon = "logo.ico"
 
 strDataDirName = "COMToolData/assets"
 strSend = "Send"
