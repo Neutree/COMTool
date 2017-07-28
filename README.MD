@@ -59,7 +59,14 @@ COMTool.exe in dir `C:\Users\yourName\AppData\Local\Programs\Python\Python36-32\
 ```
 sudo apt install python3
 sudo apt install python3-pip
-pip3 install COMTool
+sudo pip3 install comtool
+```
+or
+```
+sudo apt install python3
+wget https://bootstrap.pypa.io/get-pip.py 
+sudo python3 get-pip.py
+sudo pip3 install comtool
 ```
 be sure python bin path already in the `$PATH` env(add `export PATH=$PATH:~/.local/bin` to ~/.bashrc).
 then enjoy by type `COMTool`
@@ -69,6 +76,7 @@ then enjoy by type `COMTool`
   * download sourcecode
 ```
 python setup.py bdist_wheel
+sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl
 ```
 
 

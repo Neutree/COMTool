@@ -196,12 +196,12 @@ class MainWindow(QMainWindow):
         self.resize(800, 500)
         self.MoveToCenter()
         self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
-        pythonPathArray = sys.path
-        for i in pythonPathArray:
-            if i.find("site-packages"):
-                pythonPath = i[0:i.find("lib")]
         icon = QIcon()
-        icon.addPixmap(QPixmap(pythonPath+parameters.strDataDirName+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
+        pathDirList = sys.argv[0].replace("\\","/").split("/")
+        pathDirList.pop()
+        pathDirList.pop()
+        strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+        icon.addPixmap(QPixmap(strPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
