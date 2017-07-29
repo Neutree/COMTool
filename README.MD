@@ -27,6 +27,7 @@ A cross platform serial debug tools written by python
 - [ ] multiple auto send (order and disorder)
 - [ ] unix style terminal color support
 - [ ] night theme and White theme
+- [ ] real time data graphic display
 
 ## Install
 
