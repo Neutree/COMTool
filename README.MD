@@ -1,5 +1,8 @@
 COMTool
 ========
+
+ [![PyPI](https://img.shields.io/pypi/v/comtool.svg)](https://pypi.python.org/pypi/comtool/)
+
 A cross platform serial debug tools written by python
 ![screenshot](./COMToolData/assets/screenshot_V1.0.png)
 > screenshot shows the version 1.0, the latest may not the same totally! But better performance、more easy to use and more elegant
@@ -24,6 +27,7 @@ A cross platform serial debug tools written by python
 - [ ] multiple auto send (order and disorder)
 - [ ] unix style terminal color support
 - [ ] night theme and White theme
+- [ ] real time data graphic display
 
 ## Install
 
