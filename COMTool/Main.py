@@ -223,7 +223,7 @@ class MainWindow(QMainWindow):
         self.addButton.clicked.connect(self.functionAdd)
         return
 
-    def openCloseSerial(self):
+    def openCloseSerialProcess(self):
         try:
             if self.com.is_open:
                 self.com.close()
@@ -244,6 +244,7 @@ class MainWindow(QMainWindow):
                     self.com.parity = self.serailParityCombobox.currentText()[0]
                     self.com.stopbits = float(self.serailStopbitsCombobox.currentText())
                     self.com.timeout = None
+                    self.serialOpenCloseButton.setDisabled(True)
                     self.com.open()
                     self.serialOpenCloseButton.setText(parameters.strClose)
                     self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
@@ -252,15 +253,23 @@ class MainWindow(QMainWindow):
                     self.serailParityCombobox.setDisabled(True)
                     self.serailStopbitsCombobox.setDisabled(True)
                     self.serailBytesCombobox.setDisabled(True)
+                    self.serialOpenCloseButton.setDisabled(False)
                     receiveProcess = threading.Thread(target=self.receiveData)
                     receiveProcess.setDaemon(True)
                     receiveProcess.start()
                 except Exception as e:
                     self.com.close()
                     self.receiveProgressStop = True
-                    self.errorHint( parameters.strOpenFailed + str(e))
+                    self.errorSignal.emit( parameters.strOpenFailed + str(e))
+                    self.serialOpenCloseButton.setDisabled(False)
         except Exception:
             pass
+        return
+
+    def openCloseSerial(self):
+        t = threading.Thread(target=self.openCloseSerialProcess)
+        t.setDaemon(True)
+        t.start()
         return
 
     def portComboboxClicked(self):
@@ -278,7 +287,7 @@ class MainWindow(QMainWindow):
                 data = data.replace("\n", " ")
             data = self.hexStringB2Hex(data)
             if data == -1:
-                self.errorHint( parameters.strWriteFormatError)
+                self.errorSignal.emit( parameters.strWriteFormatError)
                 return -1
         else:
             data = data.encode()
@@ -304,7 +313,7 @@ class MainWindow(QMainWindow):
                         t.setDaemon(True)
                         t.start()
         except Exception as e:
-            self.errorHint(parameters.strWriteError)
+            self.errorSignal.emit(parameters.strWriteError)
             print(e)
         return
 
@@ -315,7 +324,7 @@ class MainWindow(QMainWindow):
             try:
                 time.sleep(int(self.sendSettingsScheduled.text().strip())/1000)
             except Exception:
-                self.errorHint(parameters.strTimeFormatError)
+                self.errorSignal.emit(parameters.strTimeFormatError)
         self.isScheduledSending = False
         return
 
