@@ -36,25 +36,22 @@ A cross platform serial debug tools written by python
 there's three ways:
 1. download excutable bin file, easiest way for one never used python
   * Download the latest bin file at the [release page](https://github.com/Neutree/COMTool/releases)
-  * unzip, and run COMTool.exe
+  * unzip, and run comtool.exe
 2. Install Python3 first then install from pypi:
   * [dowload python3](https://www.python.org/downloads/)
-  * Install pip,save https://bootstrap.pypa.io/get-pip.py as file get-pip.py
-```
-sduo python get-pip.py
-```
   * Install by pip,
 ```
-pip install COMTool
+pip install comtool
+comtool
 ```
 3. Or you can download source code, then install from source code
   * download sourcecode
   * install
 ```
 python setup.py bdist_wheel
+pip install dist/COMTool-*.*.*-py3-none-any.whl
+comtool
 ```
-COMTool.exe in dir `C:\Users\yourName\AppData\Local\Programs\Python\Python36-32\Scripts`
-  * you can click `COMTool.exe` or run command `pycom or COMTool` to run app
 
 
 ### Linux
@@ -64,6 +61,7 @@ COMTool.exe in dir `C:\Users\yourName\AppData\Local\Programs\Python\Python36-32\
 sudo apt install python3
 sudo apt install python3-pip
 sudo pip3 install comtool
+sudo comtool
 ```
 or
 ```
@@ -71,9 +69,10 @@ sudo apt install python3
 wget https://bootstrap.pypa.io/get-pip.py 
 sudo python3 get-pip.py
 sudo pip3 install comtool
+sudo comtool
 ```
-be sure python bin path already in the `$PATH` env(add `export PATH=$PATH:~/.local/bin` to ~/.bashrc).
-then enjoy by type `COMTool`
+> be sure python bin path already in the `$PATH` env.
+
 
 
  Or you can download source code, then install from source code
