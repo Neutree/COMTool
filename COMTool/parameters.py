@@ -4,7 +4,7 @@ appIcon = "COMToolData/assets/logo.png"
 appLogo = "COMToolData/assets/logo.png"
 appLogo2 = "/COMToolData/assets/logo2.png"
 
-
+author = "Neucrack"
 strSend = "Send"
 strReceive = "Receive"
 strSerialPort = "Port"
@@ -42,6 +42,7 @@ strAbout = "ABOUT"
 strSettings = "Settings"
 strNeedUpdate = "Need Update"
 strUpdateNow = "update now?"
+strUninstallApp = "uninstall app"
 
 
 class ParametersToSave:

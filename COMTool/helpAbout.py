@@ -4,14 +4,16 @@ import os
 
 versionMajor = 1
 versionMinor = 2
-versionDev   = 3
+versionDev   = 5
 date = "2017.7.28"
 
 def strAbout():
     pathDirList = sys.argv[0].replace("\\", "/").split("/")
     pathDirList.pop()
-    pathDirList.pop()
     strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+    if not os.path.exists(strPath+"/"+parameters.appIcon):
+        pathDirList.pop()
+        strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
     return '''\
 Python 3.6.1 + PyQt5<br><br>
 <div><div>COMTool is a Open source project create by </div><a style="vertical-align: middle;" href="http://www.neucrack.com"><img src="'''+strPath+"/"+parameters.appLogo2+'''" width=109 height=32></img></a></div><br><br>

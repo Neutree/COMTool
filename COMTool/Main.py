@@ -199,8 +199,10 @@ class MainWindow(QMainWindow):
         icon = QIcon()
         pathDirList = sys.argv[0].replace("\\","/").split("/")
         pathDirList.pop()
-        pathDirList.pop()
         strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+        if not os.path.exists(strPath+"/"+parameters.appIcon):
+            pathDirList.pop()
+            strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
         icon.addPixmap(QPixmap(strPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
         if sys.platform == "win32":
