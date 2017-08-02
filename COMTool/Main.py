@@ -303,13 +303,15 @@ class MainWindow(QMainWindow):
                 data = self.getSendData()
                 if data == -1:
                     return
+                print(self.sendArea.toPlainText())
                 print("send:",data)
                 self.sendCount += len(data)
                 self.com.write(data)
-                self.sendHistoryFindDelete(data.decode())
-                self.sendHistory.insertItem(0,data.decode())
+                data = self.sendArea.toPlainText()
+                self.sendHistoryFindDelete(data)
+                self.sendHistory.insertItem(0,data)
                 self.sendHistory.setCurrentIndex(0)
-                self.receiveUpdateSignal.emit(None)
+                self.receiveUpdateSignal.emit("")
                 # scheduled send
                 if self.sendSettingsScheduledCheckBox.isChecked():
                     if not self.isScheduledSending:
@@ -364,7 +366,7 @@ class MainWindow(QMainWindow):
         return
 
     def updateReceivedDataDisplay(self,str):
-        if str != None:
+        if str != "":
             curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
             endScrollValue = self.receiveArea.verticalScrollBar().value()
@@ -378,6 +380,7 @@ class MainWindow(QMainWindow):
         return
 
     def onSendSettingsHexClicked(self):
+
         data = self.sendArea.toPlainText().replace("\n","\r\n")
         data = self.asciiB2HexString(data.encode())
         self.sendArea.clear()
@@ -562,6 +565,12 @@ class MainWindow(QMainWindow):
         elif event.key() == Qt.Key_Return or event.key()==Qt.Key_Enter:
             if self.keyControlPressed:
                 self.sendData()
+        elif event.key() == Qt.Key_L:
+            if self.keyControlPressed:
+                self.sendArea.clear()
+        elif event.key() == Qt.Key_K:
+            if self.keyControlPressed:
+                self.receiveArea.clear()
         return
 
     def keyReleaseEvent(self,event):

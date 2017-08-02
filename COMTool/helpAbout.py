@@ -3,8 +3,8 @@ from COMTool import parameters
 import os
 
 versionMajor = 1
-versionMinor = 2
-versionDev   = 5
+versionMinor = 3
+versionDev   = 0
 date = "2017.7.28"
 
 def strAbout():
@@ -23,6 +23,8 @@ Welcome to improve it together<br><br>
 
 
 Shortcut:<br>
-<b style="color:red;"><kbd>Ctrl+Enter</kbd></b>: Send data<br> 
+<b style="color:red;"><kbd>Ctrl+Enter</kbd></b>: Send data<br>
+ <b style="color:red;"><kbd>Ctrl+L</kbd></b>: Clear Send Area<br>
+ <b style="color:red;"><kbd>Ctrl+K</kbd></b>: Clear Receive Area<br>
 
 '''
