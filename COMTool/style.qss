@@ -1,0 +1,122 @@
+
+MainWindow {
+    background-color:white;
+}
+
+QComboBox {
+    border: 1px solid #dadada;
+    border-radius: 2px;
+    padding: 1px 18px 1px 3px;
+    min-height:2em;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background: white;
+}
+
+/* QComboBox gets the "on" state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: white;
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+
+    border-left-width: 1px;
+    border-left-color: #dadada;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+    image: url(../COMToolData/assets/arrow_down.png);
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}
+QComboBox::hover{
+    border: 1px solid #26a2ff;
+}
+QComboBox QAbstractItemView {
+    border: 2px solid #dadada;
+    selection-background-color: white;
+    selection-color:black;
+}
+QComboBox QAbstractItemView::item{
+    min-height:3em;
+    overflow-y:
+}
+
+
+QGroupBox {
+    border: 1px solid #dadada;
+    border-radius: 3px;
+    margin-top: 2ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* position at the top center */
+    padding: 0px 1px;
+}
+
+
+
+QPushButton {
+    font-family:Tahoma,Optima,"Trebuchet MS";
+    border: 1px solid #26a2ff;
+    border-radius: 3px;
+    background-color: white;
+    min-width: 80px;
+    min-height:25px;
+    color:black;
+}
+
+QPushButton:hover {
+    background-color: #0f88eb;
+    border: 1px solid #dadada;
+    border-radius: 3px;
+    min-height:25px;
+    color:white;
+}
+QPushButton:pressed {
+    background-color: #0d79d1;
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}
+
+
+QTextEdit, QListView {
+    background-color: white;
+    border: 1px solid #b8b8bd;
+    border-radius: 3px;
+    background-attachment: scroll;
+}
+
+QLineEdit {
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    padding: 0 8px;
+    background: #f7f8fa;
+    selection-background-color: #26a2ff;
+}

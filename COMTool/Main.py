@@ -1,8 +1,9 @@
 import sys,os
-from COMTool import parameters,Combobox,helpAbout,autoUpdate
+from COMTool import parameters,helpAbout,autoUpdate
+from COMTool.Combobox import ComboBox
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
-                             QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QComboBox,QLabel,QRadioButton,QCheckBox,
+                             QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
@@ -62,7 +63,7 @@ class MainWindow(QMainWindow):
         self.sendArea = QTextEdit()
         self.clearReceiveButtion = QPushButton(parameters.strClearReceive)
         self.sendButtion = QPushButton(parameters.strSend)
-        self.sendHistory = QComboBox()
+        self.sendHistory = ComboBox()
         sendAreaWidgetsLayout = QHBoxLayout()
         buttonLayout = QVBoxLayout()
         buttonLayout.addWidget(self.clearReceiveButtion)
@@ -87,8 +88,8 @@ class MainWindow(QMainWindow):
         serailBytesLabel = QLabel(parameters.strSerialBytes)
         serailParityLabel = QLabel(parameters.strSerialParity)
         serailStopbitsLabel = QLabel(parameters.strSerialStopbits)
-        self.serialPortCombobox = Combobox.Combobox()
-        self.serailBaudrateCombobox = QComboBox()
+        self.serialPortCombobox = ComboBox()
+        self.serailBaudrateCombobox = ComboBox()
         self.serailBaudrateCombobox.addItem("9600")
         self.serailBaudrateCombobox.addItem("19200")
         self.serailBaudrateCombobox.addItem("38400")
@@ -96,20 +97,20 @@ class MainWindow(QMainWindow):
         self.serailBaudrateCombobox.addItem("115200")
         self.serailBaudrateCombobox.setCurrentIndex(4)
         self.serailBaudrateCombobox.setEditable(True)
-        self.serailBytesCombobox = QComboBox()
+        self.serailBytesCombobox = ComboBox()
         self.serailBytesCombobox.addItem("5")
         self.serailBytesCombobox.addItem("6")
         self.serailBytesCombobox.addItem("7")
         self.serailBytesCombobox.addItem("8")
         self.serailBytesCombobox.setCurrentIndex(3)
-        self.serailParityCombobox = QComboBox()
+        self.serailParityCombobox = ComboBox()
         self.serailParityCombobox.addItem("None")
         self.serailParityCombobox.addItem("Odd")
         self.serailParityCombobox.addItem("Even")
         self.serailParityCombobox.addItem("Mark")
         self.serailParityCombobox.addItem("Space")
         self.serailParityCombobox.setCurrentIndex(0)
-        self.serailStopbitsCombobox = QComboBox()
+        self.serailStopbitsCombobox = ComboBox()
         self.serailStopbitsCombobox.addItem("1")
         self.serailStopbitsCombobox.addItem("1.5")
         self.serailStopbitsCombobox.addItem("2")
@@ -246,6 +247,7 @@ class MainWindow(QMainWindow):
                     self.com.parity = self.serailParityCombobox.currentText()[0]
                     self.com.stopbits = float(self.serailStopbitsCombobox.currentText())
                     self.com.timeout = None
+                    print(self.com)
                     self.serialOpenCloseButton.setDisabled(True)
                     self.com.open()
                     self.serialOpenCloseButton.setText(parameters.strClose)
@@ -262,7 +264,7 @@ class MainWindow(QMainWindow):
                 except Exception as e:
                     self.com.close()
                     self.receiveProgressStop = True
-                    self.errorSignal.emit( parameters.strOpenFailed + str(e))
+                    self.errorSignal.emit( parameters.strOpenFailed +"\n"+ str(e))
                     self.serialOpenCloseButton.setDisabled(False)
         except Exception:
             pass
@@ -595,6 +597,8 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+    file = open('style.qss',"r")
+    app.setStyleSheet(file.read())
     mainWindow = MainWindow()
     mainWindow.detectSerialPort()
     t = threading.Thread(target=mainWindow.autoUpdateDetect)
