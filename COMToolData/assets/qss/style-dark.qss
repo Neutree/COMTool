@@ -1,10 +1,15 @@
 
 MainWindow {
-    background-color:white;
+    background-color:#212121;
+    color:white;
     min-width:100px;
 }
 QMessageBox {
-    background-color:white;
+    background-color:#212121;
+}
+QWidget {
+    color:#bcbcbd;
+    boder-color:gray;
 }
 #menuItem {
     min-height:27px;
@@ -13,6 +18,7 @@ QMessageBox {
     width:27px;
     border-radius: 5px;
     margin-right:10px;
+    background-color: #212121;
 }
 .menuItem1 {
     min-height:27px;
@@ -63,7 +69,7 @@ QMessageBox {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
 QComboBox {
-    border: 1px solid #dadada;
+    border: 1px solid #272727;
     border-radius: 2px;
     padding: 1px 18px 1px 3px;
     min-height:2em;
@@ -71,16 +77,16 @@ QComboBox {
 }
 
 QComboBox:editable {
-    background: white;
+    background: #3a3a3a;
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
-     background: white;
+     background: #3a3a3a;
 }
 
 /* QComboBox gets the "on" state when the popup is open */
 QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: white;
+    background: #3a3a3a;
 }
 
 QComboBox:on { /* shift the text when the popup opens */
@@ -94,14 +100,14 @@ QComboBox::drop-down {
     width: 18px;
 
     border-left-width: 1px;
-    border-left-color: #dadada;
+    border-left-color: #524a4a;
     border-left-style: solid; /* just a single line */
     border-top-right-radius: 3px; /* same radius as the QComboBox */
     border-bottom-right-radius: 3px;
 }
 
 QComboBox::down-arrow {
-    image: url($DataPath/assets/arrow_down.png);
+    image:url($DataPath/assets/arrow_down.png);
 }
 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
@@ -112,18 +118,19 @@ QComboBox::hover{
     border: 1px solid #26a2ff;
 }
 QComboBox QAbstractItemView {
-    border: 2px solid #dadada;
-    selection-background-color: white;
-    selection-color:black;
+    border: 2px solid #3a3a3a;
+    selection-background-color: #3a3a3a;
+    selection-color:#3a3a3a;
 }
 QComboBox QAbstractItemView::item{
     min-height:3em;
+    backgroud-color:#3a3a3a;
 }
 
 
 
 QGroupBox {
-    border: 1px solid #dadada;
+    border: 1px solid #3a3a3a;
     border-radius: 3px;
     margin-top: 2ex; /* leave space at the top for the title */
 }
@@ -137,23 +144,22 @@ QGroupBox::title {
 
 QPushButton {
     font-family:Tahoma,Optima,"Trebuchet MS";
-    border: 1px solid #26a2ff;
+    border: 1px solid #383636;
     border-radius: 3px;
-    background-color: white;
+    background-color: #3a3a3a;
     min-width: 80px;
     min-height:25px;
-    color:black;
 }
 
 QPushButton:hover {
-    background-color: #0f88eb;
-    border: 1px solid #dadada;
+    background-color: #2f2e2e;
+    border: 1px solid #0f88eb;
     border-radius: 3px;
     min-height:25px;
     color:white;
 }
 QPushButton:pressed {
-    background-color: #0d79d1;
+    background-color: #3a3a3a;
 }
 
 QPushButton:flat {
@@ -166,18 +172,18 @@ QPushButton:default {
 
 
 QTextEdit, QListView {
-    background-color: white;
-    border: 1px solid #b8b8bd;
+    background-color: #3a3a3a;
+    border: 1px solid #3a3a3a;
     border-radius: 3px;
     background-attachment: scroll;
 }
 
 QLineEdit {
-    border: 1px solid #dadada;
+    border: 1px solid #3a3a3a;
     border-radius: 5px;
     padding: 0 8px;
-    background: #f7f8fa;
-    selection-background-color: #26a2ff;
+    background: #3a3a3a;
+    selection-background-color: #373277;
 }
 
 QCheckBox {
@@ -187,27 +193,26 @@ QCheckBox::indicator {
     width: 13px;
     height: 13px;
 }
+
 QCheckBox::indicator:unchecked {
-    background-color: white;
-    border: 1px solid #dadada;
+    background-color: #6b6a6a;
 }
 
 QCheckBox::indicator:checked {
     background-color: #008000;
 }
+
 QRadioButton::indicator {
     width: 13px;
     height: 13px;
-    border: 1px solid #dadada;
 }
 
 QRadioButton::indicator:unchecked {
     border-radius:6px;
-    background-color: white;
+    background-color: #6b6a6a;
 }
 
 QRadioButton::indicator::checked {
     border-radius:6px;
     background-color: #7777cc;
 }
-

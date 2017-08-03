@@ -1,9 +1,9 @@
 appName = "COMTool"
 strDataDirName = "COMToolData"
 strDataAssetsDirName = "COMToolData/assets"
-appIcon = "COMToolData/assets/logo.png"
-appLogo = "COMToolData/assets/logo.png"
-appLogo2 = "/COMToolData/assets/logo2.png"
+appIcon = "assets/logo.png"
+appLogo = "assets/logo.png"
+appLogo2 = "assets/logo2.png"
 
 author = "Neucrack"
 strSend = "Send"
@@ -58,6 +58,7 @@ class ParametersToSave:
     sendScheduled = False
     sendScheduledTime = "300"
     useCRLF = True
+    skin = 1
     sendHistoryList = []
     def __init__(self):
         return
@@ -65,5 +66,19 @@ class ParametersToSave:
     def __del__(self):
         return
 
+strStyleShowHideButtonLeft = '''
+QPushButton {
+    border-image: url("$DataPath/assets/arrow-left.png")
+}
+QPushButton:hover {
+    border-image: url("$DataPath/assets/arrow-left-white.png")
+}'''
 
+strStyleShowHideButtonRight = '''
+QPushButton {
+    border-image: url("$DataPath/assets/arrow-right.png")
+}
+QPushButton:hover {
+    border-image: url("$DataPath/assets/arrow-right-white.png")
+}'''
 

@@ -27,20 +27,24 @@ class MainWindow(QMainWindow):
     sendCount = 0
     isScheduledSending = False
     DataPath = "./"
+    isHideSettings = False
+    isHideFunctinal = False
+    app = None
 
-    def __init__(self):
+    def __init__(self,app):
         super().__init__()
+        self.app = app
+        pathDirList = sys.argv[0].replace("\\", "/").split("/")
+        pathDirList.pop()
+        self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+        if not os.path.exists(self.DataPath + "/" + parameters.strDataDirName):
+            pathDirList.pop()
+            self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+        self.DataPath = (self.DataPath + "/" + parameters.strDataDirName).replace("\\", "/")
         self.initWindow()
         self.initTool()
         self.initEvent()
         self.programStartGetSavedParameters()
-        pathDirList = sys.argv[0].replace("\\","/").split("/")
-        pathDirList.pop()
-        self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-        if not os.path.exists(self.DataPath+"/"+parameters.strDataDirName):
-            pathDirList.pop()
-            self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-        print("data path:"+self.DataPath)
         return
 
     def __del__(self):
@@ -53,18 +57,46 @@ class MainWindow(QMainWindow):
         QToolTip.setFont(QFont('SansSerif', 10))
         # main layout
         mainWidget = QWidget()
+        frameLayout = QVBoxLayout()
+        self.settingWidget = QWidget()
+        self.functionalWiget = QWidget()
         settingLayout = QVBoxLayout()
         sendReceiveLayout = QVBoxLayout()
         sendFunctionalLayout = QVBoxLayout()
         mainLayout = QHBoxLayout()
-        mainLayout.addLayout(settingLayout)
+        self.settingWidget.setLayout(settingLayout)
+        self.functionalWiget.setLayout(sendFunctionalLayout)
+        mainLayout.addWidget(self.settingWidget)
         mainLayout.addLayout(sendReceiveLayout)
-        mainLayout.addLayout(sendFunctionalLayout)
-        mainWidget.setLayout(mainLayout)
-        mainLayout.setStretch(0,2)
+        mainLayout.addWidget(self.functionalWiget)
+        mainWidget.setLayout(frameLayout)
+        mainLayout.setStretch(0,1)
         mainLayout.setStretch(1, 6)
         mainLayout.setStretch(2, 2)
+        menuLayout = QHBoxLayout()
+        frameLayout.addLayout(menuLayout)
+        frameLayout.addLayout(mainLayout)
         self.setCentralWidget(mainWidget)
+
+        # option layout
+        self.settingsButton = QPushButton()
+        self.skinButton = QPushButton("")
+        self.aboutButton = QPushButton()
+        self.functionalButton = QPushButton()
+        self.settingsButton.setProperty("class", "menuItem1")
+        self.skinButton.setProperty("class", "menuItem2")
+        self.aboutButton.setProperty("class", "menuItem3")
+        self.functionalButton.setProperty("class", "menuItem4")
+        self.settingsButton.setObjectName("menuItem")
+        self.skinButton.setObjectName("menuItem")
+        self.aboutButton.setObjectName("menuItem")
+        self.functionalButton.setObjectName("menuItem")
+        menuLayout.addWidget(self.settingsButton)
+        menuLayout.addWidget(self.skinButton)
+        menuLayout.addWidget(self.aboutButton)
+        menuLayout.addStretch(0)
+        menuLayout.addWidget(self.functionalButton)
+
 
         # widgets receive and send area
         self.receiveArea = QTextEdit()
@@ -179,20 +211,10 @@ class MainWindow(QMainWindow):
 
         # right functional layout
         self.addButton = QPushButton(parameters.strAdd)
-        self.settingsButton = QPushButton(parameters.strSettings)
-        self.aboutButton = QPushButton(parameters.strAbout)
-        menu = QMenu()
-        menu.addAction("action1",self.action1)
-        menu.addAction("action2", self.action1)
-        self.settingsButton.setMenu(menu)
-        menuLayout = QHBoxLayout()
-        menuLayout.addWidget(self.settingsButton)
-        menuLayout.addWidget(self.aboutButton)
         functionalGroupBox = QGroupBox(parameters.strFunctionalSend)
         functionalGridLayout = QGridLayout()
         functionalGridLayout.addWidget(self.addButton,0,1)
         functionalGroupBox.setLayout(functionalGridLayout)
-        sendFunctionalLayout.addLayout(menuLayout)
         sendFunctionalLayout.addWidget(functionalGroupBox)
 
         # main window
@@ -210,6 +232,7 @@ class MainWindow(QMainWindow):
         self.MoveToCenter()
         self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
         icon = QIcon()
+        print("icon path:"+self.DataPath+"/"+parameters.appIcon)
         icon.addPixmap(QPixmap(self.DataPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
         if sys.platform == "win32":
@@ -227,9 +250,11 @@ class MainWindow(QMainWindow):
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
         self.sendHistory.currentIndexChanged.connect(self.sendHistoryIndexChanged)
-        self.settingsButton.clicked.connect(self.showSettings)
+        self.settingsButton.clicked.connect(self.showHideSettings)
+        self.skinButton.clicked.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
         self.addButton.clicked.connect(self.functionAdd)
+        self.functionalButton.clicked.connect(self.showHideFunctional)
         return
 
     def openCloseSerialProcess(self):
@@ -504,6 +529,7 @@ class MainWindow(QMainWindow):
         paramObj.dataBytes = self.serailBytesCombobox.currentIndex()
         paramObj.parity = self.serailParityCombobox.currentIndex()
         paramObj.stopBits = self.serailStopbitsCombobox.currentIndex()
+        paramObj.skin = self.param.skin
         if self.receiveSettingsHex.isChecked():
             paramObj.receiveAscii = False
         if not self.receiveSettingsAutoLinefeed.isChecked():
@@ -563,6 +589,7 @@ class MainWindow(QMainWindow):
         for i in range(0, len(paramObj.sendHistoryList)):
             str = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(str)
+        self.param = paramObj
         return
 
     def keyPressEvent(self, event):
@@ -588,8 +615,56 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, "On the way", "On the way")
         return
 
+    def showHideSettings(self):
+        if self.isHideSettings:
+            self.showSettings()
+            self.isHideSettings = False
+        else:
+            self.hideSettings()
+            self.isHideSettings = True
+        return
+
     def showSettings(self):
-        QMessageBox.information(self,"Settings","On the way")
+        self.settingWidget.show()
+        self.settingsButton.setStyleSheet(
+            parameters.strStyleShowHideButtonLeft.replace("$DataPath",self.DataPath))
+        return;
+
+    def hideSettings(self):
+        self.settingWidget.hide()
+        self.settingsButton.setStyleSheet(
+            parameters.strStyleShowHideButtonRight.replace("$DataPath", self.DataPath))
+        return;
+
+    def showHideFunctional(self):
+        if self.isHideFunctinal:
+            self.showFunctional()
+            self.isHideFunctinal = False
+        else:
+            self.hideFunctional()
+            self.isHideFunctinal = True
+        return
+
+    def showFunctional(self):
+        self.functionalWiget.show()
+        self.functionalButton.setStyleSheet(
+            parameters.strStyleShowHideButtonRight.replace("$DataPath",self.DataPath))
+        return;
+
+    def hideFunctional(self):
+        self.functionalWiget.hide()
+        self.functionalButton.setStyleSheet(
+            parameters.strStyleShowHideButtonLeft.replace("$DataPath", self.DataPath))
+        return;
+
+    def skinChange(self):
+        if self.param.skin == 1: # light
+            file = open(self.DataPath + '/assets/qss/style-dark.qss', "r")
+            self.param.skin = 2
+        else: # elif self.param.skin == 2: # dark
+            file = open(self.DataPath + '/assets/qss/style.qss', "r")
+            self.param.skin = 1
+        self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
         return
 
     def showAbout(self):
@@ -609,17 +684,21 @@ class MainWindow(QMainWindow):
             auto.OpenBrowser()
 
     def openDevManagement(self):
-        os.system('echo aaaa')
         os.system('start devmgmt.msc')
 
 
 
 def main():
     app = QApplication(sys.argv)
-    mainWindow = MainWindow()
+    mainWindow = MainWindow(app)
     print("data path:"+mainWindow.DataPath)
-    file = open(mainWindow.DataPath+'/COMToolData/assets/qss/style.qss',"r")
-    app.setStyleSheet(file.read())
+    if(mainWindow.param.skin == 1) :# light skin
+        file = open(mainWindow.DataPath+'/assets/qss/style.qss',"r")
+    else: #elif mainWindow.param == 2: # dark skin
+        file = open(mainWindow.DataPath + '/assets/qss/style-dark.qss', "r")
+    qss = file.read().replace("$DataPath",mainWindow.DataPath)
+    print(qss)
+    app.setStyleSheet(qss)
     mainWindow.detectSerialPort()
     t = threading.Thread(target=mainWindow.autoUpdateDetect)
     t.setDaemon(True)
