@@ -15,48 +15,24 @@ QMessageBox {
     margin-right:10px;
 }
 .menuItem1 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
     border-image: url("$DataPath/assets/arrow-left.png")
 }
 .menuItem1:hover {
     border-image: url("$DataPath/assets/arrow-left-white.png")
 }
 .menuItem2 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
     border-image: url("$DataPath/assets/skin.png")
 }
 .menuItem2:hover {
     border-image: url("$DataPath/assets/skin-white.png")
 }
 .menuItem3 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
     border-image: url("$DataPath/assets/help.png")
 }
 .menuItem3:hover {
     border-image: url("$DataPath/assets/help-white.png")
 }
 .menuItem4 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
     border-image: url("$DataPath/assets/arrow-right.png")
 }
 .menuItem4:hover {
@@ -101,9 +77,8 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url($DataPath/assets/arrow_down.png);
-}
-
+    image: url($DataPath/assets/arrow-down.png);
+} 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
     top: 1px;
     left: 1px;
