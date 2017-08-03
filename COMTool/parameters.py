@@ -1,5 +1,6 @@
 appName = "COMTool"
-strDataDirName = "COMToolData/assets"
+strDataDirName = "COMToolData"
+strDataAssetsDirName = "COMToolData/assets"
 appIcon = "COMToolData/assets/logo.png"
 appLogo = "COMToolData/assets/logo.png"
 appLogo2 = "/COMToolData/assets/logo2.png"

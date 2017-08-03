@@ -62,6 +62,7 @@ QComboBox QAbstractItemView::item{
 }
 
 
+
 QGroupBox {
     border: 1px solid #dadada;
     border-radius: 3px;
@@ -120,3 +121,4 @@ QLineEdit {
     background: #f7f8fa;
     selection-background-color: #26a2ff;
 }
+

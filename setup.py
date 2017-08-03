@@ -88,7 +88,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-        # 'COMTool': ['assets/logo.ico','assets/logo.png','assets/logo2.png','assets/screenshot_V1.0.png'],
+        #  'COMTool': ['style.qss'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -96,7 +96,8 @@ setup(
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     data_files=[
-         (parameters.strDataDirName, ['COMToolData/assets/logo.png','COMToolData/assets/logo2.png','COMToolData/assets/logo.ico',])
+         (parameters.strDataAssetsDirName, ['COMToolData/assets/logo.png','COMToolData/assets/logo2.png','COMToolData/assets/logo.ico',]),
+         (parameters.strDataAssetsDirName+"/qss",["COMToolData/assets/qss/style.qss"])
         ],
 
     # To provide executable scripts, use entry points in preference to the

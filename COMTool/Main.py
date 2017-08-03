@@ -4,7 +4,7 @@ from COMTool.Combobox import ComboBox
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox)
+                             QLineEdit,QGroupBox,QMenu)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
 import serial.tools.list_ports
@@ -26,6 +26,7 @@ class MainWindow(QMainWindow):
     receiveCount = 0
     sendCount = 0
     isScheduledSending = False
+    DataPath = "./"
 
     def __init__(self):
         super().__init__()
@@ -33,6 +34,13 @@ class MainWindow(QMainWindow):
         self.initTool()
         self.initEvent()
         self.programStartGetSavedParameters()
+        pathDirList = sys.argv[0].replace("\\","/").split("/")
+        pathDirList.pop()
+        self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+        if not os.path.exists(self.DataPath+"/"+parameters.strDataDirName):
+            pathDirList.pop()
+            self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
+        print("data path:"+self.DataPath)
         return
 
     def __del__(self):
@@ -173,6 +181,10 @@ class MainWindow(QMainWindow):
         self.addButton = QPushButton(parameters.strAdd)
         self.settingsButton = QPushButton(parameters.strSettings)
         self.aboutButton = QPushButton(parameters.strAbout)
+        menu = QMenu()
+        menu.addAction("action1",self.action1)
+        menu.addAction("action2", self.action1)
+        self.settingsButton.setMenu(menu)
         menuLayout = QHBoxLayout()
         menuLayout.addWidget(self.settingsButton)
         menuLayout.addWidget(self.aboutButton)
@@ -198,13 +210,7 @@ class MainWindow(QMainWindow):
         self.MoveToCenter()
         self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
         icon = QIcon()
-        pathDirList = sys.argv[0].replace("\\","/").split("/")
-        pathDirList.pop()
-        strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-        if not os.path.exists(strPath+"/"+parameters.appIcon):
-            pathDirList.pop()
-            strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-        icon.addPixmap(QPixmap(strPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
+        icon.addPixmap(QPixmap(self.DataPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
@@ -593,6 +599,10 @@ class MainWindow(QMainWindow):
                                 "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout())
         return
 
+    def action1(self):
+        print("action1")
+        return
+
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
         if auto.detectNewVersion():
@@ -606,9 +616,10 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    file = open('style.qss',"r")
-    app.setStyleSheet(file.read())
     mainWindow = MainWindow()
+    print("data path:"+mainWindow.DataPath)
+    file = open(mainWindow.DataPath+'/COMToolData/assets/qss/style.qss',"r")
+    app.setStyleSheet(file.read())
     mainWindow.detectSerialPort()
     t = threading.Thread(target=mainWindow.autoUpdateDetect)
     t.setDaemon(True)
