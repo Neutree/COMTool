@@ -4,12 +4,17 @@ MainWindow {
     color:white;
     min-width:100px;
 }
+QWidget {
+    background-color:#212121;
+}
 QMessageBox {
     background-color:#212121;
 }
 QWidget {
     color:#bcbcbd;
     boder-color:gray;
+}
+.settingWidget {
 }
 #menuItem {
     min-height:27px;
@@ -68,12 +73,15 @@ QWidget {
 .menuItem4:hover {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
+.settingWidget QComboBox{
+    width:60px;
+    min-width:60px;
+}
 QComboBox {
     border: 1px solid #272727;
     border-radius: 2px;
     padding: 1px 18px 1px 3px;
     min-height:2em;
-    max-width:70px;
 }
 
 QComboBox:editable {
@@ -107,7 +115,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image:url($DataPath/assets/arrow_down.png);
+    image:url($DataPath/assets/arrow-down.png);
 }
 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */

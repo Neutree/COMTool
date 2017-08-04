@@ -6,6 +6,9 @@ MainWindow {
 QMessageBox {
     background-color:white;
 }
+QWidget {
+    background-color:white;
+}
 #menuItem {
     min-height:27px;
     height:27px;
@@ -38,12 +41,18 @@ QMessageBox {
 .menuItem4:hover {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
+
+.settingWidget QComboBox{
+    width:60px;
+    min-width:60px;
+}
+
+
 QComboBox {
     border: 1px solid #dadada;
     border-radius: 2px;
     padding: 1px 18px 1px 3px;
     min-height:2em;
-    max-width:70px;
 }
 
 QComboBox:editable {

@@ -4,7 +4,7 @@ from COMTool.Combobox import ComboBox
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QMenu)
+                             QLineEdit,QGroupBox,QSplitter)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
 import serial.tools.list_ports
@@ -56,27 +56,32 @@ class MainWindow(QMainWindow):
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
         # main layout
-        mainWidget = QWidget()
+        frameWidget = QWidget()
+        mainWidget = QSplitter(Qt.Horizontal)
         frameLayout = QVBoxLayout()
         self.settingWidget = QWidget()
+        self.settingWidget.setProperty("class","settingWidget")
+        self.receiveSendWidget = QSplitter(Qt.Vertical)
         self.functionalWiget = QWidget()
         settingLayout = QVBoxLayout()
         sendReceiveLayout = QVBoxLayout()
         sendFunctionalLayout = QVBoxLayout()
         mainLayout = QHBoxLayout()
         self.settingWidget.setLayout(settingLayout)
+        self.receiveSendWidget.setLayout(sendReceiveLayout)
         self.functionalWiget.setLayout(sendFunctionalLayout)
         mainLayout.addWidget(self.settingWidget)
-        mainLayout.addLayout(sendReceiveLayout)
+        mainLayout.addWidget(self.receiveSendWidget)
         mainLayout.addWidget(self.functionalWiget)
-        mainWidget.setLayout(frameLayout)
-        mainLayout.setStretch(0,1)
+        mainLayout.setStretch(0,2)
         mainLayout.setStretch(1, 6)
         mainLayout.setStretch(2, 2)
         menuLayout = QHBoxLayout()
+        mainWidget.setLayout(mainLayout)
         frameLayout.addLayout(menuLayout)
-        frameLayout.addLayout(mainLayout)
-        self.setCentralWidget(mainWidget)
+        frameLayout.addWidget(mainWidget)
+        frameWidget.setLayout(frameLayout)
+        self.setCentralWidget(frameWidget)
 
         # option layout
         self.settingsButton = QPushButton()
@@ -104,7 +109,9 @@ class MainWindow(QMainWindow):
         self.clearReceiveButtion = QPushButton(parameters.strClearReceive)
         self.sendButtion = QPushButton(parameters.strSend)
         self.sendHistory = ComboBox()
+        sendWidget = QWidget()
         sendAreaWidgetsLayout = QHBoxLayout()
+        sendWidget.setLayout(sendAreaWidgetsLayout)
         buttonLayout = QVBoxLayout()
         buttonLayout.addWidget(self.clearReceiveButtion)
         buttonLayout.addStretch(1)
@@ -112,7 +119,7 @@ class MainWindow(QMainWindow):
         sendAreaWidgetsLayout.addWidget(self.sendArea)
         sendAreaWidgetsLayout.addLayout(buttonLayout)
         sendReceiveLayout.addWidget(self.receiveArea)
-        sendReceiveLayout.addLayout(sendAreaWidgetsLayout)
+        sendReceiveLayout.addWidget(sendWidget)
         sendReceiveLayout.addWidget(self.sendHistory)
         sendReceiveLayout.setStretch(0, 7)
         sendReceiveLayout.setStretch(1, 2)
@@ -697,7 +704,6 @@ def main():
     else: #elif mainWindow.param == 2: # dark skin
         file = open(mainWindow.DataPath + '/assets/qss/style-dark.qss', "r")
     qss = file.read().replace("$DataPath",mainWindow.DataPath)
-    print(qss)
     app.setStyleSheet(qss)
     mainWindow.detectSerialPort()
     t = threading.Thread(target=mainWindow.autoUpdateDetect)
