@@ -3,8 +3,8 @@ from COMTool import parameters
 import os
 
 versionMajor = 1
-versionMinor = 3
-versionDev   = 5
+versionMinor = 4
+versionDev   = 0
 date = "2017.8.3"
 
 def strAbout():
