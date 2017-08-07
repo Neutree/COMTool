@@ -5,6 +5,7 @@ COMTool
 
 A cross platform serial debug tools written by python
 ![screenshot](./COMToolData/assets/screenshot_V1.3.png)
+![screenshot](./COMToolData/assets/screenshot_V1.4_night.png)
 > screenshot shows the version 1.0, the latest may not the same totally! But better performance、more easy to use and more elegant
 
 ## Features
