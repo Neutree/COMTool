@@ -1,7 +1,7 @@
 
 MainWindow {
     background-color:#212121;
-    color:white;
+    color:#bcbcbd;
     min-width:100px;
 }
 QWidget {
@@ -12,7 +12,6 @@ QMessageBox {
 }
 QWidget {
     color:#bcbcbd;
-    boder-color:gray;
 }
 .settingWidget {
 }
@@ -81,7 +80,7 @@ QComboBox {
     border: 1px solid #272727;
     border-radius: 2px;
     padding: 1px 18px 1px 3px;
-    min-height:2em;
+    min-height:25px;
 }
 
 QComboBox:editable {
@@ -127,12 +126,11 @@ QComboBox::hover{
 }
 QComboBox QAbstractItemView {
     border: 2px solid #3a3a3a;
-    selection-background-color: #3a3a3a;
-    selection-color:#3a3a3a;
+    selection-background-color: #26a2ff;
+    selection-color:#bcbcbd;
 }
 QComboBox QAbstractItemView::item{
     min-height:3em;
-    backgroud-color:#3a3a3a;
 }
 
 
@@ -140,6 +138,7 @@ QComboBox QAbstractItemView::item{
 QGroupBox {
     border: 1px solid #3a3a3a;
     border-radius: 3px;
+    padding:0px;
     margin-top: 2ex; /* leave space at the top for the title */
 }
 
@@ -156,6 +155,7 @@ QPushButton {
     border-radius: 3px;
     background-color: #3a3a3a;
     min-width: 80px;
+    height:30px;
     min-height:25px;
 }
 

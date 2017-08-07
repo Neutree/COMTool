@@ -1,13 +1,21 @@
 
 MainWindow {
     background-color:white;
+    color: #464444;
     min-width:100px;
+}
+QWidget {
+    background-color:white;
 }
 QMessageBox {
     background-color:white;
 }
 QWidget {
-    background-color:white;
+    color:#464444;
+}
+.settingWidget QComboBox{
+    width:60px;
+    min-width:60px;
 }
 #menuItem {
     min-height:27px;
@@ -16,43 +24,74 @@ QWidget {
     width:27px;
     border-radius: 5px;
     margin-right:10px;
+    background-color: white;
+}
+#menuItem:hover {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    margin-right:10px;
+    background-color: #0f88eb;
 }
 .menuItem1 {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    margin-right:10px;
     border-image: url("$DataPath/assets/arrow-left.png")
 }
 .menuItem1:hover {
     border-image: url("$DataPath/assets/arrow-left-white.png")
 }
 .menuItem2 {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    margin-right:10px;
     border-image: url("$DataPath/assets/skin.png")
 }
 .menuItem2:hover {
     border-image: url("$DataPath/assets/skin-white.png")
 }
 .menuItem3 {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    margin-right:10px;
     border-image: url("$DataPath/assets/help.png")
 }
 .menuItem3:hover {
     border-image: url("$DataPath/assets/help-white.png")
 }
 .menuItem4 {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    margin-right:10px;
     border-image: url("$DataPath/assets/arrow-right.png")
 }
 .menuItem4:hover {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
-
 .settingWidget QComboBox{
     width:60px;
     min-width:60px;
 }
-
-
 QComboBox {
-    border: 1px solid #dadada;
+    border: 1px solid #abaaaa;
     border-radius: 2px;
     padding: 1px 18px 1px 3px;
-    min-height:2em;
+    min-height:25px;
 }
 
 QComboBox:editable {
@@ -79,15 +118,16 @@ QComboBox::drop-down {
     width: 18px;
 
     border-left-width: 1px;
-    border-left-color: #dadada;
+    border-left-color: #b9b9b9;
     border-left-style: solid; /* just a single line */
     border-top-right-radius: 3px; /* same radius as the QComboBox */
     border-bottom-right-radius: 3px;
 }
 
 QComboBox::down-arrow {
-    image: url($DataPath/assets/arrow-down.png);
-} 
+    image:url($DataPath/assets/arrow-down.png);
+}
+
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
     top: 1px;
     left: 1px;
@@ -96,9 +136,9 @@ QComboBox::hover{
     border: 1px solid #26a2ff;
 }
 QComboBox QAbstractItemView {
-    border: 2px solid #dadada;
-    selection-background-color: white;
-    selection-color:black;
+    border: 2px solid white;
+    selection-background-color: #26a2ff;
+    selection-color:white;
 }
 QComboBox QAbstractItemView::item{
     min-height:3em;
@@ -107,8 +147,9 @@ QComboBox QAbstractItemView::item{
 
 
 QGroupBox {
-    border: 1px solid #dadada;
+    border: 1px solid #b9b9b9;
     border-radius: 3px;
+    padding:0px;
     margin-top: 2ex; /* leave space at the top for the title */
 }
 
@@ -121,10 +162,11 @@ QGroupBox::title {
 
 QPushButton {
     font-family:Tahoma,Optima,"Trebuchet MS";
-    border: 1px solid #26a2ff;
+    border: 1px solid #abaaaa;
     border-radius: 3px;
     background-color: white;
     min-width: 80px;
+    height:30px;
     min-height:25px;
     color:black;
 }
@@ -137,7 +179,7 @@ QPushButton:hover {
     color:white;
 }
 QPushButton:pressed {
-    background-color: #0d79d1;
+    background-color: white;
 }
 
 QPushButton:flat {
@@ -151,17 +193,17 @@ QPushButton:default {
 
 QTextEdit, QListView {
     background-color: white;
-    border: 1px solid #b8b8bd;
+    border: 1px solid #abaaaa;
     border-radius: 3px;
     background-attachment: scroll;
 }
 
 QLineEdit {
-    border: 1px solid #dadada;
+    border: 1px solid #abaaaa;
     border-radius: 5px;
     padding: 0 8px;
-    background: #f7f8fa;
-    selection-background-color: #26a2ff;
+    background: white;
+    selection-background-color: #373277;
 }
 
 QCheckBox {
@@ -171,27 +213,26 @@ QCheckBox::indicator {
     width: 13px;
     height: 13px;
 }
+
 QCheckBox::indicator:unchecked {
-    background-color: white;
-    border: 1px solid #dadada;
+    background-color: #cecaca;
 }
 
 QCheckBox::indicator:checked {
     background-color: #008000;
 }
+
 QRadioButton::indicator {
     width: 13px;
     height: 13px;
-    border: 1px solid #dadada;
 }
 
 QRadioButton::indicator:unchecked {
     border-radius:6px;
-    background-color: white;
+    background-color: #cecaca;
 }
 
 QRadioButton::indicator::checked {
     border-radius:6px;
     background-color: #7777cc;
 }
-
