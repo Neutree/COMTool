@@ -117,4 +117,8 @@ git clone https://github.com/Neutree/COMTool.git
 
 5. pull request
 
+## Issue and improvement
+creat issue [here](https://github.com/Neutree/COMTool/issues/new)
+
+
 
