@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessage
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
 import serial.tools.list_ports
-import serial.threaded
 import threading
 import time
 import binascii,re

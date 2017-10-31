@@ -1,14 +1,28 @@
 from setuptools import setup,find_packages
 from codecs import open
 from os import path
+import os
 from COMTool import helpAbout,parameters
+import platform
+
 
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.MD'), encoding='utf-8') as f:
     long_description = f.read()
 
+systemPlatform = platform.platform()
+    
+if "Linux" in systemPlatform and "arm" in systemPlatform :
+    print("platform is arm linux: will install lib first")
+    os.system("sudo apt install python3 python3-pip python3-pyqt5")
+    os.system("sudo pip3 install bs4 pyserial")
+    installRequires = []
+else:
+    installRequires = ['pyqt5>=5',
+                      'pyserial>=3',
+                      'bs4>=4']
 
 setup(
     name='COMTool',
@@ -71,9 +85,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['pyqt5>=5',
-                      'pyserial>=3'
-    ],
+    install_requires=installRequires,
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
