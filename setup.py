@@ -22,7 +22,7 @@ if "Linux" in systemPlatform and "arm" in systemPlatform :
 else:
     installRequires = ['pyqt5>=5',
                       'pyserial>=3.4',
-                      'bs4>=4']
+                      'bs4']
 
 setup(
     name='COMTool',
