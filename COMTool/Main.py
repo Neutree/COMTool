@@ -262,6 +262,7 @@ class MainWindow(QMainWindow):
         self.aboutButton.clicked.connect(self.showAbout)
         self.addButton.clicked.connect(self.functionAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
+        self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
         return
 
     def openCloseSerialProcess(self):
@@ -433,7 +434,8 @@ class MainWindow(QMainWindow):
                 data = self.hexStringB2Hex(data).decode('utf-8','ignore')
                 self.sendArea.insertPlainText(data)
         except Exception as e:
-            QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
+            # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
+            print("format error");
         return
 
     def sendHistoryIndexChanged(self):
@@ -616,6 +618,11 @@ class MainWindow(QMainWindow):
     def keyReleaseEvent(self,event):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = False
+        return
+
+    def sendAreaFontChanged(self,font):
+        print("font changed")
+
         return
 
     def functionAdd(self):
