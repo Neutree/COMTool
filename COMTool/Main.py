@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
     isScheduledSending = False
     DataPath = "./"
     isHideSettings = False
-    isHideFunctinal = False
+    isHideFunctinal = True
     app = None
 
     def __init__(self,app):
@@ -222,6 +222,8 @@ class MainWindow(QMainWindow):
         functionalGridLayout.addWidget(self.addButton,0,1)
         functionalGroupBox.setLayout(functionalGridLayout)
         sendFunctionalLayout.addWidget(functionalGroupBox)
+        self.isHideFunctinal = True
+        self.hideFunctional()
 
         # main window
         self.statusBarStauts = QLabel()

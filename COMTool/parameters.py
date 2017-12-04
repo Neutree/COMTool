@@ -58,7 +58,7 @@ class ParametersToSave:
     sendScheduled = False
     sendScheduledTime = "300"
     useCRLF = True
-    skin = 1
+    skin = 2
     sendHistoryList = []
     def __init__(self):
         return
