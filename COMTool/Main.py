@@ -433,7 +433,8 @@ class MainWindow(QMainWindow):
                 data = self.hexStringB2Hex(data).decode('utf-8','ignore')
                 self.sendArea.insertPlainText(data)
         except Exception as e:
-            QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
+            # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
+            print("format error");
         return
 
     def sendHistoryIndexChanged(self):
