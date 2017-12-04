@@ -143,6 +143,8 @@ git clone https://github.com/Neutree/COMTool.git
 
 4. code, resolve bugs or add new reatures
 
+download `PyCharm` IDE
+
 
 5. pull request
 

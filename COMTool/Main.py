@@ -1,6 +1,7 @@
 import sys,os
 from COMTool import parameters,helpAbout,autoUpdate
 from COMTool.Combobox import ComboBox
+from COMTool.wave import Wave
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
@@ -29,6 +30,7 @@ class MainWindow(QMainWindow):
     isHideSettings = False
     isHideFunctinal = True
     app = None
+    isWaveOpen = False
 
     def __init__(self,app):
         super().__init__()
@@ -85,18 +87,22 @@ class MainWindow(QMainWindow):
         # option layout
         self.settingsButton = QPushButton()
         self.skinButton = QPushButton("")
+        self.waveButton = QPushButton("")
         self.aboutButton = QPushButton()
         self.functionalButton = QPushButton()
         self.settingsButton.setProperty("class", "menuItem1")
         self.skinButton.setProperty("class", "menuItem2")
         self.aboutButton.setProperty("class", "menuItem3")
         self.functionalButton.setProperty("class", "menuItem4")
+        self.waveButton.setProperty("class", "menuItem5")
         self.settingsButton.setObjectName("menuItem")
         self.skinButton.setObjectName("menuItem")
         self.aboutButton.setObjectName("menuItem")
         self.functionalButton.setObjectName("menuItem")
+        self.waveButton.setObjectName("menuItem")
         menuLayout.addWidget(self.settingsButton)
         menuLayout.addWidget(self.skinButton)
+        menuLayout.addWidget(self.waveButton)
         menuLayout.addWidget(self.aboutButton)
         menuLayout.addStretch(0)
         menuLayout.addWidget(self.functionalButton)
@@ -264,7 +270,8 @@ class MainWindow(QMainWindow):
         self.addButton.clicked.connect(self.functionAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
         self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
-        return
+        self.waveButton.clicked.connect(self.openWaveDisplay)
+
 
     def openCloseSerialProcess(self):
         try:
@@ -382,6 +389,8 @@ class MainWindow(QMainWindow):
                 length = self.com.in_waiting
                 if length>0:
                     bytes = self.com.read(length)
+                    if self.isWaveOpen:
+                        self.wave.displayData(bytes)
                     self.receiveCount += len(bytes)
                     if self.receiveSettingsHex.isChecked():
                         strReceived = self.asciiB2HexString(bytes)
@@ -701,12 +710,22 @@ class MainWindow(QMainWindow):
     def openDevManagement(self):
         os.system('start devmgmt.msc')
 
+    def openWaveDisplay(self):
+        self.wave = Wave()
+        self.isWaveOpen = True
+        self.wave.closed.connect(self.OnWaveClosed)
+
+    def OnWaveClosed(self):
+        print("wave window closed")
+        self.isWaveOpen = False
+
 
 
 def main():
     app = QApplication(sys.argv)
     mainWindow = MainWindow(app)
     print("data path:"+mainWindow.DataPath)
+    print(mainWindow.param.skin)
     if(mainWindow.param.skin == 1) :# light skin
         file = open(mainWindow.DataPath+'/assets/qss/style.qss',"r")
     else: #elif mainWindow.param == 2: # dark skin
