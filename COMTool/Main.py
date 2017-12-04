@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessage
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
 import serial.tools.list_ports
-import serial.threaded
 import threading
 import time
 import binascii,re
@@ -262,6 +261,7 @@ class MainWindow(QMainWindow):
         self.aboutButton.clicked.connect(self.showAbout)
         self.addButton.clicked.connect(self.functionAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
+        self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
         return
 
     def openCloseSerialProcess(self):
@@ -617,6 +617,11 @@ class MainWindow(QMainWindow):
     def keyReleaseEvent(self,event):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = False
+        return
+
+    def sendAreaFontChanged(self,font):
+        print("font changed")
+
         return
 
     def functionAdd(self):
