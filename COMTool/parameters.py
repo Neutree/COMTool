@@ -61,6 +61,7 @@ class ParametersToSave:
     skin = 2
     rts  = 0
     dtr  = 0
+    encodingIndex = 0
     sendHistoryList = []
     def __init__(self):
         return

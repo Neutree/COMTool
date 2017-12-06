@@ -90,6 +90,13 @@ class MainWindow(QMainWindow):
         self.waveButton = QPushButton("")
         self.aboutButton = QPushButton()
         self.functionalButton = QPushButton()
+        self.encodingCombobox = ComboBox()
+        self.encodingCombobox.addItem("ASCII")
+        self.encodingCombobox.addItem("UTF-8")
+        self.encodingCombobox.addItem("UTF-16")
+        self.encodingCombobox.addItem("GBK")
+        self.encodingCombobox.addItem("GB2312")
+        self.encodingCombobox.addItem("GB18030")
         self.settingsButton.setProperty("class", "menuItem1")
         self.skinButton.setProperty("class", "menuItem2")
         self.aboutButton.setProperty("class", "menuItem3")
@@ -105,6 +112,7 @@ class MainWindow(QMainWindow):
         menuLayout.addWidget(self.waveButton)
         menuLayout.addWidget(self.aboutButton)
         menuLayout.addStretch(0)
+        menuLayout.addWidget(self.encodingCombobox)
         menuLayout.addWidget(self.functionalButton)
 
 
@@ -368,7 +376,7 @@ class MainWindow(QMainWindow):
                 self.errorSignal.emit( parameters.strWriteFormatError)
                 return -1
         else:
-            data = data.encode()
+            data = data.encode(self.encodingCombobox.currentText(),"ignore")
         return data
 
     def sendData(self):
@@ -423,7 +431,7 @@ class MainWindow(QMainWindow):
                         strReceived = self.asciiB2HexString(bytes)
                         self.receiveUpdateSignal.emit(strReceived)
                     else:
-                        self.receiveUpdateSignal.emit(bytes.decode("utf-8","ignore"))
+                        self.receiveUpdateSignal.emit(bytes.decode(self.encodingCombobox.currentText(),"ignore"))
                     if self.receiveSettingsAutoLinefeed.isChecked():
                         if time.time() - self.timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
                             if self.sendSettingsCFLF.isChecked():
@@ -468,7 +476,7 @@ class MainWindow(QMainWindow):
             data = self.sendArea.toPlainText().replace("\n"," ").strip()
             self.sendArea.clear()
             if data != "":
-                data = self.hexStringB2Hex(data).decode('utf-8','ignore')
+                data = self.hexStringB2Hex(data).decode(self.encodingCombobox.currentText(),'ignore')
                 self.sendArea.insertPlainText(data)
         except Exception as e:
             # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
@@ -601,6 +609,7 @@ class MainWindow(QMainWindow):
             paramObj.dtr = 1
         else:
             paramObj.dtr = 0
+        paramObj.encodingIndex = self.encodingCombobox.currentIndex()
         f = open("settings.config","wb")
         f.truncate()
         pickle.dump(paramObj, f)
@@ -651,6 +660,7 @@ class MainWindow(QMainWindow):
             self.checkBoxDtr.setChecked(False)
         else:
             self.checkBoxDtr.setChecked(True)
+        self.encodingCombobox.setCurrentIndex(paramObj.encodingIndex)
         self.param = paramObj
         return
 

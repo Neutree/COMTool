@@ -30,7 +30,7 @@ Raspberry Pi3
 - [x] auto save settings
 - [x] <kbd>Ctrl+Enter</kbd> to send
 - [ ] escape character support, like \x \r \n etc.
-- [ ] multiple character encode support
+- [x] multiple character encode support
 - [ ] multiple auto send (order and disorder)
 - [ ] unix style terminal color support
 - [x] night theme and White theme
