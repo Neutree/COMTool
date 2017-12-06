@@ -119,6 +119,7 @@ then enjoy
 ## Development
 
 1. Install python3.6 and pip3
+
 Linux:
 ```
 sudo apt install python3 python3-pip
@@ -144,12 +145,13 @@ git clone https://github.com/Neutree/COMTool.git
 
 4. code, resolve bugs or add new reatures
 
-download `PyCharm` IDE
+Recommended `PyCharm` IDE
 
 
 5. pull request
 
 ## Issue and improvement
+
 create issue [here](https://github.com/Neutree/COMTool/issues/new)
 
 
