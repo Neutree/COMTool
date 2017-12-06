@@ -35,6 +35,7 @@ Raspberry Pi3
 - [ ] unix style terminal color support
 - [x] night theme and White theme
 - [ ] real time data graphic display
+- [x] rts & dtr control by hand
 
 ## Install
 

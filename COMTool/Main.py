@@ -161,6 +161,8 @@ class MainWindow(QMainWindow):
         self.serailStopbitsCombobox.addItem("1.5")
         self.serailStopbitsCombobox.addItem("2")
         self.serailStopbitsCombobox.setCurrentIndex(0)
+        self.checkBoxRts = QCheckBox("rts")
+        self.checkBoxDtr = QCheckBox("dtr")
         self.serialOpenCloseButton = QPushButton(parameters.strOpen)
         serialSettingsLayout.addWidget(serialPortLabek,0,0)
         serialSettingsLayout.addWidget(serailBaudrateLabel, 1, 0)
@@ -172,7 +174,9 @@ class MainWindow(QMainWindow):
         serialSettingsLayout.addWidget(self.serailBytesCombobox, 2, 1)
         serialSettingsLayout.addWidget(self.serailParityCombobox, 3, 1)
         serialSettingsLayout.addWidget(self.serailStopbitsCombobox, 4, 1)
-        serialSettingsLayout.addWidget(self.serialOpenCloseButton, 5, 0,1,2)
+        serialSettingsLayout.addWidget(self.checkBoxRts, 5, 0,1,1)
+        serialSettingsLayout.addWidget(self.checkBoxDtr, 5, 1,1,1)
+        serialSettingsLayout.addWidget(self.serialOpenCloseButton, 6, 0,1,2)
         serialSettingsGroupBox.setLayout(serialSettingsLayout)
         settingLayout.addWidget(serialSettingsGroupBox)
 
@@ -262,6 +266,8 @@ class MainWindow(QMainWindow):
         self.addButton.clicked.connect(self.functionAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
         self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
+        self.checkBoxRts.clicked.connect(self.rtsChanged)
+        self.checkBoxDtr.clicked.connect(self.dtrChanged)
         return
 
     def openCloseSerialProcess(self):
@@ -285,6 +291,14 @@ class MainWindow(QMainWindow):
                     self.com.parity = self.serailParityCombobox.currentText()[0]
                     self.com.stopbits = float(self.serailStopbitsCombobox.currentText())
                     self.com.timeout = None
+                    if self.checkBoxRts.isChecked():
+                        self.com.rts = False
+                    else:
+                        self.com.rts = True
+                    if self.checkBoxDtr.isChecked():
+                        self.com.dtr = False
+                    else:
+                        self.com.dtr = True
                     print(self.com)
                     self.serialOpenCloseButton.setDisabled(True)
                     self.com.open()
@@ -313,6 +327,18 @@ class MainWindow(QMainWindow):
         t.setDaemon(True)
         t.start()
         return
+
+    def rtsChanged(self):
+        if self.checkBoxRts.isChecked():
+            self.com.setRTS(False)
+        else:
+            self.com.setRTS(True)
+    
+    def dtrChanged(self):
+        if self.checkBoxDtr.isChecked():
+            self.com.setDTR(False)
+        else:
+            self.com.setDTR(True)
 
     def portComboboxClicked(self):
         self.detectSerialPort()
@@ -555,6 +581,14 @@ class MainWindow(QMainWindow):
         paramObj.sendHistoryList.clear()
         for i in range(0,self.sendHistory.count()):
             paramObj.sendHistoryList.append(self.sendHistory.itemText(i))
+        if self.checkBoxRts.isChecked():
+            paramObj.rts = 1
+        else:
+            paramObj.rts = 0
+        if self.checkBoxDtr.isChecked():
+            paramObj.dtr = 1
+        else:
+            paramObj.dtr = 0
         f = open("settings.config","wb")
         f.truncate()
         pickle.dump(paramObj, f)
@@ -597,6 +631,14 @@ class MainWindow(QMainWindow):
         for i in range(0, len(paramObj.sendHistoryList)):
             str = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(str)
+        if paramObj.rts == 0:
+            self.checkBoxRts.setChecked(False)
+        else:
+            self.checkBoxRts.setChecked(True)
+        if paramObj.dtr == 0:
+            self.checkBoxDtr.setChecked(False)
+        else:
+            self.checkBoxDtr.setChecked(True)
         self.param = paramObj
         return
 
