@@ -83,6 +83,18 @@ QWidget {
 .menuItem4:hover {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
+.menuItem5 {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    margin-right:10px;
+    border-image: url("$DataPath/assets/wave.png")
+}
+.menuItem5:hover {
+    border-image: url("$DataPath/assets/wave-white.png")
+}
 .settingWidget QComboBox{
     width:60px;
     min-width:60px;
