@@ -3,9 +3,9 @@ from COMTool import parameters
 import os
 
 versionMajor = 1
-versionMinor = 4
-versionDev   = 1
-date = "2017.8.3"
+versionMinor = 7
+versionDev   = 0
+date = "2018.7.2"
 
 def strAbout():
     pathDirList = sys.argv[0].replace("\\", "/").split("/")
