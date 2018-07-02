@@ -6,8 +6,8 @@ COMTool
 A cross platform serial debug tools written by python
 --------
 
-Windows(version 1.0,not the latest)
-![Windows screenshot](./COMToolData/assets/screenshot_V1.3.png)
+Windows
+![Windows screenshot](./COMToolData/assets/screenshot_V1.7.png)
 Linux(Elementry OS)
 ![Linux(Elementry OS)screenshot](./COMToolData/assets/screenshot_V1.4_night.png)
 Raspberry Pi3
