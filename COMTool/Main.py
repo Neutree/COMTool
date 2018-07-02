@@ -19,6 +19,11 @@ except ImportError:
 if sys.platform == "win32":
     import ctypes
 
+class MyClass(object):
+    def __init__(self, arg):
+        super(MyClass, self).__init__()
+        self.arg = arg
+
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
     errorSignal = pyqtSignal(str)
@@ -285,7 +290,17 @@ class MainWindow(QMainWindow):
         # self.waveButton.clicked.connect(self.openWaveDisplay)
         self.checkBoxRts.clicked.connect(self.rtsChanged)
         self.checkBoxDtr.clicked.connect(self.dtrChanged)
-        return
+
+        self.myObject=MyClass(self)
+        slotLambda = lambda: self.indexChanged_lambda(self.myObject)
+        self.serialPortCombobox.currentIndexChanged.connect(slotLambda)
+
+
+    # @QtCore.pyqtSlot(str)
+    def indexChanged_lambda(self, obj):
+        mainObj = obj.arg
+        # print("item changed:",mainObj.serialPortCombobox.currentText())
+        self.serialPortCombobox.setToolTip(mainObj.serialPortCombobox.currentText())
 
 
     def openCloseSerialProcess(self):
@@ -546,7 +561,7 @@ class MainWindow(QMainWindow):
                 self.serialPortCombobox.addItem(str(i[0])+" "+str(i[1]))
             if len(portList)>0:
                 self.serialPortCombobox.setCurrentIndex(0)
-                self.serialPortCombobox.setToolTip(str(portList[0]))
+                # self.serialPortCombobox.setToolTip(str(portList[0]))
                 break
             time.sleep(1)
         self.isDetectSerialPort = False
