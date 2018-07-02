@@ -291,10 +291,10 @@ class MainWindow(QMainWindow):
     def openCloseSerialProcess(self):
         try:
             if self.com.is_open:
+                self.receiveProgressStop = True
                 self.com.close()
                 self.serialOpenCloseButton.setText(parameters.strOpen)
                 self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", parameters.strClosed))
-                self.receiveProgressStop = True
                 self.serialPortCombobox.setDisabled(False)
                 self.serailBaudrateCombobox.setDisabled(False)
                 self.serailParityCombobox.setDisabled(False)
@@ -317,9 +317,11 @@ class MainWindow(QMainWindow):
                         self.com.dtr = False
                     else:
                         self.com.dtr = True
-                    print(self.com)
+
                     self.serialOpenCloseButton.setDisabled(True)
                     self.com.open()
+                    print("open success")
+                    print(self.com)
                     self.serialOpenCloseButton.setText(parameters.strClose)
                     self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
                     self.serialPortCombobox.setDisabled(True)
