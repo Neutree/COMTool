@@ -1,11 +1,14 @@
 import sys
-import parameters
+try:
+    import parameters
+except ImportError:
+    from COMTool import parameters
 import os
 
 versionMajor = 1
 versionMinor = 7
 versionDev   = 3
-date = "2018.7.2"
+date = "2018.11.13"
 
 def strAbout():
     pathDirList = sys.argv[0].replace("\\", "/").split("/")

@@ -99,6 +99,10 @@ QComboBox:editable {
     background: #3a3a3a;
 }
 
+QComboBox:disabled {
+    color:gray;
+}
+
 QComboBox:!editable, QComboBox::drop-down:editable {
      background: #3a3a3a;
 }
