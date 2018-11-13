@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ComTool
+Comment=comtool serial communication debug tool
+Exec=comtool %U
+Icon=/usr/local/COMToolData/assets/logo.ico
+Categories=Development;
+Terminal=false
+StartupNotify=true
+MimeType=application/x-executable;
