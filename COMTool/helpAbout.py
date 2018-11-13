@@ -7,7 +7,7 @@ import os
 
 versionMajor = 1
 versionMinor = 7
-versionDev   = 3
+versionDev   = 6
 date = "2018.11.13"
 
 def strAbout():

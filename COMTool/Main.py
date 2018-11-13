@@ -1,6 +1,11 @@
 import sys,os
-import parameters,helpAbout,autoUpdate
-from Combobox import ComboBox
+try:
+    import parameters,helpAbout,autoUpdate
+    from Combobox import ComboBox
+except ImportError:
+    from COMTool import parameters,helpAbout,autoUpdate
+    from COMTool.Combobox import ComboBox
+
 # from COMTool.wave import Wave
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -270,6 +275,7 @@ class MainWindow(QMainWindow):
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
         self.show()
+        print("config file path:",os.getcwd()+"comtool.settings.config")
         return
 
     def initEvent(self):
@@ -640,7 +646,7 @@ class MainWindow(QMainWindow):
         else:
             paramObj.dtr = 0
         paramObj.encodingIndex = self.encodingCombobox.currentIndex()
-        f = open("settings.config","wb")
+        f = open("comtool.settings.config","wb")
         f.truncate()
         pickle.dump(paramObj, f)
         pickle.dump(paramObj.sendHistoryList,f)
@@ -650,12 +656,12 @@ class MainWindow(QMainWindow):
     def programStartGetSavedParameters(self):
         paramObj = parameters.ParametersToSave()
         try:
-            f = open("settings.config", "rb")
+            f = open("comtool.settings.config", "rb")
             paramObj = pickle.load( f)
             paramObj.sendHistoryList = pickle.load(f)
             f.close()
         except Exception as e:
-            f = open("settings.config", "wb")
+            f = open("comtool.settings.config", "wb")
             f.close()
         self.serailBaudrateCombobox.setCurrentIndex(paramObj.baudRate)
         self.serailBytesCombobox.setCurrentIndex(paramObj.dataBytes)
