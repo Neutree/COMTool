@@ -68,14 +68,22 @@ comtool
 
 Test on Ubuntu 16 and Elementry OS 4
 
-* download and install
+there's many ways to install comtool on linux
+
+> The installation proccess will automatically install PyQt5, it may takes a long times!!!
+> you can install pyqt5 manually by command `sudo apt install python3-pyqt5` or `sudo pip3 install pyqt5`
+
+* (1) Download and install from [pypi] by pip
+
 ```
 sudo apt install python3
 sudo apt install python3-pip
 sudo pip3 install comtool
 sudo comtool
 ```
-or
+
+* (2) Or get by tool `get-pip.py`
+
 ```
 sudo apt install python3
 wget https://bootstrap.pypa.io/get-pip.py 
@@ -83,19 +91,36 @@ sudo python3 get-pip.py
 sudo pip3 install comtool
 sudo comtool
 ```
+
 > be sure python bin path already in the `$PATH` env.
 
+* (3) Just install from github source code by pip
 
+```
+sudo apt install python3 python3-pip
+sudo pip3 install git+https://github.com/Neutree/COMTool
+sudo comtool
+```
 
- Or you can download source code, then install from source code
-  * download sourcecode
+* (4) Or you can download source code, then install from source code
+
 ```
 python setup.py bdist_wheel
 sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl
 ```
 
+We should add current user to dialout group to avoid `sudo` command
+```
+sudo usermod -a -G dialout $USER
+grep 'dialout' /etc/group
+reboot #must reboot to take effect
+```
+
 
 ### macOS
+
+not fully test!
+
 
 ```
 brew install python3 python3-pip
@@ -130,11 +155,11 @@ Windows:
 
 2. install pyserial and PyQt5
 ```
-sudo pip install pyserail pyqt5 bs4
+sudo pip3 install pyserail pyqt5 bs4
 ```
 On Raspberry:
 ```
-sudo pip install --upgrade pyserial bs4
+sudo pip3 install --upgrade pyserial bs4
 sudo apt install python3-pyqt5
 ```
 
@@ -145,14 +170,14 @@ git clone https://github.com/Neutree/COMTool.git
 
 4. code, resolve bugs or add new reatures
 
-Recommended `PyCharm` IDE
+Recommended `PyCharm` IDE to get start
 
 
 5. pull request
 
 ## Issue and improvement
 
-create issue [here](https://github.com/Neutree/COMTool/issues/new)
+Create issue [here](https://github.com/Neutree/COMTool/issues/new)
 
 
 
