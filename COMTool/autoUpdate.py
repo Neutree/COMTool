@@ -1,7 +1,7 @@
 import webbrowser
 import urllib.request
 from bs4 import BeautifulSoup
-from COMTool import helpAbout,parameters
+import helpAbout,parameters
 
 class AutoUpdate:
     updateUrl = "https://github.com/Neutree/COMTool/releases"
@@ -10,12 +10,12 @@ class AutoUpdate:
             page = urllib.request.urlopen(self.updateUrl)
             html_doc = page.read().decode()
             soup = BeautifulSoup(html_doc,"html.parser")
-            for v in soup.select('.release-timeline .label-latest .css-truncate-target'):
+            for v in soup.select('.label-latest .css-truncate-target'):
                 versionStr = v.get_text()
                 version = list(map(int, versionStr[1:].split(".")))
+                print("The latest is %s, now:V%d.%d" %(versionStr,helpAbout.versionMajor,helpAbout.versionMinor))
                 if version[0]*10+version[1] > helpAbout.versionMajor*10+helpAbout.versionMinor:
                     return True
-                print("no new version,the latest is %s, now:V%d.%d" %(versionStr,helpAbout.versionMajor,helpAbout.versionMinor))
                 return False
         except Exception as e:
             print("error:",e)

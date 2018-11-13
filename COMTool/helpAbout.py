@@ -1,10 +1,10 @@
 import sys
-from COMTool import parameters
+import parameters
 import os
 
 versionMajor = 1
 versionMinor = 7
-versionDev   = 2
+versionDev   = 3
 date = "2018.7.2"
 
 def strAbout():

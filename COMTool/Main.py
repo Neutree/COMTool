@@ -1,6 +1,6 @@
 import sys,os
-from COMTool import parameters,helpAbout,autoUpdate
-from COMTool.Combobox import ComboBox
+import parameters,helpAbout,autoUpdate
+from Combobox import ComboBox
 # from COMTool.wave import Wave
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -27,6 +27,7 @@ class MyClass(object):
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
     errorSignal = pyqtSignal(str)
+    showSerialComboboxSignal = pyqtSignal()
     isDetectSerialPort = False
     receiveCount = 0
     sendCount = 0
@@ -280,6 +281,8 @@ class MainWindow(QMainWindow):
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
+        self.showSerialComboboxSignal.connect(self.showCombobox)
+        # self.showBaudComboboxSignal.connect(self.showBaudCombobox)
         self.sendHistory.currentIndexChanged.connect(self.sendHistoryIndexChanged)
         self.settingsButton.clicked.connect(self.showHideSettings)
         self.skinButton.clicked.connect(self.skinChange)
@@ -377,7 +380,6 @@ class MainWindow(QMainWindow):
 
     def portComboboxClicked(self):
         self.detectSerialPort()
-        return
 
     def getSendData(self):
         data = self.sendArea.toPlainText()
@@ -553,17 +555,26 @@ class MainWindow(QMainWindow):
             t.setDaemon(True)
             t.start()
 
+    def showCombobox(self):
+        self.serialPortCombobox.showPopup()
+
     def detectSerialPortProcess(self):
-        self.serialPortCombobox.clear()
         while(1):
-            portList = self.findSerialPort();
-            for i in portList:
-                self.serialPortCombobox.addItem(str(i[0])+" "+str(i[1]))
+            portList = self.findSerialPort()
             if len(portList)>0:
-                self.serialPortCombobox.setCurrentIndex(0)
-                # self.serialPortCombobox.setToolTip(str(portList[0]))
+                currText = self.serialPortCombobox.currentText()
+                self.serialPortCombobox.clear()
+                for i in portList:
+                    showStr = str(i[0])+" "+str(i[1])
+                    self.serialPortCombobox.addItem(showStr)    
+                index = self.serialPortCombobox.findText(currText)
+                if index>=0:
+                    self.serialPortCombobox.setCurrentIndex(index)
+                else:
+                    self.serialPortCombobox.setCurrentIndex(0)
                 break
             time.sleep(1)
+        self.showSerialComboboxSignal.emit()
         self.isDetectSerialPort = False
         return
 

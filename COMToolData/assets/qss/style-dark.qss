@@ -140,6 +140,7 @@ QComboBox QAbstractItemView {
     border: 2px solid #3a3a3a;
     selection-background-color: #26a2ff;
     selection-color:#bcbcbd;
+    min-width:380px;
 }
 QComboBox QAbstractItemView::item{
     min-height:3em;
