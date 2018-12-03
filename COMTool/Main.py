@@ -33,6 +33,7 @@ class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
     errorSignal = pyqtSignal(str)
     showSerialComboboxSignal = pyqtSignal()
+    setDisableSettingsSignal = pyqtSignal(bool)
     isDetectSerialPort = False
     receiveCount = 0
     sendCount = 0
@@ -289,6 +290,7 @@ class MainWindow(QMainWindow):
         self.errorSignal.connect(self.errorHint)
         self.showSerialComboboxSignal.connect(self.showCombobox)
         # self.showBaudComboboxSignal.connect(self.showBaudCombobox)
+        self.setDisableSettingsSignal.connect(self.setDisableSettings)
         self.sendHistory.currentIndexChanged.connect(self.sendHistoryIndexChanged)
         self.settingsButton.clicked.connect(self.showHideSettings)
         self.skinButton.clicked.connect(self.skinChange)
@@ -317,14 +319,7 @@ class MainWindow(QMainWindow):
             if self.com.is_open:
                 self.receiveProgressStop = True
                 self.com.close()
-                self.serialOpenCloseButton.setText(parameters.strOpen)
-                self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", parameters.strClosed))
-                self.serialPortCombobox.setDisabled(False)
-                self.serailBaudrateCombobox.setDisabled(False)
-                self.serailParityCombobox.setDisabled(False)
-                self.serailStopbitsCombobox.setDisabled(False)
-                self.serailBytesCombobox.setDisabled(False)
-                self.programExitSaveParameters()
+                self.setDisableSettingsSignal.emit(False)
             else:
                 try:
                     self.com.baudrate = int(self.serailBaudrateCombobox.currentText())
@@ -341,22 +336,14 @@ class MainWindow(QMainWindow):
                         self.com.dtr = False
                     else:
                         self.com.dtr = True
-
                     self.serialOpenCloseButton.setDisabled(True)
                     self.com.open()
                     print("open success")
                     print(self.com)
-                    self.serialOpenCloseButton.setText(parameters.strClose)
-                    self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
-                    self.serialPortCombobox.setDisabled(True)
-                    self.serailBaudrateCombobox.setDisabled(True)
-                    self.serailParityCombobox.setDisabled(True)
-                    self.serailStopbitsCombobox.setDisabled(True)
-                    self.serailBytesCombobox.setDisabled(True)
-                    self.serialOpenCloseButton.setDisabled(False)
-                    receiveProcess = threading.Thread(target=self.receiveData)
-                    receiveProcess.setDaemon(True)
-                    receiveProcess.start()
+                    self.setDisableSettingsSignal.emit(True)
+                    self.receiveProcess = threading.Thread(target=self.receiveData)
+                    self.receiveProcess.setDaemon(True)
+                    self.receiveProcess.start()
                 except Exception as e:
                     self.com.close()
                     self.receiveProgressStop = True
@@ -365,6 +352,26 @@ class MainWindow(QMainWindow):
         except Exception:
             pass
         return
+    
+    def setDisableSettings(self, disable):
+        if disable:
+            self.serialOpenCloseButton.setText(parameters.strClose)
+            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
+            self.serialPortCombobox.setDisabled(True)
+            self.serailBaudrateCombobox.setDisabled(True)
+            self.serailParityCombobox.setDisabled(True)
+            self.serailStopbitsCombobox.setDisabled(True)
+            self.serailBytesCombobox.setDisabled(True)
+            self.serialOpenCloseButton.setDisabled(False)
+        else:
+            self.serialOpenCloseButton.setText(parameters.strOpen)
+            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", parameters.strClosed))
+            self.serialPortCombobox.setDisabled(False)
+            self.serailBaudrateCombobox.setDisabled(False)
+            self.serailParityCombobox.setDisabled(False)
+            self.serailStopbitsCombobox.setDisabled(False)
+            self.serailBytesCombobox.setDisabled(False)
+            self.programExitSaveParameters()
 
     def openCloseSerial(self):
         t = threading.Thread(target=self.openCloseSerialProcess)
@@ -454,11 +461,6 @@ class MainWindow(QMainWindow):
                     # if self.isWaveOpen:
                     #     self.wave.displayData(bytes)
                     self.receiveCount += len(bytes)
-                    if self.receiveSettingsHex.isChecked():
-                        strReceived = self.asciiB2HexString(bytes)
-                        self.receiveUpdateSignal.emit(strReceived)
-                    else:
-                        self.receiveUpdateSignal.emit(bytes.decode(self.encodingCombobox.currentText(),"ignore"))
                     if self.receiveSettingsAutoLinefeed.isChecked():
                         if time.time() - self.timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
                             if self.sendSettingsCFLF.isChecked():
@@ -466,6 +468,11 @@ class MainWindow(QMainWindow):
                             else:
                                 self.receiveUpdateSignal.emit("\n")
                             self.timeLastReceive = time.time()
+                    if self.receiveSettingsHex.isChecked():
+                        strReceived = self.asciiB2HexString(bytes)
+                        self.receiveUpdateSignal.emit(strReceived)
+                    else:
+                        self.receiveUpdateSignal.emit(bytes.decode(self.encodingCombobox.currentText(),"ignore"))
             except Exception as e:
                 print("receiveData error")
                 # if self.com.is_open and not self.serialPortCombobox.isEnabled():
