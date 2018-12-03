@@ -275,7 +275,7 @@ class MainWindow(QMainWindow):
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
         self.show()
-        print("config file path:",os.getcwd()+"comtool.settings.config")
+        print("config file path:",os.getcwd()+"/comtool.settings.config")
         return
 
     def initEvent(self):
@@ -468,10 +468,10 @@ class MainWindow(QMainWindow):
                             self.timeLastReceive = time.time()
             except Exception as e:
                 print("receiveData error")
-                if self.com.is_open and not self.serialPortCombobox.isEnabled():
-                    self.openCloseSerial()
-                    self.serialPortCombobox.clear()
-                    self.detectSerialPort()
+                # if self.com.is_open and not self.serialPortCombobox.isEnabled():
+                #     self.openCloseSerial()
+                #     self.serialPortCombobox.clear()
+                #     self.detectSerialPort()
                 print(e)
             # time.sleep(0.009)
         return
