@@ -2,6 +2,8 @@ COMTool
 ========
 
  [![PyPI](https://img.shields.io/pypi/v/comtool.svg)](https://pypi.python.org/pypi/comtool/)
+ 
+[![Build Status](https://travis-ci.org/Neutree/COMTool.svg?branch=master)](https://travis-ci.org/Neutree/COMTool)
 
 A cross platform serial debug tools written by python
 --------
