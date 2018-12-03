@@ -58,13 +58,12 @@ class MainWindow(QMainWindow):
         self.initTool()
         self.initEvent()
         self.programStartGetSavedParameters()
-        return
 
     def __del__(self):
-        return
+        pass
+
     def initTool(self):
         self.com = serial.Serial()
-        return
 
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
@@ -277,7 +276,6 @@ class MainWindow(QMainWindow):
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
         self.show()
         print("config file path:",os.getcwd()+"/comtool.settings.config")
-        return
 
     def initEvent(self):
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
@@ -349,9 +347,8 @@ class MainWindow(QMainWindow):
                     self.receiveProgressStop = True
                     self.errorSignal.emit( parameters.strOpenFailed +"\n"+ str(e))
                     self.serialOpenCloseButton.setDisabled(False)
-        except Exception:
-            pass
-        return
+        except Exception as e:
+            print(e)
     
     def setDisableSettings(self, disable):
         if disable:
@@ -377,7 +374,6 @@ class MainWindow(QMainWindow):
         t = threading.Thread(target=self.openCloseSerialProcess)
         t.setDaemon(True)
         t.start()
-        return
 
     def rtsChanged(self):
         if self.checkBoxRts.isChecked():
@@ -435,7 +431,6 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.errorSignal.emit(parameters.strWriteError)
             print(e)
-        return
 
     def scheduledSend(self):
         self.isScheduledSending = True
@@ -446,7 +441,6 @@ class MainWindow(QMainWindow):
             except Exception:
                 self.errorSignal.emit(parameters.strTimeFormatError)
         self.isScheduledSending = False
-        return
 
     def receiveData(self):
         self.receiveProgressStop = False
@@ -481,7 +475,6 @@ class MainWindow(QMainWindow):
                 #     self.detectSerialPort()
                 print(e)
             # time.sleep(0.009)
-        return
 
     def updateReceivedDataDisplay(self,str):
         if str != "":
@@ -495,7 +488,6 @@ class MainWindow(QMainWindow):
                 self.receiveArea.moveCursor(QTextCursor.End)
         self.statusBarSendCount.setText("%s(bytes):%d" %(parameters.strSend ,self.sendCount))
         self.statusBarReceiveCount.setText("%s(bytes):%d" %(parameters.strReceive ,self.receiveCount))
-        return
 
     def onSendSettingsHexClicked(self):
 
@@ -503,7 +495,6 @@ class MainWindow(QMainWindow):
         data = self.asciiB2HexString(data.encode())
         self.sendArea.clear()
         self.sendArea.insertPlainText(data)
-        return
 
     def onSendSettingsAsciiClicked(self):
         try:
@@ -515,30 +506,25 @@ class MainWindow(QMainWindow):
         except Exception as e:
             # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
             print("format error");
-        return
 
     def sendHistoryIndexChanged(self):
         self.sendArea.clear()
         self.sendArea.insertPlainText(self.sendHistory.currentText())
-        return
 
     def clearReceiveBuffer(self):
         self.receiveArea.clear()
         self.receiveCount = 0;
         self.sendCount = 0;
         self.receiveUpdateSignal.emit(None)
-        return
 
     def MoveToCenter(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-        return
 
     def errorHint(self,str):
         QMessageBox.information(self, str, str)
-        return
 
     def closeEvent(self, event):
 
@@ -589,15 +575,9 @@ class MainWindow(QMainWindow):
             time.sleep(1)
         self.showSerialComboboxSignal.emit()
         self.isDetectSerialPort = False
-        return
 
     def sendHistoryFindDelete(self,str):
         self.sendHistory.removeItem(self.sendHistory.findText(str))
-        return
-
-    def test(self):
-        print("test")
-        return
 
     def asciiB2HexString(self,strB):
         strHex = binascii.b2a_hex(strB).upper()
@@ -658,7 +638,6 @@ class MainWindow(QMainWindow):
         pickle.dump(paramObj, f)
         pickle.dump(paramObj.sendHistoryList,f)
         f.close()
-        return
 
     def programStartGetSavedParameters(self):
         paramObj = parameters.ParametersToSave()
@@ -705,7 +684,6 @@ class MainWindow(QMainWindow):
             self.checkBoxDtr.setChecked(True)
         self.encodingCombobox.setCurrentIndex(paramObj.encodingIndex)
         self.param = paramObj
-        return
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
@@ -719,21 +697,16 @@ class MainWindow(QMainWindow):
         elif event.key() == Qt.Key_K:
             if self.keyControlPressed:
                 self.receiveArea.clear()
-        return
 
     def keyReleaseEvent(self,event):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = False
-        return
 
     def sendAreaFontChanged(self,font):
         print("font changed")
 
-        return
-
     def functionAdd(self):
         QMessageBox.information(self, "On the way", "On the way")
-        return
 
     def showHideSettings(self):
         if self.isHideSettings:
@@ -742,19 +715,16 @@ class MainWindow(QMainWindow):
         else:
             self.hideSettings()
             self.isHideSettings = True
-        return
 
     def showSettings(self):
         self.settingWidget.show()
         self.settingsButton.setStyleSheet(
             parameters.strStyleShowHideButtonLeft.replace("$DataPath",self.DataPath))
-        return;
 
     def hideSettings(self):
         self.settingWidget.hide()
         self.settingsButton.setStyleSheet(
             parameters.strStyleShowHideButtonRight.replace("$DataPath", self.DataPath))
-        return;
 
     def showHideFunctional(self):
         if self.isHideFunctinal:
@@ -763,19 +733,16 @@ class MainWindow(QMainWindow):
         else:
             self.hideFunctional()
             self.isHideFunctinal = True
-        return
 
     def showFunctional(self):
         self.functionalWiget.show()
         self.functionalButton.setStyleSheet(
             parameters.strStyleShowHideButtonRight.replace("$DataPath",self.DataPath))
-        return;
 
     def hideFunctional(self):
         self.functionalWiget.hide()
         self.functionalButton.setStyleSheet(
             parameters.strStyleShowHideButtonLeft.replace("$DataPath", self.DataPath))
-        return;
 
     def skinChange(self):
         if self.param.skin == 1: # light
@@ -785,18 +752,12 @@ class MainWindow(QMainWindow):
             file = open(self.DataPath + '/assets/qss/style.qss', "r")
             self.param.skin = 1
         self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
-        return
 
     def showAbout(self):
         QMessageBox.information(self, "About","<h1 style='color:#f75a5a';margin=10px;>"+parameters.appName+
                                 '</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+
                                 str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev)+
                                 "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout())
-        return
-
-    def action1(self):
-        print("action1")
-        return
 
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
