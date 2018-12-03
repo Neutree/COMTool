@@ -119,13 +119,11 @@ reboot #must reboot to take effect
 
 ### macOS
 
-not fully test!
-
-
 ```
 brew install python3 python3-pip
-pip install COMTool
+sudo pip3 install COMTool
 ```
+> It will automatically install pyqt5, may takes a lot of time depend on your network
 
 ### Rasberry Pi
 
