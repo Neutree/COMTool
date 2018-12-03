@@ -7,8 +7,8 @@ import os
 
 versionMajor = 1
 versionMinor = 7
-versionDev   = 6
-date = "2018.11.13"
+versionDev   = 7
+date = "2018.12.04"
 
 def strAbout():
     pathDirList = sys.argv[0].replace("\\", "/").split("/")
