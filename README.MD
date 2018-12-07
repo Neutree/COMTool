@@ -155,7 +155,7 @@ Windows:
 
 2. install pyserial and PyQt5
 ```
-sudo pip3 install pyserail pyqt5 bs4
+sudo pip3 install pyserial pyqt5 bs4
 ```
 On Raspberry:
 ```
