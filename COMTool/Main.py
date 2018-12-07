@@ -334,10 +334,9 @@ class MainWindow(QMainWindow):
                         self.com.dtr = False
                     else:
                         self.com.dtr = True
-                    self.serialOpenCloseButton.setDisabled(True)
                     self.com.open()
-                    print("open success")
-                    print(self.com)
+                    # print("open success")
+                    # print(self.com)
                     self.setDisableSettingsSignal.emit(True)
                     self.receiveProcess = threading.Thread(target=self.receiveData)
                     self.receiveProcess.setDaemon(True)
@@ -346,7 +345,7 @@ class MainWindow(QMainWindow):
                     self.com.close()
                     self.receiveProgressStop = True
                     self.errorSignal.emit( parameters.strOpenFailed +"\n"+ str(e))
-                    self.serialOpenCloseButton.setDisabled(False)
+                    self.setDisableSettingsSignal.emit(False)
         except Exception as e:
             print(e)
     
@@ -413,8 +412,8 @@ class MainWindow(QMainWindow):
                 data = self.getSendData()
                 if data == -1:
                     return
-                print(self.sendArea.toPlainText())
-                print("send:",data)
+                # print(self.sendArea.toPlainText())
+                # print("send:",data)
                 self.sendCount += len(data)
                 self.com.write(data)
                 data = self.sendArea.toPlainText()
@@ -430,7 +429,7 @@ class MainWindow(QMainWindow):
                         t.start()
         except Exception as e:
             self.errorSignal.emit(parameters.strWriteError)
-            print(e)
+            # print(e)
 
     def scheduledSend(self):
         self.isScheduledSending = True
@@ -468,12 +467,13 @@ class MainWindow(QMainWindow):
                     else:
                         self.receiveUpdateSignal.emit(bytes.decode(self.encodingCombobox.currentText(),"ignore"))
             except Exception as e:
-                print("receiveData error")
+                # print("receiveData error")
                 # if self.com.is_open and not self.serialPortCombobox.isEnabled():
                 #     self.openCloseSerial()
                 #     self.serialPortCombobox.clear()
                 #     self.detectSerialPort()
-                print(e)
+                if 'multiple access' in str(e):
+                    self.errorSignal.emit("device disconnected or multiple access on port?")
             # time.sleep(0.009)
 
     def updateReceivedDataDisplay(self,str):
@@ -505,7 +505,7 @@ class MainWindow(QMainWindow):
                 self.sendArea.insertPlainText(data)
         except Exception as e:
             # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
-            print("format error");
+            print("format error")
 
     def sendHistoryIndexChanged(self):
         self.sendArea.clear()
@@ -597,7 +597,7 @@ class MainWindow(QMainWindow):
             data = bytes.fromhex(data)
         except Exception:
             return -1
-        print(data)
+        # print(data)
         return data
 
     def programExitSaveParameters(self):
