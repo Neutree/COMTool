@@ -5,9 +5,6 @@ COMTool
  
 [![Build Status](https://travis-ci.org/Neutree/COMTool.svg?branch=master)](https://travis-ci.org/Neutree/COMTool)
 
-A cross platform serial debug tools written by python
---------
-
 Windows
 ![Windows screenshot](./COMToolData/assets/screenshot_V1.7.png)
 Linux(Elementry OS)
