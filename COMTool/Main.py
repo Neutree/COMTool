@@ -786,14 +786,21 @@ class MainWindow(QMainWindow):
 
     def sendFile(self):
         filename = self.filePathWidget.text()
-        f = open(filename, "rb")
+        if not os.path.exists(filename):
+            self.errorSignal.emit("File path error\npath:%s" %(filename))
+            return
+        try:
+            f = open(filename, "rb")
+        except Exception as e:
+            self.errorSignal.emit("Open file %s failed! \n %s" %(filename, str(e)))
+            return
         self.com.write(f.read()) #TODO: optimize send in new thread
         f.close()
 
     def clearHistory(self):
         self.param.sendHistoryList.clear()
         self.sendHistory.clear()
-        self.errorHint("History cleared!")
+        self.errorSignal.emit("History cleared!")
 
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
