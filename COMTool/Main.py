@@ -10,7 +10,7 @@ except ImportError:
 from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
 import serial
 import serial.tools.list_ports
@@ -245,12 +245,19 @@ class MainWindow(QMainWindow):
         settingLayout.setStretch(2, 2.5)
 
         # right functional layout
+        self.filePathWidget = QLineEdit()
+        self.openFileButton = QPushButton("Open File")
+        self.sendFileButton = QPushButton("Send File")
         self.addButton = QPushButton(parameters.strAdd)
-        functionalGroupBox = QGroupBox(parameters.strFunctionalSend)
-        functionalGridLayout = QGridLayout()
-        functionalGridLayout.addWidget(self.addButton,0,1)
-        functionalGroupBox.setLayout(functionalGridLayout)
-        sendFunctionalLayout.addWidget(functionalGroupBox)
+        fileSendGroupBox = QGroupBox(parameters.strSendFile)
+        fileSendGridLayout = QGridLayout()
+        fileSendGridLayout.addWidget(self.filePathWidget, 0, 0, 1, 1)
+        fileSendGridLayout.addWidget(self.openFileButton, 0, 1, 1, 1)
+        fileSendGridLayout.addWidget(self.sendFileButton, 1, 0, 1, 2)
+        fileSendGroupBox.setLayout(fileSendGridLayout)
+        sendFunctionalLayout.addWidget(fileSendGroupBox)
+        sendFunctionalLayout.addWidget(self.addButton)
+        sendFunctionalLayout.addStretch(1)
         self.isHideFunctinal = True
         self.hideFunctional()
 
@@ -293,6 +300,8 @@ class MainWindow(QMainWindow):
         self.settingsButton.clicked.connect(self.showHideSettings)
         self.skinButton.clicked.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
+        self.openFileButton.clicked.connect(self.selectFile)
+        self.sendFileButton.clicked.connect(self.sendFile)
         self.addButton.clicked.connect(self.functionAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
         self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
@@ -758,6 +767,24 @@ class MainWindow(QMainWindow):
                                 '</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+
                                 str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev)+
                                 "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout())
+    def selectFile(self):
+        oldPath = self.filePathWidget.text()
+        if oldPath=="":
+            oldPath = os.getcwd()
+        fileName_choose, filetype = QFileDialog.getOpenFileName(self,  
+                                    "SelectFile",
+                                    oldPath,
+                                    "All Files (*);;")
+
+        if fileName_choose == "":
+            return
+        self.filePathWidget.setText(fileName_choose)
+
+    def sendFile(self):
+        filename = self.filePathWidget.text()
+        f = open(filename, "rb")
+        self.com.write(f.read()) #TODO: optimize send in new thread
+        f.close()
 
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
