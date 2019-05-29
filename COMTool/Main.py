@@ -248,6 +248,7 @@ class MainWindow(QMainWindow):
         self.filePathWidget = QLineEdit()
         self.openFileButton = QPushButton("Open File")
         self.sendFileButton = QPushButton("Send File")
+        self.clearHistoryButton = QPushButton("Clear History")
         self.addButton = QPushButton(parameters.strAdd)
         fileSendGroupBox = QGroupBox(parameters.strSendFile)
         fileSendGridLayout = QGridLayout()
@@ -256,6 +257,7 @@ class MainWindow(QMainWindow):
         fileSendGridLayout.addWidget(self.sendFileButton, 1, 0, 1, 2)
         fileSendGroupBox.setLayout(fileSendGridLayout)
         sendFunctionalLayout.addWidget(fileSendGroupBox)
+        sendFunctionalLayout.addWidget(self.clearHistoryButton)
         sendFunctionalLayout.addWidget(self.addButton)
         sendFunctionalLayout.addStretch(1)
         self.isHideFunctinal = True
@@ -302,6 +304,7 @@ class MainWindow(QMainWindow):
         self.aboutButton.clicked.connect(self.showAbout)
         self.openFileButton.clicked.connect(self.selectFile)
         self.sendFileButton.clicked.connect(self.sendFile)
+        self.clearHistoryButton.clicked.connect(self.clearHistory)
         self.addButton.clicked.connect(self.functionAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
         self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
@@ -483,6 +486,7 @@ class MainWindow(QMainWindow):
                 #     self.detectSerialPort()
                 if 'multiple access' in str(e):
                     self.errorSignal.emit("device disconnected or multiple access on port?")
+                break
             # time.sleep(0.009)
 
     def updateReceivedDataDisplay(self,str):
@@ -785,6 +789,11 @@ class MainWindow(QMainWindow):
         f = open(filename, "rb")
         self.com.write(f.read()) #TODO: optimize send in new thread
         f.close()
+
+    def clearHistory(self):
+        self.param.sendHistoryList.clear()
+        self.sendHistory.clear()
+        self.errorHint("History cleared!")
 
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
