@@ -1,3 +1,5 @@
+import sys, os
+
 appName = "COMTool"
 strDataDirName = "COMToolData"
 strDataAssetsDirName = "COMToolData/assets"
@@ -45,6 +47,20 @@ strSettings = "Settings"
 strNeedUpdate = "Need Update"
 strUpdateNow = "update now?"
 strUninstallApp = "uninstall app"
+
+configFileName="comtool.settings.config"
+configFilePath=configFileName
+
+if sys.platform.startswith('linux') or sys.platform.startswith('darwin') or sys.platform.startswith('freebsd'):
+    configFileDir = os.path.join(os.getenv("HOME"), ".config/comtool")
+    try:
+        configFilePath = os.path.join(configFileDir, configFileName)
+        if not os.path.exists(configFileDir):
+            os.makedirs(configFileDir)
+    except:
+        pass
+else:
+    configFilePath  = os.path.join(os.getcwd(), configFileName)
 
 
 class ParametersToSave:

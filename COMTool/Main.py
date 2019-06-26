@@ -284,7 +284,7 @@ class MainWindow(QMainWindow):
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
         self.show()
-        print("config file path:",os.getcwd()+"/comtool.settings.config")
+        print("config file path:",parameters.configFilePath)
 
     def initEvent(self):
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
@@ -578,6 +578,8 @@ class MainWindow(QMainWindow):
                 self.serialPortCombobox.clear()
                 for i in portList:
                     showStr = str(i[0])+" "+str(i[1])
+                    if i[0].startswith("/dev/cu.Bluetooth-Incoming-Port"):
+                        continue
                     self.serialPortCombobox.addItem(showStr)    
                 index = self.serialPortCombobox.findText(currText)
                 if index>=0:
@@ -646,7 +648,7 @@ class MainWindow(QMainWindow):
         else:
             paramObj.dtr = 0
         paramObj.encodingIndex = self.encodingCombobox.currentIndex()
-        f = open("comtool.settings.config","wb")
+        f = open(parameters.configFilePath,"wb")
         f.truncate()
         pickle.dump(paramObj, f)
         pickle.dump(paramObj.sendHistoryList,f)
@@ -655,12 +657,12 @@ class MainWindow(QMainWindow):
     def programStartGetSavedParameters(self):
         paramObj = parameters.ParametersToSave()
         try:
-            f = open("comtool.settings.config", "rb")
+            f = open(parameters.configFilePath, "rb")
             paramObj = pickle.load( f)
             paramObj.sendHistoryList = pickle.load(f)
             f.close()
         except Exception as e:
-            f = open("comtool.settings.config", "wb")
+            f = open(parameters.configFilePath, "wb")
             f.close()
         self.serailBaudrateCombobox.setCurrentIndex(paramObj.baudRate)
         self.serailBytesCombobox.setCurrentIndex(paramObj.dataBytes)
