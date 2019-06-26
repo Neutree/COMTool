@@ -4,4 +4,4 @@
 # set -x
 
 python setup.py sdist bdist_wheel
-
+python pack.py
