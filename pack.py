@@ -1,4 +1,6 @@
 import os, sys, shutil
+sys.path.insert(1,"./COMTool/")
+from COMTool import helpAbout
 
 if os.path.exists("COMTool/__pycache__"):
     shutil.rmtree("COMTool/__pycache__")
@@ -12,5 +14,12 @@ else:
 
 os.system(cmd)
 
+if sys.platform.startswith("darwin"):
+    if os.path.exists("./dist/comtool 0.0.0.dmg"):
+        os.remove("./dist/comtool 0.0.0.dmg")
+        
+    os.system('create-dmg ./dist/comtool.app ./dist')
+    os.rename("./dist/comtool 0.0.0.dmg", 
+            "./dist/comtool_v{}.{}.{}.dmg".format(helpAbout.versionMajor, helpAbout.versionMinor, helpAbout.versionDev))
 
 
