@@ -64,18 +64,26 @@ python setup.py bdist_wheel
 pip install dist/COMTool-*.*.*-py3-none-any.whl
 comtool
 ```
+or
+```
+pip3 install pyinstaller
+python pack.py
+cd dist
+```
 
 
 ### Linux
 
-Test on Ubuntu 16 and Elementry OS 4
+Test on Ubuntu 16 18 and Elementry OS 4
 
 there's many ways to install comtool on linux
 
-> The installation proccess will automatically install PyQt5, it may takes a long times!!!
-> you can install pyqt5 manually by command `sudo apt install python3-pyqt5` or `sudo pip3 install pyqt5`
+* (1) Download release (Recommend)
 
-* (1) Download and install from [pypi] by pip
+Download release at [release](https://github.com/Neutree/COMTool/releases) page
+
+
+* (2) Download and install from [pypi] by pip
 
 ```
 sudo apt install python3
@@ -83,8 +91,11 @@ sudo apt install python3-pip
 sudo pip3 install comtool
 sudo comtool
 ```
+> The installation proccess will automatically install PyQt5, it may takes a long times!!!
+> you can install pyqt5 manually by command `sudo apt install python3-pyqt5` or `sudo pip3 install pyqt5`
 
-* (2) Or get by tool `get-pip.py`
+
+* (3) Or get by tool `get-pip.py`
 
 ```
 sudo apt install python3
@@ -96,7 +107,7 @@ sudo comtool
 
 > be sure python bin path already in the `$PATH` env.
 
-* (3) Just install from github source code by pip
+* (4) Just install from github source code by pip
 
 ```
 sudo apt install python3 python3-pip
@@ -104,11 +115,18 @@ sudo pip3 install git+https://github.com/Neutree/COMTool
 sudo comtool
 ```
 
-* (4) Or you can download source code, then install from source code
+* (5) Or you can download source code, then install from source code
 
 ```
 python setup.py bdist_wheel
 sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl
+```
+or
+```
+pip3 install pyinstaller
+python3 pack.py
+cd dist/comtool
+./comtool
 ```
 
 We should add current user to dialout group to avoid `sudo` command
@@ -121,11 +139,26 @@ reboot #must reboot to take effect
 
 ### macOS
 
+* (1) Download release (Recommend)
+
+Download release at [release](https://github.com/Neutree/COMTool/releases) page
+
+* (2) Install from pipy
+
 ```
 brew install python3 python3-pip
 sudo pip3 install COMTool
 ```
 > It will automatically install pyqt5, may takes a lot of time depend on your network
+
+* (3) Install from source
+
+```
+pip3 install pyinstaller
+python3 pack.py
+cd dist
+```
+then double click `comtool.app`
 
 ### Rasberry Pi
 
