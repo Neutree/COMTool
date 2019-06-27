@@ -32,18 +32,21 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version=str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev),
 
-    description='Cross platform serial debug assistant',
-    long_description=long_description,
-
-    # The project's main homepage.
-    url='https://github.com/Neutree/COMTool',
-
     # Author details
     author='Neucrack',
     author_email='czd666666@gmail.com',
 
+    description='Cross platform serial debug assistant with GUI',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+
+    # The project's main homepage.
+    url='https://github.com/Neutree/COMTool',
+
+
+
     # Choose your license
-    license='LGPL-3.0',
+    license='MIT',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -118,7 +121,9 @@ setup(
                                             'COMToolData/assets/help-white.png',
                                             'COMToolData/assets/skin.png',
                                             'COMToolData/assets/skin-white.png',]),
-         (parameters.strDataAssetsDirName+"/qss",["COMToolData/assets/qss/style.qss","COMToolData/assets/qss/style-dark.qss"])
+         (parameters.strDataAssetsDirName+"/qss",["COMToolData/assets/qss/style.qss","COMToolData/assets/qss/style-dark.qss"]),
+	 ("",["LICENSE","README.MD"])
+	
         ],
 
     # To provide executable scripts, use entry points in preference to the
