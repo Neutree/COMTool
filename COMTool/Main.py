@@ -334,6 +334,8 @@ class MainWindow(QMainWindow):
                 try:
                     self.com.baudrate = int(self.serailBaudrateCombobox.currentText())
                     self.com.port = self.serialPortCombobox.currentText().split(" ")[0]
+                    if not self.com.port:
+                        raise Exception("please select port")
                     self.com.bytesize = int(self.serailBytesCombobox.currentText())
                     self.com.parity = self.serailParityCombobox.currentText()[0]
                     self.com.stopbits = float(self.serailStopbitsCombobox.currentText())
