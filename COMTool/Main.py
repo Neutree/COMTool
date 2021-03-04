@@ -54,11 +54,11 @@ class MainWindow(QMainWindow):
             pathDirList.pop()
             self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
         self.DataPath = (self.DataPath + "/" + parameters.strDataDirName).replace("\\", "/")
+        self.initVar()
         self.initWindow()
         self.initTool()
         self.initEvent()
         self.programStartGetSavedParameters()
-        self.initVar()
 
     def __del__(self):
         pass
@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
     
     def initVar(self):
         self.keyControlPressed = False
+        self.baudrateCustomStr = "custom, input baudrate"
 
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
@@ -169,7 +170,14 @@ class MainWindow(QMainWindow):
         self.serailBaudrateCombobox.addItem("19200")
         self.serailBaudrateCombobox.addItem("38400")
         self.serailBaudrateCombobox.addItem("57600")
+        self.serailBaudrateCombobox.addItem("74880")
         self.serailBaudrateCombobox.addItem("115200")
+        self.serailBaudrateCombobox.addItem("921600")
+        self.serailBaudrateCombobox.addItem("1000000")
+        self.serailBaudrateCombobox.addItem("1500000")
+        self.serailBaudrateCombobox.addItem("2000000")
+        self.serailBaudrateCombobox.addItem("4500000")
+        self.serailBaudrateCombobox.addItem(self.baudrateCustomStr)
         self.serailBaudrateCombobox.setCurrentIndex(4)
         self.serailBaudrateCombobox.setEditable(True)
         self.serailBytesCombobox = ComboBox()
@@ -296,6 +304,8 @@ class MainWindow(QMainWindow):
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
         self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
         self.serialPortCombobox.clicked.connect(self.portComboboxClicked)
+        self.serailBaudrateCombobox.currentIndexChanged.connect(self.baudrateIndexChanged)
+        self.serailBaudrateCombobox.editTextChanged.connect(self.baudrateIndexChanged)
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
@@ -526,14 +536,18 @@ class MainWindow(QMainWindow):
             # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
             print("format error")
 
+    def baudrateIndexChanged(self):
+        if self.serailBaudrateCombobox.currentText() == self.baudrateCustomStr:
+            self.serailBaudrateCombobox.clearEditText()
+
     def sendHistoryIndexChanged(self):
         self.sendArea.clear()
         self.sendArea.insertPlainText(self.sendHistory.currentText())
 
     def clearReceiveBuffer(self):
         self.receiveArea.clear()
-        self.receiveCount = 0;
-        self.sendCount = 0;
+        self.receiveCount = 0
+        self.sendCount = 0
         self.receiveUpdateSignal.emit(None)
 
     def MoveToCenter(self):
