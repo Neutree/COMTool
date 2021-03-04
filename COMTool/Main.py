@@ -58,12 +58,16 @@ class MainWindow(QMainWindow):
         self.initTool()
         self.initEvent()
         self.programStartGetSavedParameters()
+        self.initVar()
 
     def __del__(self):
         pass
 
     def initTool(self):
         self.com = serial.Serial()
+    
+    def initVar(self):
+        self.keyControlPressed = False
 
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
