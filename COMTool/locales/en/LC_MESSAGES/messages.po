@@ -1,0 +1,275 @@
+# English translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-12-05 17:55+0800\n"
+"PO-Revision-Date: 2021-12-04 15:21+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: Main.py:224
+msgid ""
+"Show recived data as visible format, select decode method at top right "
+"corner"
+msgstr ""
+
+#: Main.py:226
+msgid "Show recived data as hex format"
+msgstr ""
+
+#: Main.py:229 Main.py:231
+msgid "Auto linefeed after interval, unit: ms"
+msgstr ""
+
+#: Main.py:245
+msgid ""
+"Get send data as visible format, select encoding method at top right "
+"corner"
+msgstr ""
+
+#: Main.py:246
+msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
+msgstr ""
+
+#: Main.py:249 Main.py:251
+msgid "Timed send, unit: ms"
+msgstr ""
+
+#: Main.py:255
+msgid "Select to send \\r\\n instead of \\n"
+msgstr ""
+
+#: Main.py:271
+msgid "Open File"
+msgstr ""
+
+#: Main.py:272 parameters.py:46
+msgid "Send File"
+msgstr ""
+
+#: Main.py:273
+msgid "Clear History"
+msgstr ""
+
+#: Main.py:557
+msgid "Restart now?"
+msgstr ""
+
+#: Main.py:558
+msgid "language changed to: "
+msgstr ""
+
+#: Main.py:558
+msgid "Restart software to take effect now?"
+msgstr ""
+
+#: Main.py:813
+msgid "About"
+msgstr ""
+
+#: Main.py:830
+msgid ""
+"File path error\n"
+"path"
+msgstr ""
+
+#: Main.py:835
+msgid "Open file failed!"
+msgstr ""
+
+#: Main.py:838
+msgid "Connect first please"
+msgstr ""
+
+#: Main.py:849
+msgid "History cleared!"
+msgstr ""
+
+#: Main.py:926
+msgid "Error"
+msgstr ""
+
+#: helpAbout.py:39
+msgid "Pack date:"
+msgstr ""
+
+#: helpAbout.py:41
+msgid "COMTool is a Open source project create by"
+msgstr ""
+
+#: helpAbout.py:43
+msgid "See more on"
+msgstr ""
+
+#: helpAbout.py:44
+msgid "Welcome to improve it together"
+msgstr ""
+
+#: helpAbout.py:45
+msgid "Shortcut:"
+msgstr ""
+
+#: helpAbout.py:46
+msgid "Send data"
+msgstr ""
+
+#: helpAbout.py:47
+msgid "Clear Send Area"
+msgstr ""
+
+#: helpAbout.py:48
+msgid "Clear Receive Area"
+msgstr ""
+
+#: parameters.py:24
+msgid "bytes"
+msgstr ""
+
+#: parameters.py:25
+msgid "Send"
+msgstr ""
+
+#: parameters.py:26
+msgid "Receive"
+msgstr ""
+
+#: parameters.py:27
+msgid "Port"
+msgstr ""
+
+#: parameters.py:28
+msgid "Baudrate"
+msgstr ""
+
+#: parameters.py:29
+msgid "DataBytes"
+msgstr ""
+
+#: parameters.py:30
+msgid "Parity"
+msgstr ""
+
+#: parameters.py:31
+msgid "Stopbits"
+msgstr ""
+
+#: parameters.py:32
+msgid "ASCII"
+msgstr ""
+
+#: parameters.py:33
+msgid "HEX"
+msgstr ""
+
+#: parameters.py:34 parameters.py:42
+msgid "Send Settings"
+msgstr ""
+
+#: parameters.py:35 parameters.py:41
+msgid "Receive Settings"
+msgstr ""
+
+#: parameters.py:36
+msgid "OPEN"
+msgstr ""
+
+#: parameters.py:37
+msgid "CLOSE"
+msgstr ""
+
+#: parameters.py:38
+#, fuzzy
+msgid ""
+"Auto\n"
+"Linefeed\n"
+"ms"
+msgstr ""
+"Auto\n"
+"Linefeed\n"
+"ms"
+
+#: parameters.py:39
+msgid ""
+"Timed Send\n"
+"ms"
+msgstr ""
+
+#: parameters.py:40
+msgid "Serial Settings"
+msgstr ""
+
+#: parameters.py:43
+msgid "ClearReceive"
+msgstr ""
+
+#: parameters.py:44
+msgid "+"
+msgstr ""
+
+#: parameters.py:45
+msgid "Functional Send"
+msgstr ""
+
+#: parameters.py:47
+msgid "Open Failed"
+msgstr ""
+
+#: parameters.py:48
+msgid "Closed"
+msgstr ""
+
+#: parameters.py:49
+msgid "Send Error"
+msgstr ""
+
+#: parameters.py:50
+msgid "Ready"
+msgstr ""
+
+#: parameters.py:51
+msgid "format error"
+msgstr ""
+
+#: parameters.py:52
+msgid "<CRLF>"
+msgstr ""
+
+#: parameters.py:53
+msgid "Time format error"
+msgstr ""
+
+#: parameters.py:54
+msgid "HELP"
+msgstr ""
+
+#: parameters.py:55
+msgid "ABOUT"
+msgstr ""
+
+#: parameters.py:56
+msgid "Settings"
+msgstr ""
+
+#: parameters.py:57
+msgid "Need Update"
+msgstr ""
+
+#: parameters.py:58
+msgid "update now?"
+msgstr ""
+
+#: parameters.py:59
+msgid "uninstall app"
+msgstr ""
+

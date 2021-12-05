@@ -12,5 +12,7 @@ build
 *.spec
 .DS_Store
 
+venv
+config.json
 
-
+*.mo

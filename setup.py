@@ -2,11 +2,13 @@ from setuptools import setup,find_packages
 from codecs import open
 from os import path
 import os
-from COMTool import helpAbout,parameters
+from COMTool import helpAbout, parameters, i18n, version
 import platform
 
-
 here = path.abspath(path.dirname(__file__))
+
+# update translate
+i18n.main("finish")
 
 # Get the long description from the README file
 with open(path.join(here, 'README.MD'), encoding='utf-8') as f:
@@ -22,7 +24,11 @@ if "Linux" in systemPlatform and "arm" in systemPlatform :
 else:
     installRequires = ['pyqt5>=5',
                       'pyserial>=3.4',
-                      'bs4']
+                      'bs4',
+                      'requests',
+                      'urllib3',
+                      'Babel'
+                      ]
 
 setup(
     name='COMTool',
@@ -30,7 +36,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev),
+    version=version.__version__,
 
     # Author details
     author='Neucrack',
@@ -103,7 +109,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-        #  'COMTool': ['style.qss'],
+          'COMTool': ['assets/*', "assets/qss/*", "locales/*/*/*.?o"],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -111,19 +117,7 @@ setup(
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     data_files=[
-         (parameters.strDataAssetsDirName, ['COMToolData/assets/arrow-down.png','COMToolData/assets/logo.png',
-                                            'COMToolData/assets/logo2.png','COMToolData/assets/logo.ico',
-                                            'COMToolData/assets/arrow-left.png',
-                                            'COMToolData/assets/arrow-left-white.png',
-                                            'COMToolData/assets/arrow-right.png',
-                                            'COMToolData/assets/arrow-right-white.png',
-                                            'COMToolData/assets/help.png',
-                                            'COMToolData/assets/help-white.png',
-                                            'COMToolData/assets/skin.png',
-                                            'COMToolData/assets/skin-white.png',]),
-         (parameters.strDataAssetsDirName+"/qss",["COMToolData/assets/qss/style.qss","COMToolData/assets/qss/style-dark.qss"]),
-	 ("",["LICENSE","README.MD"])
-	
+	        ("",["LICENSE","README.MD"])
         ],
 
     # To provide executable scripts, use entry points in preference to the

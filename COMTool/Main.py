@@ -1,10 +1,17 @@
+from genericpath import exists
 import sys,os
 try:
     import parameters,helpAbout,autoUpdate
     from Combobox import ComboBox
+    import i18n
+    from i18n import _
+    import version
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate
     from COMTool.Combobox import ComboBox
+    from COMTool import i18n
+    from COMTool.i18n import _
+    from COMTool import version
 
 # from COMTool.wave import Wave
 from PyQt5.QtCore import pyqtSignal,Qt
@@ -43,22 +50,19 @@ class MainWindow(QMainWindow):
     isHideFunctinal = True
     app = None
     isWaveOpen = False
+    needRestart = False
 
     def __init__(self,app):
         super().__init__()
         self.app = app
-        pathDirList = sys.argv[0].replace("\\", "/").split("/")
-        pathDirList.pop()
-        self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-        if not os.path.exists(self.DataPath + "/" + parameters.strDataDirName):
-            pathDirList.pop()
-            self.DataPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-        self.DataPath = (self.DataPath + "/" + parameters.strDataDirName).replace("\\", "/")
+        self.DataPath = parameters.dataPath
+        self.config = self.loadParameters()
         self.initVar()
+        i18n.set_locale(self.config.locale)
         self.initWindow()
         self.initTool()
+        self.programStartGetSavedParameters(self.config)
         self.initEvent()
-        self.programStartGetSavedParameters()
 
     def __del__(self):
         pass
@@ -69,6 +73,7 @@ class MainWindow(QMainWindow):
     def initVar(self):
         self.keyControlPressed = False
         self.baudrateCustomStr = "custom, input baudrate"
+        self.strings = parameters.Strings(self.config.locale)
 
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
@@ -81,20 +86,16 @@ class MainWindow(QMainWindow):
         self.receiveSendWidget = QSplitter(Qt.Vertical)
         self.functionalWiget = QWidget()
         settingLayout = QVBoxLayout()
-        sendReceiveLayout = QVBoxLayout()
         sendFunctionalLayout = QVBoxLayout()
-        mainLayout = QHBoxLayout()
         self.settingWidget.setLayout(settingLayout)
-        self.receiveSendWidget.setLayout(sendReceiveLayout)
         self.functionalWiget.setLayout(sendFunctionalLayout)
-        mainLayout.addWidget(self.settingWidget)
-        mainLayout.addWidget(self.receiveSendWidget)
-        mainLayout.addWidget(self.functionalWiget)
-        mainLayout.setStretch(0,2)
-        mainLayout.setStretch(1, 6)
-        mainLayout.setStretch(2, 2)
+        mainWidget.addWidget(self.settingWidget)
+        mainWidget.addWidget(self.receiveSendWidget)
+        mainWidget.addWidget(self.functionalWiget)
+        mainWidget.setStretchFactor(0, 3)
+        mainWidget.setStretchFactor(1, 6)
+        mainWidget.setStretchFactor(2, 2)
         menuLayout = QHBoxLayout()
-        mainWidget.setLayout(mainLayout)
         frameLayout.addLayout(menuLayout)
         frameLayout.addWidget(mainWidget)
         frameWidget.setLayout(frameLayout)
@@ -103,6 +104,10 @@ class MainWindow(QMainWindow):
         # option layout
         self.settingsButton = QPushButton()
         self.skinButton = QPushButton("")
+        self.languageCombobox = ComboBox()
+        self.languages = i18n.get_languages()
+        for locale in self.languages:
+            self.languageCombobox.addItem(self.languages[locale])
         # self.waveButton = QPushButton("")
         self.aboutButton = QPushButton()
         self.functionalButton = QPushButton()
@@ -127,6 +132,7 @@ class MainWindow(QMainWindow):
         menuLayout.addWidget(self.skinButton)
         # menuLayout.addWidget(self.waveButton)
         menuLayout.addWidget(self.aboutButton)
+        menuLayout.addWidget(self.languageCombobox)
         menuLayout.addStretch(0)
         menuLayout.addWidget(self.encodingCombobox)
         menuLayout.addWidget(self.functionalButton)
@@ -135,8 +141,8 @@ class MainWindow(QMainWindow):
         # widgets receive and send area
         self.receiveArea = QTextEdit()
         self.sendArea = QTextEdit()
-        self.clearReceiveButtion = QPushButton(parameters.strClearReceive)
-        self.sendButtion = QPushButton(parameters.strSend)
+        self.clearReceiveButtion = QPushButton(self.strings.strClearReceive)
+        self.sendButtion = QPushButton(self.strings.strSend)
         self.sendHistory = ComboBox()
         sendWidget = QWidget()
         sendAreaWidgetsLayout = QHBoxLayout()
@@ -147,36 +153,27 @@ class MainWindow(QMainWindow):
         buttonLayout.addWidget(self.sendButtion)
         sendAreaWidgetsLayout.addWidget(self.sendArea)
         sendAreaWidgetsLayout.addLayout(buttonLayout)
-        sendReceiveLayout.addWidget(self.receiveArea)
-        sendReceiveLayout.addWidget(sendWidget)
-        sendReceiveLayout.addWidget(self.sendHistory)
-        sendReceiveLayout.setStretch(0, 7)
-        sendReceiveLayout.setStretch(1, 2)
-        sendReceiveLayout.setStretch(2, 1)
+        self.receiveSendWidget.addWidget(self.receiveArea)
+        self.receiveSendWidget.addWidget(sendWidget)
+        self.receiveSendWidget.addWidget(self.sendHistory)
+        self.receiveSendWidget.setStretchFactor(0, 7)
+        self.receiveSendWidget.setStretchFactor(1, 2)
+        self.receiveSendWidget.setStretchFactor(2, 1)
 
         # widgets serial settings
-        serialSettingsGroupBox = QGroupBox(parameters.strSerialSettings)
+        serialSettingsGroupBox = QGroupBox(self.strings.strSerialSettings)
         serialSettingsLayout = QGridLayout()
         serialReceiveSettingsLayout = QGridLayout()
         serialSendSettingsLayout = QGridLayout()
-        serialPortLabek = QLabel(parameters.strSerialPort)
-        serailBaudrateLabel = QLabel(parameters.strSerialBaudrate)
-        serailBytesLabel = QLabel(parameters.strSerialBytes)
-        serailParityLabel = QLabel(parameters.strSerialParity)
-        serailStopbitsLabel = QLabel(parameters.strSerialStopbits)
+        serialPortLabek = QLabel(self.strings.strSerialPort)
+        serailBaudrateLabel = QLabel(self.strings.strSerialBaudrate)
+        serailBytesLabel = QLabel(self.strings.strSerialBytes)
+        serailParityLabel = QLabel(self.strings.strSerialParity)
+        serailStopbitsLabel = QLabel(self.strings.strSerialStopbits)
         self.serialPortCombobox = ComboBox()
         self.serailBaudrateCombobox = ComboBox()
-        self.serailBaudrateCombobox.addItem("9600")
-        self.serailBaudrateCombobox.addItem("19200")
-        self.serailBaudrateCombobox.addItem("38400")
-        self.serailBaudrateCombobox.addItem("57600")
-        self.serailBaudrateCombobox.addItem("74880")
-        self.serailBaudrateCombobox.addItem("115200")
-        self.serailBaudrateCombobox.addItem("921600")
-        self.serailBaudrateCombobox.addItem("1000000")
-        self.serailBaudrateCombobox.addItem("1500000")
-        self.serailBaudrateCombobox.addItem("2000000")
-        self.serailBaudrateCombobox.addItem("4500000")
+        for baud in parameters.defaultBaudrates:
+            self.serailBaudrateCombobox.addItem(str(baud))
         self.serailBaudrateCombobox.addItem(self.baudrateCustomStr)
         self.serailBaudrateCombobox.setCurrentIndex(4)
         self.serailBaudrateCombobox.setEditable(True)
@@ -200,7 +197,7 @@ class MainWindow(QMainWindow):
         self.serailStopbitsCombobox.setCurrentIndex(0)
         self.checkBoxRts = QCheckBox("rts")
         self.checkBoxDtr = QCheckBox("dtr")
-        self.serialOpenCloseButton = QPushButton(parameters.strOpen)
+        self.serialOpenCloseButton = QPushButton(self.strings.strOpen)
         serialSettingsLayout.addWidget(serialPortLabek,0,0)
         serialSettingsLayout.addWidget(serailBaudrateLabel, 1, 0)
         serialSettingsLayout.addWidget(serailBytesLabel, 2, 0)
@@ -218,12 +215,16 @@ class MainWindow(QMainWindow):
         settingLayout.addWidget(serialSettingsGroupBox)
 
         # serial receive settings
-        serialReceiveSettingsGroupBox = QGroupBox(parameters.strSerialReceiveSettings)
-        self.receiveSettingsAscii = QRadioButton(parameters.strAscii)
-        self.receiveSettingsHex = QRadioButton(parameters.strHex)
+        serialReceiveSettingsGroupBox = QGroupBox(self.strings.strSerialReceiveSettings)
+        self.receiveSettingsAscii = QRadioButton(self.strings.strAscii)
+        self.receiveSettingsAscii.setToolTip(_("Show recived data as visible format, select decode method at top right corner"))
+        self.receiveSettingsHex = QRadioButton(self.strings.strHex)
+        self.receiveSettingsHex.setToolTip(_("Show recived data as hex format"))
         self.receiveSettingsAscii.setChecked(True)
-        self.receiveSettingsAutoLinefeed = QCheckBox(parameters.strAutoLinefeed)
-        self.receiveSettingsAutoLinefeedTime = QLineEdit(parameters.strAutoLinefeedTime)
+        self.receiveSettingsAutoLinefeed = QCheckBox(self.strings.strAutoLinefeed)
+        self.receiveSettingsAutoLinefeed.setToolTip(_("Auto linefeed after interval, unit: ms"))
+        self.receiveSettingsAutoLinefeedTime = QLineEdit(str(parameters.defaultAutoLinefeedTime))
+        self.receiveSettingsAutoLinefeedTime.setToolTip(_("Auto linefeed after interval, unit: ms"))
         self.receiveSettingsAutoLinefeed.setMaximumWidth(75)
         self.receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
@@ -234,15 +235,20 @@ class MainWindow(QMainWindow):
         settingLayout.addWidget(serialReceiveSettingsGroupBox)
 
         # serial send settings
-        serialSendSettingsGroupBox = QGroupBox(parameters.strSerialSendSettings)
-        self.sendSettingsAscii = QRadioButton(parameters.strAscii)
-        self.sendSettingsHex = QRadioButton(parameters.strHex)
+        serialSendSettingsGroupBox = QGroupBox(self.strings.strSerialSendSettings)
+        self.sendSettingsAscii = QRadioButton(self.strings.strAscii)
+        self.sendSettingsHex = QRadioButton(self.strings.strHex)
+        self.sendSettingsAscii.setToolTip(_("Get send data as visible format, select encoding method at top right corner"))
+        self.sendSettingsHex.setToolTip(_("Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"))
         self.sendSettingsAscii.setChecked(True)
-        self.sendSettingsScheduledCheckBox = QCheckBox(parameters.strScheduled)
-        self.sendSettingsScheduled = QLineEdit(parameters.strScheduledTime)
+        self.sendSettingsScheduledCheckBox = QCheckBox(self.strings.strScheduled)
+        self.sendSettingsScheduledCheckBox.setToolTip(_("Timed send, unit: ms"))
+        self.sendSettingsScheduled = QLineEdit(str(parameters.defaultScheduledTime))
+        self.sendSettingsScheduled.setToolTip(_("Timed send, unit: ms"))
         self.sendSettingsScheduledCheckBox.setMaximumWidth(75)
         self.sendSettingsScheduled.setMaximumWidth(75)
-        self.sendSettingsCFLF = QCheckBox(parameters.strCRLF)
+        self.sendSettingsCFLF = QCheckBox(self.strings.strCRLF)
+        self.sendSettingsCFLF.setToolTip(_("Select to send \\r\\n instead of \\n"))
         self.sendSettingsCFLF.setChecked(False)
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
@@ -252,17 +258,17 @@ class MainWindow(QMainWindow):
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         settingLayout.addWidget(serialSendSettingsGroupBox)
 
-        settingLayout.setStretch(0, 5)
-        settingLayout.setStretch(1, 2.5)
-        settingLayout.setStretch(2, 2.5)
+        settingLayout.setStretch(0, 6)
+        settingLayout.setStretch(1, 3)
+        settingLayout.setStretch(2, 3)
 
         # right functional layout
         self.filePathWidget = QLineEdit()
-        self.openFileButton = QPushButton("Open File")
-        self.sendFileButton = QPushButton("Send File")
-        self.clearHistoryButton = QPushButton("Clear History")
-        self.addButton = QPushButton(parameters.strAdd)
-        fileSendGroupBox = QGroupBox(parameters.strSendFile)
+        self.openFileButton = QPushButton(_("Open File"))
+        self.sendFileButton = QPushButton(_("Send File"))
+        self.clearHistoryButton = QPushButton(_("Clear History"))
+        self.addButton = QPushButton(self.strings.strAdd)
+        fileSendGroupBox = QGroupBox(self.strings.strSendFile)
         fileSendGridLayout = QGridLayout()
         fileSendGridLayout.addWidget(self.filePathWidget, 0, 0, 1, 1)
         fileSendGridLayout.addWidget(self.openFileButton, 0, 1, 1, 1)
@@ -278,17 +284,16 @@ class MainWindow(QMainWindow):
         # main window
         self.statusBarStauts = QLabel()
         self.statusBarStauts.setMinimumWidth(80)
-        self.statusBarStauts.setText("<font color=%s>%s</font>" %("#008200", parameters.strReady))
-        self.statusBarSendCount = QLabel(parameters.strSend+"(bytes): "+"0")
-        self.statusBarReceiveCount = QLabel(parameters.strReceive+"(bytes): "+"0")
+        self.statusBarStauts.setText("<font color=%s>%s</font>" %("#008200", self.strings.strReady))
+        self.statusBarSendCount = QLabel(self.strings.strSend+"("+self.strings.strBytes+"): "+"0")
+        self.statusBarReceiveCount = QLabel(self.strings.strReceive+"("+self.strings.strBytes+"): "+"0")
         self.statusBar().addWidget(self.statusBarStauts)
         self.statusBar().addWidget(self.statusBarSendCount,2)
         self.statusBar().addWidget(self.statusBarReceiveCount,3)
-        # self.statusBar()
 
         self.resize(800, 500)
         self.MoveToCenter()
-        self.setWindowTitle(parameters.appName+" V"+str(helpAbout.versionMajor)+"."+str(helpAbout.versionMinor))
+        self.setWindowTitle(parameters.appName+" v"+version.__version__)
         icon = QIcon()
         print("icon path:"+self.DataPath+"/"+parameters.appIcon)
         icon.addPixmap(QPixmap(self.DataPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
@@ -306,13 +311,14 @@ class MainWindow(QMainWindow):
         self.serialPortCombobox.clicked.connect(self.portComboboxClicked)
         self.serailBaudrateCombobox.currentIndexChanged.connect(self.baudrateIndexChanged)
         self.serailBaudrateCombobox.editTextChanged.connect(self.baudrateIndexChanged)
+        self.languageCombobox.currentIndexChanged.connect(self.onLanguageChanged)
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
         self.showSerialComboboxSignal.connect(self.showCombobox)
         # self.showBaudComboboxSignal.connect(self.showBaudCombobox)
         self.setDisableSettingsSignal.connect(self.setDisableSettings)
-        self.sendHistory.currentIndexChanged.connect(self.sendHistoryIndexChanged)
+        self.sendHistory.activated.connect(self.sendHistoryIndexChanged)
         self.settingsButton.clicked.connect(self.showHideSettings)
         self.skinButton.clicked.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
@@ -335,7 +341,10 @@ class MainWindow(QMainWindow):
     def indexChanged_lambda(self, obj):
         mainObj = obj.arg
         # print("item changed:",mainObj.serialPortCombobox.currentText())
-        self.serialPortCombobox.setToolTip(mainObj.serialPortCombobox.currentText())
+        try:
+            self.serialPortCombobox.setToolTip(mainObj.serialPortCombobox.currentText())
+        except Exception as e:
+            print("[error] indexChanged_lambda:", e)
 
 
     def openCloseSerialProcess(self):
@@ -372,15 +381,15 @@ class MainWindow(QMainWindow):
                 except Exception as e:
                     self.com.close()
                     self.receiveProgressStop = True
-                    self.errorSignal.emit( parameters.strOpenFailed +"\n"+ str(e))
+                    self.errorSignal.emit( self.strings.strOpenFailed +"\n"+ str(e))
                     self.setDisableSettingsSignal.emit(False)
         except Exception as e:
             print(e)
     
     def setDisableSettings(self, disable):
         if disable:
-            self.serialOpenCloseButton.setText(parameters.strClose)
-            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", parameters.strReady))
+            self.serialOpenCloseButton.setText(self.strings.strClose)
+            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", self.strings.strReady))
             self.serialPortCombobox.setDisabled(True)
             self.serailBaudrateCombobox.setDisabled(True)
             self.serailParityCombobox.setDisabled(True)
@@ -388,8 +397,8 @@ class MainWindow(QMainWindow):
             self.serailBytesCombobox.setDisabled(True)
             self.serialOpenCloseButton.setDisabled(False)
         else:
-            self.serialOpenCloseButton.setText(parameters.strOpen)
-            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", parameters.strClosed))
+            self.serialOpenCloseButton.setText(self.strings.strOpen)
+            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", self.strings.strClosed))
             self.serialPortCombobox.setDisabled(False)
             self.serailBaudrateCombobox.setDisabled(False)
             self.serailParityCombobox.setDisabled(False)
@@ -428,7 +437,7 @@ class MainWindow(QMainWindow):
                 data = data.replace("\n", " ")
             data = self.hexStringB2Hex(data)
             if data == -1:
-                self.errorSignal.emit( parameters.strWriteFormatError)
+                self.errorSignal.emit( self.strings.strWriteFormatError)
                 return -1
         else:
             data = data.encode(self.encodingCombobox.currentText(),"ignore")
@@ -456,7 +465,7 @@ class MainWindow(QMainWindow):
                         t.setDaemon(True)
                         t.start()
         except Exception as e:
-            self.errorSignal.emit(parameters.strWriteError)
+            self.errorSignal.emit(self.strings.strWriteError)
             # print(e)
 
     def scheduledSend(self):
@@ -466,7 +475,7 @@ class MainWindow(QMainWindow):
             try:
                 time.sleep(int(self.sendSettingsScheduled.text().strip())/1000)
             except Exception:
-                self.errorSignal.emit(parameters.strTimeFormatError)
+                self.errorSignal.emit(self.strings.strTimeFormatError)
         self.isScheduledSending = False
 
     def receiveData(self):
@@ -515,8 +524,8 @@ class MainWindow(QMainWindow):
                 self.receiveArea.verticalScrollBar().setValue(curScrollValue)
             else:
                 self.receiveArea.moveCursor(QTextCursor.End)
-        self.statusBarSendCount.setText("%s(bytes):%d" %(parameters.strSend ,self.sendCount))
-        self.statusBarReceiveCount.setText("%s(bytes):%d" %(parameters.strReceive ,self.receiveCount))
+        self.statusBarSendCount.setText("%s(bytes):%d" %(self.strings.strSend ,self.sendCount))
+        self.statusBarReceiveCount.setText("%s(bytes):%d" %(self.strings.strReceive ,self.receiveCount))
 
     def onSendSettingsHexClicked(self):
 
@@ -533,8 +542,20 @@ class MainWindow(QMainWindow):
                 data = self.hexStringB2Hex(data).decode(self.encodingCombobox.currentText(),'ignore')
                 self.sendArea.insertPlainText(data)
         except Exception as e:
-            # QMessageBox.information(self,parameters.strWriteFormatError,parameters.strWriteFormatError)
+            # QMessageBox.information(self,self.strings.strWriteFormatError,self.strings.strWriteFormatError)
             print("format error")
+
+    def onLanguageChanged(self):
+        idx = self.languageCombobox.currentIndex()
+        locale = list(self.languages.keys())[idx]
+        self.config.locale = locale
+        i18n.set_locale(locale)
+        reply = QMessageBox.question(self, _('Restart now?'),
+                                     _("language changed to: ") + self.languages[self.config.locale] + "\n" + _("Restart software to take effect now?"), QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.needRestart = True
+            self.close()
 
     def baudrateIndexChanged(self):
         if self.serailBaudrateCombobox.currentText() == self.baudrateCustomStr:
@@ -560,11 +581,11 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, str, str)
 
     def closeEvent(self, event):
-
-        reply = QMessageBox.question(self, 'Sure To Quit?',
-                                     "Are you sure to quit?", QMessageBox.Yes |
-                                     QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        print("----- close event")
+        # reply = QMessageBox.question(self, 'Sure To Quit?',
+        #                              "Are you sure to quit?", QMessageBox.Yes |
+        #                              QMessageBox.No, QMessageBox.No)
+        if 1: # reply == QMessageBox.Yes:
             self.com.close()
             self.receiveProgressStop = True
             self.programExitSaveParameters()
@@ -596,9 +617,9 @@ class MainWindow(QMainWindow):
             if len(portList)>0:
                 currText = self.serialPortCombobox.currentText()
                 self.serialPortCombobox.clear()
-                for i in portList:
-                    showStr = str(i[0])+" "+str(i[1])
-                    if i[0].startswith("/dev/cu.Bluetooth-Incoming-Port"):
+                for p in portList:
+                    showStr = "{} {}-{}-{}".format(p.device, p.name, p.description, p.manufacturer)
+                    if p.device.startswith("/dev/cu.Bluetooth-Incoming-Port"):
                         continue
                     self.serialPortCombobox.addItem(showStr)    
                 index = self.serialPortCombobox.findText(currText)
@@ -636,12 +657,12 @@ class MainWindow(QMainWindow):
         return data
 
     def programExitSaveParameters(self):
-        paramObj = parameters.ParametersToSave()
+        paramObj = self.config
         paramObj.baudRate = self.serailBaudrateCombobox.currentIndex()
         paramObj.dataBytes = self.serailBytesCombobox.currentIndex()
         paramObj.parity = self.serailParityCombobox.currentIndex()
         paramObj.stopBits = self.serailStopbitsCombobox.currentIndex()
-        paramObj.skin = self.param.skin
+        paramObj.skin = self.config.skin
         if self.receiveSettingsHex.isChecked():
             paramObj.receiveAscii = False
         if not self.receiveSettingsAutoLinefeed.isChecked():
@@ -668,22 +689,15 @@ class MainWindow(QMainWindow):
         else:
             paramObj.dtr = 0
         paramObj.encodingIndex = self.encodingCombobox.currentIndex()
-        f = open(parameters.configFilePath,"wb")
-        f.truncate()
-        pickle.dump(paramObj, f)
-        pickle.dump(paramObj.sendHistoryList,f)
-        f.close()
 
-    def programStartGetSavedParameters(self):
-        paramObj = parameters.ParametersToSave()
-        try:
-            f = open(parameters.configFilePath, "rb")
-            paramObj = pickle.load( f)
-            paramObj.sendHistoryList = pickle.load(f)
-            f.close()
-        except Exception as e:
-            f = open(parameters.configFilePath, "wb")
-            f.close()
+        paramObj.save(parameters.configFilePath)
+
+    def loadParameters(self):
+        paramObj = parameters.Parameters()
+        paramObj.load(parameters.configFilePath)
+        return paramObj
+
+    def programStartGetSavedParameters(self, paramObj):
         self.serailBaudrateCombobox.setCurrentIndex(paramObj.baudRate)
         self.serailBytesCombobox.setCurrentIndex(paramObj.dataBytes)
         self.serailParityCombobox.setCurrentIndex(paramObj.parity)
@@ -718,7 +732,11 @@ class MainWindow(QMainWindow):
         else:
             self.checkBoxDtr.setChecked(True)
         self.encodingCombobox.setCurrentIndex(paramObj.encodingIndex)
-        self.param = paramObj
+        try:
+            idx = list(self.languages.keys()).index(paramObj.locale)
+        except Exception:
+            idx = 0
+        self.languageCombobox.setCurrentIndex(idx)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
@@ -780,19 +798,16 @@ class MainWindow(QMainWindow):
             parameters.strStyleShowHideButtonLeft.replace("$DataPath", self.DataPath))
 
     def skinChange(self):
-        if self.param.skin == 1: # light
-            file = open(self.DataPath + '/assets/qss/style-dark.qss', "r")
-            self.param.skin = 2
-        else: # elif self.param.skin == 2: # dark
-            file = open(self.DataPath + '/assets/qss/style.qss', "r")
-            self.param.skin = 1
+        if self.config.skin == 1: # light
+            file = open(self.DataPath + '/assets/qss/style-dark.qss', "r", encoding="utf-8")
+            self.config.skin = 2
+        else: # elif self.config.skin == 2: # dark
+            file = open(self.DataPath + '/assets/qss/style.qss', "r", encoding="utf-8")
+            self.config.skin = 1
         self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
 
     def showAbout(self):
-        QMessageBox.information(self, "About","<h1 style='color:#f75a5a';margin=10px;>"+parameters.appName+
-                                '</h1><br><b style="color:#08c7a1;margin = 5px;">V'+str(helpAbout.versionMajor)+"."+
-                                str(helpAbout.versionMinor)+"."+str(helpAbout.versionDev)+
-                                "</b><br><br>"+helpAbout.date+"<br><br>"+helpAbout.strAbout())
+        QMessageBox.information(self, _("About"), helpAbout.strAbout())
     def selectFile(self):
         oldPath = self.filePathWidget.text()
         if oldPath=="":
@@ -809,20 +824,26 @@ class MainWindow(QMainWindow):
     def sendFile(self):
         filename = self.filePathWidget.text()
         if not os.path.exists(filename):
-            self.errorSignal.emit("File path error\npath:%s" %(filename))
+            self.errorSignal.emit(_("File path error\npath") + ":%s" %(filename))
             return
         try:
             f = open(filename, "rb")
         except Exception as e:
-            self.errorSignal.emit("Open file %s failed! \n %s" %(filename, str(e)))
+            self.errorSignal.emit(_("Open file failed!") + "\n%s\n%s" %(filename, str(e)))
             return
-        self.com.write(f.read()) #TODO: optimize send in new thread
+        if not self.com.is_open:
+            self.errorSignal.emit(_("Connect first please"))
+        else:
+            data = f.read()
+            self.com.write(data) #TODO: optimize send in new thread
+            self.sendCount += len(data)
+            self.receiveUpdateSignal.emit("")
         f.close()
 
     def clearHistory(self):
-        self.param.sendHistoryList.clear()
+        self.config.sendHistoryList.clear()
         self.sendHistory.clear()
-        self.errorSignal.emit("History cleared!")
+        self.errorSignal.emit(_("History cleared!"))
 
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
@@ -841,25 +862,63 @@ class MainWindow(QMainWindow):
     #     print("wave window closed")
     #     self.isWaveOpen = False
 
+def gen_tranlate_files(curr_dir):
+    try:
+        import i18n
+    except Exception:
+        from COMTool import i18n
+    cwd = os.getcwd()
+    os.chdir(curr_dir)
+    i18n.main("finish")
+    os.chdir(cwd)
 
+def load_fonts(paths):
+    from PyQt5 import QtGui
+    for path in paths:
+        id = QtGui.QFontDatabase.addApplicationFont(path)
+        fonts = QtGui.QFontDatabase.applicationFontFamilies(id)
+        print("load fonts:", fonts)
 
 def main():
+    ret = 1
+    try:
+        while 1:
+            # check translate
+            curr_dir = os.path.abspath(os.path.dirname(__file__))
+            print("curr_dir   ", curr_dir)
+            mo_path = os.path.join(curr_dir, "locales", "en", "LC_MESSAGES", "messages.mo")
+            if not os.path.exists(mo_path):
+                gen_tranlate_files(curr_dir)
+            app = QApplication(sys.argv)
+            mainWindow = MainWindow(app)
+            # path = os.path.join(mainWindow.DataPath, "assets", "fonts", "JosefinSans-Regular.ttf")
+            # load_fonts([path])
+            print("data path:"+mainWindow.DataPath)
+            if(mainWindow.config.skin == 1) :# light skin
+                file = open(mainWindow.DataPath+'/assets/qss/style.qss',"r", encoding="utf-8")
+            else: #elif mainWindow.config == 2: # dark skin
+                file = open(mainWindow.DataPath + '/assets/qss/style-dark.qss', "r", encoding="utf-8")
+            qss = file.read().replace("$DataPath",mainWindow.DataPath)
+            app.setStyleSheet(qss)
+            mainWindow.detectSerialPort()
+            t = threading.Thread(target=mainWindow.autoUpdateDetect)
+            t.setDaemon(True)
+            t.start()
+            ret = app.exec_()
+            if not mainWindow.needRestart:
+                print("not mainWindow.needRestart")
+                break
+    except Exception as e:
+        import traceback
+        exc = traceback.format_exc()
+        show_error(_("Error"), exc)
+    return ret
+
+def show_error(title, msg):
     app = QApplication(sys.argv)
-    mainWindow = MainWindow(app)
-    print("data path:"+mainWindow.DataPath)
-    print(mainWindow.param.skin)
-    if(mainWindow.param.skin == 1) :# light skin
-        file = open(mainWindow.DataPath+'/assets/qss/style.qss',"r")
-    else: #elif mainWindow.param == 2: # dark skin
-        file = open(mainWindow.DataPath + '/assets/qss/style-dark.qss', "r")
-    qss = file.read().replace("$DataPath",mainWindow.DataPath)
-    app.setStyleSheet(qss)
-    mainWindow.detectSerialPort()
-    t = threading.Thread(target=mainWindow.autoUpdateDetect)
-    t.setDaemon(True)
-    t.start()
-    sys.exit(app.exec_())
+    window = QMainWindow()
+    QMessageBox.information(window, title, msg)
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
 

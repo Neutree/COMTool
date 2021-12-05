@@ -26,13 +26,13 @@ target_name= 'comtool.exe'
 
 
 build_exe_options = {
-    "include_files":["COMToolData","README.MD","LICENSE"],    
+    "include_files":["README.MD","LICENSE"],    
     #包含外围的ini、jpg文件，以及data目录下所有文件，以上所有的文件路径都是相对于cxsetup.py的路径。
     "packages": [],                #包含用到的包
     "includes": [], 
     "excludes": ["unittest"],                #提出wx里tkinter包
     "path": sys.path,                       #指定上述的寻找路径
-    #  "icon": "COMToolData/assets/logo.ico"                        #指定ico文件
+    #  "icon": "assets/logo.ico"                        #指定ico文件
 };
 
 #快捷方式表，这里定义了三个快捷方式
@@ -141,6 +141,6 @@ setup(  name = parameters.appName,
         executables = [Executable("COMTool/Main.py",
                                   targetName= target_name,
                                   base=base,
-                                  icon= r"COMToolData/assets/logo.ico")
+                                  icon= r"assets/logo.ico")
                        ]) 
 

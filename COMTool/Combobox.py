@@ -9,8 +9,8 @@ class ComboBox(QComboBox):
     def __init__(self):
         QComboBox.__init__(self)
         listView = QListView()
+        listView.executeDelayedItemsLayout()
         self.setView(listView)
-        return
 
     def mouseReleaseEvent(self, QMouseEvent):
         self.showItems()
@@ -19,9 +19,18 @@ class ComboBox(QComboBox):
         # self.popupAboutToBeShown.emit()
         # prevent show popup, manually call it in mouse release event
         pass
+
+    def _showPopup(self):
+        max_w = 0
+        for i in range(self.count()):
+            w = self.view().sizeHintForColumn(i)
+            if w > max_w:
+                max_w = w
+        self.view().setMinimumWidth(max_w + 50)
+        super(ComboBox, self).showPopup()
     
     def showItems(self):
-        super(ComboBox, self).showPopup()
+        self._showPopup()
 
     def mousePressEvent(self, QMouseEvent):
         self.clicked.emit()

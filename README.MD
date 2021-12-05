@@ -9,11 +9,11 @@ A cross platform serial debug tools written by python
 --------
 
 Windows
-![Windows screenshot](./COMToolData/assets/screenshot_V1.7.png)
+![Windows screenshot](./COMTool/assets/screenshot_V1.7.png)
 Linux(Elementry OS)
-![Linux(Elementry OS)screenshot](./COMToolData/assets/screenshot_V1.4_night.png)
+![Linux(Elementry OS)screenshot](./COMTool/assets/screenshot_V1.4_night.png)
 Raspberry Pi3
-![Raspberry Pi screenshot](./COMToolData/assets/RaspberryPiScreenshot.png)
+![Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png)
 > screenshot shows the version 1.0, the latest may not the same totally! But better performance、more easy to use and more elegant
 
 ## Features
@@ -207,6 +207,53 @@ Recommended `PyCharm` IDE to get start
 
 
 5. pull request
+
+## Add translate
+
+* Install environment first(python pip packages in the requirments.txt)
+```shell
+apt install python3 pip
+pip install -r requirements.txt
+```
+
+* If you need to add a new lanuage, or skip
+
+Add locale in [i18n.py](./COMTool/i18n.py)
+```
+locales=["en", "zh_CN", "zh_TW", "ja"]
+```
+append your language to this list, locales can be found [here](https://www.science.co.il/language/Locale-codes.php) or [wikipedia](https://en.wikipedia.org/wiki/Language_localisation), `zh_CN` for example means China Mainland, corresponding luanguage is simplified Chinese characters, `zh_TW` means China Taiwan, and language is traditional Chinese characters, you can also only use `zh` to use simplified Chinese characters.
+
+* Generate translate files
+
+```shell
+python i18n.py prepare
+```
+
+This command will generate `.po` files in locales folder
+
+* Translate mannually
+
+Then translate `.po` files, this is a standard translate file format which named `gettext`
+
+* Generate binary translate files
+
+to make it read faster, the text files `.po` should be convert to binary file `.mo`, just run command:
+```shell
+python i18n.py finish
+```
+and then you can see `locales/<locale>/LC_MESSAGES/messages.mo` file
+
+* Test
+
+Run application, you will see the new translation
+
+* Pull request
+
+Create a PR to merge your changes to [this repo](https://github.com/Neutree/COMTool)
+
+
+
 
 ## Issue and improvement
 

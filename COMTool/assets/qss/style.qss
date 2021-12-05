@@ -1,19 +1,27 @@
+/* @font-face {
+    font-family: "Josefin Sans";
+    src: url("$DataPath/assets/fonts/JosefinSans-Regular.ttf");
+} */
+/* bug 自定义字体发虚， 在py代码中addApplicationFont不会发虚 */
 
 MainWindow {
-    background-color:#212121;
-    color:#bcbcbd;
+    background-color:#f5f5f5;
+    color: #464444;
     min-width:100px;
 }
 QWidget {
-    background-color:#212121;
+    background-color:#f5f5f5;
 }
 QMessageBox {
-    background-color:#212121;
+    background-color:#f5f5f5;
 }
 QWidget {
-    color:#bcbcbd;
+    color:#6b6b6b;
+    font-family: "Microsoft YaHei",Tahoma,Optima,"Trebuchet MS";
 }
-.settingWidget {
+.settingWidget QComboBox{
+    width:60px;
+    min-width:60px;
 }
 #menuItem {
     min-height:27px;
@@ -21,8 +29,15 @@ QWidget {
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    margin-right:10px;
-    background-color: #212121;
+    background-color: #f5f5f5;
+}
+#menuItem:hover {
+    min-height:27px;
+    height:27px;
+    min-width:27px;
+    width:27px;
+    border-radius: 5px;
+    background-color: #0f88eb;
 }
 .menuItem1 {
     min-height:27px;
@@ -66,10 +81,11 @@ QWidget {
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    margin-right:10px;
+    margin-right:0px;
     border-image: url("$DataPath/assets/arrow-right.png")
 }
 .menuItem4:hover {
+    margin-right:0px;
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
 .menuItem5 {
@@ -89,27 +105,23 @@ QWidget {
     min-width:60px;
 }
 QComboBox {
-    border: 1px solid #272727;
-    border-radius: 2px;
+    border: 2px solid #dde4ec;
+    border-radius: 5px;
     padding: 1px 18px 1px 3px;
     min-height:25px;
 }
 
 QComboBox:editable {
-    background: #3a3a3a;
-}
-
-QComboBox:disabled {
-    color:gray;
+    background: #f5f5f5;
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
-     background: #3a3a3a;
+     background: #f5f5f5;
 }
 
 /* QComboBox gets the "on" state when the popup is open */
 QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: #3a3a3a;
+    background: #f5f5f5;
 }
 
 QComboBox:on { /* shift the text when the popup opens */
@@ -121,9 +133,8 @@ QComboBox::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 18px;
-
-    border-left-width: 1px;
-    border-left-color: #524a4a;
+    border-left-width: 0px;
+    border-left-color: #b9b9b9;
     border-left-style: solid; /* just a single line */
     border-top-right-radius: 3px; /* same radius as the QComboBox */
     border-bottom-right-radius: 3px;
@@ -138,14 +149,14 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
     left: 1px;
 }
 QComboBox::hover{
-    border: 1px solid #26a2ff;
+    border: 2px solid #26a2ff;
 }
 QComboBox QAbstractItemView {
-    border: 2px solid #3a3a3a;
+    border: 2px solid #f5f5f5;
     selection-background-color: #26a2ff;
-    selection-color:#bcbcbd;
-    min-width:400px;
-    min-height:10em;
+    selection-color:#f5f5f5;
+    /* min-width:400px;
+    min-height:10em; */
 }
 QComboBox QAbstractItemView::item{
     min-height:3em;
@@ -154,12 +165,11 @@ QComboBox QAbstractItemView::item{
 
 
 QGroupBox {
-    border: 1px solid #3a3a3a;
-    border-radius: 3px;
+    border: 2px solid #e6e6e6;
+    border-radius: 5px;
     padding:0px;
     margin-top: 2ex; /* leave space at the top for the title */
 }
-
 QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top left; /* position at the top center */
@@ -168,24 +178,24 @@ QGroupBox::title {
 
 
 QPushButton {
-    font-family:Tahoma,Optima,"Trebuchet MS";
-    border: 1px solid #383636;
-    border-radius: 3px;
-    background-color: #3a3a3a;
+    border: 2px solid #0f88eb;
+    border-radius: 5px;
+    background-color: #0f88eb;
     min-width: 80px;
     height:30px;
     min-height:25px;
+    color:white;
 }
 
 QPushButton:hover {
-    background-color: #2f2e2e;
-    border: 1px solid #0f88eb;
-    border-radius: 3px;
+    background-color: #0772ca;
+    border: 2px solid #0772ca;
+    border-radius: 5px;
     min-height:25px;
     color:white;
 }
 QPushButton:pressed {
-    background-color: #3a3a3a;
+    background-color: #045292;
 }
 
 QPushButton:flat {
@@ -193,22 +203,22 @@ QPushButton:flat {
 }
 
 QPushButton:default {
-    border-color: navy; /* make the default button prominent */
+    border-color: #0772ca; /* make the default button prominent */
 }
 
 
 QTextEdit, QListView {
-    background-color: #3a3a3a;
-    border: 1px solid #3a3a3a;
+    background-color: #f5f5f5;
+    border: 2px solid #e6e6e6;
     border-radius: 3px;
     background-attachment: scroll;
 }
 
 QLineEdit {
-    border: 1px solid #3a3a3a;
+    border: 2px solid #e6e6e6;
     border-radius: 5px;
     padding: 0 8px;
-    background: #3a3a3a;
+    background: #f5f5f5;
     selection-background-color: #373277;
     height: 30px;
 }
@@ -222,7 +232,7 @@ QCheckBox::indicator {
 }
 
 QCheckBox::indicator:unchecked {
-    background-color: #6b6a6a;
+    background-color: #cecaca;
 }
 
 QCheckBox::indicator:checked {
@@ -236,10 +246,47 @@ QRadioButton::indicator {
 
 QRadioButton::indicator:unchecked {
     border-radius:6px;
-    background-color: #6b6a6a;
+    background-color: #cecaca;
 }
 
 QRadioButton::indicator::checked {
     border-radius:6px;
     background-color: #7777cc;
+}
+
+QToolTip {
+    border: 0px solid #0772ca;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+    background: #7777cc;
+}
+
+QStatusBar::item {
+	border:none;
+}
+
+
+QScrollBar:vertical {
+    border: none;
+    background: #f5f5f5;
+    width: 10px;
+    border-radius: 5px;
+}
+QScrollBar::handle:vertical {
+    background: #cfcfcf;
+    border-radius: 5px;
+}
+QScrollBar::add-line:vertical {
+    border: none;
+}
+QScrollBar::sub-line:vertical {
+    border: none;
+}
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: none;
+    background-color: #f5f5f5;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background-color: #f5f5f5;
 }

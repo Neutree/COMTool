@@ -1,34 +1,46 @@
 import sys
 try:
     import parameters
+    from i18n import _
+    import version
 except ImportError:
     from COMTool import parameters
+    from COMTool.i18n import _
+    from COMTool import version
+    
 import os
+import PyQt5.QtCore
+import time
 
-versionMajor = 1
-versionMinor = 7
-versionDev   = 9
-date = "2019.06.27"
 
 def strAbout():
-    pathDirList = sys.argv[0].replace("\\", "/").split("/")
-    pathDirList.pop()
-    strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-    if not os.path.exists(strPath+"/"+parameters.appIcon):
-        pathDirList.pop()
-        strPath = os.path.abspath("/".join(str(i) for i in pathDirList))
-    strPath = strPath+"/"+parameters.strDataDirName
     return '''\
-Python 3.6.1 + PyQt5<br><br>
-<div><div>COMTool is a Open source project create by </div><a style="vertical-align: middle;" href="http://www.neucrack.com"><img src="'''+strPath+"/"+parameters.appLogo2+'''" width=109 height=32></img></a></div><br><br>
+<h1 style='color:#f75a5a';margin=10px;>{}</h1><br>
+<b style="color:#08c7a1;margin = 5px;">v{}</b><br><br>
+{} + {}<br><br>
+<div>
+    <div>{}</div>
+    <a style="vertical-align: middle;" href="https://neucrack.com">
+        <img src="{}" width=109 height=32/></a>
+</div><br><br>
+{} <b><a href="https://github.com/neutree/COMTool">Github</a></b><br><br>
+{}<br><br>
+{}<br>
+<b style="color:red;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
+ <b style="color:red;"><kbd>Ctrl+L</kbd></b>: {}<br>
+ <b style="color:red;"><kbd>Ctrl+K</kbd></b>: {}<br>
 
-See more on <b><a href="https://github.com/neutree/COMTool.git">Github</a></b><br><br>
-Welcome to improve it together<br><br>
-
-
-Shortcut:<br>
-<b style="color:red;"><kbd>Ctrl+Enter</kbd></b>: Send data<br>
- <b style="color:red;"><kbd>Ctrl+L</kbd></b>: Clear Send Area<br>
- <b style="color:red;"><kbd>Ctrl+K</kbd></b>: Clear Receive Area<br>
-
-'''
+'''.format(
+    parameters.appName,
+    version.__version__,
+    f'{sys.implementation.name}{sys.implementation.version.major}.{sys.implementation.version.minor}',
+    f'PyQt{PyQt5.QtCore.QT_VERSION_STR}',
+    _('COMTool is a Open source project create by'),
+    f'{parameters.dataPath}/{parameters.appLogo2}',
+    _('See more on'),
+    _('Welcome to improve it together'),
+    _('Shortcut:'),
+    _('Send data'),
+    _('Clear Send Area'),
+    _('Clear Receive Area')
+)
