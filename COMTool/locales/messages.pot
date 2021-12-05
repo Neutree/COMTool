@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-05 17:55+0800\n"
+"POT-Creation-Date: 2021-12-05 23:17+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,117 +17,121 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:224
+#: Main.py:173
+msgid "Flow control"
+msgstr ""
+
+#: Main.py:207 Main.py:208
+msgid "Check to enable(usually output low level)"
+msgstr ""
+
+#: Main.py:231
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:226
+#: Main.py:233
 msgid "Show recived data as hex format"
 msgstr ""
 
-#: Main.py:229 Main.py:231
+#: Main.py:236 Main.py:238
 msgid "Auto linefeed after interval, unit: ms"
 msgstr ""
 
-#: Main.py:245
+#: Main.py:252
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:246
+#: Main.py:253
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
-#: Main.py:249 Main.py:251
+#: Main.py:256 Main.py:258
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: Main.py:255
+#: Main.py:262
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
-#: Main.py:271
+#: Main.py:278
 msgid "Open File"
 msgstr ""
 
-#: Main.py:272 parameters.py:46
+#: Main.py:279 parameters.py:46
 msgid "Send File"
 msgstr ""
 
-#: Main.py:273
+#: Main.py:280
 msgid "Clear History"
 msgstr ""
 
-#: Main.py:557
+#: Main.py:572
 msgid "Restart now?"
 msgstr ""
 
-#: Main.py:558
+#: Main.py:573
 msgid "language changed to: "
 msgstr ""
 
-#: Main.py:558
+#: Main.py:573
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: Main.py:813
+#: Main.py:845
 msgid "About"
 msgstr ""
 
-#: Main.py:830
+#: Main.py:862
 msgid ""
 "File path error\n"
 "path"
 msgstr ""
 
-#: Main.py:835
+#: Main.py:867
 msgid "Open file failed!"
 msgstr ""
 
-#: Main.py:838
+#: Main.py:870
 msgid "Connect first please"
 msgstr ""
 
-#: Main.py:849
+#: Main.py:881
 msgid "History cleared!"
 msgstr ""
 
-#: Main.py:926
+#: Main.py:949
 msgid "Error"
 msgstr ""
 
-#: helpAbout.py:39
-msgid "Pack date:"
-msgstr ""
-
-#: helpAbout.py:41
+#: helpAbout.py:38
 msgid "COMTool is a Open source project create by"
 msgstr ""
 
-#: helpAbout.py:43
+#: helpAbout.py:40
 msgid "See more on"
 msgstr ""
 
-#: helpAbout.py:44
+#: helpAbout.py:41
 msgid "Welcome to improve it together"
 msgstr ""
 
-#: helpAbout.py:45
+#: helpAbout.py:42
 msgid "Shortcut:"
 msgstr ""
 
-#: helpAbout.py:46
+#: helpAbout.py:43
 msgid "Send data"
 msgstr ""
 
-#: helpAbout.py:47
+#: helpAbout.py:44
 msgid "Clear Send Area"
 msgstr ""
 
-#: helpAbout.py:48
+#: helpAbout.py:45
 msgid "Clear Receive Area"
 msgstr ""
 
