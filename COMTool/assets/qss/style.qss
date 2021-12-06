@@ -267,26 +267,31 @@ QStatusBar::item {
 }
 
 
-QScrollBar:vertical {
+QScrollBar {
     border: none;
     background: #f5f5f5;
-    width: 10px;
     border-radius: 5px;
 }
-QScrollBar::handle:vertical {
+QScrollBar:vertical {
+    width: 10px;
+}
+QScrollBar:horizontal {
+    height: 10px;
+}
+QScrollBar::handle {
     background: #cfcfcf;
     border-radius: 5px;
 }
-QScrollBar::add-line:vertical {
+QScrollBar::add-line {
     border: none;
 }
-QScrollBar::sub-line:vertical {
+QScrollBar::sub-line {
     border: none;
 }
-QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+QScrollBar::up-arrow, QScrollBar::down-arrow {
     border: none;
     background-color: #f5f5f5;
 }
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+QScrollBar::add-page, QScrollBar::sub-page {
     background-color: #f5f5f5;
 }

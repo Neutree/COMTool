@@ -44,6 +44,7 @@ class Strings:
         self.strAdd = _("+")
         self.strFunctionalSend = _("Functional Send")
         self.strSendFile = _("Send File")
+        self.strSendingFile = _("Sendding File")
         self.strOpenFailed = _("Open Failed")
         self.strClosed = _("Closed")
         self.strWriteError = _("Send Error")

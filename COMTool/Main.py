@@ -39,6 +39,8 @@ class MyClass(object):
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
     errorSignal = pyqtSignal(str)
+    statusBarSignal = pyqtSignal(str, str)
+    sendFileOkSignal = pyqtSignal(bool, str)
     showSerialComboboxSignal = pyqtSignal()
     setDisableSettingsSignal = pyqtSignal(bool)
     isDetectSerialPort = False
@@ -74,6 +76,8 @@ class MainWindow(QMainWindow):
         self.keyControlPressed = False
         self.baudrateCustomStr = "custom, input baudrate"
         self.strings = parameters.Strings(self.config.locale)
+        self.dataToSend = []
+        self.fileToSend = []
 
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
@@ -92,8 +96,8 @@ class MainWindow(QMainWindow):
         mainWidget.addWidget(self.settingWidget)
         mainWidget.addWidget(self.receiveSendWidget)
         mainWidget.addWidget(self.functionalWiget)
-        mainWidget.setStretchFactor(0, 3)
-        mainWidget.setStretchFactor(1, 6)
+        mainWidget.setStretchFactor(0, 4)
+        mainWidget.setStretchFactor(1, 7)
         mainWidget.setStretchFactor(2, 2)
         menuLayout = QHBoxLayout()
         frameLayout.addLayout(menuLayout)
@@ -295,7 +299,7 @@ class MainWindow(QMainWindow):
         # main window
         self.statusBarStauts = QLabel()
         self.statusBarStauts.setMinimumWidth(80)
-        self.statusBarStauts.setText("<font color=%s>%s</font>" %("#008200", self.strings.strReady))
+        self.onstatusBarText("info", self.strings.strReady)
         self.statusBarSendCount = QLabel(self.strings.strSend+"("+self.strings.strBytes+"): "+"0")
         self.statusBarReceiveCount = QLabel(self.strings.strReceive+"("+self.strings.strBytes+"): "+"0")
         self.statusBar().addWidget(self.statusBarStauts)
@@ -316,7 +320,7 @@ class MainWindow(QMainWindow):
 
     def initEvent(self):
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
-        self.sendButtion.clicked.connect(self.sendData)
+        self.sendButtion.clicked.connect(self.onSendData)
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
         self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
         self.serialPortCombobox.clicked.connect(self.portComboboxClicked)
@@ -326,6 +330,8 @@ class MainWindow(QMainWindow):
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.errorSignal.connect(self.errorHint)
+        self.sendFileOkSignal.connect(self.onSentFile)
+        self.statusBarSignal.connect(self.onstatusBarText)
         self.showSerialComboboxSignal.connect(self.showCombobox)
         # self.showBaudComboboxSignal.connect(self.showBaudCombobox)
         self.setDisableSettingsSignal.connect(self.setDisableSettings)
@@ -360,9 +366,12 @@ class MainWindow(QMainWindow):
 
     def openCloseSerialProcess(self):
         try:
-            if self.com.is_open:
+            if self.serialOpenCloseButton.text() == self.strings.strClose:
                 self.receiveProgressStop = True
-                self.com.close()
+                try:
+                    self.com.close()
+                except Exception:
+                    pass
                 self.setDisableSettingsSignal.emit(False)
             else:
                 try:
@@ -398,12 +407,17 @@ class MainWindow(QMainWindow):
                     # print("open success")
                     # print(self.com)
                     self.setDisableSettingsSignal.emit(True)
-                    self.receiveProcess = threading.Thread(target=self.receiveData)
+                    self.receiveProcess = threading.Thread(target=self.receiveDataProcess)
                     self.receiveProcess.setDaemon(True)
+                    self.sendProcess = threading.Thread(target=self.sendDataProcess)
+                    self.sendProcess.setDaemon(True)
+                    self.dataToSend = []
+                    self.fileToSend = []
                     self.receiveProcess.start()
+                    self.sendProcess.start()
                 except Exception as e:
-                    self.com.close()
                     self.receiveProgressStop = True
+                    self.com.close()
                     self.errorSignal.emit( self.strings.strOpenFailed +"\n"+ str(e))
                     self.setDisableSettingsSignal.emit(False)
         except Exception as e:
@@ -412,7 +426,7 @@ class MainWindow(QMainWindow):
     def setDisableSettings(self, disable):
         if disable:
             self.serialOpenCloseButton.setText(self.strings.strClose)
-            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#008200", self.strings.strReady))
+            self.onstatusBarText("info", self.strings.strReady)
             self.serialPortCombobox.setDisabled(True)
             self.serailBaudrateCombobox.setDisabled(True)
             self.serailParityCombobox.setDisabled(True)
@@ -422,7 +436,7 @@ class MainWindow(QMainWindow):
             self.serialOpenCloseButton.setDisabled(False)
         else:
             self.serialOpenCloseButton.setText(self.strings.strOpen)
-            self.statusBarStauts.setText("<font color=%s>%s</font>" % ("#f31414", self.strings.strClosed))
+            self.onstatusBarText("info", self.strings.strClosed)
             self.serialPortCombobox.setDisabled(False)
             self.serailBaudrateCombobox.setDisabled(False)
             self.serailParityCombobox.setDisabled(False)
@@ -445,7 +459,7 @@ class MainWindow(QMainWindow):
     def portComboboxClicked(self):
         self.detectSerialPort()
 
-    def getSendData(self):
+    def getSendData(self) -> bytes:
         data = self.sendArea.toPlainText()
         if self.sendSettingsCFLF.isChecked():
             data = data.replace("\n", "\r\n")
@@ -457,26 +471,22 @@ class MainWindow(QMainWindow):
             data = self.hexStringB2Hex(data)
             if data == -1:
                 self.errorSignal.emit( self.strings.strWriteFormatError)
-                return -1
+                return b''
         else:
             data = data.encode(self.encodingCombobox.currentText(),"ignore")
         return data
 
-    def sendData(self):
+    def onSendData(self):
         try:
             if self.com.is_open:
                 data = self.getSendData()
-                if data == -1:
+                if not data:
                     return
-                # print(self.sendArea.toPlainText())
-                # print("send:",data)
-                self.sendCount += len(data)
-                self.com.write(data)
+                self.sendData(data_bytes=data)
                 data = self.sendArea.toPlainText()
                 self.sendHistoryFindDelete(data)
                 self.sendHistory.insertItem(0,data)
                 self.sendHistory.setCurrentIndex(0)
-                self.receiveUpdateSignal.emit("")
                 # scheduled send
                 if self.sendSettingsScheduledCheckBox.isChecked():
                     if not self.isScheduledSending:
@@ -490,17 +500,35 @@ class MainWindow(QMainWindow):
     def scheduledSend(self):
         self.isScheduledSending = True
         while self.sendSettingsScheduledCheckBox.isChecked():
-            self.sendData()
+            self.onSendData()
             try:
                 time.sleep(int(self.sendSettingsScheduled.text().strip())/1000)
             except Exception:
                 self.errorSignal.emit(self.strings.strTimeFormatError)
         self.isScheduledSending = False
 
-    def receiveData(self):
+    def receiveDataProcess(self):
         self.receiveProgressStop = False
         self.timeLastReceive = 0
+        waitingReconnect = False
+        def portExits():
+            ports = self.findSerialPort()
+            devices = []
+            for p in ports:
+                devices.append(p.device)
+            if self.com.port in devices:
+                return True
+            return False
         while(not self.receiveProgressStop):
+            if waitingReconnect and portExits():
+                try:
+                    self.com.open()
+                    print("reopen connection")
+                    waitingReconnect = False
+                    self.statusBarSignal.emit("info", _("Ready"))
+                except Exception as e:
+                    time.sleep(0.01)
+                continue
             try:
                 # length = self.com.in_waiting
                 length = max(1, min(2048, self.com.in_waiting))
@@ -523,15 +551,67 @@ class MainWindow(QMainWindow):
                     else:
                         self.receiveUpdateSignal.emit(bytes.decode(self.encodingCombobox.currentText(),"ignore"))
             except Exception as e:
-                # print("receiveData error")
-                # if self.com.is_open and not self.serialPortCombobox.isEnabled():
-                #     self.openCloseSerial()
-                #     self.serialPortCombobox.clear()
-                #     self.detectSerialPort()
+                if (not self.receiveProgressStop) and not portExits():
+                    self.com.close()
+                    waitingReconnect = True
+                    self.statusBarSignal.emit("error", _("Connection lose!"))
+
+    def sendData(self, data_bytes=None, file_path=None):
+        if data_bytes:
+            self.dataToSend.insert(0, data_bytes)
+        if file_path:
+            self.fileToSend.insert(0, file_path)
+
+    def sendFile(self):
+        filename = self.filePathWidget.text()
+        if not os.path.exists(filename):
+            self.errorSignal.emit(_("File path error\npath") + ":%s" %(filename))
+            return
+        if not self.com.is_open:
+            self.errorSignal.emit(_("Connect first please"))
+        else:
+            self.sendFileButton.setDisabled(True)
+            self.sendFileButton.setText(self.strings.strSendingFile)
+            self.sendData(file_path=filename)
+
+    def onSent(self, n_bytes):
+        self.sendCount += n_bytes
+        self.receiveUpdateSignal.emit("")
+
+    def onSentFile(self, ok, path):
+        print(f"file sent {'ok' if ok else 'fail'}, path: {path}")
+        self.sendFileButton.setText(self.strings.strSendFile)
+        self.sendFileButton.setDisabled(False)
+
+    def sendDataProcess(self):
+        self.receiveProgressStop = False
+        self.timeLastReceive = 0
+        while(not self.receiveProgressStop):
+            try:
+                while len(self.dataToSend) > 0:
+                    data = self.dataToSend.pop()
+                    self.com.write(data)
+                    self.onSent(len(data))
+                while len(self.fileToSend) > 0:
+                    file_path = self.fileToSend.pop()
+                    ok = False
+                    if file_path and os.path.exists(file_path):
+                        data = None
+                        try:
+                            with open(file_path, "rb") as f:
+                                data = f.read()
+                        except Exception as e:
+                            self.errorSignal.emit(_("Open file failed!") + "\n%s\n%s" %(file_path, str(e)))
+                        if data:
+                            self.com.write(data)
+                            self.onSent(len(data))
+                            ok = True
+                    self.sendFileOkSignal.emit(ok, file_path)
+                time.sleep(0.001)
+            except Exception as e:
                 if 'multiple access' in str(e):
                     self.errorSignal.emit("device disconnected or multiple access on port?")
                 break
-            # time.sleep(0.009)
 
     def updateReceivedDataDisplay(self,str):
         if str != "":
@@ -543,8 +623,22 @@ class MainWindow(QMainWindow):
                 self.receiveArea.verticalScrollBar().setValue(curScrollValue)
             else:
                 self.receiveArea.moveCursor(QTextCursor.End)
-        self.statusBarSendCount.setText("%s(bytes):%d" %(self.strings.strSend ,self.sendCount))
-        self.statusBarReceiveCount.setText("%s(bytes):%d" %(self.strings.strReceive ,self.receiveCount))
+        self.statusBarSendCount.setText(f'{self.strings.strSend}({_("bytes")}): {self.sendCount}')
+        self.statusBarReceiveCount.setText(f'{self.strings.strReceive}({_("bytes")}): {self.receiveCount}')
+
+    def onstatusBarText(self, msg_type, msg):
+        if msg_type == "info":
+            color = "#008200"
+        elif msg_type == "warn":
+            color = "#fdd835"
+        elif msg_type == "error":
+            color = "#f44336"
+        else:
+            color = "#008200"
+        text = f'<font color={color}>{msg}</font>'
+        self.statusBarStauts.setText(text)
+
+
 
     def onSendSettingsHexClicked(self):
 
@@ -605,8 +699,8 @@ class MainWindow(QMainWindow):
         #                              "Are you sure to quit?", QMessageBox.Yes |
         #                              QMessageBox.No, QMessageBox.No)
         if 1: # reply == QMessageBox.Yes:
-            self.com.close()
             self.receiveProgressStop = True
+            self.com.close()
             self.programExitSaveParameters()
             event.accept()
         else:
@@ -637,7 +731,17 @@ class MainWindow(QMainWindow):
                 currText = self.serialPortCombobox.currentText()
                 self.serialPortCombobox.clear()
                 for p in portList:
-                    showStr = "{} {}-{}-{}".format(p.device, p.name, p.description, p.manufacturer)
+                    showStr = "{} {} - {}".format(p.device, p.name, p.description)
+                    if p.manufacturer:
+                        showStr += f' - {p.manufacturer}'
+                    if p.subsystem:
+                        showStr += f' - {p.subsystem}'
+                    if p.pid:
+                        showStr += ' - pid(0x{:04X})'.format(p.pid)
+                    if p.vid:
+                        showStr += ' - vid(0x{:04X})'.format(p.vid)
+                    if p.serial_number:
+                        showStr += f' - v{p.serial_number}'
                     if p.device.startswith("/dev/cu.Bluetooth-Incoming-Port"):
                         continue
                     self.serialPortCombobox.addItem(showStr)    
@@ -762,7 +866,7 @@ class MainWindow(QMainWindow):
             self.keyControlPressed = True
         elif event.key() == Qt.Key_Return or event.key()==Qt.Key_Enter:
             if self.keyControlPressed:
-                self.sendData()
+                self.onSendData()
         elif event.key() == Qt.Key_L:
             if self.keyControlPressed:
                 self.sendArea.clear()
@@ -839,25 +943,6 @@ class MainWindow(QMainWindow):
         if fileName_choose == "":
             return
         self.filePathWidget.setText(fileName_choose)
-
-    def sendFile(self):
-        filename = self.filePathWidget.text()
-        if not os.path.exists(filename):
-            self.errorSignal.emit(_("File path error\npath") + ":%s" %(filename))
-            return
-        try:
-            f = open(filename, "rb")
-        except Exception as e:
-            self.errorSignal.emit(_("Open file failed!") + "\n%s\n%s" %(filename, str(e)))
-            return
-        if not self.com.is_open:
-            self.errorSignal.emit(_("Connect first please"))
-        else:
-            data = f.read()
-            self.com.write(data) #TODO: optimize send in new thread
-            self.sendCount += len(data)
-            self.receiveUpdateSignal.emit("")
-        f.close()
 
     def clearHistory(self):
         self.config.sendHistoryList.clear()

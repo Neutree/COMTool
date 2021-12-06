@@ -255,27 +255,32 @@ QStatusBar::item {
 	border:none;
 }
 
-QScrollBar:vertical {
+QScrollBar {
     border: none;
     background: #3a3a3a;
-    width: 10px;
     border-radius: 5px;
 }
-QScrollBar::handle:vertical {
+QScrollBar:vertical {
+    width: 10px;
+}
+QScrollBar:horizontal {
+    height: 10px;
+}
+QScrollBar::handle {
     background: #212121;
     border-radius: 5px;
 }
-QScrollBar::add-line:vertical {
+QScrollBar::add-line {
     border: none;
 }
-QScrollBar::sub-line:vertical {
+QScrollBar::sub-line {
     border: none;
 }
-QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+QScrollBar::up-arrow, QScrollBar::down-arrow {
     border: none;
     background-color: #3a3a3a;
 }
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+QScrollBar::add-page, QScrollBar::sub-page {
     background: none;
     background-color: #3a3a3a;
 }
