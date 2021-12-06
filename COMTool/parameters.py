@@ -102,7 +102,9 @@ class Parameters:
     locale = "en"
     showTimestamp = False
     recordSend = False
-    encodingIndex = 0
+    encoding = "ASCII"
+    saveLogPath = ""
+    saveLog = False
     sendHistoryList = []
 
     def save(self, path):

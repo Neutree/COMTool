@@ -1,6 +1,5 @@
 from genericpath import exists
 import sys,os
-print(sys.path)
 try:
     import parameters,helpAbout,autoUpdate
     from Combobox import ComboBox
@@ -87,6 +86,7 @@ class MainWindow(QMainWindow):
         self.strings = parameters.Strings(self.config.locale)
         self.dataToSend = []
         self.fileToSend = []
+        self.sendRecord = []
 
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
@@ -125,12 +125,9 @@ class MainWindow(QMainWindow):
         self.aboutButton = QPushButton()
         self.functionalButton = QPushButton()
         self.encodingCombobox = ComboBox()
-        self.encodingCombobox.addItem("ASCII")
-        self.encodingCombobox.addItem("UTF-8")
-        self.encodingCombobox.addItem("UTF-16")
-        self.encodingCombobox.addItem("GBK")
-        self.encodingCombobox.addItem("GB2312")
-        self.encodingCombobox.addItem("GB18030")
+        self.supportedEncoding = ["ASCII", "UTF-8", "UTF-16", "GBK", "GB2312", "GB18030"]
+        for encoding in self.supportedEncoding:
+            self.encodingCombobox.addItem(encoding)
         self.settingsButton.setProperty("class", "menuItem1")
         self.skinButton.setProperty("class", "menuItem2")
         self.aboutButton.setProperty("class", "menuItem3")
@@ -302,6 +299,16 @@ class MainWindow(QMainWindow):
         fileSendGridLayout.addWidget(self.openFileButton, 0, 1, 1, 1)
         fileSendGridLayout.addWidget(self.sendFileButton, 1, 0, 1, 2)
         fileSendGroupBox.setLayout(fileSendGridLayout)
+        logFileGroupBox = QGroupBox(_("Save log"))
+        logFileLayout = QHBoxLayout()
+        self.saveLogCheckbox = QCheckBox()
+        self.logFilePath = QLineEdit()
+        self.logFileBtn = QPushButton(_("Log path"))
+        logFileLayout.addWidget(self.saveLogCheckbox)
+        logFileLayout.addWidget(self.logFilePath)
+        logFileLayout.addWidget(self.logFileBtn)
+        logFileGroupBox.setLayout(logFileLayout)
+        sendFunctionalLayout.addWidget(logFileGroupBox)
         sendFunctionalLayout.addWidget(fileSendGroupBox)
         sendFunctionalLayout.addWidget(self.clearHistoryButton)
         sendFunctionalLayout.addWidget(self.addButton)
@@ -357,6 +364,7 @@ class MainWindow(QMainWindow):
         self.skinButton.clicked.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
         self.openFileButton.clicked.connect(self.selectFile)
+        self.logFileBtn.clicked.connect(self.selectLogFile)
         self.sendFileButton.clicked.connect(self.sendFile)
         self.clearHistoryButton.clicked.connect(self.clearHistory)
         self.addButton.clicked.connect(self.functionAdd)
@@ -365,6 +373,8 @@ class MainWindow(QMainWindow):
         # self.waveButton.clicked.connect(self.openWaveDisplay)
         self.checkBoxRTS.clicked.connect(self.rtsChanged)
         self.checkBoxDTR.clicked.connect(self.dtrChanged)
+        self.saveLogCheckbox.clicked.connect(self.setSaveLog)
+        self.encodingCombobox.currentIndexChanged.connect(self.onEncodingChanged)
 
         self.myObject=MyClass(self)
         slotLambda = lambda: self.indexChanged_lambda(self.myObject)
@@ -476,6 +486,12 @@ class MainWindow(QMainWindow):
     def dtrChanged(self):
         self.com.dtr = self.checkBoxDTR.isChecked()
 
+    def setSaveLog(self):
+        if self.saveLogCheckbox.isChecked():
+            self.config.saveLog = True
+        else:
+            self.config.saveLog = False
+
     def portComboboxClicked(self):
         self.detectSerialPort()
 
@@ -519,8 +535,8 @@ class MainWindow(QMainWindow):
                         record = head + sendStr
                     else:
                         record = f'{head.rstrip()}: {sendStr}'
-
                     self.receiveUpdateSignal.emit(record)
+                    self.sendRecord.insert(0, record)
                 self.sendData(data_bytes=data)
                 data = self.sendArea.toPlainText()
                 self.sendHistoryFindDelete(data)
@@ -559,6 +575,7 @@ class MainWindow(QMainWindow):
         timeLastReceive = 0
         waitingReconnect = False
         new_line = True
+        logData = None
         while(not self.receiveProgressStop):
             if waitingReconnect:
                 if portExits():
@@ -582,15 +599,15 @@ class MainWindow(QMainWindow):
                     # if self.isWaveOpen:
                     #     self.wave.displayData(bytes)
                     self.receiveCount += len(bytes)
+                    head = ""
                     if time.time() - timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
                         if self.config.showTimestamp or self.receiveSettingsAutoLinefeed.isChecked():
                             if self.sendSettingsCRLF.isChecked():
-                                self.receiveUpdateSignal.emit("\r\n")
+                                head += "\r\n"
                             else:
-                                self.receiveUpdateSignal.emit("\n")
+                                head += "\n"
                             new_line = True
-                    data = None
-                    head = ""
+                    data = ""
                     if self.receiveSettingsHex.isChecked():
                         data = self.asciiB2HexString(bytes)
                     else:
@@ -603,7 +620,9 @@ class MainWindow(QMainWindow):
                             head += timeNow
                             head = f'{head.rstrip()}: '
                         new_line = False
-                    self.receiveUpdateSignal.emit(head + data)
+                    data = head + data
+                    self.receiveUpdateSignal.emit(data)
+                    logData = data
                     timeLastReceive = time.time()
             except Exception as e:
                 if (not self.receiveProgressStop) and not portExits():
@@ -611,6 +630,10 @@ class MainWindow(QMainWindow):
                     waitingReconnect = True
                     self.connectionSignal.emit(ConnectionStatus.LOSE)
                     self.statusBarSignal.emit("warning", _("Connection lose!"))
+            while len(self.sendRecord) > 0:
+                self.onLog(self.sendRecord.pop())
+            if logData:
+                self.onLog(logData)
 
     def sendData(self, data_bytes=None, file_path=None):
         if data_bytes:
@@ -668,8 +691,8 @@ class MainWindow(QMainWindow):
                     self.errorSignal.emit("device disconnected or multiple access on port?")
                 break
 
-    def updateReceivedDataDisplay(self,str):
-        if str != "":
+    def updateReceivedDataDisplay(self, str):
+        if str:
             curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
             endScrollValue = self.receiveArea.verticalScrollBar().value()
@@ -707,7 +730,6 @@ class MainWindow(QMainWindow):
 
 
     def onSendSettingsHexClicked(self):
-
         data = self.sendArea.toPlainText().replace("\n","\r\n")
         data = self.asciiB2HexString(data.encode())
         self.sendArea.clear()
@@ -816,8 +838,6 @@ class MainWindow(QMainWindow):
                     showStr = "{} {} - {}".format(p.device, p.name, p.description)
                     if p.manufacturer:
                         showStr += f' - {p.manufacturer}'
-                    if p.subsystem:
-                        showStr += f' - {p.subsystem}'
                     if p.pid:
                         showStr += ' - pid(0x{:04X})'.format(p.pid)
                     if p.vid:
@@ -912,7 +932,7 @@ class MainWindow(QMainWindow):
             paramObj.dtr = 1
         else:
             paramObj.dtr = 0
-        paramObj.encodingIndex = self.encodingCombobox.currentIndex()
+        paramObj.encoding = self.encodingCombobox.currentText()
 
         paramObj.save(parameters.configFilePath)
 
@@ -957,12 +977,15 @@ class MainWindow(QMainWindow):
             self.checkBoxDTR.setChecked(False)
         else:
             self.checkBoxDTR.setChecked(True)
-        self.encodingCombobox.setCurrentIndex(paramObj.encodingIndex)
+        self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(paramObj.encoding))
         try:
             idx = list(self.languages.keys()).index(paramObj.locale)
         except Exception:
             idx = 0
         self.languageCombobox.setCurrentIndex(idx)
+        self.logFilePath.setText(paramObj.saveLogPath)
+        self.logFilePath.setToolTip(paramObj.saveLogPath)
+        self.saveLogCheckbox.setChecked(paramObj.saveLog)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
@@ -1032,6 +1055,9 @@ class MainWindow(QMainWindow):
             self.config.skin = 1
         self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
 
+    def onEncodingChanged(self):
+        self.config.encoding = self.encodingCombobox.currentText()
+
     def showAbout(self):
         QMessageBox.information(self, _("About"), helpAbout.strAbout())
     def selectFile(self):
@@ -1039,13 +1065,33 @@ class MainWindow(QMainWindow):
         if oldPath=="":
             oldPath = os.getcwd()
         fileName_choose, filetype = QFileDialog.getOpenFileName(self,  
-                                    "SelectFile",
+                                    _("Select file"),
                                     oldPath,
-                                    "All Files (*);;")
+                                    _("All Files (*)"))
 
         if fileName_choose == "":
             return
         self.filePathWidget.setText(fileName_choose)
+        self.filePathWidget.setToolTip(fileName_choose)
+
+    def selectLogFile(self):
+        oldPath = self.logFilePath.text()
+        if oldPath=="":
+            oldPath = os.getcwd()
+        fileName_choose, filetype = QFileDialog.getSaveFileName(self,  
+                                    _("Select file"),
+                                    os.path.join(oldPath, "comtool.log"),
+                                    _("Log file (*.log);;txt file (*.txt);;All Files (*)"))
+
+        if fileName_choose == "":
+            return
+        self.logFilePath.setText(fileName_choose)
+        self.logFilePath.setToolTip(fileName_choose)
+        self.config.saveLogPath = fileName_choose
+
+    def onLog(self, text):
+        with open(self.config.saveLogPath, "a+", encoding=self.config.encoding, newline="\n") as f:
+            f.write(text)
 
     def clearHistory(self):
         self.config.sendHistoryList.clear()
