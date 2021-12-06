@@ -1,3 +1,7 @@
+.warning {
+    background: #fb8c00;
+    color: #0772ca;
+}
 
 MainWindow {
     background-color:#212121;

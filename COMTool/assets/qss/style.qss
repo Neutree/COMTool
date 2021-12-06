@@ -4,6 +4,11 @@
 } */
 /* bug 自定义字体发虚， 在py代码中addApplicationFont不会发虚 */
 
+.warning {
+    background: #fb8c00;
+    color: #0772ca;
+}
+
 MainWindow {
     background-color:#f5f5f5;
     color: #464444;

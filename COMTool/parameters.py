@@ -100,6 +100,8 @@ class Parameters:
     rts  = 0
     dtr  = 0
     locale = "en"
+    showTimestamp = False
+    recordSend = False
     encodingIndex = 0
     sendHistoryList = []
 

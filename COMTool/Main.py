@@ -1,5 +1,6 @@
 from genericpath import exists
 import sys,os
+print(sys.path)
 try:
     import parameters,helpAbout,autoUpdate
     from Combobox import ComboBox
@@ -23,7 +24,9 @@ import serial
 import serial.tools.list_ports
 import threading
 import time
+from datetime import datetime
 import binascii,re
+from enum import Enum
 try:
   import cPickle as pickle
 except ImportError:
@@ -36,10 +39,16 @@ class MyClass(object):
         super(MyClass, self).__init__()
         self.arg = arg
 
+class ConnectionStatus(Enum):
+    CLOSED = 0
+    CONNECTED = 1
+    LOSE = 2 
+
 class MainWindow(QMainWindow):
     receiveUpdateSignal = pyqtSignal(str)
     errorSignal = pyqtSignal(str)
     statusBarSignal = pyqtSignal(str, str)
+    connectionSignal = pyqtSignal(ConnectionStatus)
     sendFileOkSignal = pyqtSignal(bool, str)
     showSerialComboboxSignal = pyqtSignal()
     setDisableSettingsSignal = pyqtSignal(bool)
@@ -82,7 +91,7 @@ class MainWindow(QMainWindow):
     def initWindow(self):
         QToolTip.setFont(QFont('SansSerif', 10))
         # main layout
-        frameWidget = QWidget()
+        self.frameWidget = QWidget()
         mainWidget = QSplitter(Qt.Horizontal)
         frameLayout = QVBoxLayout()
         self.settingWidget = QWidget()
@@ -102,8 +111,8 @@ class MainWindow(QMainWindow):
         menuLayout = QHBoxLayout()
         frameLayout.addLayout(menuLayout)
         frameLayout.addWidget(mainWidget)
-        frameWidget.setLayout(frameLayout)
-        self.setCentralWidget(frameWidget)
+        self.frameWidget.setLayout(frameLayout)
+        self.setCentralWidget(self.frameWidget)
 
         # option layout
         self.settingsButton = QPushButton()
@@ -242,10 +251,12 @@ class MainWindow(QMainWindow):
         self.receiveSettingsAutoLinefeedTime.setToolTip(_("Auto linefeed after interval, unit: ms"))
         self.receiveSettingsAutoLinefeed.setMaximumWidth(75)
         self.receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
+        self.receiveSettingsTimestamp = QCheckBox(_("Timestamp"))
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeed, 2, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeedTime, 2, 1, 1, 1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsTimestamp, 3, 0, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
         settingLayout.addWidget(serialReceiveSettingsGroupBox)
 
@@ -262,14 +273,16 @@ class MainWindow(QMainWindow):
         self.sendSettingsScheduled.setToolTip(_("Timed send, unit: ms"))
         self.sendSettingsScheduledCheckBox.setMaximumWidth(75)
         self.sendSettingsScheduled.setMaximumWidth(75)
-        self.sendSettingsCFLF = QCheckBox(self.strings.strCRLF)
-        self.sendSettingsCFLF.setToolTip(_("Select to send \\r\\n instead of \\n"))
-        self.sendSettingsCFLF.setChecked(False)
+        self.sendSettingsCRLF = QCheckBox(self.strings.strCRLF)
+        self.sendSettingsCRLF.setToolTip(_("Select to send \\r\\n instead of \\n"))
+        self.sendSettingsCRLF.setChecked(False)
+        self.sendSettingsRecord = QCheckBox(_("Record"))
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduled, 2, 1, 1, 1)
-        serialSendSettingsLayout.addWidget(self.sendSettingsCFLF, 3, 0, 1, 2)
+        serialSendSettingsLayout.addWidget(self.sendSettingsCRLF, 3, 0, 1, 2)
+        serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 3, 1, 1, 2)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         settingLayout.addWidget(serialSendSettingsGroupBox)
 
@@ -327,11 +340,15 @@ class MainWindow(QMainWindow):
         self.serailBaudrateCombobox.currentIndexChanged.connect(self.baudrateIndexChanged)
         self.serailBaudrateCombobox.editTextChanged.connect(self.baudrateIndexChanged)
         self.languageCombobox.currentIndexChanged.connect(self.onLanguageChanged)
+        self.receiveSettingsTimestamp.clicked.connect(self.onTimeStampClicked)
+        self.receiveSettingsAutoLinefeed.clicked.connect(self.onAutoLinefeedClicked)
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
+        self.sendSettingsRecord.clicked.connect(self.onRecordSendClicked)
         self.errorSignal.connect(self.errorHint)
         self.sendFileOkSignal.connect(self.onSentFile)
         self.statusBarSignal.connect(self.onstatusBarText)
+        self.connectionSignal.connect(self.onConnection)
         self.showSerialComboboxSignal.connect(self.showCombobox)
         # self.showBaudComboboxSignal.connect(self.showBaudCombobox)
         self.setDisableSettingsSignal.connect(self.setDisableSettings)
@@ -373,6 +390,7 @@ class MainWindow(QMainWindow):
                 except Exception:
                     pass
                 self.setDisableSettingsSignal.emit(False)
+                self.connectionSignal.emit(ConnectionStatus.CLOSED)
             else:
                 try:
                     self.com.baudrate = int(self.serailBaudrateCombobox.currentText())
@@ -407,6 +425,7 @@ class MainWindow(QMainWindow):
                     # print("open success")
                     # print(self.com)
                     self.setDisableSettingsSignal.emit(True)
+                    self.connectionSignal.emit(ConnectionStatus.CONNECTED)
                     self.receiveProcess = threading.Thread(target=self.receiveDataProcess)
                     self.receiveProcess.setDaemon(True)
                     self.sendProcess = threading.Thread(target=self.sendDataProcess)
@@ -420,6 +439,7 @@ class MainWindow(QMainWindow):
                     self.com.close()
                     self.errorSignal.emit( self.strings.strOpenFailed +"\n"+ str(e))
                     self.setDisableSettingsSignal.emit(False)
+                    self.connectionSignal.emit(ConnectionStatus.CLOSED)
         except Exception as e:
             print(e)
     
@@ -461,10 +481,10 @@ class MainWindow(QMainWindow):
 
     def getSendData(self) -> bytes:
         data = self.sendArea.toPlainText()
-        if self.sendSettingsCFLF.isChecked():
+        if self.sendSettingsCRLF.isChecked():
             data = data.replace("\n", "\r\n")
         if self.sendSettingsHex.isChecked():
-            if self.sendSettingsCFLF.isChecked():
+            if self.sendSettingsCRLF.isChecked():
                 data = data.replace("\r\n", " ")
             else:
                 data = data.replace("\n", " ")
@@ -482,6 +502,25 @@ class MainWindow(QMainWindow):
                 data = self.getSendData()
                 if not data:
                     return
+                # record send data
+                if self.config.recordSend:
+                    head = '=> '
+                    if self.config.showTimestamp:
+                        head += datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%M.%f] ")
+                    sendStr, isHexStr = self.bytes2String(data, self.receiveSettingsHex.isChecked(), encoding=self.encodingCombobox.currentText())
+                    if isHexStr:
+                        head += "[HEX] "
+                        sendStr = sendStr.upper()
+                    if self.sendSettingsCRLF.isChecked():
+                        head = "\r\n" + head
+                    else:
+                        head = "\n" + head
+                    if head.strip() == '=>':
+                        record = head + sendStr
+                    else:
+                        record = f'{head.rstrip()}: {sendStr}'
+
+                    self.receiveUpdateSignal.emit(record)
                 self.sendData(data_bytes=data)
                 data = self.sendArea.toPlainText()
                 self.sendHistoryFindDelete(data)
@@ -508,9 +547,6 @@ class MainWindow(QMainWindow):
         self.isScheduledSending = False
 
     def receiveDataProcess(self):
-        self.receiveProgressStop = False
-        self.timeLastReceive = 0
-        waitingReconnect = False
         def portExits():
             ports = self.findSerialPort()
             devices = []
@@ -519,42 +555,62 @@ class MainWindow(QMainWindow):
             if self.com.port in devices:
                 return True
             return False
+        self.receiveProgressStop = False
+        timeLastReceive = 0
+        waitingReconnect = False
+        new_line = True
         while(not self.receiveProgressStop):
-            if waitingReconnect and portExits():
-                try:
-                    self.com.open()
-                    print("reopen connection")
-                    waitingReconnect = False
-                    self.statusBarSignal.emit("info", _("Ready"))
-                except Exception as e:
-                    time.sleep(0.01)
+            if waitingReconnect:
+                if portExits():
+                    try:
+                        self.com.open()
+                        print("reopen connection")
+                        waitingReconnect = False
+                        self.statusBarSignal.emit("info", _("Ready"))
+                        self.connectionSignal.emit(ConnectionStatus.CONNECTED)
+                        continue
+                    except Exception as e:
+                        pass
+                time.sleep(0.01)
                 continue
             try:
                 # length = self.com.in_waiting
-                length = max(1, min(2048, self.com.in_waiting))
+                length = max(1, self.com.in_waiting)
                 bytes = self.com.read(length)
                 if bytes!= None:
 
                     # if self.isWaveOpen:
                     #     self.wave.displayData(bytes)
                     self.receiveCount += len(bytes)
-                    if self.receiveSettingsAutoLinefeed.isChecked():
-                        if time.time() - self.timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
-                            if self.sendSettingsCFLF.isChecked():
+                    if time.time() - timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
+                        if self.config.showTimestamp or self.receiveSettingsAutoLinefeed.isChecked():
+                            if self.sendSettingsCRLF.isChecked():
                                 self.receiveUpdateSignal.emit("\r\n")
                             else:
                                 self.receiveUpdateSignal.emit("\n")
-                            self.timeLastReceive = time.time()
+                            new_line = True
+                    data = None
+                    head = ""
                     if self.receiveSettingsHex.isChecked():
-                        strReceived = self.asciiB2HexString(bytes)
-                        self.receiveUpdateSignal.emit(strReceived)
+                        data = self.asciiB2HexString(bytes)
                     else:
-                        self.receiveUpdateSignal.emit(bytes.decode(self.encodingCombobox.currentText(),"ignore"))
+                        data = bytes.decode(self.encodingCombobox.currentText(),"ignore")
+                    if new_line:
+                        timeNow = datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%M.%f] ")
+                        if self.config.recordSend:
+                            head += "<= " 
+                        if self.config.showTimestamp:
+                            head += timeNow
+                            head = f'{head.rstrip()}: '
+                        new_line = False
+                    self.receiveUpdateSignal.emit(head + data)
+                    timeLastReceive = time.time()
             except Exception as e:
                 if (not self.receiveProgressStop) and not portExits():
                     self.com.close()
                     waitingReconnect = True
-                    self.statusBarSignal.emit("error", _("Connection lose!"))
+                    self.connectionSignal.emit(ConnectionStatus.LOSE)
+                    self.statusBarSignal.emit("warning", _("Connection lose!"))
 
     def sendData(self, data_bytes=None, file_path=None):
         if data_bytes:
@@ -585,7 +641,6 @@ class MainWindow(QMainWindow):
 
     def sendDataProcess(self):
         self.receiveProgressStop = False
-        self.timeLastReceive = 0
         while(not self.receiveProgressStop):
             try:
                 while len(self.dataToSend) > 0:
@@ -629,8 +684,8 @@ class MainWindow(QMainWindow):
     def onstatusBarText(self, msg_type, msg):
         if msg_type == "info":
             color = "#008200"
-        elif msg_type == "warn":
-            color = "#fdd835"
+        elif msg_type == "warning":
+            color = "#fb8c00"
         elif msg_type == "error":
             color = "#f44336"
         else:
@@ -638,6 +693,17 @@ class MainWindow(QMainWindow):
         text = f'<font color={color}>{msg}</font>'
         self.statusBarStauts.setText(text)
 
+    def onConnection(self, status : ConnectionStatus):
+        if status == ConnectionStatus.LOSE:
+            self.serialOpenCloseButton.setProperty("class", "warning")
+        else:
+            self.serialOpenCloseButton.setProperty("class", "")
+        self.updateStyle(self.serialOpenCloseButton)
+
+    def updateStyle(self, widget):
+        self.frameWidget.style().unpolish(widget)
+        self.frameWidget.style().polish(widget)
+        self.frameWidget.update()
 
 
     def onSendSettingsHexClicked(self):
@@ -657,6 +723,22 @@ class MainWindow(QMainWindow):
         except Exception as e:
             # QMessageBox.information(self,self.strings.strWriteFormatError,self.strings.strWriteFormatError)
             print("format error")
+
+    def onAutoLinefeedClicked(self):
+        if (self.config.showTimestamp or self.config.recordSend) and not self.receiveSettingsAutoLinefeed.isChecked():
+            self.receiveSettingsAutoLinefeed.setChecked(True)
+            self.errorSignal.emit(_("linefeed always on if timestamp or record send is on"))
+
+    def onTimeStampClicked(self):
+        self.config.showTimestamp = self.receiveSettingsTimestamp.isChecked()
+        if self.config.showTimestamp:
+            self.receiveSettingsAutoLinefeed.setChecked(True)
+
+    def onRecordSendClicked(self):
+        self.config.recordSend = self.sendSettingsRecord.isChecked()
+        if self.config.recordSend:
+            self.receiveSettingsAutoLinefeed.setChecked(True)
+
 
     def onLanguageChanged(self):
         idx = self.languageCombobox.currentIndex()
@@ -779,6 +861,17 @@ class MainWindow(QMainWindow):
         # print(data)
         return data
 
+    def bytes2String(self, data : bytes, showAsHex : bool, encoding="utf-8"):
+        isHexString = False
+        if showAsHex:
+            return binascii.hexlify(data, ' ')
+        try:
+            data = data.decode(encoding=encoding)
+        except Exception:
+            data = binascii.hexlify(data, ' ').decode(encoding=encoding)
+            isHexString = True
+        return data, isHexString
+
     def programExitSaveParameters(self):
         paramObj = self.config
         paramObj.baudRate = self.serailBaudrateCombobox.currentIndex()
@@ -788,6 +881,8 @@ class MainWindow(QMainWindow):
         paramObj.skin = self.config.skin
         if self.receiveSettingsHex.isChecked():
             paramObj.receiveAscii = False
+        else:
+            paramObj.receiveAscii = True
         if not self.receiveSettingsAutoLinefeed.isChecked():
             paramObj.receiveAutoLinefeed = False
         else:
@@ -795,11 +890,17 @@ class MainWindow(QMainWindow):
         paramObj.receiveAutoLindefeedTime = self.receiveSettingsAutoLinefeedTime.text()
         if self.sendSettingsHex.isChecked():
             paramObj.sendAscii = False
+        else:
+            paramObj.sendAscii = True
         if not self.sendSettingsScheduledCheckBox.isChecked():
             paramObj.sendScheduled = False
+        else:
+            paramObj.sendScheduled = True
         paramObj.sendScheduledTime = self.sendSettingsScheduled.text()
-        if not self.sendSettingsCFLF.isChecked():
+        if not self.sendSettingsCRLF.isChecked():
             paramObj.useCRLF = False
+        else:
+            paramObj.useCRLF = True
         paramObj.sendHistoryList.clear()
         for i in range(0,self.sendHistory.count()):
             paramObj.sendHistoryList.append(self.sendHistory.itemText(i))
@@ -832,6 +933,7 @@ class MainWindow(QMainWindow):
         else:
             self.receiveSettingsAutoLinefeed.setChecked(True)
         self.receiveSettingsAutoLinefeedTime.setText(paramObj.receiveAutoLindefeedTime)
+        self.receiveSettingsTimestamp.setChecked(paramObj.showTimestamp)
         if paramObj.sendAscii == False:
             self.sendSettingsHex.setChecked(True)
         if paramObj.sendScheduled == False:
@@ -840,9 +942,10 @@ class MainWindow(QMainWindow):
             self.sendSettingsScheduledCheckBox.setChecked(True)
         self.sendSettingsScheduled.setText(paramObj.sendScheduledTime)
         if paramObj.useCRLF == False:
-            self.sendSettingsCFLF.setChecked(False)
+            self.sendSettingsCRLF.setChecked(False)
         else:
-            self.sendSettingsCFLF.setChecked(True)
+            self.sendSettingsCRLF.setChecked(True)
+        self.sendSettingsRecord.setChecked(paramObj.recordSend)
         for i in range(0, len(paramObj.sendHistoryList)):
             str = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(str)
