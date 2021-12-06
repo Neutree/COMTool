@@ -105,6 +105,7 @@ class Parameters:
     encoding = "ASCII"
     saveLogPath = ""
     saveLog = False
+    color = False
     sendHistoryList = []
 
     def save(self, path):

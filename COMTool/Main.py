@@ -15,7 +15,7 @@ except ImportError:
 
 # from COMTool.wave import Wave
 from PyQt5.QtCore import pyqtSignal,Qt
-from PyQt5.QtWidgets import (QApplication, QWidget,QToolTip,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
+from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
@@ -26,10 +26,6 @@ import time
 from datetime import datetime
 import binascii,re
 from enum import Enum
-try:
-  import cPickle as pickle
-except ImportError:
-  import pickle
 if sys.platform == "win32":
     import ctypes
 
@@ -89,7 +85,6 @@ class MainWindow(QMainWindow):
         self.sendRecord = []
 
     def initWindow(self):
-        QToolTip.setFont(QFont('SansSerif', 10))
         # main layout
         self.frameWidget = QWidget()
         mainWidget = QSplitter(Qt.Horizontal)
@@ -150,6 +145,9 @@ class MainWindow(QMainWindow):
 
         # widgets receive and send area
         self.receiveArea = QTextEdit()
+        font = QFont('Microsoft YaHei')
+        self.receiveArea.setFont(font)
+        self.receiveArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea = QTextEdit()
         self.clearReceiveButtion = QPushButton(self.strings.strClearReceive)
         self.sendButtion = QPushButton(self.strings.strSend)
@@ -249,11 +247,13 @@ class MainWindow(QMainWindow):
         self.receiveSettingsAutoLinefeed.setMaximumWidth(75)
         self.receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
         self.receiveSettingsTimestamp = QCheckBox(_("Timestamp"))
+        self.receiveSettingsColor = QCheckBox(_("Color"))
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeed, 2, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeedTime, 2, 1, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsTimestamp, 3, 0, 1, 1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsColor, 3, 1, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
         settingLayout.addWidget(serialReceiveSettingsGroupBox)
 
@@ -375,6 +375,7 @@ class MainWindow(QMainWindow):
         self.checkBoxDTR.clicked.connect(self.dtrChanged)
         self.saveLogCheckbox.clicked.connect(self.setSaveLog)
         self.encodingCombobox.currentIndexChanged.connect(self.onEncodingChanged)
+        self.receiveSettingsColor.clicked.connect(self.onSetColorChanged)
 
         self.myObject=MyClass(self)
         slotLambda = lambda: self.indexChanged_lambda(self.myObject)
@@ -692,11 +693,34 @@ class MainWindow(QMainWindow):
                 break
 
     def updateReceivedDataDisplay(self, str):
+        colors = {
+            "31": "#ff0000",
+            "32": "#008000",
+            "33": "#ffff00"
+        }
         if str:
             curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
             endScrollValue = self.receiveArea.verticalScrollBar().value()
+            # self.receiveArea.append(f'<font color="#0000FF">{str}</font>')
+            # cursor = self.receiveArea.textCursor()
+            # format = cursor.charFormat()
+            # font = QFont('Microsoft YaHei', 10)
+            # format.setFont(font)
+            # cursor.setCharFormat(format)
+            # cursor.insertText(str)
+            def re_del(c):
+                color = c[0][2:-1].split(";")
+                if len(color) == 1:
+                    if color[0] == 0: # close
+                        return ""
+                else:
+                    style, color = color
+                return ""
+            if self.config.color:
+                str = re.sub(r'\x1b\[.*?m', re_del, str, flags=re.I)
             self.receiveArea.insertPlainText(str)
+
             if curScrollValue < endScrollValue:
                 self.receiveArea.verticalScrollBar().setValue(curScrollValue)
             else:
@@ -986,6 +1010,7 @@ class MainWindow(QMainWindow):
         self.logFilePath.setText(paramObj.saveLogPath)
         self.logFilePath.setToolTip(paramObj.saveLogPath)
         self.saveLogCheckbox.setChecked(paramObj.saveLog)
+        self.receiveSettingsColor.setChecked(paramObj.color)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
@@ -1057,6 +1082,9 @@ class MainWindow(QMainWindow):
 
     def onEncodingChanged(self):
         self.config.encoding = self.encodingCombobox.currentText()
+
+    def onSetColorChanged(self):
+        self.config.color = self.receiveSettingsColor.isChecked()
 
     def showAbout(self):
         QMessageBox.information(self, _("About"), helpAbout.strAbout())
