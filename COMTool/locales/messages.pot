@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-05 23:17+0800\n"
+"POT-Creation-Date: 2021-12-07 19:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,93 +17,145 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:173
+#: Main.py:190
 msgid "Flow control"
 msgstr ""
 
-#: Main.py:207 Main.py:208
+#: Main.py:224 Main.py:225
 msgid "Check to enable(usually output low level)"
 msgstr ""
 
-#: Main.py:231
+#: Main.py:248
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:233
+#: Main.py:250
 msgid "Show recived data as hex format"
 msgstr ""
 
-#: Main.py:236 Main.py:238
+#: Main.py:253 Main.py:255
 msgid "Auto linefeed after interval, unit: ms"
 msgstr ""
 
-#: Main.py:252
+#: Main.py:258
+msgid "Timestamp"
+msgstr ""
+
+#: Main.py:259
+msgid "Color"
+msgstr ""
+
+#: Main.py:273
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:253
+#: Main.py:274
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
-#: Main.py:256 Main.py:258
+#: Main.py:277 Main.py:279
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: Main.py:262
+#: Main.py:283
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
-#: Main.py:278
+#: Main.py:285
+msgid "Record"
+msgstr ""
+
+#: Main.py:286
+msgid "Escape"
+msgstr ""
+
+#: Main.py:303
 msgid "Open File"
 msgstr ""
 
-#: Main.py:279 parameters.py:46
+#: Main.py:304 parameters.py:46
 msgid "Send File"
 msgstr ""
 
-#: Main.py:280
+#: Main.py:305
 msgid "Clear History"
 msgstr ""
 
-#: Main.py:572
-msgid "Restart now?"
+#: Main.py:313
+msgid "Save log"
 msgstr ""
 
-#: Main.py:573
-msgid "language changed to: "
+#: Main.py:317
+msgid "Log path"
 msgstr ""
 
-#: Main.py:573
-msgid "Restart software to take effect now?"
+#: Main.py:560 Main.py:578
+msgid "Escape is on, but escape error:"
 msgstr ""
 
-#: Main.py:845
-msgid "About"
+#: Main.py:663 parameters.py:51
+msgid "Ready"
 msgstr ""
 
-#: Main.py:862
+#: Main.py:682
+msgid "Connection lose!"
+msgstr ""
+
+#: Main.py:742
 msgid ""
 "File path error\n"
 "path"
 msgstr ""
 
-#: Main.py:867
-msgid "Open file failed!"
-msgstr ""
-
-#: Main.py:870
+#: Main.py:745
 msgid "Connect first please"
 msgstr ""
 
-#: Main.py:881
+#: Main.py:777
+msgid "Open file failed!"
+msgstr ""
+
+#: Main.py:945
+msgid "linefeed always on if timestamp or record send is on"
+msgstr ""
+
+#: Main.py:965
+msgid "Restart now?"
+msgstr ""
+
+#: Main.py:966
+msgid "language changed to: "
+msgstr ""
+
+#: Main.py:966
+msgid "Restart software to take effect now?"
+msgstr ""
+
+#: Main.py:1262
+msgid "About"
+msgstr ""
+
+#: Main.py:1268 Main.py:1282
+msgid "Select file"
+msgstr ""
+
+#: Main.py:1270
+msgid "All Files (*)"
+msgstr ""
+
+#: Main.py:1284
+msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
+msgstr ""
+
+#: Main.py:1300
 msgid "History cleared!"
 msgstr ""
 
-#: Main.py:949
+#: Main.py:1368
 msgid "Error"
 msgstr ""
 
@@ -221,54 +273,54 @@ msgid "Functional Send"
 msgstr ""
 
 #: parameters.py:47
-msgid "Open Failed"
+msgid "Sendding File"
 msgstr ""
 
 #: parameters.py:48
-msgid "Closed"
+msgid "Open Failed"
 msgstr ""
 
 #: parameters.py:49
-msgid "Send Error"
+msgid "Closed"
 msgstr ""
 
 #: parameters.py:50
-msgid "Ready"
-msgstr ""
-
-#: parameters.py:51
-msgid "format error"
+msgid "Send Error"
 msgstr ""
 
 #: parameters.py:52
-msgid "<CRLF>"
+msgid "format error"
 msgstr ""
 
 #: parameters.py:53
-msgid "Time format error"
+msgid "<CRLF>"
 msgstr ""
 
 #: parameters.py:54
-msgid "HELP"
+msgid "Time format error"
 msgstr ""
 
 #: parameters.py:55
-msgid "ABOUT"
+msgid "HELP"
 msgstr ""
 
 #: parameters.py:56
-msgid "Settings"
+msgid "ABOUT"
 msgstr ""
 
 #: parameters.py:57
-msgid "Need Update"
+msgid "Settings"
 msgstr ""
 
 #: parameters.py:58
-msgid "update now?"
+msgid "Need Update"
 msgstr ""
 
 #: parameters.py:59
+msgid "update now?"
+msgstr ""
+
+#: parameters.py:60
 msgid "uninstall app"
 msgstr ""
 

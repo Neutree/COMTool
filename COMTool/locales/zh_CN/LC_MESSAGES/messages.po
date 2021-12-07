@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-05 23:17+0800\n"
+"POT-Creation-Date: 2021-12-07 19:03+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,75 +18,95 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:173
+#: Main.py:190
 msgid "Flow control"
 msgstr "流控"
 
-#: Main.py:207 Main.py:208
+#: Main.py:224 Main.py:225
 msgid "Check to enable(usually output low level)"
 msgstr "选中以使能（通常会输出低电平）"
 
-#: Main.py:231
+#: Main.py:248
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "使用可见字符显示收到的数据，在右上角选择解码的方法"
 
-#: Main.py:233
+#: Main.py:250
 msgid "Show recived data as hex format"
 msgstr "使用十六进制表示方法显示收到的数据"
 
-#: Main.py:236 Main.py:238
+#: Main.py:253 Main.py:255
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超过这个时间自动换行，单位：ms"
 
-#: Main.py:252
+#: Main.py:258
+msgid "Timestamp"
+msgstr "时间戳"
+
+#: Main.py:259
+msgid "Color"
+msgstr "颜色"
+
+#: Main.py:273
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可见字符的方式获取将要发送的数据，在右上角选择编码的方法"
 
-#: Main.py:253
+#: Main.py:274
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六进制的格式获取将要发送的数据，比如 十六进制的'31 32 33' 和 ascii编码的 '123' 等效"
 
-#: Main.py:256 Main.py:258
+#: Main.py:277 Main.py:279
 msgid "Timed send, unit: ms"
 msgstr "定时发送，单位：ms"
 
-#: Main.py:262
+#: Main.py:283
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "选中发送 \\r\\n 而不是 \\n"
 
-#: Main.py:278
+#: Main.py:285
+msgid "Record"
+msgstr "记录"
+
+#: Main.py:286
+msgid "Escape"
+msgstr "转义符"
+
+#: Main.py:303
 msgid "Open File"
 msgstr "打开文件"
 
-#: Main.py:279 parameters.py:46
+#: Main.py:304 parameters.py:46
 msgid "Send File"
 msgstr "发送文件"
 
-#: Main.py:280
+#: Main.py:305
 msgid "Clear History"
 msgstr "清除历史"
 
-#: Main.py:572
-msgid "Restart now?"
-msgstr "现在就重启？"
+#: Main.py:313
+msgid "Save log"
+msgstr "保存日志"
 
-#: Main.py:573
-msgid "language changed to: "
-msgstr "语言更改为: "
+#: Main.py:317
+msgid "Log path"
+msgstr "日志路径"
 
-#: Main.py:573
-msgid "Restart software to take effect now?"
-msgstr "现在就重启软件以生效？"
+#: Main.py:560 Main.py:578
+msgid "Escape is on, but escape error:"
+msgstr "转移符支持已打开，但是转义时错误"
 
-#: Main.py:845
-msgid "About"
-msgstr "关于"
+#: Main.py:663 parameters.py:51
+msgid "Ready"
+msgstr "就绪"
 
-#: Main.py:862
+#: Main.py:682
+msgid "Connection lose!"
+msgstr "连接丢失！"
+
+#: Main.py:742
 msgid ""
 "File path error\n"
 "path"
@@ -94,19 +114,51 @@ msgstr ""
 "文件路径错误\n"
 "路径"
 
-#: Main.py:867
-msgid "Open file failed!"
-msgstr "打开失败"
-
-#: Main.py:870
+#: Main.py:745
 msgid "Connect first please"
 msgstr "请先连接"
 
-#: Main.py:881
+#: Main.py:777
+msgid "Open file failed!"
+msgstr "打开失败"
+
+#: Main.py:945
+msgid "linefeed always on if timestamp or record send is on"
+msgstr "当时间戳和记录发送时，自动换行需要打开"
+
+#: Main.py:965
+msgid "Restart now?"
+msgstr "现在就重启？"
+
+#: Main.py:966
+msgid "language changed to: "
+msgstr "语言更改为: "
+
+#: Main.py:966
+msgid "Restart software to take effect now?"
+msgstr "现在就重启软件以生效？"
+
+#: Main.py:1262
+msgid "About"
+msgstr "关于"
+
+#: Main.py:1268 Main.py:1282
+msgid "Select file"
+msgstr "选择文件"
+
+#: Main.py:1270
+msgid "All Files (*)"
+msgstr "所有文件 (*)"
+
+#: Main.py:1284
+msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
+msgstr "日志文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
+
+#: Main.py:1300
 msgid "History cleared!"
 msgstr "历史已清除"
 
-#: Main.py:949
+#: Main.py:1368
 msgid "Error"
 msgstr "错误"
 
@@ -224,57 +276,54 @@ msgid "Functional Send"
 msgstr "其它发送功能"
 
 #: parameters.py:47
+msgid "Sendding File"
+msgstr "发送文件中"
+
+#: parameters.py:48
 msgid "Open Failed"
 msgstr "打开失败"
 
-#: parameters.py:48
+#: parameters.py:49
 msgid "Closed"
 msgstr "已关闭"
 
-#: parameters.py:49
+#: parameters.py:50
 msgid "Send Error"
 msgstr "发送出错"
 
-#: parameters.py:50
-msgid "Ready"
-msgstr "就绪"
-
-#: parameters.py:51
+#: parameters.py:52
 msgid "format error"
 msgstr "格式错误"
 
-#: parameters.py:52
+#: parameters.py:53
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: parameters.py:53
+#: parameters.py:54
 msgid "Time format error"
 msgstr "时间格式错误"
 
-#: parameters.py:54
+#: parameters.py:55
 msgid "HELP"
 msgstr "帮助"
 
-#: parameters.py:55
+#: parameters.py:56
 msgid "ABOUT"
 msgstr "关于"
 
-#: parameters.py:56
+#: parameters.py:57
 msgid "Settings"
 msgstr "设置"
 
-#: parameters.py:57
+#: parameters.py:58
 msgid "Need Update"
 msgstr "需要更新"
 
-#: parameters.py:58
+#: parameters.py:59
 msgid "update now?"
 msgstr "现在就更新？"
 
-#: parameters.py:59
+#: parameters.py:60
 msgid "uninstall app"
 msgstr "卸载应用"
-
-#~ msgid "Pack date:"
-#~ msgstr "打包日期"
 

@@ -1,7 +1,7 @@
 import sys,os
 
-if sys.version_info.major < 3 or sys.version_info.minor < 9:
-    print("only support python > 3.9")
+if sys.version_info < (3, 8):
+    print("only support python >= 3.8")
     sys.exit(1)
 
 
