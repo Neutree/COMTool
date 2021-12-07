@@ -837,8 +837,7 @@ class MainWindow(QMainWindow):
                     p += idx
                 self.lastColor, self.lastBg = self._getColorByfmt(fmt)
                 p += len(fmt)
-            if p != len(text):
-                colorStrs.append([self.lastColor, self.lastBg, text[p:]])
+            colorStrs.append([self.lastColor, self.lastBg, text[p:]])
         else:
             colorStrs = [[self.lastColor, self.lastBg, text]]
         return plaintext, colorStrs
@@ -860,20 +859,24 @@ class MainWindow(QMainWindow):
             curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
             endScrollValue = self.receiveArea.verticalScrollBar().value()
+            cursor = self.receiveArea.textCursor()
+            format = cursor.charFormat()
+            font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
+            format.setFont(font)
+            if not self.defaultColor:
+                self.defaultColor = format.foreground()
+            if not self.defaultBg:
+                self.defaultBg = format.background()
             if head:
-                self.receiveArea.insertPlainText(head)
+                format.setForeground(self.defaultColor)
+                cursor.setCharFormat(format)
+                format.setBackground(self.defaultBg)
+                cursor.setCharFormat(format)
+                cursor.insertText(head)
             for data in datas:
                 if type(data) == str:
                     self.receiveArea.insertPlainText(data)
                 elif type(data) == list:
-                    cursor = self.receiveArea.textCursor()
-                    format = cursor.charFormat()
-                    if not self.defaultColor:
-                        self.defaultColor = format.foreground()
-                    if not self.defaultBg:
-                        self.defaultBg = format.background()
-                    font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
-                    format.setFont(font)
                     for color, bg, text in data:
                         if color:
                             format.setForeground(QColor(color))
