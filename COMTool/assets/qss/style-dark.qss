@@ -213,7 +213,7 @@ QLineEdit {
     padding: 0 8px;
     background: #3a3a3a;
     selection-background-color: #373277;
-    height: 30px;
+    height: 18px;
 }
 
 QCheckBox {
