@@ -1,5 +1,10 @@
-from genericpath import exists
 import sys,os
+
+if sys.version_info.major < 3 or sys.version_info.minor < 9:
+    print("only support python > 3.9")
+    sys.exit(1)
+
+
 try:
     import parameters,helpAbout,autoUpdate
     from Combobox import ComboBox
@@ -18,7 +23,7 @@ from PyQt5.QtCore import pyqtSignal,Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog)
-from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap
+from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
 import serial
 import serial.tools.list_ports
 import threading
@@ -40,7 +45,7 @@ class ConnectionStatus(Enum):
     LOSE = 2 
 
 class MainWindow(QMainWindow):
-    receiveUpdateSignal = pyqtSignal(str)
+    receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
     errorSignal = pyqtSignal(str)
     statusBarSignal = pyqtSignal(str, str)
     connectionSignal = pyqtSignal(ConnectionStatus)
@@ -83,6 +88,10 @@ class MainWindow(QMainWindow):
         self.dataToSend = []
         self.fileToSend = []
         self.sendRecord = []
+        self.lastColor = None
+        self.lastBg = None
+        self.defaultColor = None
+        self.defaultBg = None
 
     def initWindow(self):
         # main layout
@@ -145,7 +154,7 @@ class MainWindow(QMainWindow):
 
         # widgets receive and send area
         self.receiveArea = QTextEdit()
-        font = QFont('Microsoft YaHei')
+        font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
         self.receiveArea.setFont(font)
         self.receiveArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea = QTextEdit()
@@ -274,12 +283,14 @@ class MainWindow(QMainWindow):
         self.sendSettingsCRLF.setToolTip(_("Select to send \\r\\n instead of \\n"))
         self.sendSettingsCRLF.setChecked(False)
         self.sendSettingsRecord = QCheckBox(_("Record"))
+        self.sendSettingsEscape= QCheckBox(_("Escape"))
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduled, 2, 1, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsCRLF, 3, 0, 1, 2)
         serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 3, 1, 1, 2)
+        serialSendSettingsLayout.addWidget(self.sendSettingsEscape, 4, 0, 1, 2)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         settingLayout.addWidget(serialSendSettingsGroupBox)
 
@@ -352,6 +363,7 @@ class MainWindow(QMainWindow):
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.sendSettingsRecord.clicked.connect(self.onRecordSendClicked)
+        self.sendSettingsEscape.clicked.connect(self.onEscapeSendClicked)
         self.errorSignal.connect(self.errorHint)
         self.sendFileOkSignal.connect(self.onSentFile)
         self.statusBarSignal.connect(self.onstatusBarText)
@@ -510,7 +522,67 @@ class MainWindow(QMainWindow):
                 self.errorSignal.emit( self.strings.strWriteFormatError)
                 return b''
         else:
-            data = data.encode(self.encodingCombobox.currentText(),"ignore")
+            encoding = self.encodingCombobox.currentText()
+            if not self.config.sendEscape:
+                data = data.encode(encoding,"ignore")
+            else: # '11234abcd\n123你好\r\n\thello\x00\x01\x02'
+                final = b""
+                p = 0
+                escapes = {
+                    "a": (b'\a', 2),
+                    "b": (b'\b', 2),
+                    "f": (b'\f', 2),
+                    "n": (b'\n', 2),
+                    "r": (b'\r', 2),
+                    "t": (b'\t', 2),
+                    "v": (b'\v', 2),
+                    "\\": (b'\\', 2),
+                    "\'": (b"'", 2),
+                    '\"': (b'"', 2),
+                }
+                octstr = ["0", "1", "2", "3", "4", "5", "6", "7"]
+                while 1:
+                    idx = data[p:].find("\\")
+                    if idx < 0:
+                        final += data[p:].encode(encoding, "ignore")
+                        break
+                    final += data[p : p + idx].encode(encoding, "ignore")
+                    p += idx
+                    e = data[p+1]
+                    if e in escapes:
+                        r = escapes[e][0]
+                        p += escapes[e][1]
+                    elif e == "x": # \x01
+                        try:
+                            r = bytes([int(data[p+2 : p+4], base=16)])
+                            p += 4
+                        except Exception:
+                            self.errorSignal.emit(_("Escape is on, but escape error:") + data[p : p+4])
+                            return b''
+                    elif e in octstr and len(data) > (p+2) and data[p+2] in octstr: # \dd or \ddd e.g. \001
+                        try:
+                            twoOct = False
+                            if len(data) > (p+3) and data[p+3] in octstr: # \ddd
+                                try:
+                                    r = bytes([int(data[p+1 : p+4], base=8)])
+                                    p += 4
+                                except Exception:
+                                    twoOct = True
+                            else:
+                                twoOct = True
+                            if twoOct:
+                                r = bytes([int(data[p+1 : p+3], base=8)])
+                                p += 3
+                        except Exception as e:
+                            print(e)
+                            self.errorSignal.emit(_("Escape is on, but escape error:") + data[p : p+4])
+                            return b''
+                    else:
+                        r = data[p: p+2].encode(encoding, "ignore")
+                        p += 2
+                    final += r
+
+                data = final
         return data
 
     def onSendData(self):
@@ -524,20 +596,19 @@ class MainWindow(QMainWindow):
                     head = '=> '
                     if self.config.showTimestamp:
                         head += datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%M.%f] ")
-                    sendStr, isHexStr = self.bytes2String(data, self.receiveSettingsHex.isChecked(), encoding=self.encodingCombobox.currentText())
+                    isHexStr, sendStr, sendStrsColored = self.bytes2String(data, self.receiveSettingsHex.isChecked(), encoding=self.encodingCombobox.currentText())
                     if isHexStr:
                         head += "[HEX] "
                         sendStr = sendStr.upper()
+                        sendStrsColored= sendStr
                     if self.sendSettingsCRLF.isChecked():
                         head = "\r\n" + head
                     else:
                         head = "\n" + head
-                    if head.strip() == '=>':
-                        record = head + sendStr
-                    else:
-                        record = f'{head.rstrip()}: {sendStr}'
-                    self.receiveUpdateSignal.emit(record)
-                    self.sendRecord.insert(0, record)
+                    if head.strip() != '=>':
+                        head = f'{head.rstrip()}: '
+                    self.receiveUpdateSignal.emit(head, [sendStrsColored], self.encodingCombobox.currentText())
+                    self.sendRecord.insert(0, head + sendStr)
                 self.sendData(data_bytes=data)
                 data = self.sendArea.toPlainText()
                 self.sendHistoryFindDelete(data)
@@ -550,6 +621,7 @@ class MainWindow(QMainWindow):
                         t.setDaemon(True)
                         t.start()
         except Exception as e:
+            print("[Error] onSendData", e)
             self.errorSignal.emit(self.strings.strWriteError)
             # print(e)
 
@@ -577,7 +649,11 @@ class MainWindow(QMainWindow):
         waitingReconnect = False
         new_line = True
         logData = None
+        self.com.timeout = 0.010
+        buffer = b''
         while(not self.receiveProgressStop):
+            logData = None
+            bytes = b''
             if waitingReconnect:
                 if portExits():
                     try:
@@ -595,24 +671,49 @@ class MainWindow(QMainWindow):
                 # length = self.com.in_waiting
                 length = max(1, self.com.in_waiting)
                 bytes = self.com.read(length)
-                if bytes!= None:
-
-                    # if self.isWaveOpen:
-                    #     self.wave.displayData(bytes)
+                if bytes:
+                    buffer += bytes
                     self.receiveCount += len(bytes)
-                    head = ""
-                    if time.time() - timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
-                        if self.config.showTimestamp or self.receiveSettingsAutoLinefeed.isChecked():
-                            if self.sendSettingsCRLF.isChecked():
-                                head += "\r\n"
-                            else:
-                                head += "\n"
-                            new_line = True
-                    data = ""
-                    if self.receiveSettingsHex.isChecked():
-                        data = self.asciiB2HexString(bytes)
+            except Exception as e:
+                if (not self.receiveProgressStop) and not portExits():
+                    self.com.close()
+                    waitingReconnect = True
+                    self.connectionSignal.emit(ConnectionStatus.LOSE)
+                    self.statusBarSignal.emit("warning", _("Connection lose!"))
+            # check buffer and timeout
+            head = ""
+            # timeout, add new line
+            if time.time() - timeLastReceive> int(self.receiveSettingsAutoLinefeedTime.text())/1000:
+                if self.config.showTimestamp or self.receiveSettingsAutoLinefeed.isChecked():
+                    if self.sendSettingsCRLF.isChecked():
+                        head += "\r\n"
                     else:
-                        data = bytes.decode(self.encodingCombobox.currentText(),"ignore")
+                        head += "\n"
+                    new_line = True
+            if bytes:
+                timeLastReceive = time.time()
+            data = ""
+            # have data in buffer
+            if len(buffer) > 0:
+                # show as hex, just show
+                if self.receiveSettingsHex.isChecked():
+                    data = self.asciiB2HexString(buffer)
+                    colorData = data
+                    buffer = b''
+                # show as string, and don't need to render color
+                elif not self.config.color:
+                    data = buffer.decode(encoding=self.encodingCombobox.currentText(), errors="ignore")
+                    colorData = data
+                    buffer = b''
+                # show as string, and need to render color, wait for \n or until timeout to ensure color flag in buffer
+                else:
+                    if time.time() - timeLastReceive >  int(self.receiveSettingsAutoLinefeedTime.text())/1000 or b'\n' in buffer:
+                        data, colorData = self.getColoredText(buffer, self.encodingCombobox.currentText())
+                        buffer = b''
+                # add time receive head
+                # get data from buffer, now render
+                if data:
+                    # add time header
                     if new_line:
                         timeNow = datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%M.%f] ")
                         if self.config.recordSend:
@@ -621,16 +722,9 @@ class MainWindow(QMainWindow):
                             head += timeNow
                             head = f'{head.rstrip()}: '
                         new_line = False
-                    data = head + data
-                    self.receiveUpdateSignal.emit(data)
-                    logData = data
-                    timeLastReceive = time.time()
-            except Exception as e:
-                if (not self.receiveProgressStop) and not portExits():
-                    self.com.close()
-                    waitingReconnect = True
-                    self.connectionSignal.emit(ConnectionStatus.LOSE)
-                    self.statusBarSignal.emit("warning", _("Connection lose!"))
+                    self.receiveUpdateSignal.emit(head, [colorData], self.encodingCombobox.currentText())
+                    logData = head + data
+
             while len(self.sendRecord) > 0:
                 self.onLog(self.sendRecord.pop())
             if logData:
@@ -656,7 +750,7 @@ class MainWindow(QMainWindow):
 
     def onSent(self, n_bytes):
         self.sendCount += n_bytes
-        self.receiveUpdateSignal.emit("")
+        self.receiveUpdateSignal.emit("", [], "")
 
     def onSentFile(self, ok, path):
         print(f"file sent {'ok' if ok else 'fail'}, path: {path}")
@@ -692,35 +786,110 @@ class MainWindow(QMainWindow):
                     self.errorSignal.emit("device disconnected or multiple access on port?")
                 break
 
-    def updateReceivedDataDisplay(self, str):
+    def _canDraw(self, ucs4cp):
+        return 0x2500 <= ucs4cp and ucs4cp <= 0x259F
+
+    def _getColorByfmt(self, fmt:bytes):
         colors = {
-            "31": "#ff0000",
-            "32": "#008000",
-            "33": "#ffff00"
+            b"0": None,
+            b"30": "#000000",
+            b"31": "#ff0000",
+            b"32": "#008000",
+            b"33": "#ffff00",
+            b"34": "#0000ff",
+            b"35": "#9c27b0",
+            b"36": "#1b5e20",
+            b"37": "#000000",
         }
-        if str:
+        bgs = {
+            b"0": None,
+            b"40": "#000000",
+            b"41": "#ff0000",
+            b"42": "#008000",
+            b"43": "#ffff00",
+            b"44": "#0000ff",
+            b"45": "#9c27b0",
+            b"46": "#1b5e20",
+            b"47": "#000000",
+        }
+        fmt = fmt[2:-1].split(b";")
+        color = colors[b'0']
+        bg = bgs[b'0']
+        for cmd in fmt:
+            if cmd in colors:
+                color = colors[cmd]
+            if cmd in bgs:
+                bg = bgs[cmd]
+        return color, bg
+
+    def _texSplitByColor(self, text:bytes):
+        colorFmt = re.findall(rb'\x1b\[.*?m', text)
+        plaintext = text
+        for fmt in colorFmt:
+            plaintext = plaintext.replace(fmt, b"")
+        colorStrs = []
+        if colorFmt:
+            p = 0
+            for fmt in colorFmt:
+                idx = text[p:].index(fmt)
+                if idx != 0:
+                    colorStrs.append([self.lastColor, self.lastBg, text[p:p+idx]])
+                    p += idx
+                self.lastColor, self.lastBg = self._getColorByfmt(fmt)
+                p += len(fmt)
+            if p != len(text):
+                colorStrs.append([self.lastColor, self.lastBg, text[p:]])
+        else:
+            colorStrs = [[self.lastColor, self.lastBg, text]]
+        return plaintext, colorStrs
+
+    def getColoredText(self, data_bytes, decoding=None):
+        plainText, coloredText = self._texSplitByColor(data_bytes)
+        if decoding:
+            plainText = plainText.decode(encoding=decoding, errors="ignore")
+            decodedColoredText = []
+            for color, bg, text in coloredText:
+                decodedColoredText.append([color, bg, text.decode(encoding=decoding, errors="ignore")])
+            coloredText = decodedColoredText
+        return plainText, coloredText
+
+
+
+    def updateReceivedDataDisplay(self, head : str, datas : list, encoding):
+        if datas:
             curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
             endScrollValue = self.receiveArea.verticalScrollBar().value()
-            # self.receiveArea.append(f'<font color="#0000FF">{str}</font>')
-            # cursor = self.receiveArea.textCursor()
-            # format = cursor.charFormat()
-            # font = QFont('Microsoft YaHei', 10)
-            # format.setFont(font)
-            # cursor.setCharFormat(format)
-            # cursor.insertText(str)
-            def re_del(c):
-                color = c[0][2:-1].split(";")
-                if len(color) == 1:
-                    if color[0] == 0: # close
-                        return ""
-                else:
-                    style, color = color
-                return ""
-            if self.config.color:
-                str = re.sub(r'\x1b\[.*?m', re_del, str, flags=re.I)
-            self.receiveArea.insertPlainText(str)
-
+            if head:
+                self.receiveArea.insertPlainText(head)
+            for data in datas:
+                if type(data) == str:
+                    self.receiveArea.insertPlainText(data)
+                elif type(data) == list:
+                    cursor = self.receiveArea.textCursor()
+                    format = cursor.charFormat()
+                    if not self.defaultColor:
+                        self.defaultColor = format.foreground()
+                    if not self.defaultBg:
+                        self.defaultBg = format.background()
+                    font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
+                    format.setFont(font)
+                    for color, bg, text in data:
+                        if color:
+                            format.setForeground(QColor(color))
+                            cursor.setCharFormat(format)
+                        else:
+                            format.setForeground(self.defaultColor)
+                            cursor.setCharFormat(format)
+                        if bg:
+                            format.setBackground(QColor(bg))
+                            cursor.setCharFormat(format)
+                        else:
+                            format.setBackground(self.defaultBg)
+                            cursor.setCharFormat(format)
+                        cursor.insertText(text)
+                else: # bytes
+                    self.receiveArea.insertPlainText(data.decode(encoding=encoding, errors="ignore"))
             if curScrollValue < endScrollValue:
                 self.receiveArea.verticalScrollBar().setValue(curScrollValue)
             else:
@@ -785,6 +954,8 @@ class MainWindow(QMainWindow):
         if self.config.recordSend:
             self.receiveSettingsAutoLinefeed.setChecked(True)
 
+    def onEscapeSendClicked(self):
+        self.config.sendEscape = self.sendSettingsEscape.isChecked()
 
     def onLanguageChanged(self):
         idx = self.languageCombobox.currentIndex()
@@ -810,7 +981,7 @@ class MainWindow(QMainWindow):
         self.receiveArea.clear()
         self.receiveCount = 0
         self.sendCount = 0
-        self.receiveUpdateSignal.emit(None)
+        self.receiveUpdateSignal.emit("", [], "")
 
     def MoveToCenter(self):
         qr = self.frameGeometry()
@@ -888,7 +1059,7 @@ class MainWindow(QMainWindow):
         strHex = binascii.b2a_hex(strB).upper()
         return re.sub(r"(?<=\w)(?=(?:\w\w)+$)", " ", strHex.decode())+" "
 
-    def hexStringB2Hex(self,hexString):
+    def hexStringB2Hex(self,hexString) -> bytes:
         dataList = hexString.split(" ")
         j = 0
         for i in dataList:
@@ -902,19 +1073,19 @@ class MainWindow(QMainWindow):
             data = bytes.fromhex(data)
         except Exception:
             return -1
-        # print(data)
         return data
 
     def bytes2String(self, data : bytes, showAsHex : bool, encoding="utf-8"):
         isHexString = False
+        dataColored = None
         if showAsHex:
-            return binascii.hexlify(data, ' ')
+            return True, binascii.hexlify(data, ' ').decode(encoding=encoding), dataColored
         try:
-            data = data.decode(encoding=encoding)
+            dataPlain, dataColored = self.getColoredText(data, self.encodingCombobox.currentText())
         except Exception:
-            data = binascii.hexlify(data, ' ').decode(encoding=encoding)
+            dataPlain = binascii.hexlify(data, ' ').decode(encoding=encoding)
             isHexString = True
-        return data, isHexString
+        return isHexString, dataPlain, dataColored
 
     def programExitSaveParameters(self):
         paramObj = self.config
@@ -990,6 +1161,7 @@ class MainWindow(QMainWindow):
         else:
             self.sendSettingsCRLF.setChecked(True)
         self.sendSettingsRecord.setChecked(paramObj.recordSend)
+        self.sendSettingsEscape.setChecked(paramObj.sendEscape)
         for i in range(0, len(paramObj.sendHistoryList)):
             str = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(str)
@@ -1118,8 +1290,9 @@ class MainWindow(QMainWindow):
         self.config.saveLogPath = fileName_choose
 
     def onLog(self, text):
-        with open(self.config.saveLogPath, "a+", encoding=self.config.encoding, newline="\n") as f:
-            f.write(text)
+        if self.config.saveLogPath:
+            with open(self.config.saveLogPath, "a+", encoding=self.config.encoding, newline="\n") as f:
+                f.write(text)
 
     def clearHistory(self):
         self.config.sendHistoryList.clear()

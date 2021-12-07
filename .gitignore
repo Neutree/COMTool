@@ -16,3 +16,4 @@ venv
 config.json
 
 *.mo
+comtool.log

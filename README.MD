@@ -31,13 +31,14 @@ Raspberry Pi3
 - [x] CR LF / LF select support
 - [x] auto save settings
 - [x] <kbd>Ctrl+Enter</kbd> to send
-- [ ] escape character support, like \x \r \n etc.
+- [x] escape character support, like `\r \n \t \x` etc.
 - [x] multiple character encode support(ASII,GBK(Chinese),UTF-8,UTF-16......)
 - [ ] multiple auto send (order and disorder)
-- [ ] unix style terminal color support
+- [x] record support add timestamp and save log to file
+- [x] unix style terminal color support(e.g.`\x1b[33;42mhello\x1b[0mhello2`)
 - [x] night theme and White theme
-- [ ] real time data graphic display
 - [x] rts & dtr control by hand
+- [ ] real time data graphic display
 
 ## Install
 

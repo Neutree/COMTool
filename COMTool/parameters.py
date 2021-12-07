@@ -106,6 +106,7 @@ class Parameters:
     saveLogPath = ""
     saveLog = False
     color = False
+    sendEscape = False
     sendHistoryList = []
 
     def save(self, path):
