@@ -256,7 +256,9 @@ class MainWindow(QMainWindow):
         self.receiveSettingsAutoLinefeed.setMaximumWidth(75)
         self.receiveSettingsAutoLinefeedTime.setMaximumWidth(75)
         self.receiveSettingsTimestamp = QCheckBox(_("Timestamp"))
+        self.receiveSettingsTimestamp.setToolTip(_("Add timestamp before received data, will automatically enable auto line feed"))
         self.receiveSettingsColor = QCheckBox(_("Color"))
+        self.receiveSettingsColor.setToolTip(_("Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"))
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeed, 2, 0, 1, 1)
@@ -283,7 +285,9 @@ class MainWindow(QMainWindow):
         self.sendSettingsCRLF.setToolTip(_("Select to send \\r\\n instead of \\n"))
         self.sendSettingsCRLF.setChecked(False)
         self.sendSettingsRecord = QCheckBox(_("Record"))
+        self.sendSettingsRecord.setToolTip(_("Record send data"))
         self.sendSettingsEscape= QCheckBox(_("Escape"))
+        self.sendSettingsEscape.setToolTip(_("Enable escape characters like \\t \\r \\n \\x01 \\001"))
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
@@ -795,7 +799,7 @@ class MainWindow(QMainWindow):
             b"30": "#000000",
             b"31": "#ff0000",
             b"32": "#008000",
-            b"33": "#ffff00",
+            b"33": "#f9a825",
             b"34": "#0000ff",
             b"35": "#9c27b0",
             b"36": "#1b5e20",
@@ -806,7 +810,7 @@ class MainWindow(QMainWindow):
             b"40": "#000000",
             b"41": "#ff0000",
             b"42": "#008000",
-            b"43": "#ffff00",
+            b"43": "#f9a825",
             b"44": "#0000ff",
             b"45": "#9c27b0",
             b"46": "#1b5e20",

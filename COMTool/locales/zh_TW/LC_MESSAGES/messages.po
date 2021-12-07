@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-07 19:03+0800\n"
+"POT-Creation-Date: 2021-12-07 22:43+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -45,68 +45,87 @@ msgid "Timestamp"
 msgstr "時間戳"
 
 #: Main.py:259
+msgid ""
+"Add timestamp before received data, will automatically enable auto line "
+"feed"
+msgstr ""
+
+#: Main.py:260
 msgid "Color"
 msgstr "顏色"
 
-#: Main.py:273
+#: Main.py:261
+msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
+msgstr ""
+
+#: Main.py:275
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可見字符的方式獲取將要發送的數據，在右上角選擇編碼的方法"
 
-#: Main.py:274
+#: Main.py:276
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六進制的格式獲取將要發送的數據，比如 十六進制的'31 32 33' 和 ascii編碼的 '123' 等效"
 
-#: Main.py:277 Main.py:279
+#: Main.py:279 Main.py:281
 msgid "Timed send, unit: ms"
 msgstr "定時發送，單位：ms"
 
-#: Main.py:283
+#: Main.py:285
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選中發出通知\\r\\n不是\\n"
 
-#: Main.py:285
+#: Main.py:287
 msgid "Record"
 msgstr "記錄"
 
-#: Main.py:286
+#: Main.py:288
+#, fuzzy
+msgid "Record send data"
+msgstr "發送數據"
+
+#: Main.py:289
 msgid "Escape"
 msgstr "轉義符"
 
-#: Main.py:303
+#: Main.py:290
+msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
+msgstr ""
+
+#: Main.py:307
 msgid "Open File"
 msgstr "打開文件"
 
-#: Main.py:304 parameters.py:46
+#: Main.py:308 parameters.py:46
 msgid "Send File"
 msgstr "發送文件"
 
-#: Main.py:305
+#: Main.py:309
 msgid "Clear History"
 msgstr "清除歷史"
 
-#: Main.py:313
+#: Main.py:317
 msgid "Save log"
 msgstr "保存日誌"
 
-#: Main.py:317
+#: Main.py:321
 msgid "Log path"
 msgstr "日誌路徑"
 
-#: Main.py:560 Main.py:578
+#: Main.py:564 Main.py:582
 msgid "Escape is on, but escape error:"
 msgstr "轉義符支持已打開，但是轉義時出現了問題"
 
-#: Main.py:663 parameters.py:51
+#: Main.py:667 parameters.py:51
 msgid "Ready"
 msgstr "就緒"
 
-#: Main.py:682
+#: Main.py:686
 msgid "Connection lose!"
 msgstr "連接丟失！"
 
-#: Main.py:742
+#: Main.py:746
 msgid ""
 "File path error\n"
 "path"
@@ -114,51 +133,51 @@ msgstr ""
 "文件路徑錯誤\n"
 "路徑"
 
-#: Main.py:745
+#: Main.py:749
 msgid "Connect first please"
 msgstr "請先連接"
 
-#: Main.py:777
+#: Main.py:781
 msgid "Open file failed!"
 msgstr "打開失敗"
 
-#: Main.py:945
+#: Main.py:952
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "當時間戳和發送記錄打開是，必須將自動換行也打開"
 
-#: Main.py:965
+#: Main.py:972
 msgid "Restart now?"
 msgstr "現在就重啟？"
 
-#: Main.py:966
+#: Main.py:973
 msgid "language changed to: "
 msgstr "語言更改為："
 
-#: Main.py:966
+#: Main.py:973
 msgid "Restart software to take effect now?"
 msgstr "現在就重啟軟件以生效？"
 
-#: Main.py:1262
+#: Main.py:1269
 msgid "About"
 msgstr "關於"
 
-#: Main.py:1268 Main.py:1282
+#: Main.py:1275 Main.py:1289
 msgid "Select file"
 msgstr "選擇文件"
 
-#: Main.py:1270
+#: Main.py:1277
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: Main.py:1284
+#: Main.py:1291
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr "日誌文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
 
-#: Main.py:1300
+#: Main.py:1307
 msgid "History cleared!"
 msgstr "歷史已清除！"
 
-#: Main.py:1368
+#: Main.py:1375
 msgid "Error"
 msgstr "錯誤"
 

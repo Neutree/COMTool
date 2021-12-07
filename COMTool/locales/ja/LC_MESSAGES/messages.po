@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-07 19:03+0800\n"
+"POT-Creation-Date: 2021-12-07 22:43+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -45,68 +45,87 @@ msgid "Timestamp"
 msgstr "タイムスタンプ"
 
 #: Main.py:259
+msgid ""
+"Add timestamp before received data, will automatically enable auto line "
+"feed"
+msgstr ""
+
+#: Main.py:260
 msgid "Color"
 msgstr "顔色"
 
-#: Main.py:273
+#: Main.py:261
+msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
+msgstr ""
+
+#: Main.py:275
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "表示文字形式で送信するデータを取得し、右上隅でエンコード方法を選択します"
 
-#: Main.py:274
+#: Main.py:276
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "16進数の「313233」などの16進数形式で送信するデータを取得し、ASCIIコードの「123」は同等です。"
 
-#: Main.py:277 Main.py:279
+#: Main.py:279 Main.py:281
 msgid "Timed send, unit: ms"
 msgstr "定時間P送、単位：ms"
 
-#: Main.py:283
+#: Main.py:285
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選択中ρ送信\\ r \\ n圧電不是\\ n"
 
-#: Main.py:285
+#: Main.py:287
 msgid "Record"
 msgstr "記録"
 
-#: Main.py:286
+#: Main.py:288
+#, fuzzy
+msgid "Record send data"
+msgstr "データを送る"
+
+#: Main.py:289
 msgid "Escape"
 msgstr "エスケープ"
 
-#: Main.py:303
+#: Main.py:290
+msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
+msgstr ""
+
+#: Main.py:307
 msgid "Open File"
 msgstr "打開き文件"
 
-#: Main.py:304 parameters.py:46
+#: Main.py:308 parameters.py:46
 msgid "Send File"
 msgstr "ファイルを送信"
 
-#: Main.py:305
+#: Main.py:309
 msgid "Clear History"
 msgstr "履歴のクリア"
 
-#: Main.py:313
+#: Main.py:317
 msgid "Save log"
 msgstr "ログを保存"
 
-#: Main.py:317
+#: Main.py:321
 msgid "Log path"
 msgstr "ログパス"
 
-#: Main.py:560 Main.py:578
+#: Main.py:564 Main.py:582
 msgid "Escape is on, but escape error:"
 msgstr "エスケープはオンですが、エスケープエラー："
 
-#: Main.py:663 parameters.py:51
+#: Main.py:667 parameters.py:51
 msgid "Ready"
 msgstr "準備完了"
 
-#: Main.py:682
+#: Main.py:686
 msgid "Connection lose!"
 msgstr "接続が失われます！"
 
-#: Main.py:742
+#: Main.py:746
 msgid ""
 "File path error\n"
 "path"
@@ -114,51 +133,51 @@ msgstr ""
 "ファイルパスエラー\n"
 "ファイルパス"
 
-#: Main.py:745
+#: Main.py:749
 msgid "Connect first please"
 msgstr "最初に接続してください"
 
-#: Main.py:777
+#: Main.py:781
 msgid "Open file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: Main.py:945
+#: Main.py:952
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "タイムスタンプまたはレコード送信がオンの場合、改行は常にオンになります"
 
-#: Main.py:965
+#: Main.py:972
 msgid "Restart now?"
 msgstr "今すぐ再起動しますか？"
 
-#: Main.py:966
+#: Main.py:973
 msgid "language changed to: "
 msgstr "言語が次のように変更されました："
 
-#: Main.py:966
+#: Main.py:973
 msgid "Restart software to take effect now?"
 msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
 
-#: Main.py:1262
+#: Main.py:1269
 msgid "About"
 msgstr "だいたい"
 
-#: Main.py:1268 Main.py:1282
+#: Main.py:1275 Main.py:1289
 msgid "Select file"
 msgstr "ファイルを選択"
 
-#: Main.py:1270
+#: Main.py:1277
 msgid "All Files (*)"
 msgstr ""
 
-#: Main.py:1284
+#: Main.py:1291
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: Main.py:1300
+#: Main.py:1307
 msgid "History cleared!"
 msgstr "履歴がクリアされました！"
 
-#: Main.py:1368
+#: Main.py:1375
 msgid "Error"
 msgstr "間違い"
 

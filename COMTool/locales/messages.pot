@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-07 19:03+0800\n"
+"POT-Creation-Date: 2021-12-07 22:43+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,118 +44,136 @@ msgid "Timestamp"
 msgstr ""
 
 #: Main.py:259
+msgid ""
+"Add timestamp before received data, will automatically enable auto line "
+"feed"
+msgstr ""
+
+#: Main.py:260
 msgid "Color"
 msgstr ""
 
-#: Main.py:273
+#: Main.py:261
+msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
+msgstr ""
+
+#: Main.py:275
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:274
+#: Main.py:276
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
-#: Main.py:277 Main.py:279
+#: Main.py:279 Main.py:281
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: Main.py:283
+#: Main.py:285
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
-#: Main.py:285
+#: Main.py:287
 msgid "Record"
 msgstr ""
 
-#: Main.py:286
+#: Main.py:288
+msgid "Record send data"
+msgstr ""
+
+#: Main.py:289
 msgid "Escape"
 msgstr ""
 
-#: Main.py:303
+#: Main.py:290
+msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
+msgstr ""
+
+#: Main.py:307
 msgid "Open File"
 msgstr ""
 
-#: Main.py:304 parameters.py:46
+#: Main.py:308 parameters.py:46
 msgid "Send File"
 msgstr ""
 
-#: Main.py:305
+#: Main.py:309
 msgid "Clear History"
 msgstr ""
 
-#: Main.py:313
+#: Main.py:317
 msgid "Save log"
 msgstr ""
 
-#: Main.py:317
+#: Main.py:321
 msgid "Log path"
 msgstr ""
 
-#: Main.py:560 Main.py:578
+#: Main.py:564 Main.py:582
 msgid "Escape is on, but escape error:"
 msgstr ""
 
-#: Main.py:663 parameters.py:51
+#: Main.py:667 parameters.py:51
 msgid "Ready"
 msgstr ""
 
-#: Main.py:682
+#: Main.py:686
 msgid "Connection lose!"
 msgstr ""
 
-#: Main.py:742
+#: Main.py:746
 msgid ""
 "File path error\n"
 "path"
 msgstr ""
 
-#: Main.py:745
+#: Main.py:749
 msgid "Connect first please"
 msgstr ""
 
-#: Main.py:777
+#: Main.py:781
 msgid "Open file failed!"
 msgstr ""
 
-#: Main.py:945
+#: Main.py:952
 msgid "linefeed always on if timestamp or record send is on"
 msgstr ""
 
-#: Main.py:965
+#: Main.py:972
 msgid "Restart now?"
 msgstr ""
 
-#: Main.py:966
+#: Main.py:973
 msgid "language changed to: "
 msgstr ""
 
-#: Main.py:966
+#: Main.py:973
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: Main.py:1262
+#: Main.py:1269
 msgid "About"
 msgstr ""
 
-#: Main.py:1268 Main.py:1282
+#: Main.py:1275 Main.py:1289
 msgid "Select file"
 msgstr ""
 
-#: Main.py:1270
+#: Main.py:1277
 msgid "All Files (*)"
 msgstr ""
 
-#: Main.py:1284
+#: Main.py:1291
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: Main.py:1300
+#: Main.py:1307
 msgid "History cleared!"
 msgstr ""
 
-#: Main.py:1368
+#: Main.py:1375
 msgid "Error"
 msgstr ""
 

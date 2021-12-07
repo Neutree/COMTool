@@ -222,10 +222,9 @@ QTextEdit, QListView {
 QLineEdit {
     border: 2px solid #e6e6e6;
     border-radius: 5px;
-    padding: 0 8px;
     background: #f5f5f5;
-    selection-background-color: #373277;
-    height: 30px;
+    selection-background-color: #5951ca;
+    height: 18px;
 }
 
 QCheckBox {
