@@ -12,9 +12,9 @@ os.chdir("COMTool")
 if sys.platform.startswith("win32"):
     cmd = 'pyinstaller --hidden-import babel.numbers  --add-data="assets;assets" --add-data="locales;locales" --add-data="../README.MD;./" -i="assets/logo.ico" -w Main.py -n comtool'
 elif sys.platform.startswith("darwin"):
-    cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales"--add-data="../README.MD:./" -i="assets/logo.icns" -w Main.py  -n comtool'
+    cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales" --add-data="../README.MD:./" -i="assets/logo.icns" -w Main.py  -n comtool'
 else:
-    cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales"--add-data="../README.MD:./" -i="assets/logo.png" -w Main.py  -n comtool'
+    cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales" --add-data="../README.MD:./" -i="assets/logo.png" -w Main.py  -n comtool'
 
 os.system(cmd)
 
