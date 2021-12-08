@@ -31,24 +31,24 @@ def main(cmd):
     cwd = os.getcwd()
     os.chdir(root_dir)
     if cmd == "prepare":
-        print(f"== translate locales: {locales} ==")
+        print("== translate locales: {} ==".format(locales))
         print("-- extract keys from files")
         if not os.path.exists("locales"):
             os.makedirs("locales")
         os.system("pybabel extract -F babel.cfg -o locales/messages.pot ./")
         for locale in locales:
-            print(f"-- generate {locale} po files from pot files")
-            if os.path.exists(f'locales/{locale}/LC_MESSAGES/messages.po'):
+            print("-- generate {} po files from pot files".format(locale))
+            if os.path.exists('locales/{}/LC_MESSAGES/messages.po'.format(locale)):
                 print("-- file already exits, only update")
-                os.system(f"pybabel update -i locales/messages.pot -d locales -l {locale}")
+                os.system("pybabel update -i locales/messages.pot -d locales -l {}".format(locale))
             else:
                 print("-- file not exits, now create")
-                os.system(f"pybabel init -i locales/messages.pot -d locales -l {locale}")
+                os.system("pybabel init -i locales/messages.pot -d locales -l {}".format(locale))
     elif cmd == "finish":
-        print(f"== translate locales: {locales} ==")
+        print("== translate locales: {} ==".format(locales))
         for locale in locales:
-            print(f"-- generate {locale} mo file from po files")
-            os.system(f"pybabel compile -d locales -l {locale}")
+            print("-- generate {} mo file from po files".format(locale))
+            os.system("pybabel compile -d locales -l {}".format(locale))
     os.chdir(cwd)
 
 

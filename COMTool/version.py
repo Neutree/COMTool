@@ -17,4 +17,4 @@ class Version:
         return self.major * 100 + self.minor * 10 + self.dev
 
     def __str__(self):
-        return f'v{self.major}.{self.minor}.{self.dev}, {self.name}: {self.desc}'
+        return 'v{}.{}.{}, {}: {}'.format(self.major, self.minor, self.dev, self.name, self.desc)

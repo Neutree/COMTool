@@ -13,7 +13,7 @@ class AutoUpdate:
         try:
             page = requests.get(self.releaseApiUrl)
             if page.status_code != 200:
-                print(f"request {self.releaseApiUrl} fail, check update fail!")
+                print("request {} fail, check update fail!".format(self.releaseApiUrl))
                 return False, None
             releases = json.loads(page.content)
             releasesInfo = []

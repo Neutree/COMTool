@@ -673,7 +673,7 @@ class MainWindow(QMainWindow):
                 if self.config.recordSend:
                     head = '=> '
                     if self.config.showTimestamp:
-                        head += f'[{utils.datetime_format_ms(datetime.now())}] '
+                        head += '[{}] '.format(utils.datetime_format_ms(datetime.now()))
                     isHexStr, sendStr, sendStrsColored = self.bytes2String(data, not self.config.receiveAscii, encoding=self.config.encoding)
                     if isHexStr:
                         head += "[HEX] "
@@ -684,7 +684,7 @@ class MainWindow(QMainWindow):
                     else:
                         head = "\n" + head
                     if head.strip() != '=>':
-                        head = f'{head.rstrip()}: '
+                        head = '{}: '.format(head.rstrip())
                     self.receiveUpdateSignal.emit(head, [sendStrsColored], self.config.encoding)
                     self.sendRecord.insert(0, head + sendStr)
                 self.sendData(data_bytes=data)
@@ -793,12 +793,12 @@ class MainWindow(QMainWindow):
                 if data:
                     # add time header
                     if new_line:
-                        timeNow = f'[{utils.datetime_format_ms(datetime.now())}] '
+                        timeNow = '[{}] '.format(utils.datetime_format_ms(datetime.now()))
                         if self.config.recordSend:
                             head += "<= " 
                         if self.config.showTimestamp:
                             head += timeNow
-                            head = f'{head.rstrip()}: '
+                            head = '{}: '.format(head.rstrip())
                         new_line = False
                     self.receiveUpdateSignal.emit(head, [colorData], self.config.encoding)
                     logData = head + data
@@ -831,7 +831,7 @@ class MainWindow(QMainWindow):
         self.receiveUpdateSignal.emit("", [], "")
 
     def onSentFile(self, ok, path):
-        print(f"file sent {'ok' if ok else 'fail'}, path: {path}")
+        print("file sent {}, path: {}".format('ok' if ok else 'fail', path))
         self.sendFileButton.setText(self.strings.strSendFile)
         self.sendFileButton.setDisabled(False)
 
@@ -975,8 +975,8 @@ class MainWindow(QMainWindow):
                 self.receiveArea.verticalScrollBar().setValue(curScrollValue)
             else:
                 self.receiveArea.moveCursor(QTextCursor.End)
-        self.statusBarSendCount.setText(f'{self.strings.strSend}({_("bytes")}): {self.sendCount}')
-        self.statusBarReceiveCount.setText(f'{self.strings.strReceive}({_("bytes")}): {self.receiveCount}')
+        self.statusBarSendCount.setText('{}({}): {}'.format(self.strings.strSend, _("bytes"), self.sendCount))
+        self.statusBarReceiveCount.setText('{}({}): {}'.format(self.strings.strReceive, _("bytes"), self.receiveCount))
 
     def onstatusBarText(self, msg_type, msg):
         if msg_type == "info":
@@ -987,7 +987,7 @@ class MainWindow(QMainWindow):
             color = "#f44336"
         else:
             color = "#008200"
-        text = f'<font color={color}>{msg}</font>'
+        text = '<font color={}>{}</font>'.format(color, msg)
         self.statusBarStauts.setText(text)
 
     def onConnection(self, status : ConnectionStatus):
@@ -1118,13 +1118,13 @@ class MainWindow(QMainWindow):
                 for p in portList:
                     showStr = "{} {} - {}".format(p.device, p.name, p.description)
                     if p.manufacturer:
-                        showStr += f' - {p.manufacturer}'
+                        showStr += ' - {}'.format(p.manufacturer)
                     if p.pid:
                         showStr += ' - pid(0x{:04X})'.format(p.pid)
                     if p.vid:
                         showStr += ' - vid(0x{:04X})'.format(p.vid)
                     if p.serial_number:
-                        showStr += f' - v{p.serial_number}'
+                        showStr += ' - v{}'.format(p.serial_number)
                     if p.device.startswith("/dev/cu.Bluetooth-Incoming-Port"):
                         continue
                     self.serialPortCombobox.addItem(showStr)    
@@ -1385,7 +1385,7 @@ class MainWindow(QMainWindow):
         msgBox = QMessageBox()
         desc = versionInfo.desc if len(versionInfo.desc) < 300 else versionInfo.desc[:300] + " ... "
         link = '<a href="https://github.com/Neutree/COMTool/releases">github.com/Neutree/COMTool/releases</a>'
-        info = '{}<br>{}<br><br>v{}: {}<br><br>{}'.format(_("New versioin detected, please click learn more to download"), link, f'{versionInfo.major}.{versionInfo.minor}.{versionInfo.dev}', versionInfo.name, desc)
+        info = '{}<br>{}<br><br>v{}: {}<br><br>{}'.format(_("New versioin detected, please click learn more to download"), link, '{}.{}.{}'.format(versionInfo.major, versionInfo.minor, versionInfo.dev), versionInfo.name, desc)
         learn = msgBox.addButton(_("Learn More"), QMessageBox.YesRole)
         skip = msgBox.addButton(_("Skip this version"), QMessageBox.YesRole)
         nextTime = msgBox.addButton(_("Remind me next time"), QMessageBox.NoRole)
