@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-07 22:43+0800\n"
+"POT-Creation-Date: 2021-12-08 19:07+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,114 +18,129 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:190
+#: Main.py:192
 msgid "Flow control"
 msgstr "フロー制御"
 
-#: Main.py:224 Main.py:225
+#: Main.py:226 Main.py:227
 msgid "Check to enable(usually output low level)"
 msgstr "チェックして有効にします（通常は低レベルを出力します）"
 
-#: Main.py:248
+#: Main.py:250
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "表示されている文字を使用して受信データを表示し、右上隅でデコード方法を選択します"
 
-#: Main.py:250
+#: Main.py:252
 msgid "Show recived data as hex format"
 msgstr "16進表記を使用して受信データを表示します"
 
-#: Main.py:253 Main.py:255
+#: Main.py:255 Main.py:258
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超オーバー・トタイム時自PP换行、単位：ms"
 
-#: Main.py:258
+#: Main.py:261
 msgid "Timestamp"
 msgstr "タイムスタンプ"
 
-#: Main.py:259
+#: Main.py:262
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
-msgstr ""
+msgstr "受信データの前にタイムスタンプを追加すると、自動改行が自動的に有効になります"
 
-#: Main.py:260
+#: Main.py:263
 msgid "Color"
 msgstr "顔色"
 
-#: Main.py:261
+#: Main.py:264
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
-msgstr ""
+msgstr "UNIX端末の色のサポートを有効にする, 例えば \\33[31;43mhello\\33[0m"
 
-#: Main.py:275
+#: Main.py:278
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "表示文字形式で送信するデータを取得し、右上隅でエンコード方法を選択します"
 
-#: Main.py:276
+#: Main.py:279
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "16進数の「313233」などの16進数形式で送信するデータを取得し、ASCIIコードの「123」は同等です。"
 
-#: Main.py:279 Main.py:281
+#: Main.py:282 Main.py:285
 msgid "Timed send, unit: ms"
 msgstr "定時間P送、単位：ms"
 
-#: Main.py:285
+#: Main.py:289
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選択中ρ送信\\ r \\ n圧電不是\\ n"
 
-#: Main.py:287
+#: Main.py:291
 msgid "Record"
 msgstr "記録"
 
-#: Main.py:288
-#, fuzzy
+#: Main.py:292
 msgid "Record send data"
-msgstr "データを送る"
+msgstr "送信データを記録する"
 
-#: Main.py:289
+#: Main.py:293
 msgid "Escape"
 msgstr "エスケープ"
 
-#: Main.py:290
-msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
-msgstr ""
+#: Main.py:294
+msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
+msgstr "\\t \\r \\n \\x01 \\001 のようなエスケープ文字のサポートを有効にする"
 
-#: Main.py:307
+#: Main.py:311
 msgid "Open File"
 msgstr "打開き文件"
 
-#: Main.py:308 parameters.py:46
+#: Main.py:312 parameters.py:47
 msgid "Send File"
 msgstr "ファイルを送信"
 
-#: Main.py:309
+#: Main.py:313
 msgid "Clear History"
 msgstr "履歴のクリア"
 
-#: Main.py:317
+#: Main.py:321
 msgid "Save log"
 msgstr "ログを保存"
 
-#: Main.py:321
+#: Main.py:324
+msgid "Cutom send"
+msgstr "カスタム送信"
+
+#: Main.py:352
 msgid "Log path"
 msgstr "ログパス"
 
-#: Main.py:564 Main.py:582
+#: Main.py:430
+msgid "Auto line feed value error, must be integer"
+msgstr "自動改行値エラー、整数である必要があります"
+
+#: Main.py:431
+msgid "Timed send value error, must be integer"
+msgstr "時限送信値エラー。整数である必要があります"
+
+#: Main.py:599
+msgid "Format error, should be like 00 01 02 03"
+msgstr "フォーマットエラー、00 01 02 03 のようになります"
+
+#: Main.py:637 Main.py:655
 msgid "Escape is on, but escape error:"
 msgstr "エスケープはオンですが、エスケープエラー："
 
-#: Main.py:667 parameters.py:51
+#: Main.py:740 parameters.py:52
 msgid "Ready"
 msgstr "準備完了"
 
-#: Main.py:686
+#: Main.py:759
 msgid "Connection lose!"
 msgstr "接続が失われます！"
 
-#: Main.py:746
+#: Main.py:819
 msgid ""
 "File path error\n"
 "path"
@@ -133,51 +148,75 @@ msgstr ""
 "ファイルパスエラー\n"
 "ファイルパス"
 
-#: Main.py:749
+#: Main.py:822
 msgid "Connect first please"
 msgstr "最初に接続してください"
 
-#: Main.py:781
+#: Main.py:854
 msgid "Open file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: Main.py:952
+#: Main.py:1027
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "タイムスタンプまたはレコード送信がオンの場合、改行は常にオンになります"
 
-#: Main.py:972
+#: Main.py:1050
 msgid "Restart now?"
 msgstr "今すぐ再起動しますか？"
 
-#: Main.py:973
+#: Main.py:1051
 msgid "language changed to: "
 msgstr "言語が次のように変更されました："
 
-#: Main.py:973
+#: Main.py:1051
 msgid "Restart software to take effect now?"
 msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
 
-#: Main.py:1269
+#: Main.py:1250 parameters.py:26
+msgid "Send"
+msgstr "送信"
+
+#: Main.py:1330
 msgid "About"
 msgstr "だいたい"
 
-#: Main.py:1275 Main.py:1289
+#: Main.py:1336 Main.py:1350
 msgid "Select file"
 msgstr "ファイルを選択"
 
-#: Main.py:1277
+#: Main.py:1338
 msgid "All Files (*)"
 msgstr ""
 
-#: Main.py:1291
+#: Main.py:1352
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: Main.py:1307
+#: Main.py:1368
 msgid "History cleared!"
 msgstr "履歴がクリアされました！"
 
-#: Main.py:1375
+#: Main.py:1377
+msgid "New versioin detected, please click learn more to download"
+msgstr ""
+
+#: Main.py:1378
+msgid "Learn More"
+msgstr "もっと詳しく知る"
+
+#: Main.py:1379
+msgid "Skip this version"
+msgstr "このバージョンをスキップ"
+
+#: Main.py:1380
+msgid "Remind me next time"
+msgstr "次回リマインダー"
+
+#: Main.py:1381
+msgid "Need update"
+msgstr "更新が必要"
+
+#: Main.py:1456
 msgid "Error"
 msgstr "間違い"
 
@@ -209,63 +248,59 @@ msgstr "送信エリアをクリアする"
 msgid "Clear Receive Area"
 msgstr "清除接収区"
 
-#: parameters.py:24
+#: parameters.py:25
 msgid "bytes"
 msgstr "バイト"
 
-#: parameters.py:25
-msgid "Send"
-msgstr "送信"
-
-#: parameters.py:26
+#: parameters.py:27
 msgid "Receive"
 msgstr "受信"
 
-#: parameters.py:27
+#: parameters.py:28
 msgid "Port"
 msgstr "ポート"
 
-#: parameters.py:28
+#: parameters.py:29
 msgid "Baudrate"
 msgstr "ボーレート"
 
-#: parameters.py:29
+#: parameters.py:30
 msgid "DataBytes"
 msgstr "データ文字节"
 
-#: parameters.py:30
+#: parameters.py:31
 msgid "Parity"
 msgstr "パリティ"
 
-#: parameters.py:31
+#: parameters.py:32
 msgid "Stopbits"
 msgstr "ストップビット"
 
-#: parameters.py:32
+#: parameters.py:33
 msgid "ASCII"
 msgstr "ASCII"
 
-#: parameters.py:33
+#: parameters.py:34
 msgid "HEX"
 msgstr "HEX"
 
-#: parameters.py:34 parameters.py:42
+#: parameters.py:35 parameters.py:43
 msgid "Send Settings"
 msgstr "送信設定"
 
-#: parameters.py:35 parameters.py:41
+#: parameters.py:36 parameters.py:42
 msgid "Receive Settings"
 msgstr "受信設定"
 
-#: parameters.py:36
+#: parameters.py:37
 msgid "OPEN"
 msgstr "打込み"
 
-#: parameters.py:37
+#: parameters.py:38
 msgid "CLOSE"
 msgstr "関闭"
 
-#: parameters.py:38
+#: parameters.py:39
 msgid ""
 "Auto\n"
 "Linefeed\n"
@@ -275,7 +310,7 @@ msgstr ""
 "ラインフィード\n"
 "ms"
 
-#: parameters.py:39
+#: parameters.py:40
 msgid ""
 "Timed Send\n"
 "ms"
@@ -283,41 +318,37 @@ msgstr ""
 "時限送信\n"
 "ms"
 
-#: parameters.py:40
+#: parameters.py:41
 msgid "Serial Settings"
 msgstr "シリアル設定"
 
-#: parameters.py:43
+#: parameters.py:44
 msgid "ClearReceive"
 msgstr "清除接収区"
 
-#: parameters.py:44
+#: parameters.py:45
 msgid "+"
 msgstr "+"
 
-#: parameters.py:45
+#: parameters.py:46
 msgid "Functional Send"
 msgstr "機能送信"
 
-#: parameters.py:47
+#: parameters.py:48
 msgid "Sendding File"
 msgstr "ファイルの送信"
 
-#: parameters.py:48
+#: parameters.py:49
 msgid "Open Failed"
 msgstr "開くことができませんでした"
 
-#: parameters.py:49
+#: parameters.py:50
 msgid "Closed"
 msgstr "クローズ"
 
-#: parameters.py:50
+#: parameters.py:51
 msgid "Send Error"
 msgstr "エラーの送信"
-
-#: parameters.py:52
-msgid "format error"
-msgstr "フォーマットエラー"
 
 #: parameters.py:53
 msgid "<CRLF>"

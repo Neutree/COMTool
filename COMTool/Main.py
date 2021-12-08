@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
     statusBarSignal = pyqtSignal(str, str)
     connectionSignal = pyqtSignal(ConnectionStatus)
     sendFileOkSignal = pyqtSignal(bool, str)
+    updateSignal = pyqtSignal(object)
     showSerialComboboxSignal = pyqtSignal()
     setDisableSettingsSignal = pyqtSignal(bool)
     isDetectSerialPort = False
@@ -384,6 +385,7 @@ class MainWindow(QMainWindow):
         print("config file path:",parameters.configFilePath)
 
     def initEvent(self):
+        self.updateSignal.connect(self.showUpdate)
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
         self.sendButtion.clicked.connect(self.onSendData)
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
@@ -1365,10 +1367,33 @@ class MainWindow(QMainWindow):
         self.sendHistory.clear()
         self.errorSignal.emit(_("History cleared!"))
 
+    def showUpdate(self, versionInfo):
+        versionInt = versionInfo.int()
+        if self.config.skipVersion and self.config.skipVersion >= versionInt:
+            return
+        msgBox = QMessageBox()
+        desc = versionInfo.desc if len(versionInfo.desc) < 300 else versionInfo.desc[:300] + " ... "
+        link = '<a href="https://github.com/Neutree/COMTool/releases">github.com/Neutree/COMTool/releases</a>'
+        info = '{}<br>{}<br><br>v{}: {}<br><br>{}'.format(_("New versioin detected, please click learn more to download"), link, f'{versionInfo.major}.{versionInfo.minor}.{versionInfo.dev}', versionInfo.name, desc)
+        learn = msgBox.addButton(_("Learn More"), QMessageBox.YesRole)
+        skip = msgBox.addButton(_("Skip this version"), QMessageBox.YesRole)
+        nextTime = msgBox.addButton(_("Remind me next time"), QMessageBox.NoRole)
+        msgBox.setWindowTitle(_("Need update"))
+        msgBox.setText(info)
+        result = msgBox.exec_()
+        if result == 0:
+            auto = autoUpdate.AutoUpdate()
+            auto.OpenBrowser()
+        elif result == 1:
+            self.config.skipVersion = versionInt
+
+            
+
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()
-        if auto.detectNewVersion():
-            auto.OpenBrowser()
+        needUpdate, versionInfo = auto.detectNewVersion()
+        if needUpdate:
+            self.updateSignal.emit(versionInfo)
 
     # def openWaveDisplay(self):
     #     self.wave = Wave()

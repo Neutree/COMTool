@@ -1,6 +1,4 @@
-bs4==0.0.1
 PyQt5==5.12.2
 pyserial==3.4
 requests==2.22.0
-urllib3==1.26.5
 Babel==2.9.1

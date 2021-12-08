@@ -189,11 +189,11 @@ Windows:
 
 2. install pyserial and PyQt5
 ```
-sudo pip3 install pyserial pyqt5 bs4
+sudo pip3 install pyserial pyqt5
 ```
 On Raspberry:
 ```
-sudo pip3 install --upgrade pyserial bs4
+sudo pip3 install --upgrade pyserial
 sudo apt install python3-pyqt5
 ```
 

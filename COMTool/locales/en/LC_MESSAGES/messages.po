@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-07 22:43+0800\n"
+"POT-Creation-Date: 2021-12-08 19:07+0800\n"
 "PO-Revision-Date: 2021-12-04 15:21+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,163 +18,203 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:190
+#: Main.py:192
 msgid "Flow control"
 msgstr ""
 
-#: Main.py:224 Main.py:225
+#: Main.py:226 Main.py:227
 msgid "Check to enable(usually output low level)"
 msgstr ""
 
-#: Main.py:248
+#: Main.py:250
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:250
+#: Main.py:252
 msgid "Show recived data as hex format"
 msgstr ""
 
-#: Main.py:253 Main.py:255
+#: Main.py:255 Main.py:258
 msgid "Auto linefeed after interval, unit: ms"
 msgstr ""
 
-#: Main.py:258
+#: Main.py:261
 msgid "Timestamp"
 msgstr ""
 
-#: Main.py:259
+#: Main.py:262
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr ""
 
-#: Main.py:260
+#: Main.py:263
 msgid "Color"
 msgstr ""
 
-#: Main.py:261
+#: Main.py:264
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr ""
 
-#: Main.py:275
+#: Main.py:278
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: Main.py:276
+#: Main.py:279
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
-#: Main.py:279 Main.py:281
+#: Main.py:282 Main.py:285
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: Main.py:285
+#: Main.py:289
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
-#: Main.py:287
+#: Main.py:291
 msgid "Record"
 msgstr ""
 
-#: Main.py:288
+#: Main.py:292
 msgid "Record send data"
 msgstr ""
 
-#: Main.py:289
+#: Main.py:293
 msgid "Escape"
 msgstr ""
 
-#: Main.py:290
-msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
+#: Main.py:294
+msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr ""
 
-#: Main.py:307
+#: Main.py:311
 msgid "Open File"
 msgstr ""
 
-#: Main.py:308 parameters.py:46
+#: Main.py:312 parameters.py:47
 msgid "Send File"
 msgstr ""
 
-#: Main.py:309
+#: Main.py:313
 msgid "Clear History"
 msgstr ""
 
-#: Main.py:317
+#: Main.py:321
 msgid "Save log"
 msgstr ""
 
-#: Main.py:321
+#: Main.py:324
+msgid "Cutom send"
+msgstr ""
+
+#: Main.py:352
 msgid "Log path"
 msgstr ""
 
-#: Main.py:564 Main.py:582
+#: Main.py:430
+msgid "Auto line feed value error, must be integer"
+msgstr ""
+
+#: Main.py:431
+msgid "Timed send value error, must be integer"
+msgstr ""
+
+#: Main.py:599
+msgid "Format error, should be like 00 01 02 03"
+msgstr ""
+
+#: Main.py:637 Main.py:655
 msgid "Escape is on, but escape error:"
 msgstr ""
 
-#: Main.py:667 parameters.py:51
+#: Main.py:740 parameters.py:52
 msgid "Ready"
 msgstr ""
 
-#: Main.py:686
+#: Main.py:759
 msgid "Connection lose!"
 msgstr ""
 
-#: Main.py:746
+#: Main.py:819
 msgid ""
 "File path error\n"
 "path"
 msgstr ""
 
-#: Main.py:749
+#: Main.py:822
 msgid "Connect first please"
 msgstr ""
 
-#: Main.py:781
+#: Main.py:854
 msgid "Open file failed!"
 msgstr ""
 
-#: Main.py:952
+#: Main.py:1027
 msgid "linefeed always on if timestamp or record send is on"
 msgstr ""
 
-#: Main.py:972
+#: Main.py:1050
 msgid "Restart now?"
 msgstr ""
 
-#: Main.py:973
+#: Main.py:1051
 msgid "language changed to: "
 msgstr ""
 
-#: Main.py:973
+#: Main.py:1051
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: Main.py:1269
+#: Main.py:1250 parameters.py:26
+msgid "Send"
+msgstr ""
+
+#: Main.py:1330
 msgid "About"
 msgstr ""
 
-#: Main.py:1275 Main.py:1289
+#: Main.py:1336 Main.py:1350
 msgid "Select file"
 msgstr ""
 
-#: Main.py:1277
+#: Main.py:1338
 msgid "All Files (*)"
 msgstr ""
 
-#: Main.py:1291
+#: Main.py:1352
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: Main.py:1307
+#: Main.py:1368
 msgid "History cleared!"
 msgstr ""
 
-#: Main.py:1375
+#: Main.py:1377
+msgid "New versioin detected, please click learn more to download"
+msgstr ""
+
+#: Main.py:1378
+msgid "Learn More"
+msgstr ""
+
+#: Main.py:1379
+msgid "Skip this version"
+msgstr ""
+
+#: Main.py:1380
+msgid "Remind me next time"
+msgstr ""
+
+#: Main.py:1381
+msgid "Need update"
+msgstr ""
+
+#: Main.py:1456
 msgid "Error"
 msgstr ""
 
@@ -206,63 +246,59 @@ msgstr ""
 msgid "Clear Receive Area"
 msgstr ""
 
-#: parameters.py:24
+#: parameters.py:25
 msgid "bytes"
 msgstr ""
 
-#: parameters.py:25
-msgid "Send"
-msgstr ""
-
-#: parameters.py:26
+#: parameters.py:27
 msgid "Receive"
 msgstr ""
 
-#: parameters.py:27
+#: parameters.py:28
 msgid "Port"
 msgstr ""
 
-#: parameters.py:28
+#: parameters.py:29
 msgid "Baudrate"
 msgstr ""
 
-#: parameters.py:29
+#: parameters.py:30
 msgid "DataBytes"
 msgstr ""
 
-#: parameters.py:30
+#: parameters.py:31
 msgid "Parity"
 msgstr ""
 
-#: parameters.py:31
+#: parameters.py:32
 msgid "Stopbits"
 msgstr ""
 
-#: parameters.py:32
+#: parameters.py:33
 msgid "ASCII"
 msgstr ""
 
-#: parameters.py:33
+#: parameters.py:34
 msgid "HEX"
 msgstr ""
 
-#: parameters.py:34 parameters.py:42
+#: parameters.py:35 parameters.py:43
 msgid "Send Settings"
 msgstr ""
 
-#: parameters.py:35 parameters.py:41
+#: parameters.py:36 parameters.py:42
 msgid "Receive Settings"
 msgstr ""
 
-#: parameters.py:36
+#: parameters.py:37
 msgid "OPEN"
 msgstr ""
 
-#: parameters.py:37
+#: parameters.py:38
 msgid "CLOSE"
 msgstr ""
 
-#: parameters.py:38
+#: parameters.py:39
 #, fuzzy
 msgid ""
 "Auto\n"
@@ -273,46 +309,42 @@ msgstr ""
 "Linefeed\n"
 "ms"
 
-#: parameters.py:39
+#: parameters.py:40
 msgid ""
 "Timed Send\n"
 "ms"
 msgstr ""
 
-#: parameters.py:40
+#: parameters.py:41
 msgid "Serial Settings"
 msgstr ""
 
-#: parameters.py:43
+#: parameters.py:44
 msgid "ClearReceive"
 msgstr ""
 
-#: parameters.py:44
+#: parameters.py:45
 msgid "+"
 msgstr ""
 
-#: parameters.py:45
+#: parameters.py:46
 msgid "Functional Send"
 msgstr ""
 
-#: parameters.py:47
+#: parameters.py:48
 msgid "Sendding File"
 msgstr ""
 
-#: parameters.py:48
+#: parameters.py:49
 msgid "Open Failed"
 msgstr ""
 
-#: parameters.py:49
+#: parameters.py:50
 msgid "Closed"
 msgstr ""
 
-#: parameters.py:50
+#: parameters.py:51
 msgid "Send Error"
-msgstr ""
-
-#: parameters.py:52
-msgid "format error"
 msgstr ""
 
 #: parameters.py:53
@@ -348,5 +380,14 @@ msgid "uninstall app"
 msgstr ""
 
 #~ msgid "Pack date:"
+#~ msgstr ""
+
+#~ msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
+#~ msgstr ""
+
+#~ msgid "format error"
+#~ msgstr ""
+
+#~ msgid "New versioin detected, please see more and update here:"
 #~ msgstr ""
 

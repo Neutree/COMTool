@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-07 22:43+0800\n"
+"POT-Creation-Date: 2021-12-08 19:07+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -18,114 +18,130 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:190
+#: Main.py:192
 msgid "Flow control"
 msgstr "流控"
 
-#: Main.py:224 Main.py:225
+#: Main.py:226 Main.py:227
 msgid "Check to enable(usually output low level)"
 msgstr "選中以使能（通常會輸出低電平）"
 
-#: Main.py:248
+#: Main.py:250
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "使用可見字符顯示收到的數據，在右上角選擇解碼的方法"
 
-#: Main.py:250
+#: Main.py:252
 msgid "Show recived data as hex format"
 msgstr "使用十六進製表示方法顯示收到的數據"
 
-#: Main.py:253 Main.py:255
+#: Main.py:255 Main.py:258
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超過這個時間自動換行，單位：ms"
 
-#: Main.py:258
+#: Main.py:261
 msgid "Timestamp"
 msgstr "時間戳"
 
-#: Main.py:259
+#: Main.py:262
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
-msgstr ""
+msgstr "在接收的數據前添加時間戳， 會自動使能自動換行"
 
-#: Main.py:260
+#: Main.py:263
 msgid "Color"
 msgstr "顏色"
 
-#: Main.py:261
+#: Main.py:264
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
-msgstr ""
+msgstr "使能 unix 終端樣式的顏色支持， 比如： \\33[31;43mhello\\33[0m"
 
-#: Main.py:275
+#: Main.py:278
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可見字符的方式獲取將要發送的數據，在右上角選擇編碼的方法"
 
-#: Main.py:276
+#: Main.py:279
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六進制的格式獲取將要發送的數據，比如 十六進制的'31 32 33' 和 ascii編碼的 '123' 等效"
 
-#: Main.py:279 Main.py:281
+#: Main.py:282 Main.py:285
 msgid "Timed send, unit: ms"
 msgstr "定時發送，單位：ms"
 
-#: Main.py:285
+#: Main.py:289
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選中發出通知\\r\\n不是\\n"
 
-#: Main.py:287
+#: Main.py:291
 msgid "Record"
 msgstr "記錄"
 
-#: Main.py:288
+#: Main.py:292
 #, fuzzy
 msgid "Record send data"
 msgstr "發送數據"
 
-#: Main.py:289
+#: Main.py:293
 msgid "Escape"
 msgstr "轉義符"
 
-#: Main.py:290
-msgid "Enable escape characters like \\t \\r \\n \\x01 \\001"
-msgstr ""
+#: Main.py:294
+msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
+msgstr "使能轉義符支持，比如 \\t \\r \\n \\x01 \\001"
 
-#: Main.py:307
+#: Main.py:311
 msgid "Open File"
 msgstr "打開文件"
 
-#: Main.py:308 parameters.py:46
+#: Main.py:312 parameters.py:47
 msgid "Send File"
 msgstr "發送文件"
 
-#: Main.py:309
+#: Main.py:313
 msgid "Clear History"
 msgstr "清除歷史"
 
-#: Main.py:317
+#: Main.py:321
 msgid "Save log"
 msgstr "保存日誌"
 
-#: Main.py:321
+#: Main.py:324
+msgid "Cutom send"
+msgstr "自定義發送"
+
+#: Main.py:352
 msgid "Log path"
 msgstr "日誌路徑"
 
-#: Main.py:564 Main.py:582
+#: Main.py:430
+msgid "Auto line feed value error, must be integer"
+msgstr "自動換行值錯誤，必須是整數"
+
+#: Main.py:431
+msgid "Timed send value error, must be integer"
+msgstr "定時發送值錯誤，必須是整數"
+
+#: Main.py:599
+msgid "Format error, should be like 00 01 02 03"
+msgstr "格式錯誤，應該如：00 01 02 03"
+
+#: Main.py:637 Main.py:655
 msgid "Escape is on, but escape error:"
 msgstr "轉義符支持已打開，但是轉義時出現了問題"
 
-#: Main.py:667 parameters.py:51
+#: Main.py:740 parameters.py:52
 msgid "Ready"
 msgstr "就緒"
 
-#: Main.py:686
+#: Main.py:759
 msgid "Connection lose!"
 msgstr "連接丟失！"
 
-#: Main.py:746
+#: Main.py:819
 msgid ""
 "File path error\n"
 "path"
@@ -133,51 +149,75 @@ msgstr ""
 "文件路徑錯誤\n"
 "路徑"
 
-#: Main.py:749
+#: Main.py:822
 msgid "Connect first please"
 msgstr "請先連接"
 
-#: Main.py:781
+#: Main.py:854
 msgid "Open file failed!"
 msgstr "打開失敗"
 
-#: Main.py:952
+#: Main.py:1027
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "當時間戳和發送記錄打開是，必須將自動換行也打開"
 
-#: Main.py:972
+#: Main.py:1050
 msgid "Restart now?"
 msgstr "現在就重啟？"
 
-#: Main.py:973
+#: Main.py:1051
 msgid "language changed to: "
 msgstr "語言更改為："
 
-#: Main.py:973
+#: Main.py:1051
 msgid "Restart software to take effect now?"
 msgstr "現在就重啟軟件以生效？"
 
-#: Main.py:1269
+#: Main.py:1250 parameters.py:26
+msgid "Send"
+msgstr "發送"
+
+#: Main.py:1330
 msgid "About"
 msgstr "關於"
 
-#: Main.py:1275 Main.py:1289
+#: Main.py:1336 Main.py:1350
 msgid "Select file"
 msgstr "選擇文件"
 
-#: Main.py:1277
+#: Main.py:1338
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: Main.py:1291
+#: Main.py:1352
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr "日誌文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
 
-#: Main.py:1307
+#: Main.py:1368
 msgid "History cleared!"
 msgstr "歷史已清除！"
 
-#: Main.py:1375
+#: Main.py:1377
+msgid "New versioin detected, please click learn more to download"
+msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
+
+#: Main.py:1378
+msgid "Learn More"
+msgstr "瞭解更多"
+
+#: Main.py:1379
+msgid "Skip this version"
+msgstr "跳過此版本"
+
+#: Main.py:1380
+msgid "Remind me next time"
+msgstr "下次提醒我"
+
+#: Main.py:1381
+msgid "Need update"
+msgstr "需要更新"
+
+#: Main.py:1456
 msgid "Error"
 msgstr "錯誤"
 
@@ -209,110 +249,102 @@ msgstr "清除發送區"
 msgid "Clear Receive Area"
 msgstr "清除接收區"
 
-#: parameters.py:24
+#: parameters.py:25
 msgid "bytes"
 msgstr "字節"
 
-#: parameters.py:25
-msgid "Send"
-msgstr "發送"
-
-#: parameters.py:26
+#: parameters.py:27
 msgid "Receive"
 msgstr "接收"
 
-#: parameters.py:27
+#: parameters.py:28
 msgid "Port"
 msgstr "端口"
 
-#: parameters.py:28
+#: parameters.py:29
 msgid "Baudrate"
 msgstr "波特率"
 
-#: parameters.py:29
+#: parameters.py:30
 msgid "DataBytes"
 msgstr "數據字節"
 
-#: parameters.py:30
+#: parameters.py:31
 msgid "Parity"
 msgstr "奇偶偶"
 
-#: parameters.py:31
+#: parameters.py:32
 msgid "Stopbits"
 msgstr "停止位"
 
-#: parameters.py:32
+#: parameters.py:33
 msgid "ASCII"
 msgstr "ASCII"
 
-#: parameters.py:33
+#: parameters.py:34
 msgid "HEX"
 msgstr "HEX"
 
-#: parameters.py:34 parameters.py:42
+#: parameters.py:35 parameters.py:43
 msgid "Send Settings"
 msgstr "發送設置"
 
-#: parameters.py:35 parameters.py:41
+#: parameters.py:36 parameters.py:42
 msgid "Receive Settings"
 msgstr "接收設置"
 
-#: parameters.py:36
+#: parameters.py:37
 msgid "OPEN"
 msgstr "打開"
 
-#: parameters.py:37
+#: parameters.py:38
 msgid "CLOSE"
 msgstr "關閉"
 
-#: parameters.py:38
+#: parameters.py:39
 msgid ""
 "Auto\n"
 "Linefeed\n"
 "ms"
 msgstr "自動換行"
 
-#: parameters.py:39
+#: parameters.py:40
 msgid ""
 "Timed Send\n"
 "ms"
 msgstr "定時發送"
 
-#: parameters.py:40
+#: parameters.py:41
 msgid "Serial Settings"
 msgstr "串口設置"
 
-#: parameters.py:43
+#: parameters.py:44
 msgid "ClearReceive"
 msgstr "清除接收區"
 
-#: parameters.py:44
+#: parameters.py:45
 msgid "+"
 msgstr "+"
 
-#: parameters.py:45
+#: parameters.py:46
 msgid "Functional Send"
 msgstr "其它發送功能"
 
-#: parameters.py:47
+#: parameters.py:48
 msgid "Sendding File"
 msgstr "發送文件中"
 
-#: parameters.py:48
+#: parameters.py:49
 msgid "Open Failed"
 msgstr "打開失敗"
 
-#: parameters.py:49
+#: parameters.py:50
 msgid "Closed"
 msgstr "已關閉"
 
-#: parameters.py:50
+#: parameters.py:51
 msgid "Send Error"
 msgstr "發送出錯"
-
-#: parameters.py:52
-msgid "format error"
-msgstr "格式錯誤"
 
 #: parameters.py:53
 msgid "<CRLF>"
@@ -345,4 +377,3 @@ msgstr "現在就更新？"
 #: parameters.py:60
 msgid "uninstall app"
 msgstr "卸載應用"
-

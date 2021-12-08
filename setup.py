@@ -19,14 +19,12 @@ systemPlatform = platform.platform()
 if "Linux" in systemPlatform and "arm" in systemPlatform :
     print("platform is arm linux: will install lib first")
     os.system("sudo apt install python3 python3-pip python3-pyqt5")
-    os.system("sudo pip3 install --upgrade bs4 pyserial")
+    os.system("sudo pip3 install --upgrade pyserial")
     installRequires = []
 else:
     installRequires = ['pyqt5>=5',
                       'pyserial>=3.4',
-                      'bs4',
                       'requests',
-                      'urllib3',
                       'Babel'
                       ]
 

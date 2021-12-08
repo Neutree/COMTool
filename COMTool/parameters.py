@@ -107,6 +107,7 @@ class Parameters:
     saveLog = False
     color = False
     sendEscape = False
+    skipVersion = None
     customSendItems = []
     sendHistoryList = []
 
