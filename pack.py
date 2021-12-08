@@ -35,7 +35,7 @@ def pack():
     os.system(cmd)
 
     os.chdir("..")
-
+    print("platform:", sys.platform)
     if sys.platform.startswith("darwin"):
         if os.path.exists("./COMTool/dist/comtool 0.0.0.dmg"):
             os.remove("./COMTool/dist/comtool 0.0.0.dmg")

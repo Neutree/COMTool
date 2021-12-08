@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: test pack
+name: release
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -14,7 +14,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        python-version: [3.10]
+        python-version: [3.9]
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
