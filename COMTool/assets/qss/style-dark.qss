@@ -198,6 +198,23 @@ QPushButton:flat {
 QPushButton:default {
     border-color: navy; /* make the default button prominent */
 }
+.deleteBtn {
+    min-width: 10px;
+    min-height: 10px;
+    width: 20px;
+    height: 20px;
+    background: #a53c3c;
+    border-radius: 12px;
+    border: 2px solid #a53c3c;
+}
+.deleteBtn:hover {
+    border-radius: 12px;
+    background: #861818;
+    border: 2px solid #861818;
+}
+.smallBtn {
+    min-width: 30px;
+}
 
 
 QTextEdit, QListView {
@@ -213,6 +230,9 @@ QLineEdit {
     padding: 0 8px;
     background: #3a3a3a;
     selection-background-color: #373277;
+    height: 30px;
+}
+.smallInput {
     height: 18px;
 }
 

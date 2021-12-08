@@ -49,7 +49,6 @@ class Strings:
         self.strClosed = _("Closed")
         self.strWriteError = _("Send Error")
         self.strReady = _("Ready")
-        self.strWriteFormatError = _("format error")
         self.strCRLF = _("<CRLF>")
         self.strTimeFormatError = _("Time format error")
         self.strHelp = _("HELP")
@@ -91,10 +90,10 @@ class Parameters:
     stopBits = 0
     receiveAscii = True
     receiveAutoLinefeed = False
-    receiveAutoLindefeedTime = "200"
+    receiveAutoLindefeedTime = 200
     sendAscii = True
     sendScheduled = False
-    sendScheduledTime = "300"
+    sendScheduledTime = 300
     useCRLF = True
     skin = 2
     rts  = 0
@@ -107,6 +106,7 @@ class Parameters:
     saveLog = False
     color = False
     sendEscape = False
+    customSendItems = []
     sendHistoryList = []
 
     def save(self, path):
