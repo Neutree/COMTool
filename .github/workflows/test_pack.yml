@@ -31,5 +31,6 @@ jobs:
       - name: test pack
         run: |
           pip3 install -r requirements.txt
+          pip3 install pyinstaller
           python3 setup.py sdist bdist_wheel
           python3 pack.py
