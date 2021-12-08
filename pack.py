@@ -3,8 +3,8 @@ sys.path.insert(1,"./COMTool/")
 from COMTool import version, i18n
 import zipfile
 
-linux_out = ("./COMTool/dist/comtool_ubuntu_v{}.tar.xz".format(version.__version__))
-macos_out = ("./COMTool/dist/comtool_macos_v{}.zip".format(version.__version__))
+linux_out = "./COMTool/dist/comtool_ubuntu_v{}.tar.xz".format(version.__version__)
+macos_out = "./COMTool/dist/comtool_macos_v{}.zip".format(version.__version__)
 windows_out = "./COMTool/dist/comtool_windows_v{}.zip".format(version.__version__)
 
 def zip(out, path):
@@ -47,7 +47,9 @@ def pack():
     elif sys.platform.startswith("win32"):
         zip(windows_out, "COMTool/dist/comtool")
     else:
-        os.system(f"tar -Jcf {linux_out} COMTool/dist/comtool/")
+        cmd = f"tar -Jcf {linux_out} COMTool/dist/comtool/"
+        print("cmd:", cmd)
+        os.system(cmd)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
