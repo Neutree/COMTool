@@ -312,13 +312,13 @@ class MainWindow(QMainWindow):
         self.sendFileButton = QPushButton(_("Send File"))
         self.clearHistoryButton = QPushButton(_("Clear History"))
         self.addButton = QPushButton(self.strings.strAdd)
-        fileSendGroupBox = QGroupBox(self.strings.strSendFile)
+        self.fileSendGroupBox = QGroupBox(self.strings.strSendFile)
         fileSendGridLayout = QGridLayout()
         fileSendGridLayout.addWidget(self.filePathWidget, 0, 0, 1, 1)
         fileSendGridLayout.addWidget(self.openFileButton, 0, 1, 1, 1)
         fileSendGridLayout.addWidget(self.sendFileButton, 1, 0, 1, 2)
-        fileSendGroupBox.setLayout(fileSendGridLayout)
-        logFileGroupBox = QGroupBox(_("Save log"))
+        self.fileSendGroupBox.setLayout(fileSendGridLayout)
+        self.logFileGroupBox = QGroupBox(_("Save log"))
         # cumtom send zone
         #   groupbox
         customSendGroupBox = QGroupBox(_("Cutom send"))
@@ -327,7 +327,7 @@ class MainWindow(QMainWindow):
         #   scroll
 
         self.customSendScroll = QScrollArea()
-        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight)
+        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight + 20)
         self.customSendScroll.setWidgetResizable(True)
         self.customSendScroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         #   add scroll to groupbox
@@ -353,9 +353,9 @@ class MainWindow(QMainWindow):
         logFileLayout.addWidget(self.saveLogCheckbox)
         logFileLayout.addWidget(self.logFilePath)
         logFileLayout.addWidget(self.logFileBtn)
-        logFileGroupBox.setLayout(logFileLayout)
-        sendFunctionalLayout.addWidget(logFileGroupBox)
-        sendFunctionalLayout.addWidget(fileSendGroupBox)
+        self.logFileGroupBox.setLayout(logFileLayout)
+        sendFunctionalLayout.addWidget(self.logFileGroupBox)
+        sendFunctionalLayout.addWidget(self.fileSendGroupBox)
         sendFunctionalLayout.addWidget(self.clearHistoryButton)
         sendFunctionalLayout.addWidget(customSendGroupBox)
         sendFunctionalLayout.addStretch(1)
@@ -1239,9 +1239,11 @@ class MainWindow(QMainWindow):
 
     def insertSendItem(self, text="", load = False):
         itemsNum = self.customSendItemsLayout.count() + 1
-        if itemsNum > parameters.customSendItemFixHeightNum:
-            itemsNum = parameters.customSendItemFixHeightNum
-        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight * (itemsNum + 1))
+        height = parameters.customSendItemHeight * (itemsNum + 1) + 20
+        topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 200
+        if height + topHeight > self.height():
+            height = self.height() - topHeight
+        self.customSendScroll.setMinimumHeight(height)
         item = QWidget()
         layout = QHBoxLayout()
         item.setLayout(layout)
@@ -1264,9 +1266,11 @@ class MainWindow(QMainWindow):
         item.setParent(None)
         self.config.customSendItems.pop(idx)
         itemsNum = self.customSendItemsLayout.count()
-        if itemsNum > parameters.customSendItemFixHeightNum:
-            itemsNum = parameters.customSendItemFixHeightNum
-        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight * (itemsNum + 1))
+        height = parameters.customSendItemHeight * (itemsNum + 1) + 20
+        topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 200
+        if height + topHeight > self.height():
+            height = self.height() - topHeight
+        self.customSendScroll.setMinimumHeight(height)
 
     def onCustomItemChange(self, idx, edit):
         text = edit.text()

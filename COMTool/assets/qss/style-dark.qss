@@ -308,3 +308,8 @@ QScrollBar::add-page, QScrollBar::sub-page {
     background: none;
     background-color: #3a3a3a;
 }
+QScrollArea {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
