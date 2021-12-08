@@ -47,7 +47,7 @@ def pack():
     elif sys.platform.startswith("win32"):
         zip(windows_out, "COMTool/dist/comtool")
     else:
-        cmd = f"tar -Jcf {linux_out} COMTool/dist/comtool/"
+        cmd = "tar -Jcf {} COMTool/dist/comtool/".format(linux_out)
         print("cmd:", cmd)
         os.system(cmd)
 
