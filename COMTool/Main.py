@@ -1,4 +1,5 @@
 import sys,os
+from typing import TextIO
 
 if sys.version_info < (3, 8):
     print("only support python >= 3.8")
@@ -1214,8 +1215,10 @@ class MainWindow(QMainWindow):
         self.saveLogCheckbox.setChecked(paramObj.saveLog)
         self.receiveSettingsColor.setChecked(paramObj.color)
         # send items
+        self.showHideFunctional() # have to show then to get height
         for text in self.config.customSendItems:
             self.insertSendItem(text, load=True)
+        self.showHideFunctional()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
@@ -1248,8 +1251,10 @@ class MainWindow(QMainWindow):
         layout = QHBoxLayout()
         item.setLayout(layout)
         cmd = QLineEdit(text)
-        cmd.textChanged.connect(lambda: self.onCustomItemChange(self.customSendItemsLayout.indexOf(item), cmd))
         send = QPushButton(_("Send"))
+        cmd.setToolTip(text)
+        send.setToolTip(text)
+        cmd.textChanged.connect(lambda: self.onCustomItemChange(self.customSendItemsLayout.indexOf(item), cmd, send))
         send.setProperty("class", "smallBtn")
         send.clicked.connect(lambda: self.sendCustomItem(self.config.customSendItems[self.customSendItemsLayout.indexOf(item)]))
         delete = QPushButton("x")
@@ -1272,8 +1277,10 @@ class MainWindow(QMainWindow):
             height = self.height() - topHeight
         self.customSendScroll.setMinimumHeight(height)
 
-    def onCustomItemChange(self, idx, edit):
+    def onCustomItemChange(self, idx, edit, send):
         text = edit.text()
+        edit.setToolTip(text)
+        send.setToolTip(text)
         self.config.customSendItems[idx] = text
 
     def sendCustomItem(self, text):
