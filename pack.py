@@ -1,6 +1,6 @@
 import os, sys, shutil
 sys.path.insert(1,"./COMTool/")
-from COMTool import helpAbout, i18n
+from COMTool import version, i18n
 
 # update translate
 i18n.main("finish")
@@ -21,11 +21,11 @@ os.system(cmd)
 os.chdir("..")
 
 if sys.platform.startswith("darwin"):
-    if os.path.exists("./dist/comtool 0.0.0.dmg"):
-        os.remove("./dist/comtool 0.0.0.dmg")
+    if os.path.exists("./COMTool/dist/comtool 0.0.0.dmg"):
+        os.remove("./COMTool/dist/comtool 0.0.0.dmg")
         
-    os.system('create-dmg ./dist/comtool.app ./dist')
-    os.rename("./dist/comtool 0.0.0.dmg", 
-            "./dist/comtool_v{}.{}.{}.dmg".format(helpAbout.versionMajor, helpAbout.versionMinor, helpAbout.versionDev))
+    os.system('npm install --global create-dmg && create-dmg ./COMTool/dist/comtool.app ./COMTool/dist')
+    os.rename("./COMTool/dist/comtool 0.0.0.dmg", 
+            "./COMTool/dist/comtool_v{}.dmg".format(version.__version__))
 
 
