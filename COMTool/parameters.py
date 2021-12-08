@@ -14,6 +14,8 @@ assetsDir = os.path.join(dataPath, "assets").replace("\\", "/")
 
 defaultBaudrates = [9600, 19200, 38400, 57600, 74880, 115200, 921600, 1000000, 1500000, 2000000, 4500000]
 encodings = ["ASCII", "UTF-8", "UTF-16", "GBK", "GB2312", "GB18030"]
+customSendItemFixHeightNum = 8
+customSendItemHeight = 60
 
 author = "Neucrack"
 

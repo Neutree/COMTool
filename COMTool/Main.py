@@ -20,10 +20,10 @@ except ImportError:
     from COMTool import version
 
 # from COMTool.wave import Wave
-from PyQt5.QtCore import pyqtSignal,Qt
+from PyQt5.QtCore import pyqtSignal,Qt, QRect
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
 import serial
 import serial.tools.list_ports
@@ -318,12 +318,33 @@ class MainWindow(QMainWindow):
         fileSendGridLayout.addWidget(self.sendFileButton, 1, 0, 1, 2)
         fileSendGroupBox.setLayout(fileSendGridLayout)
         logFileGroupBox = QGroupBox(_("Save log"))
+        # cumtom send zone
+        #   groupbox
         customSendGroupBox = QGroupBox(_("Cutom send"))
         customSendItemsLayout0 = QVBoxLayout()
         customSendGroupBox.setLayout(customSendItemsLayout0)
+        #   scroll
+
+        self.customSendScroll = QScrollArea()
+        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight)
+        self.customSendScroll.setWidgetResizable(True)
+        self.customSendScroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        #   add scroll to groupbox
+        customSendItemsLayout0.addWidget(self.customSendScroll)
+        #   wrapper widget
+        cutomSendItemsWraper = QWidget()
+        customSendItemsLayoutWrapper = QVBoxLayout()
+        cutomSendItemsWraper.setLayout(customSendItemsLayoutWrapper)
+        #    custom items
         customItems = QWidget()
         self.customSendItemsLayout = QVBoxLayout()
         customItems.setLayout(self.customSendItemsLayout)
+        customSendItemsLayoutWrapper.addWidget(customItems)
+        customSendItemsLayoutWrapper.addWidget(self.addButton)
+        #   set wrapper widget
+        self.customSendScroll.setWidget(cutomSendItemsWraper)
+        self.customSendScroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # 
         logFileLayout = QHBoxLayout()
         self.saveLogCheckbox = QCheckBox()
         self.logFilePath = QLineEdit()
@@ -332,8 +353,6 @@ class MainWindow(QMainWindow):
         logFileLayout.addWidget(self.logFilePath)
         logFileLayout.addWidget(self.logFileBtn)
         logFileGroupBox.setLayout(logFileLayout)
-        customSendItemsLayout0.addWidget(customItems)
-        customSendItemsLayout0.addWidget(self.addButton)
         sendFunctionalLayout.addWidget(logFileGroupBox)
         sendFunctionalLayout.addWidget(fileSendGroupBox)
         sendFunctionalLayout.addWidget(self.clearHistoryButton)
@@ -1217,6 +1236,10 @@ class MainWindow(QMainWindow):
         pass
 
     def insertSendItem(self, text="", load = False):
+        itemsNum = self.customSendItemsLayout.count() + 1
+        if itemsNum > parameters.customSendItemFixHeightNum:
+            itemsNum = parameters.customSendItemFixHeightNum
+        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight * (itemsNum + 1))
         item = QWidget()
         layout = QHBoxLayout()
         item.setLayout(layout)
@@ -1238,6 +1261,10 @@ class MainWindow(QMainWindow):
     def deleteSendItem(self, idx, item):
         item.setParent(None)
         self.config.customSendItems.pop(idx)
+        itemsNum = self.customSendItemsLayout.count()
+        if itemsNum > parameters.customSendItemFixHeightNum:
+            itemsNum = parameters.customSendItemFixHeightNum
+        self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight * (itemsNum + 1))
 
     def onCustomItemChange(self, idx, edit):
         text = edit.text()
@@ -1405,6 +1432,7 @@ def main():
     return ret
 
 def show_error(title, msg):
+    print("error:", msg)
     app = QApplication(sys.argv)
     window = QMainWindow()
     QMessageBox.information(window, title, msg)
