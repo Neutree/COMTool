@@ -221,8 +221,8 @@ QPushButton:default {
 }
 .deleteBtn:hover {
     border-radius: 12px;
-    background: #d81d1d;
-    border: 2px solid #d81d1d;
+    background: #b61313;
+    border: 2px solid #b61313;
 }
 .smallBtn {
     min-width: 30px;

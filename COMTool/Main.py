@@ -11,8 +11,9 @@ try:
     import i18n
     from i18n import _
     import version
+    import utils
 except ImportError:
-    from COMTool import parameters,helpAbout,autoUpdate
+    from COMTool import parameters,helpAbout,autoUpdate, utils
     from COMTool.Combobox import ComboBox
     from COMTool import i18n
     from COMTool.i18n import _
@@ -129,7 +130,7 @@ class MainWindow(QMainWindow):
         self.aboutButton = QPushButton()
         self.functionalButton = QPushButton()
         self.encodingCombobox = ComboBox()
-        self.supportedEncoding = ["ASCII", "UTF-8", "UTF-16", "GBK", "GB2312", "GB18030"]
+        self.supportedEncoding = parameters.encodings
         for encoding in self.supportedEncoding:
             self.encodingCombobox.addItem(encoding)
         self.settingsButton.setProperty("class", "menuItem1")
@@ -251,7 +252,7 @@ class MainWindow(QMainWindow):
         self.receiveSettingsAscii.setChecked(True)
         self.receiveSettingsAutoLinefeed = QCheckBox(self.strings.strAutoLinefeed)
         self.receiveSettingsAutoLinefeed.setToolTip(_("Auto linefeed after interval, unit: ms"))
-        self.receiveSettingsAutoLinefeedTime = QLineEdit(str(parameters.defaultAutoLinefeedTime))
+        self.receiveSettingsAutoLinefeedTime = QLineEdit("200")
         self.receiveSettingsAutoLinefeedTime.setProperty("class", "smallInput")
         self.receiveSettingsAutoLinefeedTime.setToolTip(_("Auto linefeed after interval, unit: ms"))
         self.receiveSettingsAutoLinefeed.setMaximumWidth(75)
@@ -278,7 +279,7 @@ class MainWindow(QMainWindow):
         self.sendSettingsAscii.setChecked(True)
         self.sendSettingsScheduledCheckBox = QCheckBox(self.strings.strScheduled)
         self.sendSettingsScheduledCheckBox.setToolTip(_("Timed send, unit: ms"))
-        self.sendSettingsScheduled = QLineEdit(str(parameters.defaultScheduledTime))
+        self.sendSettingsScheduled = QLineEdit("300")
         self.sendSettingsScheduled.setProperty("class", "smallInput")
         self.sendSettingsScheduled.setToolTip(_("Timed send, unit: ms"))
         self.sendSettingsScheduledCheckBox.setMaximumWidth(75)
@@ -289,7 +290,7 @@ class MainWindow(QMainWindow):
         self.sendSettingsRecord = QCheckBox(_("Record"))
         self.sendSettingsRecord.setToolTip(_("Record send data"))
         self.sendSettingsEscape= QCheckBox(_("Escape"))
-        self.sendSettingsEscape.setToolTip(_("Enable escape characters like \\t \\r \\n \\x01 \\001"))
+        self.sendSettingsEscape.setToolTip(_("Enable escape characters support like \\t \\r \\n \\x01 \\001"))
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
@@ -374,10 +375,13 @@ class MainWindow(QMainWindow):
         self.languageCombobox.currentIndexChanged.connect(self.onLanguageChanged)
         self.receiveSettingsTimestamp.clicked.connect(self.onTimeStampClicked)
         self.receiveSettingsAutoLinefeed.clicked.connect(self.onAutoLinefeedClicked)
+        self.receiveSettingsAscii.clicked.connect(lambda : self.bindVar(self.receiveSettingsAscii, self.config, "receiveAscii"))
+        self.receiveSettingsHex.clicked.connect(lambda : self.bindVar(self.receiveSettingsHex, self.config, "receiveAscii", invert = True))
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.sendSettingsRecord.clicked.connect(self.onRecordSendClicked)
-        self.sendSettingsEscape.clicked.connect(self.onEscapeSendClicked)
+        self.sendSettingsEscape.clicked.connect(lambda: self.bindVar(self.sendSettingsEscape, self.config, "sendEscape"))
+        self.sendSettingsCRLF.clicked.connect(lambda: self.bindVar(self.sendSettingsCRLF, self.config, "useCRLF"))
         self.errorSignal.connect(self.errorHint)
         self.sendFileOkSignal.connect(self.onSentFile)
         self.statusBarSignal.connect(self.onstatusBarText)
@@ -393,28 +397,53 @@ class MainWindow(QMainWindow):
         self.logFileBtn.clicked.connect(self.selectLogFile)
         self.sendFileButton.clicked.connect(self.sendFile)
         self.clearHistoryButton.clicked.connect(self.clearHistory)
-        self.addButton.clicked.connect(self.functionAdd)
+        self.addButton.clicked.connect(self.customSendAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
         self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
         # self.waveButton.clicked.connect(self.openWaveDisplay)
         self.checkBoxRTS.clicked.connect(self.rtsChanged)
         self.checkBoxDTR.clicked.connect(self.dtrChanged)
         self.saveLogCheckbox.clicked.connect(self.setSaveLog)
-        self.encodingCombobox.currentIndexChanged.connect(self.onEncodingChanged)
+        self.encodingCombobox.currentIndexChanged.connect(lambda: self.bindVar(self.encodingCombobox, self.config, "encoding"))
         self.receiveSettingsColor.clicked.connect(self.onSetColorChanged)
-        self.receiveSettingsAutoLinefeedTime.textChanged.connect(self.onAutolinefeedtimeChanged)
-        self.sendSettingsScheduled.textChanged.connect(self.onscheduledSendChanged)
+        self.receiveSettingsAutoLinefeedTime.textChanged.connect(lambda: self.bindVar(self.receiveSettingsAutoLinefeedTime, self.config, "receiveAutoLindefeedTime", vtype=int, vErrorMsg=_("Auto line feed value error, must be integer")))
+        self.sendSettingsScheduled.textChanged.connect(lambda: self.bindVar(self.sendSettingsScheduled, self.config, "sendScheduledTime", vtype=int, vErrorMsg=_("Timed send value error, must be integer")))
         self.sendSettingsScheduledCheckBox.clicked.connect(lambda: self.bindVar(self.sendSettingsScheduledCheckBox, self.config, "sendScheduled"))
 
         self.myObject=MyClass(self)
         slotLambda = lambda: self.indexChanged_lambda(self.myObject)
         self.serialPortCombobox.currentIndexChanged.connect(slotLambda)
 
-    def bindVar(self, uiObj, varObj, varName: str):
-        if type(uiObj) == QCheckBox:
-            print("bind var QCheckBox")
-            varObj.__setattr__(varName, uiObj.isChecked())
-            
+    def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False):
+        objType = type(uiObj)
+        if objType == QCheckBox:
+            v = uiObj.isChecked()
+            varObj.__setattr__(varName, v if not invert else not v)
+            return
+        elif objType == QLineEdit:
+            v = uiObj.text()
+        elif objType == ComboBox:
+            varObj.__setattr__(varName, uiObj.currentText())
+            return
+        elif objType == QRadioButton:
+            v = uiObj.isChecked()
+            varObj.__setattr__(varName, v if not invert else not v)
+            return
+        else:
+            raise Exception("not support this object")
+        if vtype:
+            try:
+                v = vtype(v)
+            except Exception:
+                varObj.setText(str(varObj.__getattribute__(varName)))
+                self.errorSignal.emit(vErrorMsg)
+                return
+        try:
+            v = checkVar(v)
+        except Exception as e:
+            self.errorSignal.emit(str(e))
+            return
+        varObj.__setattr__(varName, v)
 
     # @QtCore.pyqtSlot(str)
     def indexChanged_lambda(self, obj):
@@ -446,8 +475,8 @@ class MainWindow(QMainWindow):
                     self.com.parity = self.serailParityCombobox.currentText()[0]
                     self.com.stopbits = float(self.serailStopbitsCombobox.currentText())
                     self.com.timeout = None
-                    self.com.rts = self.checkBoxRTS.isChecked()  # request to send data to device(we have data to send)
-                    self.com.dtr = self.checkBoxDTR.isChecked()  # data terminal ready, read only, i.e. we can send now
+                    self.com.rts = self.config.rts  # request to send data to device(we have data to send)
+                    self.com.dtr = self.config.dtr  # data terminal ready, read only, i.e. we can send now
                     self.com.xonxoff = False
                     self.com.rtscts = False
                     self.com.dsrdtr = False
@@ -516,10 +545,12 @@ class MainWindow(QMainWindow):
         t.start()
 
     def rtsChanged(self):
-        self.com.rts = self.checkBoxRTS.isChecked()
+        self.config.rts = self.checkBoxRTS.isChecked()
+        self.com.rts = self.config.rts
     
     def dtrChanged(self):
-        self.com.dtr = self.checkBoxDTR.isChecked()
+        self.config.dtr = self.checkBoxDTR.isChecked()
+        self.com.dtr = self.config.dtr
 
     def setSaveLog(self):
         if self.saveLogCheckbox.isChecked():
@@ -535,19 +566,19 @@ class MainWindow(QMainWindow):
             data = self.sendArea.toPlainText()
         if not data:
             return b''
-        if self.sendSettingsCRLF.isChecked():
+        if self.config.useCRLF:
             data = data.replace("\n", "\r\n")
-        if self.sendSettingsHex.isChecked():
-            if self.sendSettingsCRLF.isChecked():
+        if not self.config.sendAscii:
+            if self.config.useCRLF:
                 data = data.replace("\r\n", " ")
             else:
                 data = data.replace("\n", " ")
-            data = self.hexStringB2Hex(data)
+            data = utils.hex_str_to_bytes(data)
             if data == -1:
                 self.errorSignal.emit(_("Format error, should be like 00 01 02 03"))
                 return b''
         else:
-            encoding = self.encodingCombobox.currentText()
+            encoding = self.config.encoding
             if not self.config.sendEscape:
                 data = data.encode(encoding,"ignore")
             else: # '11234abcd\n123你好\r\n\thello\x00\x01\x02'
@@ -620,19 +651,19 @@ class MainWindow(QMainWindow):
                 if self.config.recordSend:
                     head = '=> '
                     if self.config.showTimestamp:
-                        head += datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%M.%fff] ")
-                    isHexStr, sendStr, sendStrsColored = self.bytes2String(data, self.receiveSettingsHex.isChecked(), encoding=self.encodingCombobox.currentText())
+                        head += f'[{utils.datetime_format_ms(datetime.now())}] '
+                    isHexStr, sendStr, sendStrsColored = self.bytes2String(data, not self.config.receiveAscii, encoding=self.config.encoding)
                     if isHexStr:
                         head += "[HEX] "
                         sendStr = sendStr.upper()
                         sendStrsColored= sendStr
-                    if self.sendSettingsCRLF.isChecked():
+                    if self.config.useCRLF:
                         head = "\r\n" + head
                     else:
                         head = "\n" + head
                     if head.strip() != '=>':
                         head = f'{head.rstrip()}: '
-                    self.receiveUpdateSignal.emit(head, [sendStrsColored], self.encodingCombobox.currentText())
+                    self.receiveUpdateSignal.emit(head, [sendStrsColored], self.config.encoding)
                     self.sendRecord.insert(0, head + sendStr)
                 self.sendData(data_bytes=data)
                 data = self.sendArea.toPlainText()
@@ -655,7 +686,7 @@ class MainWindow(QMainWindow):
         while self.config.sendScheduled:
             self.onSendData()
             try:
-                time.sleep(int(self.sendSettingsScheduled.text().strip())/1000)
+                time.sleep(self.config.sendScheduledTime/1000)
             except Exception:
                 self.errorSignal.emit(self.strings.strTimeFormatError)
         self.isScheduledSending = False
@@ -709,8 +740,8 @@ class MainWindow(QMainWindow):
             head = ""
             # timeout, add new line
             if time.time() - timeLastReceive> self.config.receiveAutoLindefeedTime:
-                if self.config.showTimestamp or self.receiveSettingsAutoLinefeed.isChecked():
-                    if self.sendSettingsCRLF.isChecked():
+                if self.config.showTimestamp or self.config.receiveAutoLinefeed:
+                    if self.config.useCRLF:
                         head += "\r\n"
                     else:
                         head += "\n"
@@ -721,33 +752,33 @@ class MainWindow(QMainWindow):
             # have data in buffer
             if len(buffer) > 0:
                 # show as hex, just show
-                if self.receiveSettingsHex.isChecked():
-                    data = self.asciiB2HexString(buffer)
+                if not self.config.receiveAscii:
+                    data = utils.bytes_to_hex_str(buffer)
                     colorData = data
                     buffer = b''
                 # show as string, and don't need to render color
                 elif not self.config.color:
-                    data = buffer.decode(encoding=self.encodingCombobox.currentText(), errors="ignore")
+                    data = buffer.decode(encoding=self.config.encoding, errors="ignore")
                     colorData = data
                     buffer = b''
                 # show as string, and need to render color, wait for \n or until timeout to ensure color flag in buffer
                 else:
                     if time.time() - timeLastReceive >  self.config.receiveAutoLindefeedTime or b'\n' in buffer:
-                        data, colorData = self.getColoredText(buffer, self.encodingCombobox.currentText())
+                        data, colorData = self.getColoredText(buffer, self.config.encoding)
                         buffer = b''
                 # add time receive head
                 # get data from buffer, now render
                 if data:
                     # add time header
                     if new_line:
-                        timeNow = datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%M.%f] ")
+                        timeNow = f'[{utils.datetime_format_ms(datetime.now())}] '
                         if self.config.recordSend:
                             head += "<= " 
                         if self.config.showTimestamp:
                             head += timeNow
                             head = f'{head.rstrip()}: '
                         new_line = False
-                    self.receiveUpdateSignal.emit(head, [colorData], self.encodingCombobox.currentText())
+                    self.receiveUpdateSignal.emit(head, [colorData], self.config.encoding)
                     logData = head + data
 
             while len(self.sendRecord) > 0:
@@ -951,17 +982,19 @@ class MainWindow(QMainWindow):
 
 
     def onSendSettingsHexClicked(self):
+        self.config.sendAscii = False
         data = self.sendArea.toPlainText().replace("\n","\r\n")
-        data = self.asciiB2HexString(data.encode())
+        data = utils.bytes_to_hex_str(data.encode())
         self.sendArea.clear()
         self.sendArea.insertPlainText(data)
 
     def onSendSettingsAsciiClicked(self):
+        self.config.sendAscii = True
         try:
             data = self.sendArea.toPlainText().replace("\n"," ").strip()
             self.sendArea.clear()
             if data != "":
-                data = self.hexStringB2Hex(data).decode(self.encodingCombobox.currentText(),'ignore')
+                data = utils.hex_str_to_bytes(data).decode(self.config.encoding,'ignore')
                 self.sendArea.insertPlainText(data)
         except Exception as e:
             # QMessageBox.information(self,self.strings.strWriteFormatError,self.strings.strWriteFormatError)
@@ -971,15 +1004,18 @@ class MainWindow(QMainWindow):
         if (self.config.showTimestamp or self.config.recordSend) and not self.receiveSettingsAutoLinefeed.isChecked():
             self.receiveSettingsAutoLinefeed.setChecked(True)
             self.errorSignal.emit(_("linefeed always on if timestamp or record send is on"))
+        self.config.receiveAutoLinefeed = self.receiveSettingsAutoLinefeed.isChecked()
 
     def onTimeStampClicked(self):
         self.config.showTimestamp = self.receiveSettingsTimestamp.isChecked()
         if self.config.showTimestamp:
+            self.config.receiveAutoLinefeed = True
             self.receiveSettingsAutoLinefeed.setChecked(True)
 
     def onRecordSendClicked(self):
         self.config.recordSend = self.sendSettingsRecord.isChecked()
         if self.config.recordSend:
+            self.config.receiveAutoLinefeed = True
             self.receiveSettingsAutoLinefeed.setChecked(True)
 
     def onEscapeSendClicked(self):
@@ -1083,33 +1119,13 @@ class MainWindow(QMainWindow):
     def sendHistoryFindDelete(self,str):
         self.sendHistory.removeItem(self.sendHistory.findText(str))
 
-    def asciiB2HexString(self,strB):
-        strHex = binascii.b2a_hex(strB).upper()
-        return re.sub(r"(?<=\w)(?=(?:\w\w)+$)", " ", strHex.decode())+" "
-
-    def hexStringB2Hex(self,hexString) -> bytes:
-        dataList = hexString.split(" ")
-        j = 0
-        for i in dataList:
-            if len(i) > 2:
-                return -1
-            elif len(i) == 1:
-                dataList[j] = "0" + i
-            j += 1
-        data = "".join(dataList)
-        try:
-            data = bytes.fromhex(data)
-        except Exception:
-            return -1
-        return data
-
     def bytes2String(self, data : bytes, showAsHex : bool, encoding="utf-8"):
         isHexString = False
         dataColored = None
         if showAsHex:
             return True, binascii.hexlify(data, ' ').decode(encoding=encoding), dataColored
         try:
-            dataPlain, dataColored = self.getColoredText(data, self.encodingCombobox.currentText())
+            dataPlain, dataColored = self.getColoredText(data, self.config.encoding)
         except Exception:
             dataPlain = binascii.hexlify(data, ' ').decode(encoding=encoding)
             isHexString = True
@@ -1122,34 +1138,9 @@ class MainWindow(QMainWindow):
         paramObj.parity = self.serailParityCombobox.currentIndex()
         paramObj.stopBits = self.serailStopbitsCombobox.currentIndex()
         paramObj.skin = self.config.skin
-        if self.receiveSettingsHex.isChecked():
-            paramObj.receiveAscii = False
-        else:
-            paramObj.receiveAscii = True
-        if not self.receiveSettingsAutoLinefeed.isChecked():
-            paramObj.receiveAutoLinefeed = False
-        else:
-            paramObj.receiveAutoLinefeed = True
-        if self.sendSettingsHex.isChecked():
-            paramObj.sendAscii = False
-        else:
-            paramObj.sendAscii = True
-        if not self.sendSettingsCRLF.isChecked():
-            paramObj.useCRLF = False
-        else:
-            paramObj.useCRLF = True
         paramObj.sendHistoryList.clear()
         for i in range(0,self.sendHistory.count()):
             paramObj.sendHistoryList.append(self.sendHistory.itemText(i))
-        if self.checkBoxRTS.isChecked():
-            paramObj.rts = 1
-        else:
-            paramObj.rts = 0
-        if self.checkBoxDTR.isChecked():
-            paramObj.dtr = 1
-        else:
-            paramObj.dtr = 0
-        paramObj.encoding = self.encodingCombobox.currentText()
         # send items
         valid = []
         for text in self.config.customSendItems:
@@ -1168,35 +1159,29 @@ class MainWindow(QMainWindow):
         self.serailBytesCombobox.setCurrentIndex(paramObj.dataBytes)
         self.serailParityCombobox.setCurrentIndex(paramObj.parity)
         self.serailStopbitsCombobox.setCurrentIndex(paramObj.stopBits)
-        if paramObj.receiveAscii == False:
-            self.receiveSettingsHex.setChecked(True)
-        if paramObj.receiveAutoLinefeed == False:
-            self.receiveSettingsAutoLinefeed.setChecked(False)
-        else:
-            self.receiveSettingsAutoLinefeed.setChecked(True)
-        self.receiveSettingsAutoLinefeedTime.setText(str(int(float(paramObj.receiveAutoLindefeedTime)*1000)))
+        self.receiveSettingsHex.setChecked(not paramObj.receiveAscii)
+        self.receiveSettingsAutoLinefeed.setChecked(paramObj.receiveAutoLinefeed)
+        try:
+            interval = int(paramObj.receiveAutoLindefeedTime)
+        except Exception:
+            interval = parameters.Parameters.receiveAutoLindefeedTime
+        self.receiveSettingsAutoLinefeedTime.setText(str(interval) if interval > 0 else str(parameters.Parameters.receiveAutoLindefeedTime))
         self.receiveSettingsTimestamp.setChecked(paramObj.showTimestamp)
-        if paramObj.sendAscii == False:
-            self.sendSettingsHex.setChecked(True)
+        self.sendSettingsHex.setChecked(not paramObj.sendAscii)
         self.sendSettingsScheduledCheckBox.setChecked(paramObj.sendScheduled)
-        self.sendSettingsScheduled.setText(str(int(float(paramObj.sendScheduledTime)*1000)))
-        if paramObj.useCRLF == False:
-            self.sendSettingsCRLF.setChecked(False)
-        else:
-            self.sendSettingsCRLF.setChecked(True)
+        try:
+            interval = int(paramObj.sendScheduledTime)
+        except Exception:
+            interval = parameters.Parameters.sendScheduledTime
+        self.sendSettingsScheduled.setText(str(interval) if interval > 0 else str(parameters.Parameters.sendScheduledTime))
+        self.sendSettingsCRLF.setChecked(paramObj.useCRLF)
         self.sendSettingsRecord.setChecked(paramObj.recordSend)
         self.sendSettingsEscape.setChecked(paramObj.sendEscape)
         for i in range(0, len(paramObj.sendHistoryList)):
             text = paramObj.sendHistoryList[i]
             self.sendHistory.addItem(text)
-        if paramObj.rts == 0:
-            self.checkBoxRTS.setChecked(False)
-        else:
-            self.checkBoxRTS.setChecked(True)
-        if paramObj.dtr == 0:
-            self.checkBoxDTR.setChecked(False)
-        else:
-            self.checkBoxDTR.setChecked(True)
+        self.checkBoxRTS.setChecked(paramObj.rts)
+        self.checkBoxDTR.setChecked(paramObj.dtr)
         self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(paramObj.encoding))
         try:
             idx = list(self.languages.keys()).index(paramObj.locale)
@@ -1229,7 +1214,7 @@ class MainWindow(QMainWindow):
             self.keyControlPressed = False
 
     def sendAreaFontChanged(self,font):
-        print("font changed")
+        pass
 
     def insertSendItem(self, text="", load = False):
         item = QWidget()
@@ -1261,7 +1246,7 @@ class MainWindow(QMainWindow):
     def sendCustomItem(self, text):
         self.onSendData(data = text)
 
-    def functionAdd(self):
+    def customSendAdd(self):
         self.insertSendItem()
 
     def showHideSettings(self):
@@ -1309,29 +1294,8 @@ class MainWindow(QMainWindow):
             self.config.skin = 1
         self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
 
-    def onEncodingChanged(self):
-        self.config.encoding = self.encodingCombobox.currentText()
-
     def onSetColorChanged(self):
         self.config.color = self.receiveSettingsColor.isChecked()
-
-    def onAutolinefeedtimeChanged(self):
-        try:
-            interval = int(self.receiveSettingsAutoLinefeedTime.text())/1000
-            self.config.receiveAutoLindefeedTime = interval
-        except Exception:
-            self.receiveSettingsAutoLinefeedTime.setText("100")
-            self.errorSignal.emit(_("Auto line feed value error, must be integer"))
-            return
-
-    def onscheduledSendChanged(self):
-        try:
-            interval = int(self.sendSettingsScheduled.text())/1000
-            self.config.sendScheduledTime = interval
-        except Exception:
-            self.sendSettingsScheduled.setText("300")
-            self.errorSignal.emit(_("Auto line feed value error, must be integer"))
-            return
 
     def showAbout(self):
         QMessageBox.information(self, _("About"), helpAbout.strAbout())
@@ -1378,9 +1342,6 @@ class MainWindow(QMainWindow):
         auto = autoUpdate.AutoUpdate()
         if auto.detectNewVersion():
             auto.OpenBrowser()
-
-    def openDevManagement(self):
-        os.system('start devmgmt.msc')
 
     # def openWaveDisplay(self):
     #     self.wave = Wave()
