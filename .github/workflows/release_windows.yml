@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: release
+name: release windows
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -12,12 +12,12 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    name: release and upload assets task
+    name: test pack task
     # The type of runner that the job will run on
     strategy:
       matrix:
         python-version: "3.9" # must use str, not int, or 3.10 will be recognized as 3.1
-        os: [ubuntu-latest, macos-latest]
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -39,16 +39,13 @@ jobs:
           pip3 install pyinstaller wheel
           python setup.py sdist bdist_wheel
           python pack.py
-          release_path=`python pack.py ${{ matrix.os }}`
-          echo $release_path
-          release_name=`echo $release_path | awk -F"/" '{print $NF}'`
-          echo ::set-output name=release_path::$release_path
-          echo ::set-output name=release_name::$release_name
+          $release_path = python pack.py ${{ matrix.os }}
+          echo "::set-output name=release_path::$release_path"
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2
         with:
           file: ${{ steps.pack.outputs.release_path }}
-          asset_name: ${{ steps.pack.outputs.release_name }}
+          asset_name: ${{ steps.pack.outputs.release_path }}
           tag: ${{ github.ref }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         

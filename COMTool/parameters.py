@@ -11,6 +11,9 @@ appLogo = "assets/logo.png"
 appLogo2 = "assets/logo2.png"
 dataPath = os.path.abspath(os.path.dirname(__file__)).replace("\\", "/") # replace \ to / for qss usage, qss only support /
 assetsDir = os.path.join(dataPath, "assets").replace("\\", "/")
+if not os.path.exists(assetsDir): # for pyinstaller pack
+    dataPath = os.path.dirname(dataPath)
+    assetsDir = os.path.join(dataPath, "assets").replace("\\", "/")
 
 defaultBaudrates = [9600, 19200, 38400, 57600, 74880, 115200, 921600, 1000000, 1500000, 2000000, 4500000]
 encodings = ["ASCII", "UTF-8", "UTF-16", "GBK", "GB2312", "GB18030"]

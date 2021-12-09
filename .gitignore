@@ -17,3 +17,7 @@ config.json
 
 *.mo
 comtool.log
+*.tar.xz
+*.dmg
+*.zip
+

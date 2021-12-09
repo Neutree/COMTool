@@ -2,10 +2,17 @@ import os, sys, shutil
 sys.path.insert(1,"./COMTool/")
 from COMTool import version, i18n
 import zipfile
+import shutil
 
-linux_out = "./COMTool/dist/comtool_ubuntu_v{}.tar.xz".format(version.__version__)
-macos_out = "./COMTool/dist/comtool_macos_v{}.zip".format(version.__version__)
-windows_out = "./COMTool/dist/comtool_windows_v{}.zip".format(version.__version__)
+
+if sys.version_info < (3, 8):
+    print("only support python >= 3.8, but now is {}".format(sys.version_info))
+    sys.exit(1)
+
+
+linux_out = "comtool_ubuntu_v{}.tar.xz".format(version.__version__)
+macos_out = "comtool_macos_v{}.dmg".format(version.__version__)
+windows_out = "comtool_windows_v{}.zip".format(version.__version__)
 
 def zip(out, path):
     out = os.path.abspath(out)
@@ -24,31 +31,26 @@ def pack():
     if os.path.exists("COMTool/__pycache__"):
         shutil.rmtree("COMTool/__pycache__")
 
-    os.chdir("COMTool")
     if sys.platform.startswith("win32"):
-        cmd = 'pyinstaller --hidden-import babel.numbers  --add-data="assets;assets" --add-data="locales;locales" --add-data="../README.MD;./" -i="assets/logo.ico" -w Main.py -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="COMTool/assets;COMTool/assets" --add-data="COMTool/locales;COMTool/locales" --add-data="README.MD;./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
     elif sys.platform.startswith("darwin"):
-        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales" --add-data="../README.MD:./" -i="assets/logo.icns" -w Main.py  -n comtool'
+        # macos not case insensitive, so can not contain comtool file and COMTool dir, so we copy to binary root dir
+        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
     else:
-        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales" --add-data="../README.MD:./" -i="assets/logo.png" -w Main.py  -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README.MD:./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
 
     os.system(cmd)
 
-    os.chdir("..")
-    print("platform:", sys.platform, sys.platform.startswith("darwin"))
     if sys.platform.startswith("darwin"):
-        print("pack for macos")
-        if os.path.exists("./COMTool/dist/comtool 0.0.0.dmg"):
-            os.remove("./COMTool/dist/comtool 0.0.0.dmg")
+        if os.path.exists("./dist/comtool 0.0.0.dmg"):
+            os.remove("./dist/comtool 0.0.0.dmg")
             
-        os.system('npm install --global create-dmg && create-dmg ./COMTool/dist/comtool.app ./COMTool/dist')
-        os.rename("./COMTool/dist/comtool 0.0.0.dmg", 
-                macos_out)
+        os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
+        shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
-        zip(windows_out, "COMTool/dist/comtool")
+        zip(windows_out, "dist/comtool")
     else:
-        cmd = "tar -Jcf {} COMTool/dist/comtool/".format(linux_out)
-        print("cmd:", cmd)
+        cmd = "cd dist && tar -Jcf {} comtool/ && mv {} ../ && cd ..".format(linux_out, linux_out)
         os.system(cmd)
 
 if __name__ == "__main__":
