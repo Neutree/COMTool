@@ -2,10 +2,11 @@ import os, sys, shutil
 sys.path.insert(1,"./COMTool/")
 from COMTool import version, i18n
 import zipfile
+import shutil
 
-linux_out = "./COMTool/dist/comtool_ubuntu_v{}.tar.xz".format(version.__version__)
-macos_out = "./COMTool/dist/comtool_macos_v{}.zip".format(version.__version__)
-windows_out = "./COMTool/dist/comtool_windows_v{}.zip".format(version.__version__)
+linux_out = "comtool_ubuntu_v{}.tar.xz".format(version.__version__)
+macos_out = "comtool_macos_v{}.dmg".format(version.__version__)
+windows_out = "comtool_windows_v{}.zip".format(version.__version__)
 
 def zip(out, path):
     out = os.path.abspath(out)
@@ -35,20 +36,16 @@ def pack():
     os.system(cmd)
 
     os.chdir("..")
-    print("platform:", sys.platform, sys.platform.startswith("darwin"))
     if sys.platform.startswith("darwin"):
-        print("pack for macos")
         if os.path.exists("./COMTool/dist/comtool 0.0.0.dmg"):
             os.remove("./COMTool/dist/comtool 0.0.0.dmg")
             
         os.system('npm install --global create-dmg && create-dmg ./COMTool/dist/comtool.app ./COMTool/dist')
-        os.rename("./COMTool/dist/comtool 0.0.0.dmg", 
-                macos_out)
+        shutil.copyfile("./COMTool/dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
         zip(windows_out, "COMTool/dist/comtool")
     else:
-        cmd = "tar -Jcf {} COMTool/dist/comtool/".format(linux_out)
-        print("cmd:", cmd)
+        cmd = "cd COMTool/dist && tar -Jcf {} comtool/ && mv {} ../../ && cd ../..".format(linux_out, linux_out)
         os.system(cmd)
 
 if __name__ == "__main__":

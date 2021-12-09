@@ -17,3 +17,7 @@ config.json
 
 *.mo
 comtool.log
+./comtool_*.tar.xz
+./comtool_*.dmg
+./comtool_*.zip
+
