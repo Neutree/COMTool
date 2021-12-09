@@ -34,8 +34,7 @@ jobs:
           pip3 install pyinstaller
           python3 setup.py sdist bdist_wheel
           python3 pack.py
-          for /F %%i in ('python3 pack.py ${{ matrix.os }}') do ( set release_path=%%i)
-          echo release_path=%release_path%
+          $release_path = python3 pack.py ${{ matrix.os }}
           echo ::set-output name=release_path::$release_path
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2

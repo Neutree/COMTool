@@ -161,6 +161,8 @@ class MainWindow(QMainWindow):
         self.receiveArea.setFont(font)
         self.receiveArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea = QTextEdit()
+        self.sendArea.setLineWrapMode(QTextEdit.NoWrap)
+        self.sendArea.setAcceptRichText(False)
         self.clearReceiveButtion = QPushButton(self.strings.strClearReceive)
         self.sendButtion = QPushButton(self.strings.strSend)
         self.sendHistory = ComboBox()
@@ -421,7 +423,6 @@ class MainWindow(QMainWindow):
         self.clearHistoryButton.clicked.connect(self.clearHistory)
         self.addButton.clicked.connect(self.customSendAdd)
         self.functionalButton.clicked.connect(self.showHideFunctional)
-        self.sendArea.currentCharFormatChanged.connect(self.sendAreaFontChanged)
         # self.waveButton.clicked.connect(self.openWaveDisplay)
         self.checkBoxRTS.clicked.connect(self.rtsChanged)
         self.checkBoxDTR.clicked.connect(self.dtrChanged)
@@ -1236,9 +1237,6 @@ class MainWindow(QMainWindow):
     def keyReleaseEvent(self,event):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = False
-
-    def sendAreaFontChanged(self,font):
-        pass
 
     def insertSendItem(self, text="", load = False):
         itemsNum = self.customSendItemsLayout.count() + 1
