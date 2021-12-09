@@ -25,27 +25,25 @@ def pack():
     if os.path.exists("COMTool/__pycache__"):
         shutil.rmtree("COMTool/__pycache__")
 
-    os.chdir("COMTool")
     if sys.platform.startswith("win32"):
-        cmd = 'pyinstaller --hidden-import babel.numbers  --add-data="assets;assets" --add-data="locales;locales" --add-data="../README.MD;./" -i="assets/logo.ico" -w Main.py -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="COMTool/assets;COMTool/assets" --add-data="COMTool/locales;COMTool/locales" --add-data="README.MD;./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
     elif sys.platform.startswith("darwin"):
-        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales" --add-data="../README.MD:./" -i="assets/logo.icns" -w Main.py  -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="COMTool/assets:COMTool/assets" --add-data="COMTool/locales:COMTool/locales" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
     else:
-        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="assets:assets" --add-data="locales:locales" --add-data="../README.MD:./" -i="assets/logo.png" -w Main.py  -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers --add-data="COMTool/assets:COMTool/assets" --add-data="COMTool/locales:COMTool/locales" --add-data="README.MD:./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
 
     os.system(cmd)
 
-    os.chdir("..")
     if sys.platform.startswith("darwin"):
-        if os.path.exists("./COMTool/dist/comtool 0.0.0.dmg"):
-            os.remove("./COMTool/dist/comtool 0.0.0.dmg")
+        if os.path.exists("./dist/comtool 0.0.0.dmg"):
+            os.remove("./dist/comtool 0.0.0.dmg")
             
-        os.system('npm install --global create-dmg && create-dmg ./COMTool/dist/comtool.app ./COMTool/dist')
-        shutil.copyfile("./COMTool/dist/comtool 0.0.0.dmg", macos_out)
+        os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
+        shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
-        zip(windows_out, "COMTool/dist/comtool")
+        zip(windows_out, "dist/comtool")
     else:
-        cmd = "cd COMTool/dist && tar -Jcf {} comtool/ && mv {} ../../ && cd ../..".format(linux_out, linux_out)
+        cmd = "cd dist && tar -Jcf {} comtool/ && mv {} ../ && cd ..".format(linux_out, linux_out)
         os.system(cmd)
 
 if __name__ == "__main__":
