@@ -33,10 +33,10 @@ def strAbout():
 '''.format(
     parameters.appName,
     version.__version__,
-    f'{sys.implementation.name}{sys.implementation.version.major}.{sys.implementation.version.minor}',
-    f'PyQt{PyQt5.QtCore.QT_VERSION_STR}',
+    '{}{}.{}'.format(sys.implementation.name, sys.implementation.version.major, sys.implementation.version.minor),
+    'PyQt{}'.format(PyQt5.QtCore.QT_VERSION_STR),
     _('COMTool is a Open source project create by'),
-    f'{parameters.dataPath}/{parameters.appLogo2}',
+    '{}/{}'.format(parameters.dataPath, parameters.appLogo2),
     _('See more on'),
     _('Welcome to improve it together'),
     _('Shortcut:'),

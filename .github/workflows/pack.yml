@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+
+name: test pack
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    name: test pack task
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout code from github
+        uses: actions/checkout@v2
+
+      # Runs a set of commands using the runners shell
+      - name: test pack
+        run: |
+          pip3 install -r requirements.txt
+          pip3 install pyinstaller
+          python3 setup.py sdist bdist_wheel
+          python3 pack.py

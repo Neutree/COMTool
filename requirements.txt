@@ -1,4 +1,4 @@
-PyQt5==5.12.2
-pyserial==3.4
-requests==2.22.0
-Babel==2.9.1
+PyQt5>=5.15.6
+pyserial>=3.5
+requests>=2.25.1
+Babel>=2.9.1
