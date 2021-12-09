@@ -50,7 +50,7 @@ setup(
 
 
     # Choose your license
-    license='MIT',
+    license='LGPL-3.0',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
