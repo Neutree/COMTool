@@ -35,7 +35,7 @@ jobs:
           python3 setup.py sdist bdist_wheel
           python3 pack.py
           $release_path = python3 pack.py ${{ matrix.os }}
-          echo ::set-output name=release_path::$release_path
+          echo "::set-output name=release_path::$release_path"
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2
         with:
