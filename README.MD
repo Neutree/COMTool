@@ -2,6 +2,7 @@ COMTool
 ========
 
  ![GitHub](https://img.shields.io/github/license/neutree/comtool) [![PyPI](https://img.shields.io/pypi/v/comtool.svg)](https://pypi.python.org/pypi/comtool/) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/neutree/comtool/pack) ![GitHub repo size](https://img.shields.io/github/repo-size/neutree/comtool) ![GitHub Repo stars](https://img.shields.io/github/stars/neutree/comtool?style=social)
+ 
  ![GitHub all releases](https://img.shields.io/github/downloads/neutree/comtool/total?label=release%20downloads) ![PyPI - Downloads](https://img.shields.io/pypi/dm/comtool?label=pypi%20downloads) ![SourceForge](https://img.shields.io/sourceforge/dt/comtool?label=sourceforge%20downloads)
  
 
@@ -11,13 +12,13 @@ A cross platform serial debug tools written by python
 
 | Windows | Linux | Raspberry Pi | macOS |
 | ------- | ----- | ------------ | ----- |
-| ![comtool Windows screenshot](./COMTool/assets/screenshot_V1.7.png) | ![comtool linux screenshot](./COMTool/assets/screenshot_v2.png) | ![comtool Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png)
+| ![comtool Windows screenshot](./COMTool/assets/screenshot_v2_white.png) | ![comtool linux screenshot](./COMTool/assets/screenshot_V1.4_night.png) | ![comtool Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png)
  | |
 
 
 | White theme | Dark theme |
 | ----------- | ---------- |
-| | ![comtool linux screenshot](./COMTool/assets/screenshot_v2.png) |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) |
 
 
 

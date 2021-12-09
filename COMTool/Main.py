@@ -1186,6 +1186,7 @@ class MainWindow(QMainWindow):
         self.receiveSettingsAutoLinefeed.setChecked(paramObj.receiveAutoLinefeed)
         try:
             interval = int(paramObj.receiveAutoLindefeedTime)
+            paramObj.receiveAutoLindefeedTime = interval
         except Exception:
             interval = parameters.Parameters.receiveAutoLindefeedTime
         self.receiveSettingsAutoLinefeedTime.setText(str(interval) if interval > 0 else str(parameters.Parameters.receiveAutoLindefeedTime))
@@ -1194,6 +1195,7 @@ class MainWindow(QMainWindow):
         self.sendSettingsScheduledCheckBox.setChecked(paramObj.sendScheduled)
         try:
             interval = int(paramObj.sendScheduledTime)
+            paramObj.sendScheduledTime = interval
         except Exception:
             interval = parameters.Parameters.sendScheduledTime
         self.sendSettingsScheduled.setText(str(interval) if interval > 0 else str(parameters.Parameters.sendScheduledTime))
