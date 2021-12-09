@@ -4,6 +4,12 @@ from COMTool import version, i18n
 import zipfile
 import shutil
 
+
+if sys.version_info < (3, 8):
+    print("only support python >= 3.8")
+    sys.exit(1)
+
+
 linux_out = "comtool_ubuntu_v{}.tar.xz".format(version.__version__)
 macos_out = "comtool_macos_v{}.dmg".format(version.__version__)
 windows_out = "comtool_windows_v{}.zip".format(version.__version__)
