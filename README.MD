@@ -32,21 +32,22 @@ A cross platform serial debug tools written by python
 - [x] reliable stability, no UI freeze
 - [x] multiple language support
 - [x] serial auto detect
-- [x] port baudrate bytesize parity stopbits flow control etc. settings
+- [x] port baudrate(any value) bytesize parity stopbits flow control etc. settings
 - [x] basic send/receive data (ascii and hex)
 - [x] send and receive data count
 - [x] clear received data area
 - [x] auto linefeed
 - [x] scheduled auto send
 - [x] send history and select send again
-- [x] custom send items and one click to send
-- [x] CR LF(\r\n) / LF(\n) select support
+- [x] custom most usage data items and one click to send
+- [x] CR LF(\r\n) or LF(\n)  support
 - [x] auto save settings
 - [x] key shortcuts like <kbd>Ctrl+Enter</kbd> to send
 - [x] escape character support, like `\r \n \t \x` etc.
-- [x] multiple character encode support(ASII,GBK(Chinese),UTF-8,UTF-16......)
+- [x] multiple character encode support(`ASII,GBK(Chinese),UTF-8,UTF-16` etc.)
 - [x] receive and send record support add timestamp and save log to file
-- [x] unix style terminal color support(e.g.`\x1b[33;42mhello\x1b[0mhello2`)
+- [x] send file
+- [x] unix terminal style color support(e.g.`\x1b[33;42mhello\x1b[0mhello2`)
 - [x] night theme and White theme
 - [x] rts & dtr control by hand
 - [ ] multiple auto send (order and disorder)
@@ -102,7 +103,7 @@ reboot #must reboot to take effect
 then enjoy by command
 ```
 comtool
-``
+```
 
 ### macOS
 
@@ -118,6 +119,15 @@ or
 cd /Applicatioin/comtool.app/Contents/MacOS
 ./comtool
 ```
+
+## Windows defender shows comtool binary is malware?
+
+If your program is download from [here](https://github.com/Neutree/COMTool/releases), it's ok, the error caused by [pack issue](https://github.com/pyinstaller/pyinstaller/issues/4852), all the source code and pack script is here, even the pack progress is totally automated with github action, no one manually pack.
+
+If you remain have concern, just download source code to run with python or pack yourself.
+
+Of course, if you find a better pack way, please open issue to tell us.
+
 
 ## Install python package
 
@@ -233,7 +243,7 @@ Add locale in [i18n.py](./COMTool/i18n.py)
 ```
 locales=["en", "zh_CN", "zh_TW", "ja"]
 ```
-append your language to this list, locales can be found [here](https://www.science.co.il/language/Locale-codes.php) or [wikipedia](https://en.wikipedia.org/wiki/Language_localisation), `zh_CN` for example means China Mainland, corresponding luanguage is simplified Chinese characters, `zh_TW` means China Taiwan, and language is traditional Chinese characters, you can also only use `zh` to use simplified Chinese characters.
+append your language to this list, locales can be found [here](https://www.science.co.il/language/Locale-codes.php) or [wikipedia](https://en.wikipedia.org/wiki/Language_localisation), `zh_CN` for example means China Mainland, corresponding language is simplified Chinese characters, `zh_TW` means China Taiwan, and language is traditional Chinese characters, you can also only use `zh` to use simplified Chinese characters.
 
 * Generate translate files
 
@@ -249,7 +259,7 @@ Then translate `.po` files, this is a standard translate file format which named
 
 * Generate binary translate files
 
-to make it read faster, the text files `.po` should be convert to binary file `.mo`, just run command:
+to make program read faster, the text files `.po` should be convert to binary file `.mo`, just run command:
 ```shell
 python i18n.py finish
 ```
