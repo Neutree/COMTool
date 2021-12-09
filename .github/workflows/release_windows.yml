@@ -16,7 +16,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        python-version: "3.9"
+        python-version: "3.9" # must use str, not int, or 3.10 will be recognized as 3.1
         os: [windows-latest]
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
