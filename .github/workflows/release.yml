@@ -35,12 +35,16 @@ jobs:
           pip3 install pyinstaller
           python3 setup.py sdist bdist_wheel
           python3 pack.py
-          release_name=`python3 pack.py ${{ matrix.os }}`
-          echo $release_name
+          release_path=`python3 pack.py ${{ matrix.os }}`
+          echo $release_path
+          release_name=`echo $release_path | awk -F"/" '{print $NF}'`
+          echo ::set-output name=release_path::$release_path
           echo ::set-output name=release_name::$release_name
       - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
+        uses: svenstaro/upload-release-action@v2
         with:
-          args: ${{ steps.pack.outputs.release_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.pack.outputs.release_path }}
+          asset_name: ${{ steps.pack.outputs.release_path }}
+          tag: ${{ github.ref }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        
