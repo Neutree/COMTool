@@ -198,7 +198,7 @@ class MainWindow(QMainWindow):
         for baud in parameters.defaultBaudrates:
             self.serailBaudrateCombobox.addItem(str(baud))
         self.serailBaudrateCombobox.addItem(self.baudrateCustomStr)
-        self.serailBaudrateCombobox.setCurrentIndex(4)
+        self.serailBaudrateCombobox.setCurrentIndex(5)
         self.serailBaudrateCombobox.setEditable(True)
         self.serailBytesCombobox = ComboBox()
         self.serailBytesCombobox.addItem("5")
