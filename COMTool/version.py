@@ -13,6 +13,23 @@ class Version:
         self.name = name
         self.desc = desc
 
+    def dump_dict(self):
+        ret = {
+            "major": self.major,
+            "minor": self.minor,
+            "dev": self.dev,
+            "name": self.name,
+            "desc": self.desc
+        }
+        return ret
+
+    def load_dict(self, obj):
+        self.major = obj['major']
+        self.minor = obj['minor']
+        self.mdev= obj['dev']
+        self.name = obj['name']
+        self.desc = obj['desc']
+
     def int(self):
         return self.major * 100 + self.minor * 10 + self.dev
 
