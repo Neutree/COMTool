@@ -21,7 +21,7 @@ except ImportError:
     from COMTool import version
 
 # from COMTool.wave import Wave
-from PyQt5.QtCore import pyqtSignal,Qt, QRect
+from PyQt5.QtCore import pyqtSignal,Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
@@ -168,6 +168,7 @@ class MainWindow(QMainWindow):
         self.sendHistory = ComboBox()
         sendWidget = QWidget()
         sendAreaWidgetsLayout = QHBoxLayout()
+        sendAreaWidgetsLayout.setContentsMargins(0,4,0,0)
         sendWidget.setLayout(sendAreaWidgetsLayout)
         buttonLayout = QVBoxLayout()
         buttonLayout.addWidget(self.clearReceiveButtion)
@@ -272,6 +273,7 @@ class MainWindow(QMainWindow):
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsTimestamp, 3, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsColor, 3, 1, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
+        serialReceiveSettingsGroupBox.setAlignment(Qt.AlignHCenter)
         settingLayout.addWidget(serialReceiveSettingsGroupBox)
 
         # serial send settings
@@ -299,8 +301,8 @@ class MainWindow(QMainWindow):
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduled, 2, 1, 1, 1)
-        serialSendSettingsLayout.addWidget(self.sendSettingsCRLF, 3, 0, 1, 2)
-        serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 3, 1, 1, 2)
+        serialSendSettingsLayout.addWidget(self.sendSettingsCRLF, 3, 0, 1, 1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 3, 1, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsEscape, 4, 0, 1, 2)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         settingLayout.addWidget(serialSendSettingsGroupBox)
@@ -326,6 +328,7 @@ class MainWindow(QMainWindow):
         #   groupbox
         customSendGroupBox = QGroupBox(_("Cutom send"))
         customSendItemsLayout0 = QVBoxLayout()
+        customSendItemsLayout0.setContentsMargins(0,8,0,0)
         customSendGroupBox.setLayout(customSendItemsLayout0)
         #   scroll
 
@@ -338,10 +341,12 @@ class MainWindow(QMainWindow):
         #   wrapper widget
         cutomSendItemsWraper = QWidget()
         customSendItemsLayoutWrapper = QVBoxLayout()
+        customSendItemsLayoutWrapper.setContentsMargins(0,0,0,0)
         cutomSendItemsWraper.setLayout(customSendItemsLayoutWrapper)
         #    custom items
         customItems = QWidget()
         self.customSendItemsLayout = QVBoxLayout()
+        self.customSendItemsLayout.setContentsMargins(0,0,0,0)
         customItems.setLayout(self.customSendItemsLayout)
         customSendItemsLayoutWrapper.addWidget(customItems)
         customSendItemsLayoutWrapper.addWidget(self.addButton)
@@ -1249,6 +1254,7 @@ class MainWindow(QMainWindow):
         self.customSendScroll.setMinimumHeight(height)
         item = QWidget()
         layout = QHBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
         item.setLayout(layout)
         cmd = QLineEdit(text)
         send = QPushButton(_("Send"))

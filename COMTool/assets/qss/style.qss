@@ -141,8 +141,8 @@ QComboBox::drop-down {
     border-left-width: 0px;
     border-left-color: #b9b9b9;
     border-left-style: solid; /* just a single line */
-    border-top-right-radius: 3px; /* same radius as the QComboBox */
-    border-bottom-right-radius: 3px;
+    border-top-right-radius: 5px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 5px;
 }
 
 QComboBox::down-arrow {
@@ -231,7 +231,7 @@ QPushButton:default {
 QTextEdit, QListView {
     background-color: #f5f5f5;
     border: 2px solid #e6e6e6;
-    border-radius: 3px;
+    border-radius: 5px;
     background-attachment: scroll;
 }
 
@@ -261,7 +261,9 @@ QCheckBox::indicator:unchecked {
 QCheckBox::indicator:checked {
     background-color: #008000;
 }
-
+QRadioButton {
+    text-align: center;
+}
 QRadioButton::indicator {
     width: 13px;
     height: 13px;

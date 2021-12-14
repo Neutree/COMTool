@@ -130,8 +130,8 @@ QComboBox::drop-down {
     border-left-width: 0px;
     border-left-color: #524a4a;
     border-left-style: solid; /* just a single line */
-    border-top-right-radius: 3px; /* same radius as the QComboBox */
-    border-bottom-right-radius: 3px;
+    border-top-right-radius: 5px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 5px;
 }
 
 QComboBox::down-arrow {
