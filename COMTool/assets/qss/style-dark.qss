@@ -98,6 +98,7 @@ QComboBox {
     border-radius: 5px;
     padding: 1px 18px 1px 3px;
     min-height:25px;
+    min-width:60px;
 }
 
 QComboBox:editable {

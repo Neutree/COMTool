@@ -24,10 +24,6 @@ QWidget {
     color:#6b6b6b;
     font-family: "Microsoft YaHei",Tahoma,Optima,"Trebuchet MS";
 }
-.settingWidget QComboBox{
-    width:60px;
-    min-width:60px;
-}
 #menuItem {
     min-height:27px;
     height:27px;
@@ -114,6 +110,7 @@ QComboBox {
     border-radius: 5px;
     padding: 1px 18px 1px 3px;
     min-height:25px;
+    min-width:60px;
 }
 
 QComboBox:editable {
