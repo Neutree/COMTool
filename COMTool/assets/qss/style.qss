@@ -24,13 +24,75 @@ QWidget {
     color:#6b6b6b;
     font-family: "Microsoft YaHei",Tahoma,Optima,"Trebuchet MS";
 }
+.TitleBar {
+    background-color: #0b1722;
+    color: white;
+}
+.TitleBar QPushButton {
+    border: none;
+    border-radius: 0;
+    min-width: 35;
+    min-height: 35;
+}
+.TitleBar QPushButton:hover {
+    border: none;
+    border-radius: 0;
+}
+.TitleBar .icon{
+    margin-left: 5;
+    background-color: transparent;
+}
+.TitleBar .title{
+    margin-left: 5;
+    color: white;
+    background-color: transparent;
+}
+.TitleBar .top{
+    margin-left: 5;
+    color: white;
+    border-radius: 20;
+    background-color: transparent;
+}
+.TitleBar .top:hover{
+    background-color: #273b4e;
+}
+.TitleBar .topActive{
+    margin-left: 5;
+    color: white;
+    border-radius: 20;
+    background-color: #273b4e;
+}
+.TitleBar .min{
+    background-color: transparent;
+    color: white;
+}
+.TitleBar .max{
+    background-color: transparent;
+    color: white;
+}
+.TitleBar .close{
+    background-color: transparent;
+    color: white;
+}
+.TitleBar .min:hover {
+    background-color: #2ba13e;
+}
+.TitleBar .max:hover {
+    background-color: #cf9001;
+}
+.TitleBar .close:hover {
+    background-color: #df2f25;
+}
+.menuBar {
+    background-color: #0b1722;
+}
 #menuItem {
     min-height:27px;
     height:27px;
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    background-color: #f5f5f5;
+    background-color: #0b1722;
 }
 #menuItem:hover {
     min-height:27px;
@@ -38,7 +100,7 @@ QWidget {
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    background-color: #0f88eb;
+    background-color: #0b1722;
 }
 .menuItem1 {
     min-height:27px;

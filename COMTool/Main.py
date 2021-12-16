@@ -15,6 +15,7 @@ try:
     import utils
     from conn.conn_serial import Serial
     from plugins import dbg
+    from widgets import TitleBar
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate, utils
     from COMTool.Combobox import ComboBox
@@ -23,8 +24,9 @@ except ImportError:
     from COMTool import version
     from COMTool.conn.conn_serial import Serial
     from COMTool.plugins import dbg
+    from .widgets import TitleBar
 
-from PyQt5.QtCore import pyqtSignal,Qt, QRect, QMargins
+from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
@@ -133,12 +135,28 @@ class MainWindow(QMainWindow):
             plugin.onUiInitDone()
 
     def initWindow(self):
+        self.resize(800, 500)
+        self.MoveToCenter()
+
+        # title bar
+        title = parameters.appName+" v"+version.__version__
+        iconPath = self.DataPath+"/"+parameters.appIcon
+        print("-- icon path: " + iconPath)
+        titleBar = TitleBar(self, icon=iconPath, title=title)
+
         # main layout
         self.frameWidget = QWidget()
         frameLayout = QVBoxLayout()
+        frameLayout.setSpacing(0)
+        menuWidget = QWidget()
         menuLayout = QHBoxLayout()
+        menuWidget.setLayout(menuLayout)
+        menuWidget.setProperty("class", "menuBar")
         contentWidget = QSplitter(Qt.Horizontal)
-        frameLayout.addLayout(menuLayout)
+        contentWidget.setProperty("class", "contentWraper")
+        frameLayout.setContentsMargins(0,0,0,0)
+        frameLayout.addWidget(titleBar)
+        frameLayout.addWidget(menuWidget)
         frameLayout.addWidget(contentWidget)
         self.frameWidget.setLayout(frameLayout)
         self.setCentralWidget(self.frameWidget)
@@ -214,13 +232,6 @@ class MainWindow(QMainWindow):
         contentWidget.setStretchFactor(1, 7)
         contentWidget.setStretchFactor(2, 2)
 
-        self.resize(800, 500)
-        self.MoveToCenter()
-        self.setWindowTitle(parameters.appName+" v"+version.__version__)
-        icon = QIcon()
-        print("icon path:"+self.DataPath+"/"+parameters.appIcon)
-        icon.addPixmap(QPixmap(self.DataPath+"/"+parameters.appIcon), QIcon.Normal, QIcon.Off)
-        self.setWindowIcon(icon)
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
         self.show()
