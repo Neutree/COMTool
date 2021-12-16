@@ -27,3 +27,9 @@ def hex_str_to_bytes(hexString : str) -> bytes:
     except Exception:
         return -1
     return data
+
+
+def can_draw(ucs4cp):
+    return 0x2500 <= ucs4cp and ucs4cp <= 0x259F
+
+
