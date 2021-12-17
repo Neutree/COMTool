@@ -19,7 +19,7 @@ QWidget {
     font-family: "Microsoft YaHei",Tahoma,Optima,"Trebuchet MS";
 }
 .TitleBar {
-    background-color: #0b1722;
+    background-color: #212121;
     color: white;
 }
 .TitleBar QPushButton {
@@ -78,7 +78,7 @@ QWidget {
     background-color: #df2f25;
 }
 .menuBar {
-    background-color: #0b1722;
+    background-color: #212121;
 }
 #menuItem {
     min-height:27px;
@@ -86,7 +86,7 @@ QWidget {
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    background-color: #0b1722;
+    background-color: #212121;
 }
 .menuItem1 {
     min-height:27px;
@@ -336,8 +336,9 @@ QToolTip {
     background: #7777cc;
 }
 
-QStatusBar::item {
+.statusBar {
 	border:none;
+    max-height: 30;
 }
 
 QScrollBar {

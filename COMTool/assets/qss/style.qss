@@ -346,8 +346,9 @@ QToolTip {
     background: #7777cc;
 }
 
-QStatusBar::item {
+.statusBar {
 	border:none;
+    max-height: 30;
 }
 
 

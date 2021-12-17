@@ -15,7 +15,7 @@ try:
     import utils
     from conn.conn_serial import Serial
     from plugins import dbg
-    from widgets import TitleBar
+    from widgets import TitleBar, WindowResizableMixin
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate, utils
     from COMTool.Combobox import ComboBox
@@ -24,7 +24,7 @@ except ImportError:
     from COMTool import version
     from COMTool.conn.conn_serial import Serial
     from COMTool.plugins import dbg
-    from .widgets import TitleBar
+    from .widgets import TitleBar, WindowResizableMixin
 
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -40,7 +40,7 @@ if sys.platform == "win32":
 
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, WindowResizableMixin):
     hintSignal = pyqtSignal(str, str, str) # type(error, warning, info), title, msg
     statusBarSignal = pyqtSignal(str, str)
     updateSignal = pyqtSignal(object)
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
     needRestart = False
 
     def __init__(self,app):
-        super().__init__()
+        QMainWindow.__init__(self)
         self.app = app
         self.DataPath = parameters.dataPath
         self.config = self.loadParameters()
@@ -135,33 +135,10 @@ class MainWindow(QMainWindow):
             plugin.onUiInitDone()
 
     def initWindow(self):
-        self.resize(800, 500)
-        self.MoveToCenter()
-
-        # title bar
-        title = parameters.appName+" v"+version.__version__
-        iconPath = self.DataPath+"/"+parameters.appIcon
-        print("-- icon path: " + iconPath)
-        titleBar = TitleBar(self, icon=iconPath, title=title)
-
-        # main layout
-        self.frameWidget = QWidget()
-        frameLayout = QVBoxLayout()
-        frameLayout.setSpacing(0)
+        # menu layout
         menuWidget = QWidget()
-        menuLayout = QHBoxLayout()
-        menuWidget.setLayout(menuLayout)
         menuWidget.setProperty("class", "menuBar")
-        contentWidget = QSplitter(Qt.Horizontal)
-        contentWidget.setProperty("class", "contentWraper")
-        frameLayout.setContentsMargins(0,0,0,0)
-        frameLayout.addWidget(titleBar)
-        frameLayout.addWidget(menuWidget)
-        frameLayout.addWidget(contentWidget)
-        self.frameWidget.setLayout(frameLayout)
-        self.setCentralWidget(self.frameWidget)
-
-        # option layout
+        menuWidget.setFixedHeight(43)
         self.settingsButton = QPushButton()
         self.skinButton = QPushButton("")
         self.languageCombobox = ComboBox()
@@ -182,6 +159,8 @@ class MainWindow(QMainWindow):
         self.skinButton.setObjectName("menuItem")
         self.aboutButton.setObjectName("menuItem")
         self.functionalButton.setObjectName("menuItem")
+        menuLayout = QHBoxLayout()
+        menuWidget.setLayout(menuLayout)
         menuLayout.addWidget(self.settingsButton)
         menuLayout.addWidget(self.skinButton)
         menuLayout.addWidget(self.aboutButton)
@@ -189,6 +168,26 @@ class MainWindow(QMainWindow):
         menuLayout.addStretch(0)
         menuLayout.addWidget(self.encodingCombobox)
         menuLayout.addWidget(self.functionalButton)
+
+        # title bar
+        title = parameters.appName+" v"+version.__version__
+        iconPath = self.DataPath+"/"+parameters.appIcon
+        print("-- icon path: " + iconPath)
+        titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[menuWidget])
+        WindowResizableMixin.__init__(self, titleBar=titleBar)
+
+        # main layout
+        self.frameWidget = QWidget()
+        self.frameWidget.setMouseTracking(True)
+        contentWidget = QSplitter(Qt.Horizontal)
+        contentWidget.setProperty("class", "contentWraper")
+        contentWidget.setContentsMargins(5,5,5,5)
+        # self.contentLayout.setSpacing(0)
+        # self.contentLayout.setContentsMargins(0,0,0,0)
+        self.contentLayout.addWidget(contentWidget)
+        # frameLayout.addStretch(0)
+        self.frameWidget.setLayout(self.rootLayout)
+        self.setCentralWidget(self.frameWidget)
 
         # widget main
         self.mainWidget = self.plugins[0].onWidgetMain()
@@ -208,8 +207,7 @@ class MainWindow(QMainWindow):
         #  other settings
         widget = self.plugins[0].onWidgetSettings()
         settingLayout.addWidget(widget)
-        settingLayout.addStretch(1)
-        # settingLayout.setContentsMargins(0,0,0,0)
+        settingLayout.setContentsMargins(0,0,0,0)
 
         # right functional layout
         self.functionalWiget = self.plugins[0].onWidgetFunctional()
@@ -221,9 +219,13 @@ class MainWindow(QMainWindow):
         self.onstatusBarText("info", self.strings.strReady)
         self.statusBarSendCount = QLabel('{}({}):0'.format(_("Sent"), _("bytes")))
         self.statusBarReceiveCount = QLabel('{}({}):0'.format(_("Received"), _("bytes")))
-        self.statusBar().addWidget(self.statusBarStauts)
-        self.statusBar().addWidget(self.statusBarSendCount,2)
-        self.statusBar().addWidget(self.statusBarReceiveCount,3)
+        self.statusBar = QWidget()
+        self.statusBar.setProperty("class", "statusBar")
+        self.statusBarLayout = QHBoxLayout()
+        self.statusBarLayout.addWidget(self.statusBarStauts)
+        self.statusBarLayout.addWidget(self.statusBarSendCount,2)
+        self.statusBarLayout.addWidget(self.statusBarReceiveCount,3)
+        self.statusBar.setLayout(self.statusBarLayout)
 
         contentWidget.addWidget(self.settingWidget)
         contentWidget.addWidget(self.mainWidget)
@@ -232,8 +234,12 @@ class MainWindow(QMainWindow):
         contentWidget.setStretchFactor(1, 7)
         contentWidget.setStretchFactor(2, 2)
 
+        self.contentLayout.addWidget(self.statusBar)
+
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
+        self.resize(800, 500)
+        self.MoveToCenter()
         self.show()
         print("config file path:",parameters.configFilePath)
 
