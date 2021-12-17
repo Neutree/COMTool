@@ -57,7 +57,8 @@ class Plugin(Plugin_Base):
     defaultColor = None
     defaultBg = None
 
-    def onInit(self, config):
+    def onInit(self, config, plugins):
+        super().onInit(config, plugins)
         self.keyControlPressed = False
         self.isScheduledSending = False
         self.config = {
@@ -90,7 +91,7 @@ class Plugin(Plugin_Base):
         self.sendArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea.setAcceptRichText(False)
         self.clearReceiveButtion = QPushButton(_("ClearReceive"))
-        self.sendButtion = QPushButton(_("Send"))
+        self.sendButton = QPushButton(_("Send"))
         self.sendHistory = ComboBox()
         sendWidget = QWidget()
         sendAreaWidgetsLayout = QHBoxLayout()
@@ -99,7 +100,7 @@ class Plugin(Plugin_Base):
         buttonLayout = QVBoxLayout()
         buttonLayout.addWidget(self.clearReceiveButtion)
         buttonLayout.addStretch(1)
-        buttonLayout.addWidget(self.sendButtion)
+        buttonLayout.addWidget(self.sendButton)
         sendAreaWidgetsLayout.addWidget(self.sendArea)
         sendAreaWidgetsLayout.addLayout(buttonLayout)
         self.mainWidget.addWidget(self.receiveArea)
@@ -109,7 +110,7 @@ class Plugin(Plugin_Base):
         self.mainWidget.setStretchFactor(1, 2)
         self.mainWidget.setStretchFactor(2, 1)
         # event
-        self.sendButtion.clicked.connect(self.onSendData)
+        self.sendButton.clicked.connect(self.onSendData)
         self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
 
@@ -296,7 +297,7 @@ class Plugin(Plugin_Base):
     def onAutoLinefeedClicked(self):
         if (self.config["showTimestamp"] or self.config["recordSend"]) and not self.receiveSettingsAutoLinefeed.isChecked():
             self.receiveSettingsAutoLinefeed.setChecked(True)
-            self.hintSignal.emit(_("linefeed always on if timestamp or record send is on"))
+            self.hintSignal.emit("warning", _("Warning"), _("linefeed always on if timestamp or record send is on"))
         self.config["receiveAutoLinefeed"] = self.receiveSettingsAutoLinefeed.isChecked()
 
     def onTimeStampClicked(self):
@@ -324,12 +325,12 @@ class Plugin(Plugin_Base):
     def clearHistory(self):
         self.config["sendHistoryList"].clear()
         self.sendHistory.clear()
-        self.hintSignal.emit(_("History cleared!"))
+        self.hintSignal.emit("info", _("OK"), _("History cleared!"))
 
 
     def onSentFile(self, ok, path):
         print("file sent {}, path: {}".format('ok' if ok else 'fail', path))
-        self.sendFileButton.setText(self.strings.strSendFile)
+        self.sendFileButton.setText(_("Send file"))
         self.sendFileButton.setDisabled(False)
 
     def setSaveLog(self):
@@ -453,7 +454,7 @@ class Plugin(Plugin_Base):
                 data = data.replace("\n", " ")
             data = utils.hex_str_to_bytes(data)
             if data == -1:
-                self.hintSignal.emit(_("Format error, should be like 00 01 02 03"))
+                self.hintSignal.emit("error", _("Error"), _("Format error, should be like 00 01 02 03"))
                 return b''
         else:
             encoding = self.configGlobal["encoding"]
@@ -491,7 +492,7 @@ class Plugin(Plugin_Base):
                             r = bytes([int(data[p+2 : p+4], base=16)])
                             p += 4
                         except Exception:
-                            self.hintSignal.emit(_("Escape is on, but escape error:") + data[p : p+4])
+                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
                             return b''
                     elif e in octstr and len(data) > (p+2) and data[p+2] in octstr: # \dd or \ddd e.g. \001
                         try:
@@ -509,7 +510,7 @@ class Plugin(Plugin_Base):
                                 p += 3
                         except Exception as e:
                             print(e)
-                            self.hintSignal.emit(_("Escape is on, but escape error:") + data[p : p+4])
+                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
                             return b''
                     else:
                         r = data[p: p+2].encode(encoding, "ignore")
@@ -519,20 +520,17 @@ class Plugin(Plugin_Base):
                 data = final
         return data
 
-    def onSendData(self):
-        pass
-
     def sendFile(self):
         filename = self.filePathWidget.text()
         if not os.path.exists(filename):
-            self.hintSignal.emit(_("File path error\npath") + ":%s" %(filename))
+            self.hintSignal.emit("error", _("Error"), _("File path error\npath") + ":%s" %(filename))
             return
-        if not self.com.is_open:
-            self.hintSignal.emit(_("Connect first please"))
+        if not self.isConnected():
+            self.hintSignal.emit("warning", _("Warning"), _("Connect first please"))
         else:
             self.sendFileButton.setDisabled(True)
-            self.sendFileButton.setText(self.strings.strSendingFile)
-            self.send(file_path=filename)
+            self.sendFileButton.setText(_("Sending file"))
+            self.send(file_path=filename, callback = lambda ok, msg: self.onSentFile(ok, filename))
 
 
     def scheduledSend(self):
@@ -542,13 +540,16 @@ class Plugin(Plugin_Base):
             try:
                 time.sleep(self.config["sendScheduledTime"]/1000)
             except Exception:
-                self.hintSignal.emit(self.strings.strTimeFormatError)
+                self.hintSignal.emit("error", _("Error"), _("Time format error"))
         self.isScheduledSending = False
 
-    def onSendData(self, notClick=True, data=None):
+    def sendData(self, data_bytes = None):
         try:
-            if self.com.is_open:
-                data = self.getSendData(data)
+            if self.isConnected():
+                if not data_bytes or type(data_bytes) == str:
+                    data = self.getSendData(data_bytes)
+                else:
+                    data = data_bytes
                 if not data:
                     return
                 # record send data
@@ -569,8 +570,11 @@ class Plugin(Plugin_Base):
                         head = '{}: '.format(head.rstrip())
                     self.receiveUpdateSignal.emit(head, [sendStrsColored], self.config["encoding"])
                     self.sendRecord.insert(0, head + sendStr)
-                self.sendData(data_bytes=data)
-                data = self.sendArea.toPlainText()
+                self.send(data_bytes=data)
+                if data_bytes:
+                    data = str(data_bytes)
+                else:
+                    data = self.sendArea.toPlainText()
                 self.sendHistoryFindDelete(data)
                 self.sendHistory.insertItem(0,data)
                 self.sendHistory.setCurrentIndex(0)
@@ -581,9 +585,18 @@ class Plugin(Plugin_Base):
                         t.setDaemon(True)
                         t.start()
         except Exception as e:
-            print("[Error] onSendData", e)
-            self.hintSignal.emit(self.strings.strWriteError)
+            import traceback
+            traceback.print_exc()
+            print("[Error] sendData: ", e)
+            self.hintSignal.emit("error", _("Error"), _("Send Error") + str(e))
             # print(e)
+
+    def onSendData(self, call=True, data=None):
+        try:
+            self.sendData(data)
+        except Exception as e:
+            print("[Error] onSendData: ", e)
+            self.hintSignal.emit("error", _("Error"), _("get data error") + ": " + str(e))
 
     def updateReceivedDataDisplay(self, head : str, datas : list, encoding):
         if datas:

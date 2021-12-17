@@ -103,7 +103,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             config = {}
             if plugin.id in configs:
                 config = configs[plugin.id]
-            plugin.onInit(config)
+            plugin.onInit(config, self.plugins)
             if plugin.id in enabled:
                 self.enablePlugin(plugin)
             if plugin.id == activeId:
@@ -117,12 +117,20 @@ class MainWindow(QMainWindow, WindowResizableMixin):
 
     def activePlugin(self, plugin):
         plugin.active = True
-        if plugin.connParent:
-            for plugin in self.plugins:
-                if plugin.id == plugin.connParent:
-                    plugin.active = True
-        
-
+        parent = None
+        if (not "main" in plugin.connParent) and (plugin.connParent):
+            plugin.isConnected = self.connection.isConnected
+            for pluginParent in self.plugins:
+                if pluginParent.id == plugin.connParent:
+                    pluginParent.active = True
+                    pluginParent.isConnected = self.connection.isConnected
+                    pluginParent.send = self.sendData
+                    parent = pluginParent
+                    break
+            plugin.send = parent.sendData
+        if not parent:
+            plugin.isConnected = self.connection.isConnected
+            plugin.send = self.sendData
     
     def initVar(self):
         self.strings = parameters.Strings(self.config.basic["locale"])
@@ -133,6 +141,10 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.connection.onUiInitDone()
         for plugin in self.plugins:
             plugin.onUiInitDone()
+        
+        self.sendProcess = threading.Thread(target=self.sendDataProcess)
+        self.sendProcess.setDaemon(True)
+        self.sendProcess.start()
 
     def initWindow(self):
         # menu layout
@@ -289,14 +301,14 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             return
         varObj.__setattr__(varName, v)
 
-    def sendData(self, data_bytes=None, file_path=None):
+    def sendData(self, data_bytes=None, file_path=None, callback=lambda ok,msg:None):
         if data_bytes:
-            self.dataToSend.insert(0, data_bytes)
+            self.dataToSend.insert(0, (data_bytes, callback))
         if file_path:
-            self.fileToSend.insert(0, file_path)
+            self.fileToSend.insert(0, (file_path, callback))
 
-    def onSent(self, n_bytes):
-        self.sendCount += n_bytes
+    def onSent(self, data):
+        self.sendCount += len(data)
         self.countUpdateSignal.emit(self.sendCount, self.receiveCount)
 
     def onReceived(self, data):
@@ -312,12 +324,16 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.receiveProgressStop = False
         while(not self.receiveProgressStop):
             try:
+                if not self.connection.isConnected():
+                    time.sleep(0.001)
+                    continue
                 while len(self.dataToSend) > 0:
-                    data = self.dataToSend.pop()
-                    self.com.write(data)
-                    self.onSent(len(data))
+                    data, callback = self.dataToSend.pop()
+                    self.connection.send(data)
+                    self.onSent(data)
+                    callback(True, "")
                 while len(self.fileToSend) > 0:
-                    file_path = self.fileToSend.pop()
+                    file_path, callback = self.fileToSend.pop()
                     ok = False
                     if file_path and os.path.exists(file_path):
                         data = None
@@ -327,10 +343,10 @@ class MainWindow(QMainWindow, WindowResizableMixin):
                         except Exception as e:
                             self.hintSignal.emit("error", _("Error"), _("Open file failed!") + "\n%s\n%s" %(file_path, str(e)))
                         if data:
-                            self.com.write(data)
-                            self.onSent(len(data))
+                            self.connection.send(data)
+                            self.onSent(data)
                             ok = True
-                    self.sendFileOkSignal.emit(ok, file_path)
+                    callback(ok, "")
                 time.sleep(0.001)
             except Exception as e:
                 if 'multiple access' in str(e):

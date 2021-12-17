@@ -22,9 +22,10 @@ class Plugin_Base(QObject):
             getConfig
     '''
     # vars set by caller
-    send = None              # send(data_bytes=None, file_path=None)
-    hintSignal = None       # hintSignal.emit(type(error, warning, info), title, msg)
-    clearCountSignal = None  # clearCountSignal.emit()
+    isConnected = lambda : False
+    send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None)
+    hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
+    clearCountSignal = None         # clearCountSignal.emit()
     configGlobal = {}
     # other vars
     connParent = None        # parent id
@@ -39,11 +40,15 @@ class Plugin_Base(QObject):
         if not self.id:
             raise ValueError(f"var id of Plugin {self} should be set")
 
-    def onInit(self, config):
+    def onInit(self, config, plugins):
         '''
             init params, DO NOT take too long time in this func
         '''
-        pass
+        self.plugins = plugins
+        self.plugins_info = {}
+        for p in self.plugins:
+            if p.id in self.connChilds:
+                self.plugins_info[p.id] = p
 
     def onWidgetMain(self):
         raise NotImplementedError()
@@ -55,7 +60,8 @@ class Plugin_Base(QObject):
         return None
 
     def onReceived(self, data : bytes):
-        pass
+        for id in self.connChilds:
+            self.plugins_info[id].onReceived(data)
 
     def onKeyPressEvent(self, event):
         pass
@@ -76,6 +82,9 @@ class Plugin_Base(QObject):
             this method runs in UI thread, do not block too long
         '''
         pass
+
+    def sendData(self, data_bytes=None, file_path=None):
+        self.send(data_bytes, file_path)
 
     def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False):
         objType = type(uiObj)

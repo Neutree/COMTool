@@ -294,14 +294,9 @@ class Serial(COMM):
                 self.status = ConnectionStatus.CONNECTED
                 self.onConnectionStatus.emit(self.status, "")
                 self.showSwitchSignal.emit(self.status)
-                # self.dataToSend = []
-                # self.fileToSend = []
                 self.receiveProcess = threading.Thread(target=self.receiveDataProcess)
                 self.receiveProcess.setDaemon(True)
                 self.receiveProcess.start()
-                # self.sendProcess = threading.Thread(target=self.sendDataProcess)
-                # self.sendProcess.setDaemon(True)
-                # self.sendProcess.start()
             except Exception as e:
                 try:
                     self.com.close()

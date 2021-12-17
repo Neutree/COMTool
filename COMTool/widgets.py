@@ -126,6 +126,7 @@ class TitleBar(QWidget):
     
     def mouseReleaseEvent(self, event):
         self.mPos = None
+        self.setCursor(Qt.ArrowCursor)
         event.accept()
     
     def mouseMoveEvent(self, event):
