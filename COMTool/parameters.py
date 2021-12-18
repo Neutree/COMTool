@@ -17,7 +17,7 @@ if not os.path.exists(assetsDir): # for pyinstaller pack
 
 defaultBaudrates = [9600, 19200, 38400, 57600, 74880, 115200, 921600, 1000000, 1500000, 2000000, 4500000]
 encodings = ["ASCII", "UTF-8", "UTF-16", "GBK", "GB2312", "GB18030"]
-customSendItemHeight = 60
+customSendItemHeight = 40
 
 author = "Neucrack"
 
@@ -100,7 +100,7 @@ class Parameters:
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(obj, f, indent=4)
+            json.dump(obj, f, indent=4, ensure_ascii=False)
 
     def load(self, path):
         if not os.path.exists(path):

@@ -56,7 +56,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         QMainWindow.__init__(self)
         self.app = app
         self.DataPath = parameters.dataPath
-        self.config = self.loadParameters()
+        self.config = self.loadConfig()
         i18n.set_locale(self.config.basic["locale"])
         self.initVar()
         self.initConn(self.config.basic["connId"], self.config.conns)
@@ -80,6 +80,8 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             config = {}
             if conn.id in configs:
                 config = configs[conn.id]
+            else: # add new dict obj for conn to use
+                configs[conn.id] = config
             conn.onInit(config)
         # init last used one
         self.connection = None
@@ -103,6 +105,8 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             config = {}
             if plugin.id in configs:
                 config = configs[plugin.id]
+            else: # add new dict obj for plugin to use
+                configs[plugin.id] = config
             plugin.onInit(config, self.plugins)
             if plugin.id in enabled:
                 self.enablePlugin(plugin)
@@ -141,7 +145,9 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.connection.onUiInitDone()
         for plugin in self.plugins:
             plugin.onUiInitDone()
-        
+        # always hide functional, and show before init complete so we can get its width height
+        self.hideFunctional()
+
         self.sendProcess = threading.Thread(target=self.sendDataProcess)
         self.sendProcess.setDaemon(True)
         self.sendProcess.start()
@@ -202,7 +208,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.setCentralWidget(self.frameWidget)
 
         # widget main
-        self.mainWidget = self.plugins[0].onWidgetMain()
+        self.mainWidget = self.plugins[0].onWidgetMain(contentWidget, self)
 
         # widgets settings
         self.settingWidget = QWidget()
@@ -217,13 +223,12 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         layout.addWidget(widget)
         settingLayout.addWidget(serialSettingsGroupBox)
         #  other settings
-        widget = self.plugins[0].onWidgetSettings()
+        widget = self.plugins[0].onWidgetSettings(settingLayout)
         settingLayout.addWidget(widget)
         settingLayout.setContentsMargins(0,0,0,0)
 
         # right functional layout
-        self.functionalWiget = self.plugins[0].onWidgetFunctional()
-        self.hideFunctional()
+        self.functionalWiget = self.plugins[0].onWidgetFunctional(contentWidget)
 
         # main window
         self.statusBarStauts = QLabel()
@@ -234,6 +239,8 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.statusBar = QWidget()
         self.statusBar.setProperty("class", "statusBar")
         self.statusBarLayout = QHBoxLayout()
+        self.statusBarLayout.setSpacing(0)
+        self.statusBarLayout.setContentsMargins(0, 0, 0, 0)
         self.statusBarLayout.addWidget(self.statusBarStauts)
         self.statusBarLayout.addWidget(self.statusBarSendCount,2)
         self.statusBarLayout.addWidget(self.statusBarReceiveCount,3)
@@ -259,7 +266,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         # menu
         self.settingsButton.clicked.connect(self.toggleSettings)
         self.languageCombobox.currentIndexChanged.connect(self.onLanguageChanged)
-        self.encodingCombobox.currentIndexChanged.connect(lambda: self.bindVar(self.encodingCombobox, self.config, "encoding"))
+        self.encodingCombobox.currentIndexChanged.connect(lambda: self.bindVar(self.encodingCombobox, self.config.basic, "encoding"))
         self.functionalButton.clicked.connect(self.toggleFunctional)
         self.skinButton.clicked.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
@@ -274,16 +281,25 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         objType = type(uiObj)
         if objType == QCheckBox:
             v = uiObj.isChecked()
-            varObj.__setattr__(varName, v if not invert else not v)
+            if hasattr(varObj, varName):
+                varObj.__setattr__(varName, v if not invert else not v)
+            else:
+                varObj[varName] = v if not invert else not v
             return
         elif objType == QLineEdit:
             v = uiObj.text()
         elif objType == ComboBox:
-            varObj.__setattr__(varName, uiObj.currentText())
+            if hasattr(varObj, varName):
+                varObj.__setattr__(varName, uiObj.currentText())
+            else:
+                varObj[varName] = uiObj.currentText()
             return
         elif objType == QRadioButton:
             v = uiObj.isChecked()
-            varObj.__setattr__(varName, v if not invert else not v)
+            if hasattr(varObj, varName):
+                varObj.__setattr__(varName, v if not invert else not v)
+            else:
+                varObj[varName] = v if not invert else not v
             return
         else:
             raise Exception("not support this object")
@@ -412,76 +428,30 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         #                              QMessageBox.No, QMessageBox.No)
         if 1: # reply == QMessageBox.Yes:
             self.receiveProgressStop = True
-            self.programExitSaveParameters()
+            self.saveConfig()
             event.accept()
         else:
             event.ignore()
 
-    def programExitSaveParameters(self):
-        paramObj = self.config
-        # paramObj.skin = self.config.basic["skin"]
-        # paramObj.sendHistoryList.clear()
-        # for i in range(0,self.sendHistory.count()):
-        #     paramObj.sendHistoryList.append(self.sendHistory.itemText(i))
-        # send items
-        # valid = []
-        # for text in self.config.customSendItems:
-        #     if text:
-        #         valid.append(text)
-        # self.config.customSendItems = valid
-        paramObj.save(parameters.configFilePath)
+    def saveConfig(self):
+        self.config.save(parameters.configFilePath)
 
-    def loadParameters(self):
+    def loadConfig(self):
         paramObj = parameters.Parameters()
         paramObj.load(parameters.configFilePath)
-        return paramObj
+        self.config = paramObj
+        return self.config
 
     def uiLoadConfigs(self, config):
-        pass
-        # for plugin in self.plugins:
-        #     conf = {}
-        #     if plugin.id in config.pluginsConfis:
-        #         conf = config.pluginsConfis[plugin.id]
-        #     plugin.updateConfig(conf)
-        
-        # self.receiveSettingsHex.setChecked(not paramObj.receiveAscii)
-        # self.receiveSettingsAutoLinefeed.setChecked(paramObj.receiveAutoLinefeed)
-        # try:
-        #     interval = int(paramObj.receiveAutoLindefeedTime)
-        #     paramObj.receiveAutoLindefeedTime = interval
-        # except Exception:
-        #     interval = parameters.Parameters.receiveAutoLindefeedTime
-        # self.receiveSettingsAutoLinefeedTime.setText(str(interval) if interval > 0 else str(parameters.Parameters.receiveAutoLindefeedTime))
-        # self.receiveSettingsTimestamp.setChecked(paramObj.showTimestamp)
-        # self.sendSettingsHex.setChecked(not paramObj.sendAscii)
-        # self.sendSettingsScheduledCheckBox.setChecked(paramObj.sendScheduled)
-        # try:
-        #     interval = int(paramObj.sendScheduledTime)
-        #     paramObj.sendScheduledTime = interval
-        # except Exception:
-        #     interval = parameters.Parameters.sendScheduledTime
-        # self.sendSettingsScheduled.setText(str(interval) if interval > 0 else str(parameters.Parameters.sendScheduledTime))
-        # self.sendSettingsCRLF.setChecked(paramObj.useCRLF)
-        # self.sendSettingsRecord.setChecked(paramObj.recordSend)
-        # self.sendSettingsEscape.setChecked(paramObj.sendEscape)
-        # for i in range(0, len(paramObj.sendHistoryList)):
-        #     text = paramObj.sendHistoryList[i]
-        #     self.sendHistory.addItem(text)
-        # self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(paramObj.encoding))
-        # try:
-        #     idx = list(self.languages.keys()).index(paramObj.locale)
-        # except Exception:
-        #     idx = 0
-        # self.languageCombobox.setCurrentIndex(idx)
-        # self.logFilePath.setText(paramObj.saveLogPath)
-        # self.logFilePath.setToolTip(paramObj.saveLogPath)
-        # self.saveLogCheckbox.setChecked(paramObj.saveLog)
-        # self.receiveSettingsColor.setChecked(paramObj.color)
-        # # send items
-        # self.toggleFunctional() # have to show then to get height
-        # for text in self.config.customSendItems:
-        #     self.insertSendItem(text, load=True)
-        # self.toggleFunctional()
+        config = config.basic
+        # language
+        try:
+            idx = list(self.languages.keys()).index(config["locale"])
+        except Exception:
+            idx = 0
+        self.languageCombobox.setCurrentIndex(idx)
+        # encoding
+        self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(config["encoding"]))
 
     def keyPressEvent(self, event):
         self.plugins[0].onKeyReleaseEvent(event)

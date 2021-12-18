@@ -61,7 +61,8 @@ class Plugin(Plugin_Base):
         super().onInit(config, plugins)
         self.keyControlPressed = False
         self.isScheduledSending = False
-        self.config = {
+        self.config = config
+        default = {
             "receiveAscii" : True,
             "receiveAutoLinefeed" : False,
             "receiveAutoLindefeedTime" : 200,
@@ -78,9 +79,12 @@ class Plugin(Plugin_Base):
             "customSendItems" : [],
             "sendHistoryList" : [],
         }
-        self.config.update(config)
+        for k in default:
+            if not k in self.config:
+                self.config[k] = default[k]
 
-    def onWidgetMain(self):
+    def onWidgetMain(self, parent, rootWindow):
+        self.rootWindow = rootWindow
         self.mainWidget = QSplitter(Qt.Vertical)
         # widgets receive and send area
         self.receiveArea = QTextEdit()
@@ -116,7 +120,7 @@ class Plugin(Plugin_Base):
 
         return self.mainWidget
 
-    def onWidgetSettings(self):
+    def onWidgetSettings(self, parent):
         # serial receive settings
         layout = QVBoxLayout()
         serialReceiveSettingsLayout = QGridLayout()
@@ -200,7 +204,7 @@ class Plugin(Plugin_Base):
         return widget
 
 
-    def onWidgetFunctional(self):
+    def onWidgetFunctional(self, parent):
         sendFunctionalLayout = QVBoxLayout()
         # right functional layout
         self.filePathWidget = QLineEdit()
@@ -258,8 +262,8 @@ class Plugin(Plugin_Base):
         sendFunctionalLayout.addWidget(self.clearHistoryButton)
         sendFunctionalLayout.addWidget(customSendGroupBox)
         sendFunctionalLayout.addStretch(1)
-        widget = QWidget()
-        widget.setLayout(sendFunctionalLayout)
+        self.funcWidget = QWidget()
+        self.funcWidget.setLayout(sendFunctionalLayout)
         # event
         self.sendFileButton.clicked.connect(self.sendFile)
         self.sendFileOkSignal.connect(self.onSentFile)
@@ -268,9 +272,42 @@ class Plugin(Plugin_Base):
         self.openFileButton.clicked.connect(self.selectFile)
         self.addButton.clicked.connect(self.customSendAdd)
         self.clearHistoryButton.clicked.connect(self.clearHistory)
-        return widget
+        self.funcParent = parent
+        return self.funcWidget
 
     def onUiInitDone(self):
+        paramObj = self.config
+        self.receiveSettingsHex.setChecked(not paramObj["receiveAscii"])
+        self.receiveSettingsAutoLinefeed.setChecked(paramObj["receiveAutoLinefeed"])
+        try:
+            interval = int(paramObj["receiveAutoLindefeedTime"])
+            paramObj["receiveAutoLindefeedTime"] = interval
+        except Exception:
+            interval = parameters.Parameters.receiveAutoLindefeedTime
+        self.receiveSettingsAutoLinefeedTime.setText(str(interval) if interval > 0 else str(parameters.Parameters.receiveAutoLindefeedTime))
+        self.receiveSettingsTimestamp.setChecked(paramObj["showTimestamp"])
+        self.sendSettingsHex.setChecked(not paramObj["sendAscii"])
+        self.sendSettingsScheduledCheckBox.setChecked(paramObj["sendScheduled"])
+        try:
+            interval = int(paramObj["sendScheduledTime"])
+            paramObj["sendScheduledTime"] = interval
+        except Exception:
+            interval = parameters.Parameters.sendScheduledTime
+        self.sendSettingsScheduled.setText(str(interval) if interval > 0 else str(parameters.Parameters.sendScheduledTime))
+        self.sendSettingsCRLF.setChecked(paramObj["useCRLF"])
+        self.sendSettingsRecord.setChecked(paramObj["recordSend"])
+        self.sendSettingsEscape.setChecked(paramObj["sendEscape"])
+        for i in range(0, len(paramObj["sendHistoryList"])):
+            text = paramObj["sendHistoryList"][i]
+            self.sendHistory.addItem(text)
+        self.logFilePath.setText(paramObj["saveLogPath"])
+        self.logFilePath.setToolTip(paramObj["saveLogPath"])
+        self.saveLogCheckbox.setChecked(paramObj["saveLog"])
+        self.receiveSettingsColor.setChecked(paramObj["color"])
+        # send items
+        for text in paramObj["customSendItems"]:
+            self.insertSendItem(text, load=True)
+
         self.receiveProcess = threading.Thread(target=self.receiveDataProcess)
         self.receiveProcess.setDaemon(True)
         self.receiveProcess.start()
@@ -288,7 +325,7 @@ class Plugin(Plugin_Base):
             data = self.sendArea.toPlainText().replace("\n"," ").strip()
             self.sendArea.clear()
             if data != "":
-                data = utils.hex_str_to_bytes(data).decode(self.config["encoding"],'ignore')
+                data = utils.hex_str_to_bytes(data).decode(self.configGlobal["encoding"],'ignore')
                 self.sendArea.insertPlainText(data)
         except Exception as e:
             # QMessageBox.information(self,self.strings.strWriteFormatError,self.strings.strWriteFormatError)
@@ -343,7 +380,7 @@ class Plugin(Plugin_Base):
         oldPath = self.filePathWidget.text()
         if oldPath=="":
             oldPath = os.getcwd()
-        fileName_choose, filetype = QFileDialog.getOpenFileName(self.mainWidget,  
+        fileName_choose, filetype = QFileDialog.getOpenFileName(self.mainWidget,
                                     _("Select file"),
                                     oldPath,
                                     _("All Files (*)"))
@@ -357,7 +394,7 @@ class Plugin(Plugin_Base):
         oldPath = self.logFilePath.text()
         if oldPath=="":
             oldPath = os.getcwd()
-        fileName_choose, filetype = QFileDialog.getSaveFileName(self.mainWidget,  
+        fileName_choose, filetype = QFileDialog.getSaveFileName(self.mainWidget,
                                     _("Select file"),
                                     os.path.join(oldPath, "comtool.log"),
                                     _("Log file (*.log);;txt file (*.txt);;All Files (*)"))
@@ -393,9 +430,9 @@ class Plugin(Plugin_Base):
     def insertSendItem(self, text="", load = False):
         itemsNum = self.customSendItemsLayout.count() + 1
         height = parameters.customSendItemHeight * (itemsNum + 1) + 20
-        topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 200
-        if height + topHeight > self.height():
-            height = self.height() - topHeight
+        topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 100
+        if height + topHeight > self.funcParent.height():
+            height = self.funcParent.height() - topHeight
         self.customSendScroll.setMinimumHeight(height)
         item = QWidget()
         layout = QHBoxLayout()
@@ -423,9 +460,9 @@ class Plugin(Plugin_Base):
         self.config["customSendItems"].pop(idx)
         itemsNum = self.customSendItemsLayout.count()
         height = parameters.customSendItemHeight * (itemsNum + 1) + 20
-        topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 200
-        if height + topHeight > self.height():
-            height = self.height() - topHeight
+        topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 100
+        if height + topHeight > self.funcParent.height():
+            height = self.funcParent.height() - topHeight
         self.customSendScroll.setMinimumHeight(height)
 
     def onCustomItemChange(self, idx, edit, send):
@@ -568,7 +605,7 @@ class Plugin(Plugin_Base):
                         head = "\n" + head
                     if head.strip() != '=>':
                         head = '{}: '.format(head.rstrip())
-                    self.receiveUpdateSignal.emit(head, [sendStrsColored], self.config["encoding"])
+                    self.receiveUpdateSignal.emit(head, [sendStrsColored], self.configGlobal["encoding"])
                     self.sendRecord.insert(0, head + sendStr)
                 self.send(data_bytes=data)
                 if data_bytes:
@@ -578,6 +615,13 @@ class Plugin(Plugin_Base):
                 self.sendHistoryFindDelete(data)
                 self.sendHistory.insertItem(0,data)
                 self.sendHistory.setCurrentIndex(0)
+                try:
+                    idx = self.config["sendHistoryList"].index(data)
+                    self.config["sendHistoryList"].pop(idx)
+                except Exception:
+                     pass
+                self.config["sendHistoryList"].insert(0, data)
+
                 # scheduled send
                 if self.config["sendScheduled"]:
                     if not self.isScheduledSending:
@@ -714,7 +758,7 @@ class Plugin(Plugin_Base):
         if showAsHex:
             return True, binascii.hexlify(data, ' ').decode(encoding=encoding), dataColored
         try:
-            dataPlain, dataColored = self.getColoredText(data, self.config["encoding"])
+            dataPlain, dataColored = self.getColoredText(data, self.configGlobal["encoding"])
         except Exception:
             dataPlain = binascii.hexlify(data, ' ').decode(encoding=encoding)
             isHexString = True

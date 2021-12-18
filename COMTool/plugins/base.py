@@ -50,13 +50,13 @@ class Plugin_Base(QObject):
             if p.id in self.connChilds:
                 self.plugins_info[p.id] = p
 
-    def onWidgetMain(self):
+    def onWidgetMain(self, parent, rootWindow):
         raise NotImplementedError()
 
-    def onWidgetSettings(self):
+    def onWidgetSettings(self, parent):
         raise NotImplementedError()
 
-    def onWidgetFunctional(self):
+    def onWidgetFunctional(self, parent):
         return None
 
     def onReceived(self, data : bytes):
