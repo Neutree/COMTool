@@ -14,7 +14,7 @@ try:
     import version
     import utils
     from conn.conn_serial import Serial
-    from plugins import dbg
+    from plugins import plugins
     from widgets import TitleBar, WindowResizableMixin
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate, utils
@@ -23,13 +23,13 @@ except ImportError:
     from COMTool.i18n import _
     from COMTool import version
     from COMTool.conn.conn_serial import Serial
-    from COMTool.plugins import dbg
+    from COMTool.plugins import plugins
     from .widgets import TitleBar, WindowResizableMixin
 
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
 import threading
 import time
@@ -94,9 +94,9 @@ class MainWindow(QMainWindow, WindowResizableMixin):
 
     def initPlugins(self, enabled, activeId, configs):
         if not enabled:
-            enabled = ["dbg"]
+            enabled = ["dbg", "protocol"]
         self.connChilds = []
-        self.plugins = [dbg.Plugin()]
+        self.plugins = [Plugin() for Plugin in plugins]
         for plugin in self.plugins:
             plugin.hintSignal = self.hintSignal
             plugin.send = self.sendData
@@ -120,6 +120,8 @@ class MainWindow(QMainWindow, WindowResizableMixin):
 
 
     def activePlugin(self, plugin):
+        for p in self.plugins:
+            p.active = False
         plugin.active = True
         parent = None
         if (not "main" in plugin.connParent) and (plugin.connParent):
@@ -135,6 +137,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         if not parent:
             plugin.isConnected = self.connection.isConnected
             plugin.send = self.sendData
+        self.config.basic["activePlugin"] = plugin.id
     
     def initVar(self):
         self.strings = parameters.Strings(self.config.basic["locale"])
@@ -154,9 +157,6 @@ class MainWindow(QMainWindow, WindowResizableMixin):
 
     def initWindow(self):
         # menu layout
-        menuWidget = QWidget()
-        menuWidget.setProperty("class", "menuBar")
-        menuWidget.setFixedHeight(43)
         self.settingsButton = QPushButton()
         self.skinButton = QPushButton("")
         self.languageCombobox = ComboBox()
@@ -177,58 +177,94 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.skinButton.setObjectName("menuItem")
         self.aboutButton.setObjectName("menuItem")
         self.functionalButton.setObjectName("menuItem")
-        menuLayout = QHBoxLayout()
-        menuWidget.setLayout(menuLayout)
-        menuLayout.addWidget(self.settingsButton)
-        menuLayout.addWidget(self.skinButton)
-        menuLayout.addWidget(self.aboutButton)
-        menuLayout.addWidget(self.languageCombobox)
-        menuLayout.addStretch(0)
-        menuLayout.addWidget(self.encodingCombobox)
-        menuLayout.addWidget(self.functionalButton)
 
         # title bar
         title = parameters.appName+" v"+version.__version__
         iconPath = self.DataPath+"/"+parameters.appIcon
         print("-- icon path: " + iconPath)
-        titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[menuWidget])
+        titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.aboutButton], []])
         WindowResizableMixin.__init__(self, titleBar=titleBar)
 
-        # main layout
+        # root layout
         self.frameWidget = QWidget()
         self.frameWidget.setMouseTracking(True)
-        contentWidget = QSplitter(Qt.Horizontal)
-        contentWidget.setProperty("class", "contentWraper")
-        contentWidget.setContentsMargins(5,5,5,5)
-        # self.contentLayout.setSpacing(0)
-        # self.contentLayout.setContentsMargins(0,0,0,0)
-        self.contentLayout.addWidget(contentWidget)
-        # frameLayout.addStretch(0)
         self.frameWidget.setLayout(self.rootLayout)
         self.setCentralWidget(self.frameWidget)
+        # tab widgets
+        def addTabPanel(tabWidget, name, plugin, connectionWidget = None):
+            '''
+                @return panenl widget, connectionWidget parent
+            '''
+            contentWidget = QSplitter(Qt.Horizontal)
+            contentWidget.setProperty("class", "contentWrapper")
+            # contentWidget.setContentsMargins(5,5,5,5)
+            tabWidget.addTab(contentWidget, name)
+            mainWidget = plugin.onWidgetMain(contentWidget, self)
 
-        # widget main
-        self.mainWidget = self.plugins[0].onWidgetMain(contentWidget, self)
+            # widgets settings
+            settingWidget = QWidget()
+            settingWidget.setProperty("class","settingWidget")
+            settingLayout = QVBoxLayout()
+            settingWidget.setLayout(settingLayout)
+            #    connection settings
+            connSettingsGroupBox = QGroupBox(_("Connection"))
+            layout = QVBoxLayout()
+            connSettingsGroupBox.setLayout(layout)
+            layout.addWidget(connectionWidget)
+            settingLayout.addWidget(connSettingsGroupBox)
+            #  other settings
+            widget = plugin.onWidgetSettings(settingLayout)
+            settingLayout.addWidget(widget)
+            settingLayout.setContentsMargins(0,0,0,0)
 
-        # widgets settings
-        self.settingWidget = QWidget()
-        self.settingWidget.setProperty("class","settingWidget")
-        settingLayout = QVBoxLayout()
-        self.settingWidget.setLayout(settingLayout)
-        #  connection settings
-        serialSettingsGroupBox = QGroupBox(self.strings.strSerialSettings)
-        layout = QVBoxLayout()
-        serialSettingsGroupBox.setLayout(layout)
-        widget = self.connection.onWidget()
-        layout.addWidget(widget)
-        settingLayout.addWidget(serialSettingsGroupBox)
-        #  other settings
-        widget = self.plugins[0].onWidgetSettings(settingLayout)
-        settingLayout.addWidget(widget)
-        settingLayout.setContentsMargins(0,0,0,0)
-
-        # right functional layout
-        self.functionalWiget = self.plugins[0].onWidgetFunctional(contentWidget)
+            # right functional layout
+            functionalWiget = plugin.onWidgetFunctional(contentWidget)
+            contentWidget.addWidget(settingWidget)
+            contentWidget.addWidget(mainWidget)
+            contentWidget.addWidget(functionalWiget)
+            contentWidget.setStretchFactor(0, 4)
+            contentWidget.setStretchFactor(1, 7)
+            contentWidget.setStretchFactor(2, 2)
+            return contentWidget, connSettingsGroupBox
+        self.tabWidget = QTabWidget()
+        # self.contentLayout.setSpacing(0)
+        # self.contentLayout.setContentsMargins(0,0,0,0)
+        # tab left menu
+        tabConerWidget = QWidget()
+        tabConerLayout = QHBoxLayout()
+        tabConerLayout.setSpacing(0)
+        tabConerLayout.setContentsMargins(0, 0, 0, 0)
+        tabConerWidget.setLayout(tabConerLayout)
+        tabConerLayout.addWidget(self.settingsButton)
+        # tab right menu
+        tabConerWidgetRight = QWidget()
+        tabConerLayoutRight = QHBoxLayout()
+        tabConerLayoutRight.setSpacing(0)
+        tabConerLayoutRight.setContentsMargins(0, 0, 0, 0)
+        tabConerWidgetRight.setLayout(tabConerLayoutRight)
+        tabConerLayoutRight.addWidget(self.languageCombobox)
+        tabConerLayoutRight.addWidget(self.encodingCombobox)
+        tabConerLayoutRight.addWidget(self.functionalButton)
+        self.tabWidget.setCornerWidget(tabConerWidget, Qt.TopLeftCorner)
+        self.tabWidget.setCornerWidget(tabConerWidgetRight, Qt.TopRightCorner)
+        self.contentLayout.addWidget(self.tabWidget)
+        # get widgets from plugins
+            # widget main
+        self.connectionWidget = self.connection.onWidget()
+        self.tabWidgets = []
+        self.connParentWidgets = []
+        for i, plugin in enumerate(self.plugins):
+            active = False
+            if plugin.id == self.config.basic["activePlugin"]:
+                active = True
+                conn = self.connectionWidget
+            else:
+                conn = None
+            w, connParent = addTabPanel(self.tabWidget, plugin.name, plugin, conn)
+            self.tabWidgets.append(w)
+            self.connParentWidgets.append(connParent)
+            if active:
+                self.tabWidget.setCurrentWidget(w)
 
         # main window
         self.statusBarStauts = QLabel()
@@ -245,13 +281,6 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.statusBarLayout.addWidget(self.statusBarSendCount,2)
         self.statusBarLayout.addWidget(self.statusBarReceiveCount,3)
         self.statusBar.setLayout(self.statusBarLayout)
-
-        contentWidget.addWidget(self.settingWidget)
-        contentWidget.addWidget(self.mainWidget)
-        contentWidget.addWidget(self.functionalWiget)
-        contentWidget.setStretchFactor(0, 4)
-        contentWidget.setStretchFactor(1, 7)
-        contentWidget.setStretchFactor(2, 2)
 
         self.contentLayout.addWidget(self.statusBar)
 
@@ -270,6 +299,8 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.functionalButton.clicked.connect(self.toggleFunctional)
         self.skinButton.clicked.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
+        # main
+        self.tabWidget.currentChanged.connect(lambda idx: self.changeConnToTab(idx))
         # others
         self.updateSignal.connect(self.showUpdate)
         self.hintSignal.connect(self.showHint)
@@ -316,6 +347,17 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             self.hintSignal.emit("error", _("Error"), str(e))
             return
         varObj.__setattr__(varName, v)
+
+    def changeConnToTab(self, idx):
+        print("-- switch to tab", idx)
+        parent = self.connectionWidget.parentWidget()
+        if parent.layout().indexOf(self.connectionWidget) >= 0:
+            parent.layout().removeWidget(self.connectionWidget)
+        newParent = self.connParentWidgets[idx]
+        newParent.layout().addWidget(self.connectionWidget)
+        self.updateStyle(parent)
+        self.updateStyle(newParent)
+        self.activePlugin(self.plugins[idx])
 
     def sendData(self, data_bytes=None, file_path=None, callback=lambda ok,msg:None):
         if data_bytes:
@@ -454,41 +496,50 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(config["encoding"]))
 
     def keyPressEvent(self, event):
-        self.plugins[0].onKeyReleaseEvent(event)
+        for plugin in self.plugins:
+            if plugin.active:
+                plugin.onKeyReleaseEvent(event)
 
     def keyReleaseEvent(self,event):
-        # call active plugin
-        self.plugins[0].onKeyReleaseEvent(event)
+        for plugin in self.plugins:
+            if plugin.active:
+                plugin.onKeyReleaseEvent(event)
 
     def toggleSettings(self):
-        if self.settingWidget.isVisible():
+        widget = self.tabWidget.currentWidget().widget(0)
+        if widget.isVisible():
             self.hideSettings()
         else:
             self.showSettings()
 
     def showSettings(self):
-        self.settingWidget.show()
+        widget = self.tabWidget.currentWidget().widget(0)
+        widget.show()
         self.settingsButton.setStyleSheet(
             parameters.strStyleShowHideButtonLeft.replace("$DataPath",self.DataPath))
 
     def hideSettings(self):
-        self.settingWidget.hide()
+        widget = self.tabWidget.currentWidget().widget(0)
+        widget.hide()
         self.settingsButton.setStyleSheet(
             parameters.strStyleShowHideButtonRight.replace("$DataPath", self.DataPath))
 
     def toggleFunctional(self):
-        if self.functionalWiget.isVisible():
+        widget = self.tabWidget.currentWidget().widget(2)
+        if widget.isVisible():
             self.hideFunctional()
         else:
             self.showFunctional()
 
     def showFunctional(self):
-        self.functionalWiget.show()
+        widget = self.tabWidget.currentWidget().widget(2)
+        widget.show()
         self.functionalButton.setStyleSheet(
             parameters.strStyleShowHideButtonRight.replace("$DataPath",self.DataPath))
 
     def hideFunctional(self):
-        self.functionalWiget.hide()
+        widget = self.tabWidget.currentWidget().widget(2)
+        widget.hide()
         self.functionalButton.setStyleSheet(
             parameters.strStyleShowHideButtonLeft.replace("$DataPath", self.DataPath))
 

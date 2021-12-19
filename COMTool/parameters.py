@@ -27,7 +27,6 @@ class Strings:
         self.strReceive = _("Receive")
         self.strSendSettings = _("Send Settings")
         self.strReceiveSettings = _("Receive Settings")
-        self.strSerialSettings = _("Serial Settings")
         self.strFunctionalSend = _("Functional Send")
         self.strClosed = _("Closed")
         self.strReady = _("Ready")

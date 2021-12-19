@@ -45,6 +45,7 @@ class Plugin(Plugin_Base):
     connParent = "main"
     connChilds = []
     id = "dbg"
+    name = _("Send Receive")
     # 
     receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
     sendFileOkSignal = pyqtSignal(bool, str)
@@ -433,6 +434,8 @@ class Plugin(Plugin_Base):
         topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 100
         if height + topHeight > self.funcParent.height():
             height = self.funcParent.height() - topHeight
+        if height < 0:
+            height = self.funcParent.height() // 3
         self.customSendScroll.setMinimumHeight(height)
         item = QWidget()
         layout = QHBoxLayout()

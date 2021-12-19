@@ -83,16 +83,12 @@ QWidget {
 .TitleBar .close:hover {
     background-color: #df2f25;
 }
-.menuBar {
-    background-color: #0b1722;
-}
 #menuItem {
     min-height:27px;
     height:27px;
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    background-color: #0b1722;
 }
 #menuItem:hover {
     min-height:27px;
@@ -100,7 +96,6 @@ QWidget {
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    background-color: #0b1722;
 }
 .menuItem1 {
     min-height:27px;
@@ -109,6 +104,7 @@ QWidget {
     width:27px;
     border-radius: 5px;
     margin-right:10px;
+    background-color: #f5f5f5;
     border-image: url("$DataPath/assets/arrow-left.png")
 }
 .menuItem1:hover {
@@ -121,9 +117,11 @@ QWidget {
     width:27px;
     border-radius: 5px;
     margin-right:10px;
+    background-color: #0b1722;
     border-image: url("$DataPath/assets/skin.png")
 }
 .menuItem2:hover {
+    background-color: #0b1722;
     border-image: url("$DataPath/assets/skin-white.png")
 }
 .menuItem3 {
@@ -133,9 +131,11 @@ QWidget {
     width:27px;
     border-radius: 5px;
     margin-right:10px;
+    background-color: #0b1722;
     border-image: url("$DataPath/assets/help.png")
 }
 .menuItem3:hover {
+    background-color: #0b1722;
     border-image: url("$DataPath/assets/help-white.png")
 }
 .menuItem4 {
@@ -145,23 +145,12 @@ QWidget {
     width:27px;
     border-radius: 5px;
     margin-right:0px;
+    background-color: #f5f5f5;
     border-image: url("$DataPath/assets/arrow-right.png")
 }
 .menuItem4:hover {
     margin-right:0px;
     border-image: url("$DataPath/assets/arrow-right-white.png")
-}
-.menuItem5 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
-    border-image: url("$DataPath/assets/wave.png")
-}
-.menuItem5:hover {
-    border-image: url("$DataPath/assets/wave-white.png")
 }
 .settingWidget QComboBox{
     width:60px;
@@ -386,3 +375,58 @@ QScrollArea {
     padding: 0;
     margin: 0;
 }
+
+QTabWidget::pane { /* The tab widget frame */
+    /* border-top: 2px solid #e6e6e6; */
+}
+
+QTabWidget::tab-bar {
+   /* left: 5px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+    color: #757575;
+    background: #e6e6e6;
+    border: 2px solid #e6e6e6;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    min-height: 10ex;
+    padding-left: 2ex;
+    padding-right: 2ex;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    color: white;
+    border-top-color: #0073d1;
+    border-left-color: #0073d1;
+    border-right-color: #0073d1;
+    background-color: #0f88eb;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}
+
+/* make use of negative margins for overlapping tabs */
+QTabBar::tab:selected {
+    /* expand/overlap to the left and right by 4px */
+    margin-left: -4px;
+    margin-right: -4px;
+}
+
+QTabBar::tab:first:selected {
+    margin-left: 0; /* the first selected tab has nothing to overlap with on the left */
+}
+
+QTabBar::tab:last:selected {
+    margin-right: 0; /* the last selected tab has nothing to overlap with on the right */
+}
+
+QTabBar::tab:only-one {
+    margin: 0; /* if there is only one tab, we don't want overlapping margins */
+}
+

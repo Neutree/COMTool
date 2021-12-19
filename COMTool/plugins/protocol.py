@@ -10,7 +10,12 @@ except ImportError:
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
 
-class Plugin_Base(QObject):
+try:
+    from base import Plugin_Base
+except Exception:
+    from .base import Plugin_Base
+
+class Plugin(Plugin_Base):
     '''
         call sequence:
             set vars like hintSignal, hintSignal
@@ -30,7 +35,8 @@ class Plugin_Base(QObject):
     # other vars
     connParent = "main"      # parent id
     connChilds = []          # children ids
-    id = ""
+    id = "protocol"
+    name = _("protocol")
 
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
@@ -51,13 +57,22 @@ class Plugin_Base(QObject):
                 self.plugins_info[p.id] = p
 
     def onWidgetMain(self, parent, rootWindow):
-        raise NotImplementedError()
+        self.mainWidget = QWidget()
+        layout = QVBoxLayout()
+        self.mainWidget.setLayout(layout)
+        return self.mainWidget
 
     def onWidgetSettings(self, parent):
-        raise NotImplementedError()
+        self.settingsWidget = QWidget()
+        layout = QVBoxLayout()
+        self.settingsWidget.setLayout(layout)
+        return self.settingsWidget
 
     def onWidgetFunctional(self, parent):
-        return None
+        self.funcWidget = QWidget()
+        layout = QVBoxLayout()
+        self.funcWidget.setLayout(layout)
+        return self.funcWidget
 
     def onReceived(self, data : bytes):
         for id in self.connChilds:

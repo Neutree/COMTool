@@ -11,7 +11,9 @@ class TitleBar(QWidget):
                             ["□", "❒"],
                             "×", ["○", "●"]
                         ],
-                        brothers=[]) -> None:
+                        brothers=[],
+                        widgets=[[], []]
+                ) -> None:
         super().__init__()
         self._height = height
         self.parent = parent
@@ -47,21 +49,31 @@ class TitleBar(QWidget):
         self.close = QPushButton(btnContents[2])
         self.top = QPushButton(btnContents[3][0])
         self.title = QLabel(title)
+        widgets_l, widgets_r = widgets
         if sys.platform.startswith("darwin"):
             layout.addWidget(self.close)
             layout.addWidget(self.max)
             layout.addWidget(self.min)
-            layout.addStretch(1)
-            layout.addWidget(self.top)
-            layout.addWidget(self.title)
+            for w in widgets_r:
+                layout.addWidget(w)
+            layout.addStretch(0)
             if iconWidget:
                 layout.addWidget(iconWidget)
+            layout.addWidget(self.title)
+            layout.addStretch(0)
+            layout.addWidget(self.top)
+            for w in widgets_l:
+                layout.addWidget(w)
         else:
             if iconWidget:
                 layout.addWidget(iconWidget)
             layout.addWidget(self.title)
             layout.addWidget(self.top)
-            layout.addStretch(1)
+            for w in widgets_l:
+                layout.addWidget(w)
+            layout.addStretch(0)
+            for w in widgets_r:
+                layout.addWidget(w)
             layout.addWidget(self.min)
             layout.addWidget(self.max)
             layout.addWidget(self.close)
