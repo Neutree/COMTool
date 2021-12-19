@@ -1,5 +1,4 @@
 import sys,os
-from typing import TextIO
 
 if sys.version_info < (3, 8):
     print("only support python >= 3.8, but now is {}".format(sys.version_info))
@@ -124,13 +123,14 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             p.active = False
         plugin.active = True
         parent = None
-        if (not "main" in plugin.connParent) and (plugin.connParent):
+        if (not "main" in plugin.connParent) and plugin.connParent:
             plugin.isConnected = self.connection.isConnected
             for pluginParent in self.plugins:
                 if pluginParent.id == plugin.connParent:
                     pluginParent.active = True
                     pluginParent.isConnected = self.connection.isConnected
                     pluginParent.send = self.sendData
+                    pluginParent.connChilds.append(plugin)
                     parent = pluginParent
                     break
             plugin.send = parent.sendData
@@ -276,10 +276,10 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.statusBar.setProperty("class", "statusBar")
         self.statusBarLayout = QHBoxLayout()
         self.statusBarLayout.setSpacing(0)
-        self.statusBarLayout.setContentsMargins(0, 0, 0, 0)
+        self.statusBarLayout.setContentsMargins(0, 5, 0, 0)
         self.statusBarLayout.addWidget(self.statusBarStauts)
-        self.statusBarLayout.addWidget(self.statusBarSendCount,2)
-        self.statusBarLayout.addWidget(self.statusBarReceiveCount,3)
+        self.statusBarLayout.addWidget(self.statusBarSendCount)
+        self.statusBarLayout.addWidget(self.statusBarReceiveCount)
         self.statusBar.setLayout(self.statusBarLayout)
 
         self.contentLayout.addWidget(self.statusBar)
@@ -407,9 +407,11 @@ class MainWindow(QMainWindow, WindowResizableMixin):
                     callback(ok, "")
                 time.sleep(0.001)
             except Exception as e:
+                import traceback
+                traceback.print_exc()
                 if 'multiple access' in str(e):
                     self.hintSignal.emit("error", _("Error"), "device disconnected or multiple access on port?")
-                break
+                continue
 
     def onUpdateCountUi(self, send, receive):
         self.statusBarSendCount.setText('{}({}): {}'.format(_("Sent"), _("bytes"), send))

@@ -207,6 +207,7 @@ class Plugin(Plugin_Base):
 
     def onWidgetFunctional(self, parent):
         sendFunctionalLayout = QVBoxLayout()
+        sendFunctionalLayout.setContentsMargins(0,0,0,0)
         # right functional layout
         self.filePathWidget = QLineEdit()
         self.openFileButton = QPushButton(_("Open File"))
@@ -773,6 +774,9 @@ class Plugin(Plugin_Base):
 
     def onReceived(self, data : bytes):
         self.receivedData.append(data)
+        for plugin in self.connChilds:
+            if plugin.active:
+                plugin.onReceived(data)
         self.lock.release()
 
     def receiveDataProcess(self):

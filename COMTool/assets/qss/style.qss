@@ -276,7 +276,7 @@ QPushButton:default {
     min-width: 30px;
 }
 
-QTextEdit, QListView {
+QTextEdit, QPlainTextEdit, QListView {
     background-color: #f5f5f5;
     border: 2px solid #e6e6e6;
     border-radius: 5px;
