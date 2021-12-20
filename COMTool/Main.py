@@ -45,6 +45,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
     updateSignal = pyqtSignal(object)
     countUpdateSignal = pyqtSignal(int, int)
     clearCountSignal = pyqtSignal()
+    reloadWindowSignal = pyqtSignal(str, str, object)
     receiveCount = 0
     sendCount = 0
     DataPath = "./"
@@ -100,6 +101,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             plugin.hintSignal = self.hintSignal
             plugin.send = self.sendData
             plugin.clearCountSignal = self.clearCountSignal
+            plugin.reloadWindowSignal = self.reloadWindowSignal
             plugin.configGlobal = self.config.basic
             config = {}
             if plugin.id in configs:
@@ -306,6 +308,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.hintSignal.connect(self.showHint)
         self.statusBarSignal.connect(self.onstatusBarText)
         self.clearCountSignal.connect(self.onClearCount)
+        self.reloadWindowSignal.connect(self.onReloadWindow)
         self.countUpdateSignal.connect(self.onUpdateCountUi)
 
     def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False):
@@ -445,6 +448,19 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         if reply == QMessageBox.Yes:
             self.needRestart = True
             self.close()
+
+    def onReloadWindow(self, title, msg, callback):
+        if not title:
+            title = _('Restart now?')
+        reply = QMessageBox.question(self, title, msg,
+                            QMessageBox.Yes |
+                            QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            callback(True)
+            self.needRestart = True
+            self.close()
+        else:
+            callback(False)
 
     def onClearCount(self):
         self.receiveCount = 0

@@ -18,8 +18,14 @@ except ImportError:
 
 try:
     from base import Plugin_Base
+    import crc
 except Exception:
     from .base import Plugin_Base
+    from . import crc
+
+import os, json
+from struct import unpack, pack
+
 
 defaultCodes = {
     "default":
@@ -33,13 +39,55 @@ def encode(data):
 
     "maix-mm": 
 '''
-def decode(data):
-    data += b'123'
-    return data
+version = 1
+def decode(raw : bytes):
+    print("decode...")
+    print(globals().keys())
+    # find valid header and body, and check parity sum
+    if not raw:
+        return b''
+    idx = raw.find(b'\\xAA\\xCA\\xAC\\xBB')
+    if idx < 0:
+        return b''
+    raw = raw[idx:]
+    # check frame length, not enough a frame
+    if len(raw) < 12:
+        return b''
+    _version = raw[4]
+    if _version != version:
+        print(f"protocol version is {_version}, but support is {version}")
+        return b''
+    # get cmd type
+    cmd = raw[5]
+    length = unpack("I", raw[6:10])[0]
+    # check body length, not enough body
+    if len(raw) < length + 12:
+        return b''
+    # checksum
+    crc0 = unpack("H", raw[10 + length : 12 + length])[0]
+    crc = crc.crc16(raw[:10 + length])
+    if crc0 != crc:
+        raw = raw[12+length:]
+        return b''
+    # get body
+    body = raw[10:length + 10]
+    # remove parsed bytes
+    raw = raw[12+length:]
+    return body
 
 def encode(data):
-    data += b'123'
-    return data
+    print("encode...")
+    print(globals().keys())
+    cmd = data[0]
+    body = data[1:]
+    header = b'\\xAA\\xCA\\xAC\\xBB'
+    data_len = len(body)
+    data_len = pack("I", data_len)
+    frame = header + bytes([version]) + bytes([cmd]) + data_len + body
+    crc = crc.crc16(frame)
+    crc = pack("H", crc)
+    frame += crc
+    return frame
 '''
 }
 
@@ -99,7 +147,7 @@ class Plugin(Plugin_Base):
             if not k in self.config:
                 self.config[k] = default[k]
         self.editingDefaults = False
-        self.codeGlobals = {}
+        self.codeGlobals = {"unpack": unpack, "pack": pack, "crc": crc}
         self.encodeMethod = lambda x:x
         self.decodeMethod = lambda x:x
 
@@ -205,8 +253,46 @@ class Plugin(Plugin_Base):
     def onWidgetFunctional(self, parent):
         self.funcParent = parent
         self.funcWidget = QWidget()
-        layout = QVBoxLayout()
-        self.funcWidget.setLayout(layout)
+        layout0 = QVBoxLayout()
+        loadConfigBtn = QPushButton(_("Load config"))
+        shareConfigBtn = QPushButton(_("Share config"))
+        layout0.addWidget(loadConfigBtn)
+        layout0.addWidget(shareConfigBtn)
+        layout0.addStretch()
+        self.funcWidget.setLayout(layout0)
+        # event
+        def selectSharefile():
+            oldPath = os.getcwd()
+            fileName_choose, filetype = QFileDialog.getSaveFileName(self.funcWidget,
+                                _("Select file"),
+                                os.path.join(oldPath, "comtool.protocol.json"),
+                                _("json file (*.json);;config file (*.conf);;All Files (*)"))
+            if fileName_choose != "":
+                with open(fileName_choose, "w", encoding="utf-8") as f:
+                    json.dump(self.config, f, indent=4, ensure_ascii=False)
+
+        def selectLoadfile():
+            oldPath = os.getcwd()
+            fileName_choose, filetype = QFileDialog.getOpenFileName(self.funcWidget,
+                                    _("Select file"),
+                                    oldPath,
+                                    _("json file (*.json);;config file (*.conf);;All Files (*)"))
+            if fileName_choose != "":
+                with open(fileName_choose, "r", encoding="utf-8") as f:
+                    config = json.load( f)
+                    self.oldConfig = self.config.copy()
+                    self.config.clear()
+                    for k in config:
+                        self.config[k] = config[k]
+                    def onClose(ok):
+                        if not ok:
+                            self.config.clear()
+                            self.config.update(self.oldConfig)
+                    self.reloadWindowSignal.emit("", _("Restart to load config?"), onClose)
+
+
+        loadConfigBtn.clicked.connect(lambda : selectLoadfile())
+        shareConfigBtn.clicked.connect(lambda : selectSharefile())
         return self.funcWidget
 
     def onUiInitDone(self):
@@ -292,15 +378,26 @@ class Plugin(Plugin_Base):
                 self.receiveWidget.moveCursor(QTextCursor.End)
 
     def onReceived(self, data : bytes):
-        data = self.encodeMethod(data)
+        try:
+            data = self.decodeMethod(data)
+        except Exception as e:
+            self.hintSignal.emit("error", _("Error"), _("Run decode error") + " " + str(e))
+            return
+        if not data:
+            return
         for id in self.connChilds:
             self.plugins_info[id].onReceived(data)
         text = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], False)
         self.showReceiveDataSignal.emit(text)
 
     def sendData(self, data_bytes=None):
-        data_bytes = self.encodeMethod(data_bytes)
-        self.send(data_bytes)
+        try:
+            data_bytes = self.encodeMethod(data_bytes)
+        except Exception as e:
+            self.hintSignal.emit("error", _("Error"), _("Run encode error") + " " + str(e))
+            return
+        if data_bytes:
+            self.send(data_bytes)
 
     def sendCustomItem(self, text):
         dateBytes = self.parseSendData(text, self.configGlobal["encoding"], self.config["useCRLF"], not self.config["sendAscii"], self.config["sendEscape"])
