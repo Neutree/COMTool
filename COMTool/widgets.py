@@ -1,5 +1,5 @@
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit
 from PyQt5.QtGui import QIcon, QPixmap, QPainter
 import os, sys
 
@@ -245,6 +245,27 @@ class WindowResizableMixin:
         self._right_drag = False
         self.setCursor(Qt.ArrowCursor)
 
+class TextEdit(QTextEdit):
+    def __init__(self,parent=None):
+        super(TextEdit,self).__init__(parent=None)
+
+    def keyPressEvent(self,event):
+        if event.key() == Qt.Key_Tab:                
+            tc = self.textCursor()
+            tc.insertText("    ")
+            return
+        return QTextEdit.keyPressEvent(self,event)
+
+class PlainTextEdit(QPlainTextEdit):
+    def __init__(self,parent=None):
+        super(QPlainTextEdit,self).__init__(parent=None)
+
+    def keyPressEvent(self,event):
+        if event.key() == Qt.Key_Tab:                
+            tc = self.textCursor()
+            tc.insertText("    ")
+            return
+        return QPlainTextEdit.keyPressEvent(self,event)
 
 if __name__ == "__main__":
     import sys

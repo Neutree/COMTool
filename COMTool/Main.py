@@ -222,9 +222,9 @@ class MainWindow(QMainWindow, WindowResizableMixin):
             contentWidget.addWidget(settingWidget)
             contentWidget.addWidget(mainWidget)
             contentWidget.addWidget(functionalWiget)
-            contentWidget.setStretchFactor(0, 4)
-            contentWidget.setStretchFactor(1, 7)
-            contentWidget.setStretchFactor(2, 2)
+            contentWidget.setStretchFactor(0, 1)
+            contentWidget.setStretchFactor(1, 2)
+            contentWidget.setStretchFactor(2, 1)
             return contentWidget, connSettingsGroupBox
         self.tabWidget = QTabWidget()
         # self.contentLayout.setSpacing(0)

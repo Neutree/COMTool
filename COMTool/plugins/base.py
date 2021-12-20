@@ -6,7 +6,9 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesk
 try:
     from Combobox import ComboBox
     from i18n import _
+    import utils
 except ImportError:
+    from COMTool import utils
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
 
@@ -19,7 +21,6 @@ class Plugin_Base(QObject):
             onUiInitDone
                 send
                 onReceived
-            getConfig
     '''
     # vars set by caller
     isConnected = lambda : False
@@ -43,7 +44,10 @@ class Plugin_Base(QObject):
     def onInit(self, config, plugins):
         '''
             init params, DO NOT take too long time in this func
+            @config dict type, just change this var's content,
+                               when program exit, this config will be auto save to config file
         '''
+        self.config = config
         self.plugins = plugins
         self.plugins_info = {}
         for p in self.plugins:
@@ -68,13 +72,6 @@ class Plugin_Base(QObject):
 
     def onKeyReleaseEvent(self, event):
         pass
-
-    def getConfig(self):
-        '''
-            get config, dict type
-            this method runs in UI thread, do not block too long
-        '''
-        return {}
 
     def onUiInitDone(self):
         '''
@@ -117,4 +114,88 @@ class Plugin_Base(QObject):
             return
         varObj[varName] = v
 
+    def parseSendData(self, data:str, encoding, usrCRLF=False, isHexStr=False, escape=False):
+        if not data:
+            return b''
+        if usrCRLF:
+            data = data.replace("\n", "\r\n")
+        if isHexStr:
+            if usrCRLF:
+                data = data.replace("\r\n", " ")
+            else:
+                data = data.replace("\n", " ")
+            data = utils.hex_str_to_bytes(data)
+            if data == -1:
+                self.hintSignal.emit("error", _("Error"), _("Format error, should be like 00 01 02 03"))
+                return b''
+        else:
+            if not escape:
+                data = data.encode(encoding,"ignore")
+            else: # '11234abcd\n123你好\r\n\thello\x00\x01\x02'
+                final = b""
+                p = 0
+                escapes = {
+                    "a": (b'\a', 2),
+                    "b": (b'\b', 2),
+                    "f": (b'\f', 2),
+                    "n": (b'\n', 2),
+                    "r": (b'\r', 2),
+                    "t": (b'\t', 2),
+                    "v": (b'\v', 2),
+                    "\\": (b'\\', 2),
+                    "\'": (b"'", 2),
+                    '\"': (b'"', 2),
+                }
+                octstr = ["0", "1", "2", "3", "4", "5", "6", "7"]
+                while 1:
+                    idx = data[p:].find("\\")
+                    if idx < 0:
+                        final += data[p:].encode(encoding, "ignore")
+                        break
+                    final += data[p : p + idx].encode(encoding, "ignore")
+                    p += idx
+                    e = data[p+1]
+                    if e in escapes:
+                        r = escapes[e][0]
+                        p += escapes[e][1]
+                    elif e == "x": # \x01
+                        try:
+                            r = bytes([int(data[p+2 : p+4], base=16)])
+                            p += 4
+                        except Exception:
+                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
+                            return b''
+                    elif e in octstr and len(data) > (p+2) and data[p+2] in octstr: # \dd or \ddd e.g. \001
+                        try:
+                            twoOct = False
+                            if len(data) > (p+3) and data[p+3] in octstr: # \ddd
+                                try:
+                                    r = bytes([int(data[p+1 : p+4], base=8)])
+                                    p += 4
+                                except Exception:
+                                    twoOct = True
+                            else:
+                                twoOct = True
+                            if twoOct:
+                                r = bytes([int(data[p+1 : p+3], base=8)])
+                                p += 3
+                        except Exception as e:
+                            print(e)
+                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
+                            return b''
+                    else:
+                        r = data[p: p+2].encode(encoding, "ignore")
+                        p += 2
+                    final += r
 
+                data = final
+        return data
+
+    def decodeReceivedData(self, data:bytes, encoding, isHexStr = False, escape=False):
+        if isHexStr:
+            data = utils.bytes_to_hex_str(data)
+        elif escape:
+            data = str(data)[2:-1] # b'1234\x01' => "b'1234\\x01'" =>"1234\\x01"
+        else:
+            data = data.decode(encoding=encoding, errors="ignore")
+        return data

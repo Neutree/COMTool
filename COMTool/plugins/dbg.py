@@ -34,7 +34,6 @@ class Plugin(Plugin_Base):
             onUiInitDone
                 send
                 onReceived
-            getConfig
     '''
     # vars set by caller
     send = None              # send(data_bytes=None, file_path=None)
@@ -484,82 +483,7 @@ class Plugin(Plugin_Base):
     def getSendData(self, data=None) -> bytes:
         if data is None:
             data = self.sendArea.toPlainText()
-        if not data:
-            return b''
-        if self.config["useCRLF"]:
-            data = data.replace("\n", "\r\n")
-        if not self.config["sendAscii"]:
-            if self.config["useCRLF"]:
-                data = data.replace("\r\n", " ")
-            else:
-                data = data.replace("\n", " ")
-            data = utils.hex_str_to_bytes(data)
-            if data == -1:
-                self.hintSignal.emit("error", _("Error"), _("Format error, should be like 00 01 02 03"))
-                return b''
-        else:
-            encoding = self.configGlobal["encoding"]
-            if not self.config["sendEscape"]:
-                data = data.encode(encoding,"ignore")
-            else: # '11234abcd\n123你好\r\n\thello\x00\x01\x02'
-                final = b""
-                p = 0
-                escapes = {
-                    "a": (b'\a', 2),
-                    "b": (b'\b', 2),
-                    "f": (b'\f', 2),
-                    "n": (b'\n', 2),
-                    "r": (b'\r', 2),
-                    "t": (b'\t', 2),
-                    "v": (b'\v', 2),
-                    "\\": (b'\\', 2),
-                    "\'": (b"'", 2),
-                    '\"': (b'"', 2),
-                }
-                octstr = ["0", "1", "2", "3", "4", "5", "6", "7"]
-                while 1:
-                    idx = data[p:].find("\\")
-                    if idx < 0:
-                        final += data[p:].encode(encoding, "ignore")
-                        break
-                    final += data[p : p + idx].encode(encoding, "ignore")
-                    p += idx
-                    e = data[p+1]
-                    if e in escapes:
-                        r = escapes[e][0]
-                        p += escapes[e][1]
-                    elif e == "x": # \x01
-                        try:
-                            r = bytes([int(data[p+2 : p+4], base=16)])
-                            p += 4
-                        except Exception:
-                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
-                            return b''
-                    elif e in octstr and len(data) > (p+2) and data[p+2] in octstr: # \dd or \ddd e.g. \001
-                        try:
-                            twoOct = False
-                            if len(data) > (p+3) and data[p+3] in octstr: # \ddd
-                                try:
-                                    r = bytes([int(data[p+1 : p+4], base=8)])
-                                    p += 4
-                                except Exception:
-                                    twoOct = True
-                            else:
-                                twoOct = True
-                            if twoOct:
-                                r = bytes([int(data[p+1 : p+3], base=8)])
-                                p += 3
-                        except Exception as e:
-                            print(e)
-                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
-                            return b''
-                    else:
-                        r = data[p: p+2].encode(encoding, "ignore")
-                        p += 2
-                    final += r
-
-                data = final
-        return data
+        return self.parseSendData(data, self.configGlobal["encoding"], self.config["useCRLF"], not self.config["sendAscii"], self.config["sendEscape"])
 
     def sendFile(self):
         filename = self.filePathWidget.text()
@@ -600,9 +524,9 @@ class Plugin(Plugin_Base):
                         head += '[{}] '.format(utils.datetime_format_ms(datetime.now()))
                     isHexStr, sendStr, sendStrsColored = self.bytes2String(data, not self.config["receiveAscii"], encoding=self.configGlobal["encoding"])
                     if isHexStr:
-                        head += "[HEX] "
                         sendStr = sendStr.upper()
                         sendStrsColored= sendStr
+                        head += "[HEX] "
                     if self.config["useCRLF"]:
                         head = "\r\n" + head
                     else:
@@ -805,11 +729,13 @@ class Plugin(Plugin_Base):
             data = ""
             # have data in buffer
             if len(buffer) > 0:
+                hexstr = False
                 # show as hex, just show
                 if not self.config["receiveAscii"]:
                     data = utils.bytes_to_hex_str(buffer)
                     colorData = data
                     buffer = b''
+                    hexstr = True
                 # show as string, and don't need to render color
                 elif not self.config["color"]:
                     data = buffer.decode(encoding=self.configGlobal["encoding"], errors="ignore")
@@ -823,14 +749,21 @@ class Plugin(Plugin_Base):
                 # add time receive head
                 # get data from buffer, now render
                 if data:
-                    # add time header
+                    # add time header, head format(send receive '123' for example):
+                    # '123'  '[2021-12-20 11:02:08.02.754]: 123' '=> 12' '<= 123'
+                    # '=> [2021-12-20 11:02:34.02.291]: 123' '<= [2021-12-20 11:02:40.02.783]: 123' 
+                    # '<= [2021-12-20 11:03:25.03.320] [HEX]: 31 32 33 ' '=> [2021-12-20 11:03:27.03.319] [HEX]: 31 32 33'
                     if new_line:
                         timeNow = '[{}] '.format(utils.datetime_format_ms(datetime.now()))
                         if self.config["recordSend"]:
-                            head += "<= " 
+                            head += "<= "
                         if self.config["showTimestamp"]:
                             head += timeNow
-                            head = '{}: '.format(head.rstrip())
+                            head = '{} '.format(head.rstrip())
+                        if hexstr:
+                            head += "[HEX] "
+                        if (self.config["recordSend"] or self.config["showTimestamp"]) and not head.endswith("<= "):
+                            head = head[:-1] + ": "
                         new_line = False
                     self.receiveUpdateSignal.emit(head, [colorData], self.configGlobal["encoding"])
                     logData = head + data
