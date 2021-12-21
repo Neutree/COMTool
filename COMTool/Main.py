@@ -30,6 +30,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesk
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
+import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import threading
 import time
 from datetime import datetime

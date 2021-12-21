@@ -25,7 +25,8 @@ else:
     installRequires = ['pyqt5>=5',
                       'pyserial>=3.4',
                       'requests',
-                      'Babel'
+                      'Babel',
+                      'qtawesome'
                       ]
 
 setup(

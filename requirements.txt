@@ -2,3 +2,4 @@ PyQt5>=5.15.6
 pyserial>=3.5
 requests>=2.25.1
 Babel>=2.9.1
+qtawesome

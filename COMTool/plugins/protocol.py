@@ -2,8 +2,9 @@
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QInputDialog)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QFontMetricsF
+import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 
 try:
     import parameters
@@ -19,77 +20,14 @@ except ImportError:
 try:
     from base import Plugin_Base
     import crc
+    from protocols import defaultProtocols
 except Exception:
     from .base import Plugin_Base
     from . import crc
+    from .protocols import defaultProtocols
 
 import os, json
 from struct import unpack, pack
-
-
-defaultCodes = {
-    "default":
-'''
-def decode(data):
-    return data
-
-def encode(data):
-    return data
-''',
-
-    "maix-mm": 
-'''
-version = 1
-def decode(raw : bytes):
-    print("decode...")
-    print(globals().keys())
-    # find valid header and body, and check parity sum
-    if not raw:
-        return b''
-    idx = raw.find(b'\\xAA\\xCA\\xAC\\xBB')
-    if idx < 0:
-        return b''
-    raw = raw[idx:]
-    # check frame length, not enough a frame
-    if len(raw) < 12:
-        return b''
-    _version = raw[4]
-    if _version != version:
-        print(f"protocol version is {_version}, but support is {version}")
-        return b''
-    # get cmd type
-    cmd = raw[5]
-    length = unpack("I", raw[6:10])[0]
-    # check body length, not enough body
-    if len(raw) < length + 12:
-        return b''
-    # checksum
-    crc0 = unpack("H", raw[10 + length : 12 + length])[0]
-    crc = crc.crc16(raw[:10 + length])
-    if crc0 != crc:
-        raw = raw[12+length:]
-        return b''
-    # get body
-    body = raw[10:length + 10]
-    # remove parsed bytes
-    raw = raw[12+length:]
-    return body
-
-def encode(data):
-    print("encode...")
-    print(globals().keys())
-    cmd = data[0]
-    body = data[1:]
-    header = b'\\xAA\\xCA\\xAC\\xBB'
-    data_len = len(body)
-    data_len = pack("I", data_len)
-    frame = header + bytes([version]) + bytes([cmd]) + data_len + body
-    crc = crc.crc16(frame)
-    crc = pack("H", crc)
-    frame += crc
-    return frame
-'''
-}
 
 
 class Plugin(Plugin_Base):
@@ -138,7 +76,7 @@ class Plugin(Plugin_Base):
             "sendAscii" : True,
             "useCRLF" : True,
             "sendEscape" : False,
-            "code": defaultCodes.copy(),
+            "code": defaultProtocols.copy(),
             "currCode": "default",
             "customSendItems": []
         }
@@ -157,8 +95,8 @@ class Plugin(Plugin_Base):
         font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
         self.receiveWidget.setFont(font)
         self.receiveWidget.setLineWrapMode(TextEdit.NoWrap)
-        self.clearBtn = QPushButton(_("Clear"))
-        self.addButton = QPushButton(_("+"))
+        self.clearBtn = QPushButton(qta.icon("mdi6.broom"), "")
+        self.addButton = QPushButton(qta.icon("fa.plus"), "")
         self.customSendScroll = QScrollArea()
         self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight + 20)
         self.customSendScroll.setWidgetResizable(True)
@@ -300,8 +238,8 @@ class Plugin(Plugin_Base):
             UI init done, you can update your widget here
             this method runs in UI thread, do not block too long
         '''
-        for text in self.config["customSendItems"]:
-            self.insertSendItem(text, load=True)
+        for item in self.config["customSendItems"]:
+            self.insertSendItem(item, load=True)
         self.sendSettingsAscii.setChecked(self.config["sendAscii"])
         self.sendSettingsHex.setChecked(not self.config["sendAscii"])
         self.sendSettingsCRLF.setChecked(self.config["useCRLF"])
@@ -327,7 +265,7 @@ class Plugin(Plugin_Base):
     def onKeyReleaseEvent(self, event):
         pass
 
-    def insertSendItem(self, text="", load = False):
+    def insertSendItem(self, item = {"text": "", "remark": None}, load = False):
         # itemsNum = self.customSendItemsLayout.count() + 1
         # height = parameters.customSendItemHeight * (itemsNum + 1) + 20
         # topHeight = self.receiveWidget.height() + 100
@@ -336,26 +274,42 @@ class Plugin(Plugin_Base):
         # if height < 0:
         #     height = self.funcParent.height() // 3
         # self.customSendScroll.setMinimumHeight(height)
-        item = QWidget()
+        text = item["text"]
+        remark = item["remark"]
+        itemWidget = QWidget()
         layout = QHBoxLayout()
         layout.setContentsMargins(0,0,0,0)
-        item.setLayout(layout)
+        itemWidget.setLayout(layout)
         cmd = QLineEdit(text)
-        send = QPushButton(_("Send"))
+        if remark:
+            send = QPushButton(remark)
+        else:
+            send = QPushButton(qta.icon('fa.send'), "")
+        editRemark = QPushButton(qta.icon('ei.pencil'), "")
+        editRemark.setProperty("class", "remark")
         cmd.setToolTip(text)
         send.setToolTip(text)
-        cmd.textChanged.connect(lambda: self.onCustomItemChange(self.customSendItemsLayout.indexOf(item), cmd, send))
+        cmd.textChanged.connect(lambda: self.onCustomItemChange(self.customSendItemsLayout.indexOf(itemWidget), cmd, send))
         send.setProperty("class", "smallBtn")
-        send.clicked.connect(lambda: self.sendCustomItem(self.config["customSendItems"][self.customSendItemsLayout.indexOf(item)]))
-        delete = QPushButton("x")
+        def sendCustomData(idx):
+            self.sendCustomItem(self.config["customSendItems"][idx])
+        send.clicked.connect(lambda: sendCustomData(self.customSendItemsLayout.indexOf(itemWidget)))
+        delete = QPushButton(qta.icon('fa.close'), "")
         delete.setProperty("class", "deleteBtn")
         layout.addWidget(cmd)
         layout.addWidget(send)
+        layout.addWidget(editRemark)
         layout.addWidget(delete)
-        delete.clicked.connect(lambda: self.deleteSendItem(self.customSendItemsLayout.indexOf(item), item))
-        self.customSendItemsLayout.addWidget(item)
+        delete.clicked.connect(lambda: self.deleteSendItem(self.customSendItemsLayout.indexOf(itemWidget), itemWidget))
+        def changeRemark(idx, obj):
+            remark ,ok = QInputDialog.getText(self.mainWidget, _("Input"), _("Input remark"), text = obj.text())
+            if ok:
+                obj.setText(remark)
+                self.config["customSendItems"][idx]["remark"] = remark
+        editRemark.clicked.connect(lambda: changeRemark(self.customSendItemsLayout.indexOf(itemWidget), send))
+        self.customSendItemsLayout.addWidget(itemWidget)
         if not load:
-            self.config["customSendItems"].append("")
+            self.config["customSendItems"].append(item)
 
     def deleteSendItem(self, idx, item):
         item.setParent(None)
@@ -387,8 +341,9 @@ class Plugin(Plugin_Base):
             return
         for id in self.connChilds:
             self.plugins_info[id].onReceived(data)
-        text = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], False)
-        self.showReceiveDataSignal.emit(text)
+        if type(data) != str:
+            data = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], self.config["sendEscape"])
+        self.showReceiveDataSignal.emit(data + "\n")
 
     def sendData(self, data_bytes=None):
         try:
@@ -399,15 +354,21 @@ class Plugin(Plugin_Base):
         if data_bytes:
             self.send(data_bytes)
 
-    def sendCustomItem(self, text):
+    def sendCustomItem(self, item):
+        text = item["text"]
         dateBytes = self.parseSendData(text, self.configGlobal["encoding"], self.config["useCRLF"], not self.config["sendAscii"], self.config["sendEscape"])
-        self.sendData(data_bytes = dateBytes)
+        if dateBytes:
+            self.sendData(data_bytes = dateBytes)
 
     def onCustomItemChange(self, idx, edit, send):
         text = edit.text()
         edit.setToolTip(text)
         send.setToolTip(text)
-        self.config["customSendItems"][idx] = text
+        item = {
+            "text": text,
+            "remark": send.text()
+        }
+        self.config["customSendItems"][idx] = item
 
     def onCodeItemChanged(self):
         if self.editingDefaults:
@@ -418,13 +379,13 @@ class Plugin(Plugin_Base):
             self.editingDefaults = False
             return
         if self.codeItems.currentText() == self.codeItemLoadDefaultsStr:
-            for name in defaultCodes:
+            for name in defaultProtocols:
                 idx = self.codeItems.findText(name)
                 if idx >= 0:
                     self.codeItems.removeItem(idx)
                 print(self.codeItems.count(), self.codeItems.count() - 2)
                 self.codeItems.insertItem(self.codeItems.count() - 2, name)
-                self.config["code"][name] = defaultCodes[name]
+                self.config["code"][name] = defaultProtocols[name]
             self.codeItems.setCurrentIndex(0)
             self.selectCode(self.codeItems.currentText())
             self.editingDefaults = False

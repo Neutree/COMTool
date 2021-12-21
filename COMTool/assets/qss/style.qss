@@ -16,13 +16,11 @@ MainWindow {
 }
 QWidget {
     background-color:#f5f5f5;
+    color:#6b6b6b;
+    font-family: "Microsoft YaHei",Tahoma,Optima,"Trebuchet MS";
 }
 QMessageBox {
     background-color:#f5f5f5;
-}
-QWidget {
-    color:#6b6b6b;
-    font-family: "Microsoft YaHei",Tahoma,Optima,"Trebuchet MS";
 }
 .TitleBar {
     background-color: #0b1722;
@@ -276,6 +274,13 @@ QPushButton:default {
     min-width: 30px;
 }
 
+.remark {
+    min-width: 10px;
+    min-height: 10px;
+    width: 20px;
+    height: 20px;
+}
+
 QTextEdit, QPlainTextEdit, QListView {
     background-color: #f5f5f5;
     border: 2px solid #e6e6e6;
@@ -394,7 +399,7 @@ QTabBar::tab {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     min-width: 8ex;
-    min-height: 38px;
+    min-height: 34px;
     padding-left: 2ex;
     padding-right: 2ex;
 }

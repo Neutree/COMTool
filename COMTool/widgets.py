@@ -1,16 +1,13 @@
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit
 from PyQt5.QtGui import QIcon, QPixmap, QPainter
+import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
 class TitleBar(QWidget):
     windowMovedSignal = pyqtSignal(QPoint)
     def __init__(self, parent, icon=None, title="", height=35,
-                        btnContents=[
-                            "-",
-                            ["□", "❒"],
-                            "×", ["○", "●"]
-                        ],
+                        btnIcons = None,
                         brothers=[],
                         widgets=[[], []]
                 ) -> None:
@@ -18,7 +15,14 @@ class TitleBar(QWidget):
         self._height = height
         self.parent = parent
         self.mPos = None
-        self.btnContents = btnContents
+        if not btnIcons:
+            btnIcons = [
+                qta.icon("mdi.window-minimize"),
+                [qta.icon("mdi.window-maximize"), qta.icon("mdi.window-restore")],
+                qta.icon("mdi.window-close"),
+                [qta.icon("ph.push-pin-bold"), qta.icon("ph.push-pin-fill")]
+            ]
+        self.btnIcons = btnIcons
         parent.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint)
         layout = QHBoxLayout()
         if brothers:
@@ -44,10 +48,10 @@ class TitleBar(QWidget):
             iconWidget = QLabel()
             iconWidget.setPixmap(QPixmap(icon).scaled(height, height))
             iconWidget.setProperty("class", "icon")
-        self.min = QPushButton(btnContents[0])
-        self.max = QPushButton(btnContents[1][0])
-        self.close = QPushButton(btnContents[2])
-        self.top = QPushButton(btnContents[3][0])
+        self.min = QPushButton(btnIcons[0], "")
+        self.max = QPushButton(btnIcons[1][0], "")
+        self.close = QPushButton(btnIcons[2], "")
+        self.top = QPushButton(btnIcons[3][0], "")
         self.title = QLabel(title)
         widgets_l, widgets_r = widgets
         if sys.platform.startswith("darwin"):
@@ -106,11 +110,10 @@ class TitleBar(QWidget):
     def onSetMaximized(self):
         if self.parent.windowState() == Qt.WindowNoState:
             self.parent.setWindowState(Qt.WindowMaximized)
-            if self.btnContents[1]:
-                self.max.setText(self.btnContents[1][1])
+            self.max.setIcon(self.btnIcons[1][1])
         else:
             self.parent.setWindowState(Qt.WindowNoState)
-            self.max.setText(self.btnContents[1][0])
+            self.max.setIcon(self.btnIcons[1][0])
 
     def onSetTop(self):
         flags = self.parent.windowFlags()
@@ -118,12 +121,12 @@ class TitleBar(QWidget):
         if flags & Qt.WindowStaysOnTopHint:
             flags &=  (~Qt.WindowStaysOnTopHint)
             self.parent.setWindowFlags(flags)
-            self.top.setText(self.btnContents[3][0])
+            self.top.setIcon(self.btnIcons[3][0])
             self.top.setProperty("class", "top")
         else:
             flags |= Qt.WindowStaysOnTopHint
             self.parent.setWindowFlags(flags)
-            self.top.setText(self.btnContents[3][1])
+            self.top.setIcon(self.btnIcons[3][1])
             self.top.setProperty("class", "topActive")
         self.style().unpolish(self.top)
         self.style().polish(self.top)

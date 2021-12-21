@@ -22,6 +22,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesk
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
+import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, threading, time, re, binascii
 from datetime import datetime
 
@@ -94,8 +95,8 @@ class Plugin(Plugin_Base):
         self.sendArea = QTextEdit()
         self.sendArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea.setAcceptRichText(False)
-        self.clearReceiveButtion = QPushButton(_("ClearReceive"))
-        self.sendButton = QPushButton(_("Send"))
+        self.clearReceiveButtion = QPushButton(qta.icon("mdi6.broom"), "")
+        self.sendButton = QPushButton(qta.icon("fa.send"), "")
         self.sendHistory = ComboBox()
         sendWidget = QWidget()
         sendAreaWidgetsLayout = QHBoxLayout()
@@ -212,7 +213,7 @@ class Plugin(Plugin_Base):
         self.openFileButton = QPushButton(_("Open File"))
         self.sendFileButton = QPushButton(_("Send File"))
         self.clearHistoryButton = QPushButton(_("Clear History"))
-        self.addButton = QPushButton(_("+"))
+        self.addButton = QPushButton(qta.icon("fa.plus"), "")
         self.fileSendGroupBox = QGroupBox(_("Sendding File"))
         fileSendGridLayout = QGridLayout()
         fileSendGridLayout.addWidget(self.filePathWidget, 0, 0, 1, 1)
@@ -442,13 +443,13 @@ class Plugin(Plugin_Base):
         layout.setContentsMargins(0,0,0,0)
         item.setLayout(layout)
         cmd = QLineEdit(text)
-        send = QPushButton(_("Send"))
+        send = QPushButton(qta.icon('fa.send'), "")
         cmd.setToolTip(text)
         send.setToolTip(text)
         cmd.textChanged.connect(lambda: self.onCustomItemChange(self.customSendItemsLayout.indexOf(item), cmd, send))
         send.setProperty("class", "smallBtn")
         send.clicked.connect(lambda: self.sendCustomItem(self.config["customSendItems"][self.customSendItemsLayout.indexOf(item)]))
-        delete = QPushButton("x")
+        delete = QPushButton(qta.icon("fa.close"), "")
         delete.setProperty("class", "deleteBtn")
         layout.addWidget(cmd)
         layout.addWidget(send)
