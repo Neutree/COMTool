@@ -281,3 +281,11 @@ python i18n.py finish
 
 [LGPL-3.0 许可证](LICENSE)
 
+以库的方式使用了以下开源项目:
+
+* [PyQt5](https://www.riverbankcomputing.com/software/pyqt/): [GNU GPL v3](https://www.riverbankcomputing.com/software/pyqt/)
+* [pyserial](https://github.com/pyserial/pyserial): [BSD-3-Clause](https://github.com/pyserial/pyserial/blob/master/LICENSE.txt)
+* [requests](https://github.com/psf/requests): [Apache 2.0](https://github.com/psf/requests/blob/main/LICENSE)
+* [Babel](https://github.com/python-babel/babel): [BSD](https://github.com/python-babel/babel/blob/master/LICENSE)
+* [qtawesome](https://github.com/spyder-ide/qtawesome): [MIT](https://github.com/spyder-ide/qtawesome/blob/master/LICENSE.txt)
+
