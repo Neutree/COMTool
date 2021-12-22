@@ -97,11 +97,11 @@ def pack():
     os.system(cmd)
 
     if sys.platform.startswith("darwin"):
-        if os.path.exists(f"./dist/comtool {version.__version__}.dmg"):
-            os.remove(f"./dist/comtool {version.__version__}.dmg")
+        if os.path.exists("./dist/comtool 0.0.0.dmg"):
+            os.remove("./dist/comtool 0.0.0.dmg")
             
-        os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
-        shutil.copyfile(f"./dist/comtool {version.__version__}.dmg", macos_out)
+        os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist && ls ./dist')
+        shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
         zip(windows_out, "dist/comtool")
     else:
