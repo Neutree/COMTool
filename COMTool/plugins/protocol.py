@@ -74,8 +74,8 @@ class Plugin(Plugin_Base):
                 self.plugins_info[p.id] = p
         default = {
             "sendAscii" : True,
-            "useCRLF" : True,
-            "sendEscape" : False,
+            "useCRLF" : False,
+            "sendEscape" : True,
             "code": defaultProtocols.copy(),
             "currCode": "default",
             "customSendItems": [

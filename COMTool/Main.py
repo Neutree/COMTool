@@ -38,7 +38,7 @@ import binascii,re
 if sys.platform == "win32":
     import ctypes
 
-
+windows_for_macos = []
 
 class MainWindow(QMainWindow, WindowResizableMixin):
     hintSignal = pyqtSignal(str, str, str) # type(error, warning, info), title, msg
@@ -297,15 +297,14 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         self.show()
         print("config file path:",parameters.configFilePath)
 
-    def macOsAddDockMenu(self):
-        def dumplicateProcess():
-            import multiprocessing
-            p = multiprocessing.Process(target=main)
-            p.start()
+    def add_new_window(self):
+        mainWindow = MainWindow(self.app)
+        windows_for_macos.append(mainWindow)
 
+    def macOsAddDockMenu(self):
         self.dockMenu = QMenu(self)
         self.dockMenu.addAction(_('New Window'),
-                                dumplicateProcess)
+                                self.add_new_window)
         self.dockMenu.setAsDockMenu()
         self.app.setAttribute(Qt.AA_DontShowIconsInMenus, True)
 
@@ -646,6 +645,7 @@ def main():
                 gen_tranlate_files(curr_dir)
             app = QApplication(sys.argv)
             mainWindow = MainWindow(app)
+            windows_for_macos.append(mainWindow)
             # path = os.path.join(mainWindow.DataPath, "assets", "fonts", "JosefinSans-Regular.ttf")
             # load_fonts([path])
             print("data path:"+mainWindow.DataPath)
