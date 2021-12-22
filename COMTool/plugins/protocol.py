@@ -78,7 +78,24 @@ class Plugin(Plugin_Base):
             "sendEscape" : False,
             "code": defaultProtocols.copy(),
             "currCode": "default",
-            "customSendItems": []
+            "customSendItems": [
+                {
+                    "text": "\\x01\\x03\\x03\\x03\\x03\\x01",
+                    "remark": "pre"
+                },
+                {
+                    "text": "\\x01\\x04\\x04\\x04\\x04\\x01",
+                    "remark": "next"
+                },
+                {
+                    "text": "\\x01\\x01\\x01\\x01\\x01\\x01",
+                    "remark": "ok"
+                },
+                {
+                    "text": "\\x01\\x02\\x02\\x02\\x02\\x01",
+                    "remark": "ret"
+                }
+            ]
         }
         self.config = config
         for k in default:

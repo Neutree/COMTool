@@ -25,14 +25,15 @@ def zip(out, path):
                 target.write(os.path.join(i[0],n))
     os.chdir(cwd)
 
-def upadte_spec_plist(spec_path, items={}):
+def upadte_spec_bundle(spec_path, items = {}, plist_items={}):
     with open(spec_path) as f:
         spec = f.read()
     def BUNDLE(*args, **kw_args):
+        kw_args.update(items)
         if "info_plist" in kw_args:
-            kw_args["info_plist"].update(items)
+            kw_args["info_plist"].update(plist_items)
         else:
-            kw_args["info_plist"] = items
+            kw_args["info_plist"] = plist_items
         bundle_str_args = ""
         for arg in args:
             if type(arg) == str and arg != "exe" and arg != "coll":
@@ -81,9 +82,13 @@ def pack():
         # macos not case insensitive, so can not contain comtool file and COMTool dir, so we copy to binary root dir
         cmd = 'pyi-makespec --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README_ZH.MD:./" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
         os.system(cmd)
-        upadte_spec_plist("comtool.spec", {
-            "LSMultipleInstancesProhibited": False,
-            "CFBundleShortVersionString": version.__version__
+        upadte_spec_bundle("comtool.spec", 
+            items = {
+                "version": version.__version__
+            },
+            plist_items = {
+                "LSMultipleInstancesProhibited": False,
+                "CFBundleShortVersionString": version.__version__
             }) # enable multi instance support
         cmd = 'pyinstaller comtool.spec'
     else:
@@ -92,11 +97,11 @@ def pack():
     os.system(cmd)
 
     if sys.platform.startswith("darwin"):
-        if os.path.exists("./dist/comtool 0.0.0.dmg"):
-            os.remove("./dist/comtool 0.0.0.dmg")
+        if os.path.exists(f"./dist/comtool {version.__version__}.dmg"):
+            os.remove(f"./dist/comtool {version.__version__}.dmg")
             
         os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
-        shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
+        shutil.copyfile(f"./dist/comtool {version.__version__}.dmg", macos_out)
     elif sys.platform.startswith("win32"):
         zip(windows_out, "dist/comtool")
     else:
