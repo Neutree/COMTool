@@ -35,7 +35,7 @@ def upadte_spec_plist(spec_path, items={}):
             kw_args["info_plist"] = items
         bundle_str_args = ""
         for arg in args:
-            if type(arg) == str and arg != "exe":
+            if type(arg) == str and arg != "exe" and arg != "coll":
                 bundle_str_args += f'"{arg}", \n'
             else:
                 bundle_str_args += f'{arg}, \n'
@@ -52,7 +52,8 @@ def upadte_spec_plist(spec_path, items={}):
     code =f'app = BUNDLE({match[0]})'
     vars = {
         "BUNDLE": BUNDLE,
-        "exe": "exe"
+        "exe": "exe",
+        "coll": "coll"
     }
     exec(code, vars)
     final_str = vars["app"]
@@ -80,7 +81,10 @@ def pack():
         # macos not case insensitive, so can not contain comtool file and COMTool dir, so we copy to binary root dir
         cmd = 'pyi-makespec --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README_ZH.MD:./" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
         os.system(cmd)
-        upadte_spec_plist("comtool.spec", {"LSMultipleInstancesProhibited": False}) # enable multi instance support
+        upadte_spec_plist("comtool.spec", {
+            "LSMultipleInstancesProhibited": False,
+            "CFBundleShortVersionString": version.__version__
+            }) # enable multi instance support
         cmd = 'pyinstaller comtool.spec'
     else:
         cmd = 'pyinstaller --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README.MD:./" --add-data="README_ZH.MD:./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'

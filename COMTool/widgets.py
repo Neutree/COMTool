@@ -56,8 +56,8 @@ class TitleBar(QWidget):
         widgets_l, widgets_r = widgets
         if sys.platform.startswith("darwin"):
             layout.addWidget(self.close)
-            layout.addWidget(self.max)
             layout.addWidget(self.min)
+            layout.addWidget(self.max)
             for w in widgets_r:
                 layout.addWidget(w)
             layout.addStretch(0)

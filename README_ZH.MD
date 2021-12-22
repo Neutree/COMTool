@@ -109,7 +109,9 @@ comtool
 * 在 [release](https://github.com/Neutree/COMTool/releases) 页面或 [sourceforge](https://sourceforge.net/projects/comtool/files/) 下载最新版本
 * 安装 dmg 包
 
-如果你想同时打开多个`comtool`，目前[只能](https://github.com/Neutree/COMTool/issues/30)打开终端并输入
+如果你想同时打开多个`comtool`，只需要右键 dock 栏图标，选择`新建窗口`即可。
+
+另外也可以打开终端并输入
 ```
 open -n /Application/comtool.app
 ```
@@ -118,6 +120,8 @@ open -n /Application/comtool.app
 cd /Applicatioin/comtool.app/Contents/MacOS
 ./comtool
 ```
+
+> 因为程序没有开发者签名，所以第一次打开时会警告，需要到`设置 -> 安全和隐私 -> 通用` 看到提示`comtool` 点击 `仍要打开`即可
 
 
 ## Windows Defender 显示 comtool 可执行程序是恶意软件？

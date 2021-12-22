@@ -28,7 +28,7 @@ except ImportError:
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget, QMenu)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import threading
@@ -289,10 +289,25 @@ class MainWindow(QMainWindow, WindowResizableMixin):
 
         if sys.platform == "win32":
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
+        elif sys.platform == 'darwin':
+            self.macOsAddDockMenu()
+
         self.resize(800, 500)
         self.MoveToCenter()
         self.show()
         print("config file path:",parameters.configFilePath)
+
+    def macOsAddDockMenu(self):
+        def dumplicateProcess():
+            import multiprocessing
+            p = multiprocessing.Process(target=main)
+            p.start()
+
+        self.dockMenu = QMenu(self)
+        self.dockMenu.addAction(_('New Window'),
+                                dumplicateProcess)
+        self.dockMenu.setAsDockMenu()
+        self.app.setAttribute(Qt.AA_DontShowIconsInMenus, True)
 
     def initEvent(self):
         # menu

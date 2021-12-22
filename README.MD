@@ -112,7 +112,9 @@ comtool
 * Download release at [release](https://github.com/Neutree/COMTool/releases) page or [sourceforge](https://sourceforge.net/projects/comtool/files/)
 * Install dmg package
 
-If you want to open multiple comtool, now [you have to](https://github.com/Neutree/COMTool/issues/30) open terminal and type
+If you want to open multiple comtool, just right click dock icon, then click `New Window`.
+
+or you can open terminal and type
 ```
 open -n /Application/comtool.app
 ```
@@ -121,6 +123,8 @@ or
 cd /Applicatioin/comtool.app/Contents/MacOS
 ./comtool
 ```
+
+> Because the program is not signed by the developer, it will warn when you open it for the first time. You need to go to `Settings -> Security and Privacy -> General` to see the prompt `comtool` and click `Open anyway`.
 
 ## Windows defender shows comtool binary is malware?
 
