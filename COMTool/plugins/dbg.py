@@ -4,9 +4,9 @@ try:
     import i18n
     from i18n import _
     import version
-    import utils
+    import utils, utils_ui
 except ImportError:
-    from COMTool import parameters,helpAbout,autoUpdate, utils
+    from COMTool import parameters,helpAbout,autoUpdate, utils, utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool import i18n
     from COMTool.i18n import _
@@ -95,8 +95,10 @@ class Plugin(Plugin_Base):
         self.sendArea = QTextEdit()
         self.sendArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea.setAcceptRichText(False)
-        self.clearReceiveButtion = QPushButton(qta.icon("mdi6.broom"), "")
-        self.sendButton = QPushButton(qta.icon("fa.send"), "")
+        self.clearReceiveButtion = QPushButton("")
+        utils_ui.setButtonIcon(self.clearReceiveButtion, "mdi6.broom")
+        self.sendButton = QPushButton("")
+        utils_ui.setButtonIcon(self.sendButton, "fa.send")
         self.sendHistory = ComboBox()
         sendWidget = QWidget()
         sendAreaWidgetsLayout = QHBoxLayout()
@@ -213,7 +215,8 @@ class Plugin(Plugin_Base):
         self.openFileButton = QPushButton(_("Open File"))
         self.sendFileButton = QPushButton(_("Send File"))
         self.clearHistoryButton = QPushButton(_("Clear History"))
-        self.addButton = QPushButton(qta.icon("fa.plus"), "")
+        self.addButton = QPushButton("")
+        utils_ui.setButtonIcon(self.addButton, "fa.plus")
         self.fileSendGroupBox = QGroupBox(_("Sendding File"))
         fileSendGridLayout = QGridLayout()
         fileSendGridLayout.addWidget(self.filePathWidget, 0, 0, 1, 1)
@@ -443,13 +446,15 @@ class Plugin(Plugin_Base):
         layout.setContentsMargins(0,0,0,0)
         item.setLayout(layout)
         cmd = QLineEdit(text)
-        send = QPushButton(qta.icon('fa.send'), "")
+        send = QPushButton("")
+        utils_ui.setButtonIcon(send, "fa.send")
         cmd.setToolTip(text)
         send.setToolTip(text)
         cmd.textChanged.connect(lambda: self.onCustomItemChange(self.customSendItemsLayout.indexOf(item), cmd, send))
         send.setProperty("class", "smallBtn")
         send.clicked.connect(lambda: self.sendCustomItem(self.config["customSendItems"][self.customSendItemsLayout.indexOf(item)]))
-        delete = QPushButton(qta.icon("fa.close"), "")
+        delete = QPushButton("")
+        utils_ui.setButtonIcon(delete, "fa.close")
         delete.setProperty("class", "deleteBtn")
         layout.addWidget(cmd)
         layout.addWidget(send)

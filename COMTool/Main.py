@@ -11,12 +11,12 @@ try:
     import i18n
     from i18n import _
     import version
-    import utils
+    import utils_ui
     from conn.conn_serial import Serial
     from plugins import plugins
     from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 except ImportError:
-    from COMTool import parameters,helpAbout,autoUpdate, utils
+    from COMTool import parameters,helpAbout,autoUpdate, utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool import i18n
     from COMTool.i18n import _
@@ -40,7 +40,7 @@ if sys.platform == "win32":
 
 g_all_windows = []
 
-class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
+class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
     hintSignal = pyqtSignal(str, str, str) # type(error, warning, info), title, msg
     statusBarSignal = pyqtSignal(str, str)
     updateSignal = pyqtSignal(object)
@@ -160,6 +160,8 @@ class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
         self.sendProcess.start()
 
     def initWindow(self):
+        # set skin for utils_ui
+        utils_ui.setSkin(self.config.basic["skin"])
         # menu layout
         self.settingsButton = QPushButton()
         self.skinButton = QPushButton("")
@@ -187,7 +189,7 @@ class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
         iconPath = self.DataPath+"/"+parameters.appIcon
         print("-- icon path: " + iconPath)
         titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.aboutButton], []])
-        CustomTitleBarWindowMixin.__init__(self, titleBar=titleBar)
+        CustomTitleBarWindowMixin.__init__(self, titleBar=titleBar, init = True)
 
         # root layout
         self.frameWidget = QWidget()
@@ -591,6 +593,7 @@ class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
             file = open(self.DataPath + '/assets/qss/style.qss', "r", encoding="utf-8")
             self.config.basic["skin"] = "light"
         self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
+        utils_ui.setSkin(self.config.basic["skin"])
 
     def showAbout(self):
         QMessageBox.information(self, _("About"), helpAbout.strAbout())

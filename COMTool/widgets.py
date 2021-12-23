@@ -4,6 +4,11 @@ from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
+try:
+    import utils_ui
+except Exception:
+    from COMTool import utils_ui
+
 class TitleBar(QWidget):
     def __init__(self, parent, icon=None, title="", height=35,
                         btnIcons = None,
@@ -15,10 +20,10 @@ class TitleBar(QWidget):
         self.parent = parent
         if not btnIcons:
             btnIcons = [
-                qta.icon("mdi.window-minimize"),
-                [qta.icon("mdi.window-maximize"), qta.icon("mdi.window-restore")],
-                qta.icon("mdi.window-close"),
-                [qta.icon("ph.push-pin-bold"), qta.icon("ph.push-pin-fill")]
+                "mdi.window-minimize",
+                ["mdi.window-maximize", "mdi.window-restore"],
+                "mdi.window-close",
+                ["ph.push-pin-bold", "ph.push-pin-fill"]
             ]
         self.btnIcons = btnIcons
         layout = QHBoxLayout()
@@ -45,10 +50,14 @@ class TitleBar(QWidget):
             iconWidget = QLabel()
             iconWidget.setPixmap(QPixmap(icon).scaled(height, height))
             iconWidget.setProperty("class", "icon")
-        self.min = QPushButton(btnIcons[0], "")
-        self.max = QPushButton(btnIcons[1][0], "")
-        self.close = QPushButton(btnIcons[2], "")
-        self.top = QPushButton(btnIcons[3][0], "")
+        self.min = QPushButton("")
+        self.max = QPushButton("")
+        self.close = QPushButton("")
+        self.top = QPushButton("")
+        utils_ui.setButtonIcon(self.min, btnIcons[0])
+        utils_ui.setButtonIcon(self.max, btnIcons[1][0])
+        utils_ui.setButtonIcon(self.close, btnIcons[2])
+        utils_ui.setButtonIcon(self.top, btnIcons[3][0])
         self.title = QLabel(title)
         widgets_l, widgets_r = widgets
         if sys.platform.startswith("darwin"):
@@ -106,9 +115,9 @@ class TitleBar(QWidget):
     def onSetMaximized(self, isMax = None, fromMaxBtn=False, fullScreen = False):
         if not isMax is None:
             if isMax:
-                self.max.setIcon(self.btnIcons[1][1])
+                utils_ui.setButtonIcon(self.max, self.btnIcons[1][1])
             else:
-                self.max.setIcon(self.btnIcons[1][0])
+                utils_ui.setButtonIcon(self.max, self.btnIcons[1][0])
             return
         status = Qt.WindowNoState
         if fullScreen:
@@ -120,9 +129,9 @@ class TitleBar(QWidget):
             else:
                 status = Qt.WindowMaximized
         if status == Qt.WindowNoState:
-            self.max.setIcon(self.btnIcons[1][0])
+            utils_ui.setButtonIcon(self.max, self.btnIcons[1][0])
         else:
-            self.max.setIcon(self.btnIcons[1][1])
+            utils_ui.setButtonIcon(self.max, self.btnIcons[1][1])
         self.parent.setWindowState(status)
         if status == Qt.WindowFullScreen:
             self.hide()
@@ -135,12 +144,12 @@ class TitleBar(QWidget):
         if flags & Qt.WindowStaysOnTopHint:
             flags &=  (~Qt.WindowStaysOnTopHint)
             self.parent.setWindowFlags(flags)
-            self.top.setIcon(self.btnIcons[3][0])
+            utils_ui.setButtonIcon(self.top, self.btnIcons[3][0])
             self.top.setProperty("class", "top")
         else:
             flags |= Qt.WindowStaysOnTopHint
             self.parent.setWindowFlags(flags)
-            self.top.setIcon(self.btnIcons[3][1])
+            utils_ui.setButtonIcon(self.top, self.btnIcons[3][1])
             self.top.setProperty("class", "topActive")
         self.style().unpolish(self.top)
         self.style().polish(self.top)
@@ -202,7 +211,8 @@ class EventFilter(QObject):
             if window.windowState() == Qt.WindowNoState:
                 window.startSystemResize(edges)
         else:
-            window.startSystemMove()
+            if window.windowState() != Qt.WindowFullScreen:
+                window.startSystemMove()
 
     def eventFilter(self, obj, event):
         # print(obj, event.type(), obj.isWindowType(), QEvent.MouseMove)
@@ -232,7 +242,9 @@ class EventFilter(QObject):
 
 
 class CustomTitleBarWindowMixin:
-    def __init__(self,titleBar=None):
+    def __init__(self, titleBar = None, init = False):
+        if not init:
+            return
         isQMainWindow = False
         for base in self.__class__.__bases__:
             if base == QMainWindow:
@@ -447,7 +459,6 @@ if __name__ == "__main__":
         _padding = 5
         def __init__(self) -> None:
             super(QMainWindow, self).__init__()
-            super(CustomTitleBarWindowMixin, self).__init__()
             label = QLabel("hello hhhhhhhhhhh")
             layout = QVBoxLayout()
             layout.addWidget(label)

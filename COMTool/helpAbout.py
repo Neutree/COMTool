@@ -30,6 +30,7 @@ def strAbout():
 {} <b><a href="https://neucrack.com/donate"> neucrack.com/donate</a></b><br>
 {} <b><a href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br><br>
 {}<br>
+ <b style="color:red;"><kbd>F11</kbd></b>: {}<br>
 <b style="color:red;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
  <b style="color:red;"><kbd>Ctrl+L</kbd></b>: {}<br>
  <b style="color:red;"><kbd>Ctrl+K</kbd></b>: {}<br>
@@ -48,7 +49,8 @@ def strAbout():
     _("Donate"),
     _("Have problem? see"),
     _('Shortcut:'),
+    _('Full screen'),
     _('Send data'),
     _('Clear Send Area'),
-    _('Clear Receive Area')
+    _('Clear Receive Area'),
 )

@@ -130,3 +130,12 @@ QPushButton:hover {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }'''
 
+styleForCode = {
+    "light":{
+        "iconColor": "white"
+    },
+    "dark":{
+        "iconColor": "#bcbcbd"
+    }
+}
+

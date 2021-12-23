@@ -6,9 +6,9 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesk
 try:
     from Combobox import ComboBox
     from i18n import _
-    import utils
+    import utils, parameters
 except ImportError:
-    from COMTool import utils
+    from COMTool import utils, parameters
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
 

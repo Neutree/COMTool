@@ -11,8 +11,9 @@ try:
     from Combobox import ComboBox
     from i18n import _
     from widgets import TextEdit, PlainTextEdit
+    import utils_ui
 except ImportError:
-    from COMTool import parameters
+    from COMTool import parameters, utils_ui
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
     from COMTool.widgets import TextEdit, PlainTextEdit
@@ -112,8 +113,10 @@ class Plugin(Plugin_Base):
         font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
         self.receiveWidget.setFont(font)
         self.receiveWidget.setLineWrapMode(TextEdit.NoWrap)
-        self.clearBtn = QPushButton(qta.icon("mdi6.broom"), "")
-        self.addButton = QPushButton(qta.icon("fa.plus"), "")
+        self.clearBtn = QPushButton("")
+        utils_ui.setButtonIcon(self.clearBtn, "mdi6.broom")
+        self.addButton = QPushButton("")
+        utils_ui.setButtonIcon(self.addButton, "fa.plus")
         self.customSendScroll = QScrollArea()
         self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight + 20)
         self.customSendScroll.setWidgetResizable(True)
@@ -291,6 +294,11 @@ class Plugin(Plugin_Base):
         # if height < 0:
         #     height = self.funcParent.height() // 3
         # self.customSendScroll.setMinimumHeight(height)
+        if type(item) == str:
+            item = {
+                "text": item,
+                "remark": None
+            }
         text = item["text"]
         remark = item["remark"]
         itemWidget = QWidget()
@@ -301,8 +309,10 @@ class Plugin(Plugin_Base):
         if remark:
             send = QPushButton(remark)
         else:
-            send = QPushButton(qta.icon('fa.send'), "")
-        editRemark = QPushButton(qta.icon('ei.pencil'), "")
+            send = QPushButton("")
+            utils_ui.setButtonIcon(send, "fa.send")
+        editRemark = QPushButton("")
+        utils_ui.setButtonIcon(editRemark, "ei.pencil")
         editRemark.setProperty("class", "remark")
         cmd.setToolTip(text)
         send.setToolTip(text)
@@ -311,7 +321,8 @@ class Plugin(Plugin_Base):
         def sendCustomData(idx):
             self.sendCustomItem(self.config["customSendItems"][idx])
         send.clicked.connect(lambda: sendCustomData(self.customSendItemsLayout.indexOf(itemWidget)))
-        delete = QPushButton(qta.icon('fa.close'), "")
+        delete = QPushButton("")
+        utils_ui.setButtonIcon(delete, "fa.close")
         delete.setProperty("class", "deleteBtn")
         layout.addWidget(cmd)
         layout.addWidget(send)
