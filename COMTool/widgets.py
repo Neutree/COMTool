@@ -94,7 +94,7 @@ class TitleBar(QWidget):
         self.title.setProperty("class", "title")
         self.top.setProperty("class", "top")
         self.close.clicked.connect(lambda : parent.close())
-        self.max.clicked.connect(lambda : self.onSetMaximized())
+        self.max.clicked.connect(lambda : self.onSetMaximized(fromMaxBtn=True))
         self.min.clicked.connect(lambda : parent.setWindowState(Qt.WindowNoState) if parent.windowState() == Qt.WindowMinimized else parent.setWindowState(Qt.WindowMinimized))
         self.top.clicked.connect(self.onSetTop)
         self.setProperty("class", "TitleBar")
@@ -103,19 +103,31 @@ class TitleBar(QWidget):
         if event.buttons() == Qt.LeftButton:
             self.onSetMaximized()
 
-    def onSetMaximized(self, isMax = None):
+    def onSetMaximized(self, isMax = None, fromMaxBtn=False, fullScreen = False):
         if not isMax is None:
             if isMax:
                 self.max.setIcon(self.btnIcons[1][1])
             else:
                 self.max.setIcon(self.btnIcons[1][0])
             return
-        if self.parent.windowState() == Qt.WindowNoState:
-            self.parent.setWindowState(Qt.WindowMaximized)
-            self.max.setIcon(self.btnIcons[1][1])
-        else:
-            self.parent.setWindowState(Qt.WindowNoState)
+        status = Qt.WindowNoState
+        if fullScreen:
+            if self.parent.windowState() != Qt.WindowFullScreen:
+                status = Qt.WindowFullScreen
+        elif self.parent.windowState() == Qt.WindowNoState:
+            if fromMaxBtn and sys.platform.startswith("darwin"): # mac max button to full screen
+                status = Qt.WindowFullScreen
+            else:
+                status = Qt.WindowMaximized
+        if status == Qt.WindowNoState:
             self.max.setIcon(self.btnIcons[1][0])
+        else:
+            self.max.setIcon(self.btnIcons[1][1])
+        self.parent.setWindowState(status)
+        if status == Qt.WindowFullScreen:
+            self.hide()
+        else:
+            self.show()
 
     def onSetTop(self):
         flags = self.parent.windowFlags()
@@ -147,7 +159,6 @@ class EventFilter(QObject):
     windows = []
     _readyToMove = False
     _moving = False
-    _resizing = False
     _resizeCursor = False
 
     def listenWindow(self, window):
@@ -165,7 +176,6 @@ class EventFilter(QObject):
             edge |= Qt.RightEdge
         if y >= height - self.Margins:
             edge |= Qt.BottomEdge
-
         return edge
 
     def _get_cursor(self, edges):
@@ -202,24 +212,22 @@ class EventFilter(QObject):
                 cursor = self._get_cursor(self._get_edges(event.pos(), obj.width(), obj.height()))
                 if not cursor is None:
                     obj.setCursor(cursor)
-            if event.type() == QEvent.TouchUpdate and not self._resizing:
-                self._resizing = True
+            if event.type() == QEvent.TouchUpdate and not self._moving:
+                self._moving = True
                 self.moveOrResize(obj, event.pos(), obj.width(), obj.height())
         elif isinstance(event, QMouseEvent):
             if obj in self.windows:
                 if event.button() == Qt.LeftButton :
                     if event.type() == QEvent.MouseButtonPress:
                         self._readyToMove = True
-                        # self.moveOrResize(obj.windowHandle(), event.pos(), obj.width(), obj.height())
-                    elif event.type() == QEvent.MouseButtonDblClick:
-                        print(obj, event.type(), event)
+                    # elif event.type() == QEvent.MouseButtonDblClick:
+                    #     print(obj, event.type(), event)
                 elif event.type() == QEvent.MouseMove and self._readyToMove and not self._moving:
                     self._moving = True
                     self.moveOrResize(obj.windowHandle(), event.pos(), obj.width(), obj.height())
         if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.Move:
             self._readyToMove = False
             self._moving = False
-            self._resizing = False
         return False
 
 
@@ -255,6 +263,13 @@ class CustomTitleBarWindowMixin:
     def changeEvent(self, event):
         # super(CustomTitleBarWindowMixin, self).changeEvent(event)
         self.titleBar.onSetMaximized(isMax = self.isMaximized())
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_F11:
+            self.titleBar.onSetMaximized(fullScreen=True)
+
+    def keyReleaseEvent(self,event):
+        pass
 
     # def paintEvent(self, event):
     #     # 透明背景但是需要留下一个透明度用于鼠标捕获
@@ -346,7 +361,7 @@ class TextEdit(QTextEdit):
         super(TextEdit,self).__init__(parent=None)
 
     def keyPressEvent(self,event):
-        if event.key() == Qt.Key_Tab:                
+        if event.key() == Qt.Key_Tab:
             tc = self.textCursor()
             tc.insertText("    ")
             return
@@ -357,7 +372,7 @@ class PlainTextEdit(QPlainTextEdit):
         super(QPlainTextEdit,self).__init__(parent=None)
 
     def keyPressEvent(self,event):
-        if event.key() == Qt.Key_Tab:                
+        if event.key() == Qt.Key_Tab:
             tc = self.textCursor()
             tc.insertText("    ")
             return

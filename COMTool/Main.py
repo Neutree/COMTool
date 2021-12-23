@@ -253,6 +253,7 @@ class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
         self.tabWidget.setCornerWidget(tabConerWidgetRight, Qt.TopRightCorner)
         self.contentLayout = QVBoxLayout()
         self.contentWidget.setLayout(self.contentLayout)
+        self.contentLayout.setContentsMargins(10, 0, 10, 10)
         self.contentLayout.addWidget(self.tabWidget)
         # get widgets from plugins
             # widget main
@@ -533,11 +534,13 @@ class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
         self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(config["encoding"]))
 
     def keyPressEvent(self, event):
+        CustomTitleBarWindowMixin.keyPressEvent(self, event)
         for plugin in self.plugins:
             if plugin.active:
                 plugin.onKeyReleaseEvent(event)
 
     def keyReleaseEvent(self,event):
+        CustomTitleBarWindowMixin.keyReleaseEvent(self, event)
         for plugin in self.plugins:
             if plugin.active:
                 plugin.onKeyReleaseEvent(event)
@@ -667,7 +670,7 @@ def main():
             t.start()
             ret = app.exec_()
             if not mainWindow.needRestart:
-                print("not mainWindow.needRestart")
+                print("-- no need to restart, now exit")
                 break
     except Exception as e:
         import traceback
@@ -682,5 +685,7 @@ def show_error(title, msg):
     QMessageBox.information(window, title, msg)
 
 if __name__ == '__main__':
-    sys.exit(main())
+    ret = main()
+    print("-- program exit, code:", ret)
+    sys.exit(ret)
 
