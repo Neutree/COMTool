@@ -14,7 +14,7 @@ try:
     import utils
     from conn.conn_serial import Serial
     from plugins import plugins
-    from widgets import TitleBar, WindowResizableMixin
+    from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate, utils
     from COMTool.Combobox import ComboBox
@@ -23,7 +23,7 @@ except ImportError:
     from COMTool import version
     from COMTool.conn.conn_serial import Serial
     from COMTool.plugins import plugins
-    from .widgets import TitleBar, WindowResizableMixin
+    from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -38,9 +38,9 @@ import binascii,re
 if sys.platform == "win32":
     import ctypes
 
-windows_for_macos = []
+g_all_windows = []
 
-class MainWindow(QMainWindow, WindowResizableMixin):
+class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
     hintSignal = pyqtSignal(str, str, str) # type(error, warning, info), title, msg
     statusBarSignal = pyqtSignal(str, str)
     updateSignal = pyqtSignal(object)
@@ -53,9 +53,10 @@ class MainWindow(QMainWindow, WindowResizableMixin):
     app = None
     needRestart = False
 
-    def __init__(self,app):
+    def __init__(self,app, eventFilter):
         QMainWindow.__init__(self)
         self.app = app
+        self.eventFilter = eventFilter
         self.DataPath = parameters.dataPath
         self.config = self.loadConfig()
         i18n.set_locale(self.config.basic["locale"])
@@ -186,7 +187,7 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         iconPath = self.DataPath+"/"+parameters.appIcon
         print("-- icon path: " + iconPath)
         titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.aboutButton], []])
-        WindowResizableMixin.__init__(self, titleBar=titleBar)
+        CustomTitleBarWindowMixin.__init__(self, titleBar=titleBar)
 
         # root layout
         self.frameWidget = QWidget()
@@ -250,6 +251,8 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         tabConerLayoutRight.addWidget(self.functionalButton)
         self.tabWidget.setCornerWidget(tabConerWidget, Qt.TopLeftCorner)
         self.tabWidget.setCornerWidget(tabConerWidgetRight, Qt.TopRightCorner)
+        self.contentLayout = QVBoxLayout()
+        self.contentWidget.setLayout(self.contentLayout)
         self.contentLayout.addWidget(self.tabWidget)
         # get widgets from plugins
             # widget main
@@ -298,8 +301,9 @@ class MainWindow(QMainWindow, WindowResizableMixin):
         print("config file path:",parameters.configFilePath)
 
     def add_new_window(self):
-        mainWindow = MainWindow(self.app)
-        windows_for_macos.append(mainWindow)
+        mainWindow = MainWindow(self.app, self.eventFilter)
+        self.eventFilter.listenWindow(mainWindow)
+        g_all_windows.append(mainWindow)
 
     def macOsAddDockMenu(self):
         self.dockMenu = QMenu(self)
@@ -644,8 +648,11 @@ def main():
             if not os.path.exists(mo_path):
                 gen_tranlate_files(curr_dir)
             app = QApplication(sys.argv)
-            mainWindow = MainWindow(app)
-            windows_for_macos.append(mainWindow)
+            eventFilter = EventFilter()
+            mainWindow = MainWindow(app, eventFilter)
+            eventFilter.listenWindow(mainWindow)
+            app.installEventFilter(eventFilter)
+            g_all_windows.append(mainWindow)
             # path = os.path.join(mainWindow.DataPath, "assets", "fonts", "JosefinSans-Regular.ttf")
             # load_fonts([path])
             print("data path:"+mainWindow.DataPath)

@@ -1,11 +1,10 @@
-from PyQt5.QtCore import pyqtSignal, QPoint, Qt
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit
-from PyQt5.QtGui import QIcon, QPixmap, QPainter
+from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
 class TitleBar(QWidget):
-    windowMovedSignal = pyqtSignal(QPoint)
     def __init__(self, parent, icon=None, title="", height=35,
                         btnIcons = None,
                         brothers=[],
@@ -14,7 +13,6 @@ class TitleBar(QWidget):
         super().__init__()
         self._height = height
         self.parent = parent
-        self.mPos = None
         if not btnIcons:
             btnIcons = [
                 qta.icon("mdi.window-minimize"),
@@ -23,7 +21,6 @@ class TitleBar(QWidget):
                 [qta.icon("ph.push-pin-bold"), qta.icon("ph.push-pin-fill")]
             ]
         self.btnIcons = btnIcons
-        parent.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint)
         layout = QHBoxLayout()
         if brothers:
             rootLayout = QVBoxLayout()
@@ -97,17 +94,22 @@ class TitleBar(QWidget):
         self.title.setProperty("class", "title")
         self.top.setProperty("class", "top")
         self.close.clicked.connect(lambda : parent.close())
-        self.max.clicked.connect(self.onSetMaximized)
+        self.max.clicked.connect(lambda : self.onSetMaximized())
         self.min.clicked.connect(lambda : parent.setWindowState(Qt.WindowNoState) if parent.windowState() == Qt.WindowMinimized else parent.setWindowState(Qt.WindowMinimized))
         self.top.clicked.connect(self.onSetTop)
-        self.windowMovedSignal.connect(self.onParentWindowMove)
         self.setProperty("class", "TitleBar")
 
     def mouseDoubleClickEvent(self, event):
         if event.buttons() == Qt.LeftButton:
             self.onSetMaximized()
 
-    def onSetMaximized(self):
+    def onSetMaximized(self, isMax = None):
+        if not isMax is None:
+            if isMax:
+                self.max.setIcon(self.btnIcons[1][1])
+            else:
+                self.max.setIcon(self.btnIcons[1][0])
+            return
         if self.parent.windowState() == Qt.WindowNoState:
             self.parent.setWindowState(Qt.WindowMaximized)
             self.max.setIcon(self.btnIcons[1][1])
@@ -134,119 +136,210 @@ class TitleBar(QWidget):
         if needShow:
             self.parent.show()
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.mPos = event.pos()
-            event.accept()
-    
-    def mouseReleaseEvent(self, event):
-        self.mPos = None
-        self.setCursor(Qt.ArrowCursor)
-        event.accept()
-    
-    def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.LeftButton and self.mPos:
-            self.windowMovedSignal.emit(self.mapToGlobal(event.pos() - self.mPos))
-        event.accept()
-
-    def onParentWindowMove(self, pos):
-        if self.parent.windowState() == Qt.WindowMaximized or self.parent.windowState() == Qt.WindowFullScreen:
-            return
-        self.parent.move(pos)
-
     def paintEvent(self, event):
         opt = QStyleOption()
         opt.initFrom(self)
         p = QPainter(self)
         self.style().drawPrimitive(QStyle.PE_Widget, opt, p, self)
 
-class WindowResizableMixin:
-    '''
-        attrs:
-            self.rootLayout: root layout, QVBoxLayout
-            self.contentLayout: content layout, QVBoxLayout
-            self.titleBar: titleBar widget
-        if not inherits from Widget, you should add a widget, and set self.rootLayout as its layout, and call `widget.setMouseTracking(True)`
-    '''
-    def __init__(self, titleBar=None, contentLayoutType=QVBoxLayout) -> None:
-        self._move_drag = False
-        self._corner_drag = False
-        self._bottom_drag = False
-        self._right_drag = False
-        self._padding = 6
-        # wrapper, no padding
+class EventFilter(QObject):
+    Margins = 4  # 边缘边距
+    windows = []
+    _readyToMove = False
+    _moving = False
+    _resizing = False
+    _resizeCursor = False
+
+    def listenWindow(self, window):
+        self.windows.append(window)
+
+    def _get_edges(self, pos, width, height):
+        edge = 0
+        x, y = pos.x(), pos.y()
+
+        if y <= self.Margins:
+            edge |= Qt.TopEdge
+        if x <= self.Margins:
+            edge |= Qt.LeftEdge
+        if x >= width - self.Margins:
+            edge |= Qt.RightEdge
+        if y >= height - self.Margins:
+            edge |= Qt.BottomEdge
+
+        return edge
+
+    def _get_cursor(self, edges):
+        if edges == Qt.LeftEdge | Qt.TopEdge or edges == Qt.RightEdge | Qt.BottomEdge:
+            self._resizeCursor = True
+            return Qt.SizeFDiagCursor
+        elif edges == Qt.RightEdge | Qt.TopEdge or edges == Qt.LeftEdge | Qt.BottomEdge:
+            self._resizeCursor = True
+            return Qt.SizeBDiagCursor
+        elif edges == Qt.LeftEdge or edges == Qt.RightEdge:
+            self._resizeCursor = True
+            return Qt.SizeHorCursor
+        elif edges == Qt.TopEdge or edges == Qt.BottomEdge:
+            self._resizeCursor = True
+            return Qt.SizeVerCursor
+        if self._resizeCursor:
+            self._resizeCursor = False
+            return Qt.ArrowCursor
+        return None
+
+    def moveOrResize(self, window, pos, width, height):
+        edges = self._get_edges(pos, width, height)
+        if edges:
+            if window.windowState() == Qt.WindowNoState:
+                window.startSystemResize(edges)
+        else:
+            window.startSystemMove()
+
+    def eventFilter(self, obj, event):
+        # print(obj, event.type(), obj.isWindowType(), QEvent.MouseMove)
+        if obj.isWindowType():
+            # top window 处理光标样式
+            if event.type() == QEvent.MouseMove and obj.windowState() == Qt.WindowNoState:
+                cursor = self._get_cursor(self._get_edges(event.pos(), obj.width(), obj.height()))
+                if not cursor is None:
+                    obj.setCursor(cursor)
+            if event.type() == QEvent.TouchUpdate and not self._resizing:
+                self._resizing = True
+                self.moveOrResize(obj, event.pos(), obj.width(), obj.height())
+        elif isinstance(event, QMouseEvent):
+            if obj in self.windows:
+                if event.button() == Qt.LeftButton :
+                    if event.type() == QEvent.MouseButtonPress:
+                        self._readyToMove = True
+                        # self.moveOrResize(obj.windowHandle(), event.pos(), obj.width(), obj.height())
+                    elif event.type() == QEvent.MouseButtonDblClick:
+                        print(obj, event.type(), event)
+                elif event.type() == QEvent.MouseMove and self._readyToMove and not self._moving:
+                    self._moving = True
+                    self.moveOrResize(obj.windowHandle(), event.pos(), obj.width(), obj.height())
+        if event.type() == QEvent.MouseButtonRelease or event.type() == QEvent.Move:
+            self._readyToMove = False
+            self._moving = False
+            self._resizing = False
+        return False
+
+
+class CustomTitleBarWindowMixin:
+    def __init__(self,titleBar=None):
+        isQMainWindow = False
+        for base in self.__class__.__bases__:
+            if base == QMainWindow:
+                isQMainWindow = True
+                break
+        if isQMainWindow:
+            self.root = QWidget()
+            self.setCentralWidget(self.root)
+        else:
+            self.root = self
+        self.root.setProperty("class", "customTilebarWindow")
         self.rootLayout = QVBoxLayout()
-        self.rootLayout.setContentsMargins(0,0,0,0)
-        self.rootLayout.setSpacing(0)
         # title bar
         if titleBar:
             self.titleBar = titleBar
         else:
             self.titleBar = TitleBar(self, icon = "assets/logo.png", title="标题", height=35)
-        # content widget, have padding for resize
-        content = QWidget()
-        self.contentLayout = contentLayoutType()
-        self.contentLayout.setContentsMargins(self._padding, 0, self._padding, self._padding)
-        self.contentLayout.setSpacing(0)
-        content.setLayout(self.contentLayout)
+        self.contentWidget = QWidget()
         self.rootLayout.addWidget(self.titleBar)
-        self.rootLayout.addWidget(content)
-
+        self.rootLayout.addWidget(self.contentWidget)
+        self.root.setLayout(self.rootLayout)
+        self.rootLayout.setContentsMargins(0, 0, 0, 0) # padding
+        self.root.setMouseTracking(True)
         self.titleBar.setMouseTracking(True)
-        self.setMouseTracking(True)
-        content.setMouseTracking(True)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint)
+        self.init_vars()
 
-    def resizeEvent(self, QResizeEvent):
-        self._right_rect = [QPoint(x, y) for x in range(self.width() - self._padding + 1, self.width())
-                for y in range(1, self.height() - self._padding)]
-        self._bottom_rect = [QPoint(x, y) for x in range(1, self.width() - self._padding)
-                for y in range(self.height() - self._padding + 1, self.height())]
-        self._corner_rect = [QPoint(x, y) for x in range(self.width() - self._padding, self.width() + 1)
-                    for y in range(self.height() - self._padding, self.height() + 1)]
-    
-    def mousePressEvent(self, event):
-        if (event.button() == Qt.LeftButton) and (event.pos() in self._corner_rect):
-            self._corner_drag = True
-            event.accept()
-        elif (event.button() == Qt.LeftButton) and (event.pos() in self._right_rect):
-            self._right_drag = True
-            event.accept()
-        elif (event.button() == Qt.LeftButton) and (event.pos() in self._bottom_rect):
-            self._bottom_drag = True
-            event.accept()
-        # elif (event.button() == Qt.LeftButton) and (event.y() < self.titleBar.height()):
-        #     self._move_drag = True
-        #     self.move_DragPosition = event.globalPos() - self.pos()
-        #     event.accept()
-    
-    def mouseMoveEvent(self, QMouseEvent):
-        if QMouseEvent.pos() in self._corner_rect:
-            self.setCursor(Qt.SizeFDiagCursor)
-        elif QMouseEvent.pos() in self._bottom_rect:
-            self.setCursor(Qt.SizeVerCursor)
-        elif QMouseEvent.pos() in self._right_rect:
-            self.setCursor(Qt.SizeHorCursor)
-        else:
-            self.setCursor(Qt.ArrowCursor)
-        if Qt.LeftButton and self._right_drag:
-            self.resize(QMouseEvent.pos().x(), self.height())
-            QMouseEvent.accept()
-        elif Qt.LeftButton and self._bottom_drag:
-            self.resize(self.width(), QMouseEvent.pos().y())
-            QMouseEvent.accept()
-        elif Qt.LeftButton and self._corner_drag:
-            self.resize(QMouseEvent.pos().x(), QMouseEvent.pos().y())
-            QMouseEvent.accept()
-        # elif Qt.LeftButton and self._move_drag:
-        #     self.move(QMouseEvent.globalPos() - self.move_DragPosition)
-        #     QMouseEvent.accept()
-    
-    def mouseReleaseEvent(self, QMouseEvent):
+    def changeEvent(self, event):
+        # super(CustomTitleBarWindowMixin, self).changeEvent(event)
+        self.titleBar.onSetMaximized(isMax = self.isMaximized())
+
+    # def paintEvent(self, event):
+    #     # 透明背景但是需要留下一个透明度用于鼠标捕获
+    #     painter = QPainter(self)
+    #     painter.fillRect(self.rect(), QColor(255, 255, 255, 1))
+
+    def init_vars(self):
         self._move_drag = False
         self._corner_drag = False
         self._bottom_drag = False
         self._right_drag = False
-        self.setCursor(Qt.ArrowCursor)
+        self._padding = 6
+        self.mPos = None
+
+    # def resizeEvent(self, QResizeEvent):
+    #     self._right_rect = [QPoint(x, y) for x in range(self.width() - self._padding + 1, self.width())
+    #             for y in range(1, self.height() - self._padding)]
+    #     self._bottom_rect = [QPoint(x, y) for x in range(1, self.width() - self._padding)
+    #             for y in range(self.height() - self._padding + 1, self.height())]
+    #     self._corner_rect = [QPoint(x, y) for x in range(self.width() - self._padding, self.width() + 1)
+    #                 for y in range(self.height() - self._padding, self.height() + 1)]
+    
+    # def mousePressEvent(self, event):
+    #     if event.button() == Qt.LeftButton and not self.mPos:
+    #         self.mPos = event.pos()
+    #         event.accept()
+    #     return
+
+    #     if (event.button() == Qt.LeftButton) and (event.pos() in self._corner_rect):
+    #         self._corner_drag = True
+    #         event.accept()
+    #     elif (event.button() == Qt.LeftButton) and (event.pos() in self._right_rect):
+    #         self._right_drag = True
+    #         event.accept()
+    #     elif (event.button() == Qt.LeftButton) and (event.pos() in self._bottom_rect):
+    #         self._bottom_drag = True
+    #         event.accept()
+    #     # elif (event.button() == Qt.LeftButton) and (event.y() < self.titleBar.height()):
+    #     #     self._move_drag = True
+    #     #     self.move_DragPosition = event.globalPos() - self.pos()
+    #     #     event.accept()
+    
+    # def mouseMoveEvent(self, event): # QMouseEvent
+    #     if event.buttons() == Qt.LeftButton and self.mPos:
+    #         pos = self.mapToGlobal(event.pos() - self.mPos)
+    #         if self.windowState() == Qt.WindowMaximized or self.windowState() == Qt.WindowFullScreen:
+    #             return
+    #         self.move(pos)
+    #         event.accept()
+    #     return
+
+    #     if QMouseEvent.pos() in self._corner_rect:
+    #         self.setCursor(Qt.SizeFDiagCursor)
+    #     elif QMouseEvent.pos() in self._bottom_rect:
+    #         self.setCursor(Qt.SizeVerCursor)
+    #     elif QMouseEvent.pos() in self._right_rect:
+    #         self.setCursor(Qt.SizeHorCursor)
+    #     else:
+    #         self.setCursor(Qt.ArrowCursor)
+    #     if Qt.LeftButton and self._right_drag:
+    #         self.resize(QMouseEvent.pos().x(), self.height())
+    #         QMouseEvent.accept()
+    #     elif Qt.LeftButton and self._bottom_drag:
+    #         self.resize(self.width(), QMouseEvent.pos().y())
+    #         QMouseEvent.accept()
+    #     elif Qt.LeftButton and self._corner_drag:
+    #         self.resize(QMouseEvent.pos().x(), QMouseEvent.pos().y())
+    #         QMouseEvent.accept()
+    #     # elif Qt.LeftButton and self._move_drag:
+    #     #     self.move(QMouseEvent.globalPos() - self.move_DragPosition)
+    #     #     QMouseEvent.accept()
+    
+    # def mouseReleaseEvent(self, event):
+    #     if self.mPos:
+    #         self.mPos = None
+    #         self.setCursor(Qt.ArrowCursor)
+    #         event.accept()
+    #     return
+
+    #     self._move_drag = False
+    #     self._corner_drag = False
+    #     self._bottom_drag = False
+    #     self._right_drag = False
+    #     self.setCursor(Qt.ArrowCursor)
+
 
 class TextEdit(QTextEdit):
     def __init__(self,parent=None):
@@ -276,7 +369,9 @@ if __name__ == "__main__":
 
     style = '''
     QWidget {
-        background-color: red;
+    }
+    .customTilebarWindow {
+        background-color: white;
     }
     .TitleBar {
         background-color: #0b1722;
@@ -329,26 +424,29 @@ if __name__ == "__main__":
         background-color: #df2f25;
     }
     QLabel {
-        background-color: black;
+        background-color: gray;
     }
     '''
 
-    class MainWindow(QMainWindow, WindowResizableMixin):
+    class MainWindow(QMainWindow, CustomTitleBarWindowMixin):
         _padding = 5
         def __init__(self) -> None:
-            super().__init__()
-            widget = QWidget()
-            widget.setMouseTracking(True)
-            widget.setLayout(self.rootLayout)
+            super(QMainWindow, self).__init__()
+            super(CustomTitleBarWindowMixin, self).__init__()
             label = QLabel("hello hhhhhhhhhhh")
-            self.contentLayout.addWidget(label)
+            layout = QVBoxLayout()
+            layout.addWidget(label)
+            self.contentWidget.setLayout(layout)
             self.resize(800, 600)
-            self.setCentralWidget(widget)
             self.show()
-
 
     app = QApplication(sys.argv)
     app.setStyleSheet(style)
     w = MainWindow()
+    # w2 = MainWindow()
+    eventFilter = EventFilter()
+    eventFilter.listenWindow(w)
+    # eventFilter.listenWindow(w2)
+    app.installEventFilter(eventFilter)
     app.exec_()
 
