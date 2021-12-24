@@ -319,8 +319,11 @@ class Plugin(Plugin_Base):
             UI init done, you can update your widget here
             this method runs in UI thread, do not block too long
         '''
+        newItems = []
         for item in self.config["customSendItems"]:
-            self.insertSendItem(item, load=True)
+            item = self.insertSendItem(item, load=True)
+            newItems.append(item)
+        self.config["customSendItems"] = newItems
         self.sendSettingsAscii.setChecked(self.config["sendAscii"])
         self.sendSettingsHex.setChecked(not self.config["sendAscii"])
         self.sendSettingsCRLF.setChecked(self.config["useCRLF"])
@@ -371,7 +374,7 @@ class Plugin(Plugin_Base):
             send = QPushButton(remark)
         else:
             send = QPushButton("")
-        if not item["icon"]:
+        if (not "icon" in item) or not item["icon"]:
             item["icon"] = "fa.send"
         utils_ui.setButtonIcon(send, item["icon"])
         editRemark = QPushButton("")
@@ -408,6 +411,7 @@ class Plugin(Plugin_Base):
         self.customSendItemsLayout.addWidget(itemWidget)
         if not load:
             self.config["customSendItems"].append(item)
+        return item
 
     def deleteSendItem(self, idx, item, iconItems = []):
         for obj in iconItems:

@@ -15,8 +15,8 @@ import time
 
 def strAbout():
     return '''\
-<h1 style='color:#f75a5a';margin=10px;>{}</h1><br>
-<b style="color:#08c7a1;margin = 5px;">v{}</b><br><br>
+<h1 style='color:#009688';margin=10px;>{}</h1><br>
+<b style="color:#009688;margin = 5px;">v{}</b><br><br>
 {} + {}<br>
 {}:{}
 <br>
@@ -26,14 +26,14 @@ def strAbout():
         <img src="{}" width=109 height=32/></a>
 </div>
 {}<br>
-{} <b><a href="https://github.com/neutree/COMTool">Github</a></b><br>
-{} <b><a href="https://neucrack.com/donate"> neucrack.com/donate</a></b><br>
-{} <b><a href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br><br>
+{} <b><a style="color:#009688;" href="https://github.com/neutree/COMTool">Github</a></b><br>
+{} <b><a style="color:#009688;" href="https://neucrack.com/donate"> neucrack.com/donate</a></b><br>
+{} <b><a style="color:#009688;" href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br><br>
 {}<br>
- <b style="color:red;"><kbd>F11</kbd></b>: {}<br>
-<b style="color:red;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
- <b style="color:red;"><kbd>Ctrl+L</kbd></b>: {}<br>
- <b style="color:red;"><kbd>Ctrl+K</kbd></b>: {}<br>
+ <b style="color:#ef5350;"><kbd>F11</kbd></b>: {}<br>
+ <b style="color:#ef5350;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
+ <b style="color:#ef5350;"><kbd>Ctrl+L</kbd></b>: {}<br>
+ <b style="color:#ef5350;"><kbd>Ctrl+K</kbd></b>: {}<br>
 
 '''.format(
     parameters.appName,
