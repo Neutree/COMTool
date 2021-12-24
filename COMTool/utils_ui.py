@@ -7,6 +7,8 @@ except ImportError:
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
 
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QIcon
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 
 _buttonIcons = {}
@@ -17,10 +19,16 @@ def setSkin(skin):
 
     if skin == _skin:
         return
+    delete = []
     for btn in _buttonIcons:
+        if type(btn.parent()) == None:
+            delete.append(btn)
+            continue
         icon, colorVar = _buttonIcons[btn]
         color = parameters.styleForCode[skin][colorVar]
         btn.setIcon(qta.icon(icon, color=color))
+    for btn in delete:
+        _buttonIcons.pop(btn)
     _skin = skin    
 
 def setButtonIcon(button, icon : str, colorVar = "iconColor"):
@@ -32,3 +40,14 @@ def setButtonIcon(button, icon : str, colorVar = "iconColor"):
     iconColor = parameters.styleForCode[_skin][colorVar]
     _buttonIcons[button] = [icon, colorVar]
     button.setIcon(qta.icon(icon, color=iconColor))
+
+def clearButtonIcon(button):
+    global _skin, _buttonIcons
+    if button in _buttonIcons:
+        button.setIcon(QIcon())
+        _buttonIcons.pop(button)
+
+def getStyleVar(var):
+    global _skin, _buttonIcons
+
+    return parameters.styleForCode[_skin][var]

@@ -2,7 +2,7 @@
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QInputDialog)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QInputDialog, QDialog)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QFontMetricsF
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 
@@ -12,11 +12,13 @@ try:
     from i18n import _
     from widgets import TextEdit, PlainTextEdit
     import utils_ui
+    from qta_icon_browser import selectIcon
 except ImportError:
     from COMTool import parameters, utils_ui
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
     from COMTool.widgets import TextEdit, PlainTextEdit
+    from COMTool.qta_icon_browser import selectIcon
 
 try:
     from base import Plugin_Base
@@ -30,6 +32,51 @@ except Exception:
 import os, json
 from struct import unpack, pack
 
+class EditRemarDialog(QDialog):
+    def __init__(self, remark = "", icon=None) -> None:
+        super().__init__()
+        self.remark = remark
+        self.icon = icon
+        self.ok = False
+
+        layout = QGridLayout()
+        self.setLayout(layout)
+        layout.addWidget(QLabel(_("Input remark")), 0, 0, 1, 1)
+        remarkInput = QLineEdit(self.remark)
+        self.iconBtn = QPushButton(self.remark)
+        if self.icon:
+            self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
+        layout.addWidget(remarkInput, 0, 1, 1, 1)
+        layout.addWidget(QLabel(_("Select icon")), 1, 0, 1, 1)
+        layout.addWidget(self.iconBtn, 1, 1, 1, 1)
+        okBtn = QPushButton(_("OK"))
+        cancelBtn = QPushButton(_("Cancel"))
+        layout.addWidget(okBtn, 2, 0, 1, 1)
+        layout.addWidget(cancelBtn, 2, 1, 1, 1)
+
+        def ok():
+            self.ok = True
+            self.close()
+        okBtn.clicked.connect(lambda : ok())
+        cancelBtn.clicked.connect(lambda : self.close())
+        def updateRemark(text):
+            self.remark = text
+            self.iconBtn.setText(self.remark)
+        remarkInput.textChanged.connect(updateRemark)
+        self.iconBtn.clicked.connect(lambda: self.selectIcon())
+
+    def selectIcon(self):
+        self.icon = selectIcon(parent = self, title = _("Select icon"), btnName = _("OK"), color = utils_ui.getStyleVar("iconSelectorColor"))
+        if self.icon:
+            self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
+        else:
+            self.iconBtn.setIcon(QIcon())
+
+    def exec(self):
+        super().exec()
+        return self.ok, self.remark, self.icon
+
+        
 
 class Plugin(Plugin_Base):
     '''
@@ -82,19 +129,33 @@ class Plugin(Plugin_Base):
             "customSendItems": [
                 {
                     "text": "\\x01\\x03\\x03\\x03\\x03\\x01",
-                    "remark": "pre"
+                    "remark": "pre",
+                    "icon": "ei.arrow-left"
                 },
                 {
                     "text": "\\x01\\x04\\x04\\x04\\x04\\x01",
-                    "remark": "next"
+                    "remark": "next",
+                    "icon": "ei.arrow-right"
                 },
                 {
                     "text": "\\x01\\x01\\x01\\x01\\x01\\x01",
-                    "remark": "ok"
+                    "remark": "ok",
+                    "icon": "ei.ok"
                 },
                 {
                     "text": "\\x01\\x02\\x02\\x02\\x02\\x01",
-                    "remark": "ret"
+                    "remark": "ret",
+                    "icon": "ei.return-key"
+                },
+                {
+                    "text": "",
+                    "remark": None,
+                    "icon": "fa.send"
+                },
+                {
+                    "text": "",
+                    "remark": None,
+                    "icon": "fa.send"
                 }
             ]
         }
@@ -285,7 +346,7 @@ class Plugin(Plugin_Base):
     def onKeyReleaseEvent(self, event):
         pass
 
-    def insertSendItem(self, item = {"text": "", "remark": None}, load = False):
+    def insertSendItem(self, item = {"text": "", "remark": None, "icon": None}, load = False):
         # itemsNum = self.customSendItemsLayout.count() + 1
         # height = parameters.customSendItemHeight * (itemsNum + 1) + 20
         # topHeight = self.receiveWidget.height() + 100
@@ -310,7 +371,9 @@ class Plugin(Plugin_Base):
             send = QPushButton(remark)
         else:
             send = QPushButton("")
-            utils_ui.setButtonIcon(send, "fa.send")
+        if not item["icon"]:
+            item["icon"] = "fa.send"
+        utils_ui.setButtonIcon(send, item["icon"])
         editRemark = QPushButton("")
         utils_ui.setButtonIcon(editRemark, "ei.pencil")
         editRemark.setProperty("class", "remark")
@@ -328,18 +391,27 @@ class Plugin(Plugin_Base):
         layout.addWidget(send)
         layout.addWidget(editRemark)
         layout.addWidget(delete)
-        delete.clicked.connect(lambda: self.deleteSendItem(self.customSendItemsLayout.indexOf(itemWidget), itemWidget))
+        delete.clicked.connect(lambda: self.deleteSendItem(self.customSendItemsLayout.indexOf(itemWidget), itemWidget, [send, editRemark, delete]))
         def changeRemark(idx, obj):
-            remark ,ok = QInputDialog.getText(self.mainWidget, _("Input"), _("Input remark"), text = obj.text())
+            if not "icon" in self.config["customSendItems"][idx]:
+                self.config["customSendItems"][idx]["icon"] = None
+            ok, remark, icon = EditRemarDialog(obj.text(), self.config["customSendItems"][idx]["icon"]).exec()
             if ok:
                 obj.setText(remark)
+                if icon:
+                    utils_ui.setButtonIcon(obj, icon)
+                else:
+                    obj.setIcon(QIcon())
                 self.config["customSendItems"][idx]["remark"] = remark
+                self.config["customSendItems"][idx]["icon"] = icon
         editRemark.clicked.connect(lambda: changeRemark(self.customSendItemsLayout.indexOf(itemWidget), send))
         self.customSendItemsLayout.addWidget(itemWidget)
         if not load:
             self.config["customSendItems"].append(item)
 
-    def deleteSendItem(self, idx, item):
+    def deleteSendItem(self, idx, item, iconItems = []):
+        for obj in iconItems:
+            utils_ui.clearButtonIcon(obj)
         item.setParent(None)
         self.config["customSendItems"].pop(idx)
         # itemsNum = self.customSendItemsLayout.count()

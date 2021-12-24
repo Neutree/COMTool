@@ -132,10 +132,12 @@ QPushButton:hover {
 
 styleForCode = {
     "light":{
-        "iconColor": "white"
+        "iconColor": "white",
+        "iconSelectorColor": "#929599"
     },
     "dark":{
-        "iconColor": "#bcbcbd"
+        "iconColor": "#bcbcbd",
+        "iconSelectorColor": "#bcbcbd"
     }
 }
 

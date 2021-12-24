@@ -33,7 +33,8 @@ A cross platform serial debug tools written by python
 - [x] cross platform (Windows, Linux, macOS, Raspberry Pi)(code with python, only if your platform support python)
 - [x] reliable stability, no UI freeze
 - [x] multiple language support
-- [x] serial auto detect
+- [x] serial auto detect, and remember last selected support
+- [x] serial offline auto reconnect support
 - [x] port baudrate(any value) bytesize parity stopbits flow control etc. settings
 - [x] basic send/receive data (ascii and hex)
 - [x] send and receive data count
@@ -52,6 +53,7 @@ A cross platform serial debug tools written by python
 - [x] unix terminal style color support(e.g.`\x1b[33;42mhello\x1b[0mhello2`)
 - [x] night theme and White theme
 - [x] rts & dtr control by hand
+- [x] protocol with customable encoding and decoding method support, 
 - [ ] multiple auto send (order and disorder)
 - [ ] real time data graphic display
 - [ ] TCP UDP support
