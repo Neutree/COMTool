@@ -539,7 +539,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         CustomTitleBarWindowMixin.keyPressEvent(self, event)
         for plugin in self.plugins:
             if plugin.active:
-                plugin.onKeyReleaseEvent(event)
+                plugin.onKeyPressEvent(event)
 
     def keyReleaseEvent(self,event):
         CustomTitleBarWindowMixin.keyReleaseEvent(self, event)

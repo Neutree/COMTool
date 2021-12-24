@@ -164,7 +164,7 @@ class TitleBar(QWidget):
         self.style().drawPrimitive(QStyle.PE_Widget, opt, p, self)
 
 class EventFilter(QObject):
-    Margins = 4  # 边缘边距
+    Margins = 5  # 边缘边距
     windows = []
     _readyToMove = False
     _moving = False
@@ -173,17 +173,17 @@ class EventFilter(QObject):
     def listenWindow(self, window):
         self.windows.append(window)
 
-    def _get_edges(self, pos, width, height):
+    def _get_edges(self, pos, width, height, offset=0):
         edge = 0
         x, y = pos.x(), pos.y()
 
-        if y <= self.Margins:
+        if y <= self.Margins - offset and y >= 0:
             edge |= Qt.TopEdge
-        if x <= self.Margins:
+        if x <= self.Margins - offset and x >= 0:
             edge |= Qt.LeftEdge
-        if x >= width - self.Margins:
+        if x >= width - self.Margins + offset and x < width:
             edge |= Qt.RightEdge
-        if y >= height - self.Margins:
+        if y >= height - self.Margins + offset and y < height:
             edge |= Qt.BottomEdge
         return edge
 
@@ -219,7 +219,7 @@ class EventFilter(QObject):
         if obj.isWindowType():
             # top window 处理光标样式
             if event.type() == QEvent.MouseMove and obj.windowState() == Qt.WindowNoState:
-                cursor = self._get_cursor(self._get_edges(event.pos(), obj.width(), obj.height()))
+                cursor = self._get_cursor(self._get_edges(event.pos(), obj.width(), obj.height(), offset=1))
                 if not cursor is None:
                     obj.setCursor(cursor)
             if event.type() == QEvent.TouchUpdate and not self._moving:
