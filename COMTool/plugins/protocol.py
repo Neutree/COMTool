@@ -436,17 +436,20 @@ class Plugin(Plugin_Base):
                 self.receiveWidget.moveCursor(QTextCursor.End)
 
     def onReceived(self, data : bytes):
+        print("-- onReceived:", data)
         try:
             data = self.decodeMethod(data)
         except Exception as e:
             self.hintSignal.emit("error", _("Error"), _("Run decode error") + " " + str(e))
             return
+        print("-- decoded data:", data)
         if not data:
             return
         for id in self.connChilds:
             self.plugins_info[id].onReceived(data)
         if type(data) != str:
             data = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], self.config["sendEscape"])
+        print("-- show data:", data)
         self.showReceiveDataSignal.emit(data + "\n")
 
     def sendData(self, data_bytes=None):
