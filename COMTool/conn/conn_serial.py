@@ -429,7 +429,10 @@ class Serial(COMM):
                         continue
                     buffer += data
                 if buffer and (time.time() - t > 0.001): # no new data in 1ms
-                    self.onReceived(buffer)
+                    try:
+                        self.onReceived(buffer)
+                    except Exception as e:
+                        print("-- error in onReceived callback:", e)
                     buffer = b''
             except Exception as e:
                 if (self.status != ConnectionStatus.CLOSED):
