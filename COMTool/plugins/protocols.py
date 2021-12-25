@@ -7,7 +7,7 @@ def encode(data):
 '''
 
 
-maix_mm = '''
+maix_mm = """
 
 import json
 
@@ -65,26 +65,6 @@ class Data_ERROR(Base):
         return self.msg.encode("utf-8")
 
 class Data_KEY(Base):
-    '''
-        simulate keyboard input, only have request format:
-        |   name  | cmd(1B)     | key(4B) | value(1B) |
-        | ------- | ----------- | ------------- | --------- |
-        | example | 0x01(fixed) | 0x00000026(LE)    | 0x01(/0x00/0x02) |
-        e.g. [0x01, 0x26, 0x00, 0x00, 0x00, 0x01]
-        cmd: fixed 0x01
-        key: little edian 4 bytes data, value can be:
-            38: "up"
-            40: "down"
-            37: "left"
-            39: "right"
-            108: "enter"
-            27: "esc"
-            0x01010101: "ok"
-            0x02020202: "ret"
-            0x03030303: "pre"
-            0x04040404: "next"
-        value: key value, can be 0x01(pressed),0x02(long pressed), 0x00(released)
-    '''
     name = "key"
     map = {
         38: "up",
@@ -109,9 +89,6 @@ class Data_KEY(Base):
         super().__init__(request, body=body)
 
     def decode(self, body):
-        '''
-            @body 4 bytes(int32 type) key, little edian, e.g. b'\x73\x00\x00\x00', 1 byte(uint8 type) value: b'\x01'
-        '''
         self.num = unpack("i", body[:4])[0]
         if self.num in self.map:
             self.k = self.map[self.num]
@@ -132,17 +109,6 @@ class Data_KEY(Base):
         return json.dumps(ret, ensure_ascii=False)
 
 class Data_APP_List(Base):
-    '''
-        get app list command,
-            request format:
-                |   name  | cmd(1B) | 
-                | ------- | ------- |
-                | example | 0x02    |
-            response format:
-                |   name  | cmd(1B) | number(1B) | app 0 info(id_len(1B),id,name_len(1B),name,brief_len(1B),brief| ... | app n info |
-                | ------- | ------- | ---------- | ---------- | ----- |  ------ |
-                | example | 0x82    |    0x05    | [4, 'face', 4, 'face', 11, 'face detect'] | ... | ... |
-    '''
     name = "app list"
     def __init__(self, request = True,  body=b'', apps = []):
         self.apps = apps
@@ -214,17 +180,6 @@ class Data_APP_List(Base):
         return json.dumps(ret, ensure_ascii=False)
 
 class Data_CUR_APP_Info(Base):
-    '''
-        get current app info command,
-            request format:
-                |   name  | cmd(1B) | 
-                | ------- | ------- |
-                | example | 0x03    |
-            response format:
-                |   name  | cmd(1B) |  idx(1B)                 | app 0 info(id_len(1B),id,name_len(1B),name,brief_len(1B),brief|
-                | ------- | ------- | ------------------------ | ---------- |
-                | example | 0x83    |    0x02(0xFF means home) | [4, 'face', 4, 'face', 11, 'face detect'] |
-    '''
     name = "cur app info"
     def __init__(self, request = True,  body=b'', app_id = "", apps = []):
         self.apps = apps
@@ -305,24 +260,13 @@ class Data_CUR_APP_Info(Base):
         return json.dumps(ret, ensure_ascii=False)
 
 class Data_APP_Info(Base):
-    '''
-        get app info command,
-            request format:
-                |   name  | cmd(1B) |  idx(1B)                           | app_id(nB) |  
-                | ------- | ------- | ---------------------------------- | ------ | 
-                | example | 0x04    | 0x02(set to 0xFF means not set)    | 'face'(if idx set, this can be empty) | 
-            response format:
-                |   name  | cmd(1B) | idx(1B) | app 0 info(id_len(1B),id,name_len(1B),name,brief_len(1B),brief|
-                | ------- | ------- | ------- | ---------------- |
-                | example | 0x84    |  0x02   | [4, 'face', 4, 'face', 11, 'face detect'] |
-    '''
     name = "app info"
     def __init__(self, request = True,  body=b'', idx = 0xff, app_id = "", apps = []):
         self.apps = apps
         self.app_id = app_id
         self.idx = idx
         super().__init__(request, body=body)
-        if not request:
+        if (not request) and not body:
             idx = -1
             if self.app_id == "home":
                 idx = 0xff
@@ -401,18 +345,11 @@ class Data_APP_Info(Base):
                 "type": self.name,
                 "request": self.request,
                 "idx": self.idx,
-                "app": self.apps
+                "app": self.app
             }
         return json.dumps(ret, ensure_ascii=False)
 
 class Data_START_APP(Base):
-    '''
-        start app command, only have request
-            request format:
-                |   name  | cmd(1B) |  idx(1B)                           | app_id(nB) |  
-                | ------- | ------- | ---------------------------------- | ------ | 
-                | example | 0x05    | 0x02(set to 0xFF means not set)    | 'face'(if idx set, this can be empty) | 
-    '''
     name = "start app"
     def __init__(self, request = True,  body=b''):
         if not request:
@@ -436,13 +373,6 @@ class Data_START_APP(Base):
         return json.dumps(ret, ensure_ascii=False)
 
 class Data_EXIT_APP(Base):
-    '''
-        exit app command, only have request
-            request format:
-                |   name  | cmd(1B) |
-                | ------- | ------- |
-                | example | 0x06    |
-    '''
     name = "exit app"
     def __init__(self, request = True,  body=b'',):
         if not request:
@@ -478,7 +408,7 @@ cmd_class = {
 def encode(data:bytes):
     cmd = data[0]
     body = data[1:]
-    header = b'\xAA\xCA\xAC\xBB'
+    header = b'\\xAA\\xCA\\xAC\\xBB'
     data_len = len(body) + 1
     data_len = pack("I", data_len)
     frame = header + bytes([version]) + data_len + bytes([cmd]) + body
@@ -490,21 +420,10 @@ def encode(data:bytes):
 
 
 def _decode(raw : bytes):
-    '''
-        @raw protocol | header(4B) | version(1B) | data len(4B)(cmd + body)  | cmd(1B) | body(nB)     | CRC16_IBM(2B)(all previous) |
-             decimal  | 3148663466 | 1           | 5                         | 1       | ...          | 1271                        |
-               hex    | 0xBBACCAAA | 0x01        | 0x00000005                | 0x01    | 0x01000073   | 0x04F7                      |
-             little edian when convert bytes to integer
-             bytes: b'\xAA\xCA\xAC\xBB\x01\x06\x00\x00\x00\x01\x73\x00\x00\x00\x01\xf7\x04'
-        @return (cmd, data, raw) 
-                cmd 
-                data 
-                raw Data remaining after parsing
-    '''
     # find valid header and body, and check parity sum
     if not raw:
         return None, None, raw
-    idx = raw.find(b'\xAA\xCA\xAC\xBB')
+    idx = raw.find(b'\\xAA\\xCA\\xAC\\xBB')
     if idx < 0:
         return None, None, raw
     raw = raw[idx:]
@@ -551,7 +470,7 @@ def decode(raw:bytes):
     if type(data) == bytes:
         return bytes([cmd])+data
     return str(data)
-'''
+"""
 
 defaultProtocols = {
     "default": default,
