@@ -70,6 +70,7 @@ class Plugin(Plugin_Base):
             "sendAscii" : True,
             "sendScheduled" : False,
             "sendScheduledTime" : 300,
+            "sendAutoNewline": False,
             "useCRLF" : True,
             "showTimestamp" : False,
             "recordSend" : False,
@@ -176,13 +177,17 @@ class Plugin(Plugin_Base):
         self.sendSettingsRecord.setToolTip(_("Record send data"))
         self.sendSettingsEscape= QCheckBox(_("Escape"))
         self.sendSettingsEscape.setToolTip(_("Enable escape characters support like \\t \\r \\n \\x01 \\001"))
+        self.sendSettingsAppendNewLine= QCheckBox(_("Newline"))
+        self.sendSettingsAppendNewLine.setToolTip(_("Auto add new line when send"))
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,1,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,1,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduledCheckBox, 2, 0, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsScheduled, 2, 1, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsCRLF, 3, 0, 1, 1)
-        serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 3, 1, 1, 1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsAppendNewLine, 3, 1, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsEscape, 4, 0, 1, 2)
+        serialSendSettingsLayout.addWidget(self.sendSettingsEscape, 4, 0, 1, 2)
+        serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 4, 1, 1, 1)
         serialSendSettingsGroupBox.setLayout(serialSendSettingsLayout)
         layout.addWidget(serialSendSettingsGroupBox)
 
@@ -197,6 +202,7 @@ class Plugin(Plugin_Base):
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.sendSettingsRecord.clicked.connect(self.onRecordSendClicked)
+        self.sendSettingsAppendNewLine.clicked.connect(lambda: self.bindVar(self.sendSettingsAppendNewLine, self.config, "sendAutoNewline"))
         self.sendSettingsEscape.clicked.connect(lambda: self.bindVar(self.sendSettingsEscape, self.config, "sendEscape"))
         self.sendSettingsCRLF.clicked.connect(lambda: self.bindVar(self.sendSettingsCRLF, self.config, "useCRLF"))
         self.sendHistory.activated.connect(self.onSendHistoryIndexChanged)
@@ -300,6 +306,7 @@ class Plugin(Plugin_Base):
             interval = parameters.Parameters.sendScheduledTime
         self.sendSettingsScheduled.setText(str(interval) if interval > 0 else str(parameters.Parameters.sendScheduledTime))
         self.sendSettingsCRLF.setChecked(paramObj["useCRLF"])
+        self.sendSettingsAppendNewLine.setChecked(paramObj["sendAutoNewline"])
         self.sendSettingsRecord.setChecked(paramObj["recordSend"])
         self.sendSettingsEscape.setChecked(paramObj["sendEscape"])
         for i in range(0, len(paramObj["sendHistoryList"])):
@@ -523,6 +530,8 @@ class Plugin(Plugin_Base):
                     data = data_bytes
                 if not data:
                     return
+                if self.config["sendAutoNewline"]:
+                    data += b"\r\n" if self.config["useCRLF"] else b"\n"
                 # record send data
                 if self.config["recordSend"]:
                     head = '=> '
