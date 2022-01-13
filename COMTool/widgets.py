@@ -380,15 +380,28 @@ class TextEdit(QTextEdit):
         return QTextEdit.keyPressEvent(self,event)
 
 class PlainTextEdit(QPlainTextEdit):
+    onSave = lambda : None
     def __init__(self,parent=None):
         super(QPlainTextEdit,self).__init__(parent=None)
+        self.keyControlPressed = False
 
     def keyPressEvent(self,event):
-        if event.key() == Qt.Key_Tab:
+        if event.key() == Qt.Key_Control:
+            self.keyControlPressed = True
+            return
+        elif event.key() == Qt.Key_Tab:
             tc = self.textCursor()
             tc.insertText("    ")
+            event.accept()
             return
+        elif event.key() == Qt.Key_S:
+            self.onSave()
         return QPlainTextEdit.keyPressEvent(self,event)
+
+    def onKeyReleaseEvent(self, event):
+        if event.key() == Qt.Key_Control:
+            self.keyControlPressed = False
+
 
 if __name__ == "__main__":
     import sys

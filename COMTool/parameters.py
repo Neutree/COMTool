@@ -112,6 +112,14 @@ class Parameters:
             self.conns.update(obj["conns"])
         if "plugins" in obj:
             self.plugins.update(obj["plugins"])
+
+    def __str__(self) -> str:
+        obj = {
+            "basic": self.basic,
+            "conns": self.conns,
+            "plugins": self.plugins
+        }
+        return json.dumps(obj)
         
 
 strStyleShowHideButtonLeft = '''

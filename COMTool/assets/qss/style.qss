@@ -334,7 +334,6 @@ QRadioButton::indicator::checked {
 
 QToolTip {
     border: 0px solid #0772ca;
-    border-radius: 5px;
     padding: 5px;
     color: white;
     background: #7777cc;

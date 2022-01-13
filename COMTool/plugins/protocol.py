@@ -131,31 +131,44 @@ class Plugin(Plugin_Base):
                     "text": "\\x01\\x03\\x03\\x03\\x03\\x01",
                     "remark": "pre",
                     "icon": "ei.arrow-left"
-                },
-                {
+                },{
                     "text": "\\x01\\x04\\x04\\x04\\x04\\x01",
                     "remark": "next",
                     "icon": "ei.arrow-right"
-                },
-                {
+                },{
                     "text": "\\x01\\x01\\x01\\x01\\x01\\x01",
                     "remark": "ok",
-                    "icon": "ei.ok"
-                },
-                {
+                    "icon": "fa.circle-o"
+                },{
                     "text": "\\x01\\x02\\x02\\x02\\x02\\x01",
                     "remark": "ret",
                     "icon": "ei.return-key"
-                },
-                {
-                    "text": "",
-                    "remark": None,
+                },{
+                    "text": "\\x02",
+                    "remark": "apps",
                     "icon": "fa.send"
-                },
-                {
-                    "text": "",
-                    "remark": None,
+                },{
+                    "text": "\\x03",
+                    "remark": "curApp",
                     "icon": "fa.send"
+                },{
+                    "text": "\\x04\\xFFface",
+                    "remark": "appInfo",
+                    "icon": "fa.send"
+                },{
+                    "text": "\\x05\\xFFface",
+                    "remark": "start",
+                    "icon": "mdi.rocket-launch"
+                },{
+                    "text": "\\x06",
+                    "remark": "exit",
+                    "icon": "mdi.exit-to-app"
+                },{
+                    "text": "\\x08\\x00",
+                    "remark": ""
+                },{
+                    "text": "\\x08\\x01",
+                    "remark": ""
                 }
             ]
         }
@@ -164,9 +177,20 @@ class Plugin(Plugin_Base):
             if not k in self.config:
                 self.config[k] = default[k]
         self.editingDefaults = False
-        self.codeGlobals = {"unpack": unpack, "pack": pack, "crc": crc}
+        self.codeGlobals = {"unpack": unpack, "pack": pack, "crc": crc, "encoding": self.configGlobal["encoding"], "print": self.print}
         self.encodeMethod = lambda x:x
         self.decodeMethod = lambda x:x
+
+    def print(self, *args, **kw_args):
+        end = "\n"
+        start = "[MSG]: "
+        if "end" in kw_args:
+            end = kw_args["end"]
+        if "start" in kw_args:
+            start = kw_args["start"]
+        string = start  + " ".join(map(str, args)) + end
+        self.showReceiveDataSignal.emit(string)
+        
 
     def onWidgetMain(self, parent, rootWindow):
         self.mainWidget = QSplitter(Qt.Vertical)
@@ -267,6 +291,7 @@ class Plugin(Plugin_Base):
         self.sendSettingsEscape.clicked.connect(lambda : self.bindVar(self.sendSettingsEscape, self.config, "sendEscape", bool))
         self.saveCodeBtn.clicked.connect(self.saveCode)
         self.deleteCodeBtn.clicked.connect(self.deleteCode)
+        self.codeWidget.onSave = self.saveCode
         return root
 
     def onWidgetFunctional(self, parent):
@@ -342,6 +367,7 @@ class Plugin(Plugin_Base):
         self.codeItems.setCurrentIndex(idx)
         self.selectCode(name)
         self.codeItems.currentIndexChanged.connect(self.onCodeItemChanged) # add here to avoid self.selectCode trigger
+        self.codeWidget.textChanged.connect(self.onCodeChanged)
 
     def onKeyPressEvent(self, event):
         pass
@@ -436,20 +462,17 @@ class Plugin(Plugin_Base):
                 self.receiveWidget.moveCursor(QTextCursor.End)
 
     def onReceived(self, data : bytes):
-        print("-- onReceived:", data)
         try:
             data = self.decodeMethod(data)
         except Exception as e:
             self.hintSignal.emit("error", _("Error"), _("Run decode error") + " " + str(e))
             return
-        print("-- decoded data:", data)
         if not data:
             return
         for id in self.connChilds:
             self.plugins_info[id].onReceived(data)
         if type(data) != str:
             data = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], self.config["sendEscape"])
-        print("-- show data:", data)
         self.showReceiveDataSignal.emit(data + "\n")
 
     def sendData(self, data_bytes=None):
@@ -490,7 +513,6 @@ class Plugin(Plugin_Base):
                 idx = self.codeItems.findText(name)
                 if idx >= 0:
                     self.codeItems.removeItem(idx)
-                print(self.codeItems.count(), self.codeItems.count() - 2)
                 self.codeItems.insertItem(self.codeItems.count() - 2, name)
                 self.config["code"][name] = defaultProtocols[name]
             self.codeItems.setCurrentIndex(0)
@@ -512,6 +534,7 @@ class Plugin(Plugin_Base):
         if ok:
             self.encodeMethod = e
             self.decodeMethod = d
+        self.saveCodeBtn.setText(_("Save"))
 
     def getEnDecodeMethod(self, code):
         func = lambda x:x
@@ -524,6 +547,9 @@ class Plugin(Plugin_Base):
             msg = _("Method error") + "\n" + str(e)
             self.hintSignal.emit("error", _("Error"), msg)
         return False, func, func
+
+    def onCodeChanged(self):
+        self.saveCodeBtn.setText(_("Save") + " *")
 
     def saveCode(self):
         self.editingDefaults = True
@@ -542,6 +568,7 @@ class Plugin(Plugin_Base):
             self.encodeMethod = e
             self.decodeMethod = d
             self.config["code"][name] = code
+            self.saveCodeBtn.setText(_("Save"))
         
     def deleteCode(self):
         self.editingDefaults = True

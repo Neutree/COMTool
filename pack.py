@@ -77,10 +77,10 @@ def pack():
         shutil.rmtree("COMTool/__pycache__")
 
     if sys.platform.startswith("win32"):
-        cmd = 'pyinstaller --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets;assets" --add-data="COMTool/locales;locales" --add-data="README.MD;./" --add-data="README_ZH.MD;./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets;assets" --add-data="COMTool/locales;locales" --add-data="COMTool/protocols;protocols" --add-data="README.MD;./" --add-data="README_ZH.MD;./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
     elif sys.platform.startswith("darwin"):
         # macos not case insensitive, so can not contain comtool file and COMTool dir, so we copy to binary root dir
-        cmd = 'pyi-makespec --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README_ZH.MD:./" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
+        cmd = 'pyi-makespec --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="COMTool/protocols:protocols" --add-data="README_ZH.MD:./" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
         os.system(cmd)
         print("-- update bundle for macos build")
         upadte_spec_bundle("comtool.spec", 
@@ -94,7 +94,7 @@ def pack():
         print("-- update bundle for macos build complete")
         cmd = 'pyinstaller comtool.spec'
     else:
-        cmd = 'pyinstaller --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="README.MD:./" --add-data="README_ZH.MD:./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
+        cmd = 'pyinstaller --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="COMTool/protocols:protocols" --add-data="README.MD:./" --add-data="README_ZH.MD:./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
 
     print("-- execute:", cmd)
     os.system(cmd)

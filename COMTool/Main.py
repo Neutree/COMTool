@@ -134,7 +134,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                     pluginParent.active = True
                     pluginParent.isConnected = self.connection.isConnected
                     pluginParent.send = self.sendData
-                    pluginParent.connChilds.append(plugin)
+                    if not plugin in pluginParent.connChilds:
+                        pluginParent.connChilds.append(plugin)
                     parent = pluginParent
                     break
             plugin.send = parent.sendData
@@ -516,7 +517,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             event.ignore()
 
     def saveConfig(self):
+        print("save config:", self.config)
         self.config.save(parameters.configFilePath)
+        print("save config compelte")
 
     def loadConfig(self):
         paramObj = parameters.Parameters()
