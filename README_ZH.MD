@@ -66,6 +66,15 @@ COMTool
 
 ### Linux
 
+* Arch Linux 及其衍生版本通过 AUR 仓库在线安装：
+
+```bash
+# 发行版
+yay-S python-comtool
+# 开发版
+yay-S python-comtool-git
+```
+
 > Linux版本太多，我们只为ubuntu编译二进制。
 > 其他发行版请从 pypi 或源码安装。
 > 如果你有什么好的跨平台打包想法，比如 flatpak 或 appimage，你可以贡献一个 PR 或添加一个 issue 来告诉我如何可以做到
