@@ -70,9 +70,9 @@ COMTool
 
 ```bash
 # 发行版
-yay-S python-comtool
+yay -S python-comtool
 # 开发版
-yay-S python-comtool-git
+yay -S python-comtool-git
 ```
 
 > Linux版本太多，我们只为ubuntu编译二进制。

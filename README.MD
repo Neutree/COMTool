@@ -72,9 +72,9 @@ A cross platform serial debug tools written by python
 
 ```bash
 # Release version
-yay-S python-comtool
+yay -S python-comtool
 # Development version
-yay-S python-comtool-git
+yay -S python-comtool-git
 ```
 
 > Linux has too much version, so we only compile binary for ubuntu.
