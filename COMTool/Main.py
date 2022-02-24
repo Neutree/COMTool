@@ -225,10 +225,10 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             settingLayout.setContentsMargins(0,0,0,0)
 
             # right functional layout
-            functionalWiget = plugin.onWidgetFunctional(contentWidget)
+            functionalWidget = plugin.onWidgetFunctional(contentWidget)
             contentWidget.addWidget(settingWidget)
             contentWidget.addWidget(mainWidget)
-            contentWidget.addWidget(functionalWiget)
+            contentWidget.addWidget(functionalWidget)
             contentWidget.setStretchFactor(0, 1)
             contentWidget.setStretchFactor(1, 2)
             contentWidget.setStretchFactor(2, 1)
