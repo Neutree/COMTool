@@ -1,7 +1,7 @@
 import sys,os
 
-if sys.version_info < (3, 8):
-    print("only support python >= 3.8, but now is {}".format(sys.version_info))
+if sys.version_info < (3, 7):
+    print("only support python >= 3.7, but now is {}".format(sys.version_info))
     sys.exit(1)
 
 
@@ -143,7 +143,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             plugin.isConnected = self.connection.isConnected
             plugin.send = self.sendData
         self.config.basic["activePlugin"] = plugin.id
-    
+
     def initVar(self):
         self.strings = parameters.Strings(self.config.basic["locale"])
         self.dataToSend = []
@@ -453,7 +453,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         else:
             color = "#008200"
         text = '<font color={}>{}</font>'.format(color, msg)
-        self.statusBarStauts.setText(text)        
+        self.statusBarStauts.setText(text)
 
     def updateStyle(self, widget):
         self.frameWidget.style().unpolish(widget)
@@ -621,7 +621,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         elif result == 1:
             self.config.basic["skipVersion"] = versionInt
 
-            
+
 
     def autoUpdateDetect(self):
         auto = autoUpdate.AutoUpdate()

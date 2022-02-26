@@ -1,5 +1,5 @@
 from struct import unpack, pack
-import binascii
+import utils
 
 crc16 = crc.crc16
 
@@ -63,7 +63,7 @@ class Data_APP_CMD(Base):
         ret = pack("B", len(app_id))
         ret += app_id
         ret += self.content
-        return ret 
+        return ret
 
 class Data_OK(Base):
     '''
@@ -228,7 +228,7 @@ class Data_APP_List(Base):
     '''
         get app list command,
             request format:
-                |   name  | cmd(1B) | 
+                |   name  | cmd(1B) |
                 | ------- | ------- |
                 | example | 0x02    |
             response format:
@@ -310,7 +310,7 @@ class Data_CUR_APP_Info(Base):
     '''
         get current app info command,
             request format:
-                |   name  | cmd(1B) | 
+                |   name  | cmd(1B) |
                 | ------- | ------- |
                 | example | 0x03    |
             response format:
@@ -401,9 +401,9 @@ class Data_APP_Info(Base):
     '''
         get app info command,
             request format:
-                |   name  | cmd(1B) |  idx(1B)                           | app_id(nB) |  
-                | ------- | ------- | ---------------------------------- | ------ | 
-                | example | 0x04    | 0x02(set to 0xFF means not set)    | 'face'(if idx set, this can be empty) | 
+                |   name  | cmd(1B) |  idx(1B)                           | app_id(nB) |
+                | ------- | ------- | ---------------------------------- | ------ |
+                | example | 0x04    | 0x02(set to 0xFF means not set)    | 'face'(if idx set, this can be empty) |
             response format:
                 |   name  | cmd(1B) | idx(1B) | app 0 info(id_len(1B),id,name_len(1B),name,brief_len(1B),brief|
                 | ------- | ------- | ------- | ---------------- |
@@ -502,9 +502,9 @@ class Data_START_APP(Base):
     '''
         start app command, only have request
             request format:
-                |   name  | cmd(1B) |  idx(1B)                           | app_id(nB) |  
-                | ------- | ------- | ---------------------------------- | ------ | 
-                | example | 0x05    | 0x02(set to 0xFF means not set)    | 'face'(if idx set, this can be empty) | 
+                |   name  | cmd(1B) |  idx(1B)                           | app_id(nB) |
+                | ------- | ------- | ---------------------------------- | ------ |
+                | example | 0x05    | 0x02(set to 0xFF means not set)    | 'face'(if idx set, this can be empty) |
     '''
     name = "start app"
     def __init__(self, request = True,  body=b''):
@@ -575,10 +575,10 @@ def _decode(raw : bytes):
                hex    | 0xBBACCAAA | 0x01        | 0x00000005                | 0x01    | 0x01000073   | 0x04F7                      |
              little edian when convert bytes to integer
              bytes: b'\xAA\xCA\xAC\xBB\x01\x06\x00\x00\x00\x01\x73\x00\x00\x00\x01\xf7\x04'
-        @return (request, cmd, data, raw) 
+        @return (request, cmd, data, raw)
                 request or response
-                cmd 
-                data 
+                cmd
+                data
                 raw Data remaining after parsing
     '''
     # find valid header and body, and check parity sum
@@ -638,7 +638,7 @@ def encode(data:bytes):
     _crc = crc16(frame)
     _crc = pack("H", _crc)
     frame += _crc
-    msg = '  [HEX] {}\n  [BYTES]: {}\n'.format(binascii.hexlify(data, " ").decode(), str(data)[2:-1])
+    msg = '  [HEX] {}\n  [BYTES]: {}\n'.format(utils.hexlify(data, " ").decode(), str(data)[2:-1])
     print(msg, start = "=> REQUEST\n")
     return frame
 
@@ -648,12 +648,12 @@ def decode(raw:bytes):
         return b''
     if type(data) == bytes:
         data = bytes([cmd])+data
-        data = '<= {}\n  [HEX]: {}\n  [BYTES]:  {}'.format("REQUEST" if reqeust else "RESPONSE", binascii.hexlify(data, " ").decode(), str(data)[2:-1])
+        data = '<= {}\n  [HEX]: {}\n  [BYTES]:  {}'.format("REQUEST" if reqeust else "RESPONSE", utils.hexlify(data, " ").decode(), str(data)[2:-1])
         return data
     cmd_bytes = bytes([cmd if reqeust else cmd|CMD_RESPONSE_MASK])
     data = '<= {}\n  [HEX]: {}\n  [BYTES]: {}{}\n  [DECODED]: {}\n'.format(
             "REQUEST" if reqeust else "RESPONSE",
-            binascii.hexlify(cmd_bytes + body, " ").decode(),
+            utils.hexlify(cmd_bytes + body, " ").decode(),
             str(cmd_bytes)[2:-1],
             str(body)[2:-1],
             str(data)
