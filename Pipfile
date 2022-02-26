@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyserial = ">=3.5"
+requests = ">=2.25.1"
+PyQt5 = ">=5.15.6"
+Babel = ">=2.9.1"
+QtAwesome = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"

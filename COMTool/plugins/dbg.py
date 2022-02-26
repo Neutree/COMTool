@@ -23,7 +23,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesk
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
-import os, threading, time, re, binascii
+import os, threading, time, re
 from datetime import datetime
 
 class Plugin(Plugin_Base):
@@ -46,7 +46,7 @@ class Plugin(Plugin_Base):
     connChilds = []
     id = "dbg"
     name = _("Send Receive")
-    # 
+    #
     receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
     sendFileOkSignal = pyqtSignal(bool, str)
     receiveProgressStop = False
@@ -259,7 +259,7 @@ class Plugin(Plugin_Base):
         #   set wrapper widget
         self.customSendScroll.setWidget(cutomSendItemsWraper)
         self.customSendScroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        # 
+        #
         logFileLayout = QHBoxLayout()
         self.saveLogCheckbox = QCheckBox()
         self.logFilePath = QLineEdit()
@@ -699,11 +699,11 @@ class Plugin(Plugin_Base):
         isHexString = False
         dataColored = None
         if showAsHex:
-            return True, binascii.hexlify(data, ' ').decode(encoding=encoding), dataColored
+            return True, utils.hexlify(data, ' ').decode(encoding=encoding), dataColored
         try:
             dataPlain, dataColored = self.getColoredText(data, self.configGlobal["encoding"])
         except Exception:
-            dataPlain = binascii.hexlify(data, ' ').decode(encoding=encoding)
+            dataPlain = utils.hexlify(data, ' ').decode(encoding=encoding)
             isHexString = True
         return isHexString, dataPlain, dataColored
 
@@ -766,7 +766,7 @@ class Plugin(Plugin_Base):
                 if data:
                     # add time header, head format(send receive '123' for example):
                     # '123'  '[2021-12-20 11:02:08.02.754]: 123' '=> 12' '<= 123'
-                    # '=> [2021-12-20 11:02:34.02.291]: 123' '<= [2021-12-20 11:02:40.02.783]: 123' 
+                    # '=> [2021-12-20 11:02:34.02.291]: 123' '<= [2021-12-20 11:02:40.02.783]: 123'
                     # '<= [2021-12-20 11:03:25.03.320] [HEX]: 31 32 33 ' '=> [2021-12-20 11:03:27.03.319] [HEX]: 31 32 33'
                     if new_line:
                         timeNow = '[{}] '.format(utils.datetime_format_ms(datetime.now()))
