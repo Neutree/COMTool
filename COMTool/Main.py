@@ -517,7 +517,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             event.ignore()
 
     def saveConfig(self):
-        print("save config:", self.config)
+        # print("save config:", self.config)
         self.config.save(parameters.configFilePath)
         print("save config compelte")
 
@@ -676,6 +676,7 @@ def main():
             t.start()
             ret = app.exec_()
             if not mainWindow.needRestart:
+                app.removeEventFilter(eventFilter)
                 print("-- no need to restart, now exit")
                 break
     except Exception as e:

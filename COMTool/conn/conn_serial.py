@@ -459,6 +459,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     conn = Serial()
+    conn.onInit({})
 
     def onReceived(data):
         print(data)
@@ -466,6 +467,5 @@ if __name__ == "__main__":
 
     conn.onReceived = onReceived
     window = conn.onWidget()
-    conn.updateConfig({})
     window.show()
     ret = app.exec_()
