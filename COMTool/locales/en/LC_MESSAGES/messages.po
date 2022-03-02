@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-08 19:07+0800\n"
+"POT-Creation-Date: 2022-03-02 22:17+0800\n"
 "PO-Revision-Date: 2021-12-04 15:21+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,287 +18,249 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:192
-msgid "Flow control"
+#: Main.py:217
+msgid "Connection"
 msgstr ""
 
-#: Main.py:226 Main.py:227
-msgid "Check to enable(usually output low level)"
+#: Main.py:283 Main.py:443
+msgid "Sent"
 msgstr ""
 
-#: Main.py:250
-msgid ""
-"Show recived data as visible format, select decode method at top right "
-"corner"
+#: Main.py:283 Main.py:284 Main.py:443 Main.py:444
+msgid "bytes"
 msgstr ""
 
-#: Main.py:252
-msgid "Show recived data as hex format"
+#: Main.py:284 Main.py:444
+msgid "Received"
 msgstr ""
 
-#: Main.py:255 Main.py:258
-msgid "Auto linefeed after interval, unit: ms"
+#: Main.py:314
+msgid "New Window"
 msgstr ""
 
-#: Main.py:261
-msgid "Timestamp"
-msgstr ""
-
-#: Main.py:262
-msgid ""
-"Add timestamp before received data, will automatically enable auto line "
-"feed"
-msgstr ""
-
-#: Main.py:263
-msgid "Color"
-msgstr ""
-
-#: Main.py:264
-msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
-msgstr ""
-
-#: Main.py:278
-msgid ""
-"Get send data as visible format, select encoding method at top right "
-"corner"
-msgstr ""
-
-#: Main.py:279
-msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
-msgstr ""
-
-#: Main.py:282 Main.py:285
-msgid "Timed send, unit: ms"
-msgstr ""
-
-#: Main.py:289
-msgid "Select to send \\r\\n instead of \\n"
-msgstr ""
-
-#: Main.py:291
-msgid "Record"
-msgstr ""
-
-#: Main.py:292
-msgid "Record send data"
-msgstr ""
-
-#: Main.py:293
-msgid "Escape"
-msgstr ""
-
-#: Main.py:294
-msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
-msgstr ""
-
-#: Main.py:311
-msgid "Open File"
-msgstr ""
-
-#: Main.py:312 parameters.py:47
-msgid "Send File"
-msgstr ""
-
-#: Main.py:313
-msgid "Clear History"
-msgstr ""
-
-#: Main.py:321
-msgid "Save log"
-msgstr ""
-
-#: Main.py:324
-msgid "Cutom send"
-msgstr ""
-
-#: Main.py:352
-msgid "Log path"
-msgstr ""
-
-#: Main.py:430
-msgid "Auto line feed value error, must be integer"
-msgstr ""
-
-#: Main.py:431
-msgid "Timed send value error, must be integer"
-msgstr ""
-
-#: Main.py:599
-msgid "Format error, should be like 00 01 02 03"
-msgstr ""
-
-#: Main.py:637 Main.py:655
-msgid "Escape is on, but escape error:"
-msgstr ""
-
-#: Main.py:740 parameters.py:52
-msgid "Ready"
-msgstr ""
-
-#: Main.py:759
-msgid "Connection lose!"
-msgstr ""
-
-#: Main.py:819
-msgid ""
-"File path error\n"
-"path"
-msgstr ""
-
-#: Main.py:822
-msgid "Connect first please"
-msgstr ""
-
-#: Main.py:854
-msgid "Open file failed!"
-msgstr ""
-
-#: Main.py:1027
-msgid "linefeed always on if timestamp or record send is on"
-msgstr ""
-
-#: Main.py:1050
-msgid "Restart now?"
-msgstr ""
-
-#: Main.py:1051
-msgid "language changed to: "
-msgstr ""
-
-#: Main.py:1051
-msgid "Restart software to take effect now?"
-msgstr ""
-
-#: Main.py:1250 parameters.py:26
-msgid "Send"
-msgstr ""
-
-#: Main.py:1330
-msgid "About"
-msgstr ""
-
-#: Main.py:1336 Main.py:1350
-msgid "Select file"
-msgstr ""
-
-#: Main.py:1338
-msgid "All Files (*)"
-msgstr ""
-
-#: Main.py:1352
-msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
-msgstr ""
-
-#: Main.py:1368
-msgid "History cleared!"
-msgstr ""
-
-#: Main.py:1377
-msgid "New versioin detected, please click learn more to download"
-msgstr ""
-
-#: Main.py:1378
-msgid "Learn More"
-msgstr ""
-
-#: Main.py:1379
-msgid "Skip this version"
-msgstr ""
-
-#: Main.py:1380
-msgid "Remind me next time"
-msgstr ""
-
-#: Main.py:1381
-msgid "Need update"
-msgstr ""
-
-#: Main.py:1456
+#: Main.py:368 Main.py:373 Main.py:428 Main.py:439 Main.py:685
+#: conn/conn_serial.py:320 plugins/base.py:109 plugins/base.py:114
+#: plugins/base.py:130 plugins/base.py:167 plugins/base.py:185
+#: plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
+#: plugins/protocol.py:549 plugins/protocol.py:563 plugins/protocol.py:629
 msgid "Error"
 msgstr ""
 
-#: helpAbout.py:38
-msgid "COMTool is a Open source project create by"
+#: Main.py:428
+msgid "Open file failed!"
 msgstr ""
 
-#: helpAbout.py:40
-msgid "See more on"
+#: Main.py:468 Main.py:477
+msgid "Restart now?"
 msgstr ""
 
-#: helpAbout.py:41
-msgid "Welcome to improve it together"
+#: Main.py:469
+msgid "language changed to: "
 msgstr ""
 
-#: helpAbout.py:42
-msgid "Shortcut:"
+#: Main.py:469
+msgid "Restart software to take effect now?"
+msgstr ""
+
+#: Main.py:602
+msgid "About"
+msgstr ""
+
+#: Main.py:611
+msgid "New versioin detected, please click learn more to download"
+msgstr ""
+
+#: Main.py:612
+msgid "Learn More"
+msgstr ""
+
+#: Main.py:613
+msgid "Skip this version"
+msgstr ""
+
+#: Main.py:614
+msgid "Remind me next time"
+msgstr ""
+
+#: Main.py:615
+msgid "Need update"
 msgstr ""
 
 #: helpAbout.py:43
-msgid "Send data"
-msgstr ""
-
-#: helpAbout.py:44
-msgid "Clear Send Area"
+msgid "Config path"
 msgstr ""
 
 #: helpAbout.py:45
-msgid "Clear Receive Area"
+msgid "COMTool is a Open source project create by"
 msgstr ""
 
-#: parameters.py:25
-msgid "bytes"
+#: helpAbout.py:47
+msgid "Welcome to improve it together"
+msgstr ""
+
+#: helpAbout.py:48
+msgid "See more details on"
+msgstr ""
+
+#: helpAbout.py:49
+msgid "Donate"
+msgstr ""
+
+#: helpAbout.py:50
+msgid "Have problem? see"
+msgstr ""
+
+#: helpAbout.py:51
+msgid "Shortcut:"
+msgstr ""
+
+#: helpAbout.py:52
+msgid "Full screen"
+msgstr ""
+
+#: helpAbout.py:53
+msgid "Send data"
+msgstr ""
+
+#: helpAbout.py:54
+msgid "Clear Send Area"
+msgstr ""
+
+#: helpAbout.py:55
+msgid "Clear Receive Area"
 msgstr ""
 
 #: parameters.py:27
 msgid "Receive"
 msgstr ""
 
-#: parameters.py:28
-msgid "Port"
-msgstr ""
-
-#: parameters.py:29
-msgid "Baudrate"
-msgstr ""
-
-#: parameters.py:30
-msgid "DataBytes"
-msgstr ""
-
-#: parameters.py:31
-msgid "Parity"
-msgstr ""
-
-#: parameters.py:32
-msgid "Stopbits"
-msgstr ""
-
-#: parameters.py:33
-msgid "ASCII"
-msgstr ""
-
-#: parameters.py:34
-msgid "HEX"
-msgstr ""
-
-#: parameters.py:35 parameters.py:43
+#: parameters.py:28 plugins/dbg.py:160
 msgid "Send Settings"
 msgstr ""
 
-#: parameters.py:36 parameters.py:42
+#: parameters.py:29 plugins/dbg.py:131
 msgid "Receive Settings"
 msgstr ""
 
+#: parameters.py:30
+msgid "Functional Send"
+msgstr ""
+
+#: parameters.py:31
+msgid "Closed"
+msgstr ""
+
+#: parameters.py:32
+msgid "Ready"
+msgstr ""
+
+#: parameters.py:33
+msgid "HELP"
+msgstr ""
+
+#: parameters.py:34
+msgid "ABOUT"
+msgstr ""
+
+#: parameters.py:35
+msgid "Settings"
+msgstr ""
+
+#: parameters.py:36
+msgid "Need Update"
+msgstr ""
+
 #: parameters.py:37
-msgid "OPEN"
+msgid "update now?"
 msgstr ""
 
 #: parameters.py:38
+msgid "uninstall app"
+msgstr ""
+
+#: conn/conn_serial.py:74
+msgid "Custom, input baudrate"
+msgstr ""
+
+#: conn/conn_serial.py:98
+msgid "Port"
+msgstr ""
+
+#: conn/conn_serial.py:99
+msgid "Baudrate"
+msgstr ""
+
+#: conn/conn_serial.py:100
+msgid "DataBytes"
+msgstr ""
+
+#: conn/conn_serial.py:101
+msgid "Parity"
+msgstr ""
+
+#: conn/conn_serial.py:102
+msgid "Stopbits"
+msgstr ""
+
+#: conn/conn_serial.py:103
+msgid "Flow control"
+msgstr ""
+
+#: conn/conn_serial.py:137 conn/conn_serial.py:138
+msgid "Check to enable(usually output low level)"
+msgstr ""
+
+#: conn/conn_serial.py:139 conn/conn_serial.py:285 conn/conn_serial.py:376
+msgid "OPEN"
+msgstr ""
+
+#: conn/conn_serial.py:193 conn/conn_serial.py:319
+msgid "Open Failed"
+msgstr ""
+
+#: conn/conn_serial.py:379 conn/conn_serial.py:382
 msgid "CLOSE"
 msgstr ""
 
-#: parameters.py:39
+#: conn/conn_serial.py:416
+msgid "Reconnected"
+msgstr ""
+
+#: conn/conn_serial.py:445
+msgid "Connection lose!"
+msgstr ""
+
+#: plugins/base.py:130
+msgid "Format error, should be like 00 01 02 03"
+msgstr ""
+
+#: plugins/base.py:167 plugins/base.py:185
+msgid "Escape is on, but escape error:"
+msgstr ""
+
+#: plugins/dbg.py:48
+msgid "Send Receive"
+msgstr ""
+
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:327
+msgid "ASCII"
+msgstr ""
+
+#: plugins/dbg.py:133
+msgid ""
+"Show recived data as visible format, select decode method at top right "
+"corner"
+msgstr ""
+
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:328
+msgid "HEX"
+msgstr ""
+
+#: plugins/dbg.py:135
+msgid "Show recived data as hex format"
+msgstr ""
+
+#: plugins/dbg.py:137
 #, fuzzy
 msgid ""
 "Auto\n"
@@ -309,74 +271,271 @@ msgstr ""
 "Linefeed\n"
 "ms"
 
-#: parameters.py:40
+#: plugins/dbg.py:138 plugins/dbg.py:141
+msgid "Auto linefeed after interval, unit: ms"
+msgstr ""
+
+#: plugins/dbg.py:144
+msgid "Timestamp"
+msgstr ""
+
+#: plugins/dbg.py:145
+msgid ""
+"Add timestamp before received data, will automatically enable auto line "
+"feed"
+msgstr ""
+
+#: plugins/dbg.py:146
+msgid "Color"
+msgstr ""
+
+#: plugins/dbg.py:147
+msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
+msgstr ""
+
+#: plugins/dbg.py:163 plugins/protocol.py:329
+msgid ""
+"Get send data as visible format, select encoding method at top right "
+"corner"
+msgstr ""
+
+#: plugins/dbg.py:164 plugins/protocol.py:330
+msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
+msgstr ""
+
+#: plugins/dbg.py:166
 msgid ""
 "Timed Send\n"
 "ms"
 msgstr ""
 
-#: parameters.py:41
-msgid "Serial Settings"
+#: plugins/dbg.py:167 plugins/dbg.py:170
+msgid "Timed send, unit: ms"
 msgstr ""
 
-#: parameters.py:44
-msgid "ClearReceive"
-msgstr ""
-
-#: parameters.py:45
-msgid "+"
-msgstr ""
-
-#: parameters.py:46
-msgid "Functional Send"
-msgstr ""
-
-#: parameters.py:48
-msgid "Sendding File"
-msgstr ""
-
-#: parameters.py:49
-msgid "Open Failed"
-msgstr ""
-
-#: parameters.py:50
-msgid "Closed"
-msgstr ""
-
-#: parameters.py:51
-msgid "Send Error"
-msgstr ""
-
-#: parameters.py:53
+#: plugins/dbg.py:173 plugins/protocol.py:332
 msgid "<CRLF>"
 msgstr ""
 
-#: parameters.py:54
+#: plugins/dbg.py:174 plugins/protocol.py:333
+msgid "Select to send \\r\\n instead of \\n"
+msgstr ""
+
+#: plugins/dbg.py:176 plugins/protocol.py:54 plugins/protocol.py:101
+msgid "Record"
+msgstr ""
+
+#: plugins/dbg.py:177
+msgid "Record send data"
+msgstr ""
+
+#: plugins/dbg.py:178 plugins/protocol.py:335
+msgid "Escape"
+msgstr ""
+
+#: plugins/dbg.py:179 plugins/protocol.py:336
+msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
+msgstr ""
+
+#: plugins/dbg.py:180
+msgid "Newline"
+msgstr ""
+
+#: plugins/dbg.py:181
+msgid "Auto add new line when send"
+msgstr ""
+
+#: plugins/dbg.py:210
+msgid "Auto line feed value error, must be integer"
+msgstr ""
+
+#: plugins/dbg.py:211
+msgid "Timed send value error, must be integer"
+msgstr ""
+
+#: plugins/dbg.py:221
+msgid "Open File"
+msgstr ""
+
+#: plugins/dbg.py:222
+msgid "Send File"
+msgstr ""
+
+#: plugins/dbg.py:223
+msgid "Clear History"
+msgstr ""
+
+#: plugins/dbg.py:226
+msgid "Sendding File"
+msgstr ""
+
+#: plugins/dbg.py:232
+msgid "Save log"
+msgstr ""
+
+#: plugins/dbg.py:235
+msgid "Cutom send"
+msgstr ""
+
+#: plugins/dbg.py:266
+msgid "Log path"
+msgstr ""
+
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:639
+#: plugins/protocol.py:660
+msgid "Warning"
+msgstr ""
+
+#: plugins/dbg.py:349
+msgid "linefeed always on if timestamp or record send is on"
+msgstr ""
+
+#: plugins/dbg.py:377 plugins/protocol.py:64 plugins/protocol.py:82
+msgid "OK"
+msgstr ""
+
+#: plugins/dbg.py:377
+msgid "History cleared!"
+msgstr ""
+
+#: plugins/dbg.py:382
+msgid "Send file"
+msgstr ""
+
+#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:368
+#: plugins/protocol.py:378
+msgid "Select file"
+msgstr ""
+
+#: plugins/dbg.py:398
+msgid "All Files (*)"
+msgstr ""
+
+#: plugins/dbg.py:412
+msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
+msgstr ""
+
+#: plugins/dbg.py:504
+msgid ""
+"File path error\n"
+"path"
+msgstr ""
+
+#: plugins/dbg.py:507
+msgid "Connect first please"
+msgstr ""
+
+#: plugins/dbg.py:510
+msgid "Sending file"
+msgstr ""
+
+#: plugins/dbg.py:521
 msgid "Time format error"
 msgstr ""
 
-#: parameters.py:55
-msgid "HELP"
+#: plugins/dbg.py:578
+msgid "Send Error"
 msgstr ""
 
-#: parameters.py:56
-msgid "ABOUT"
+#: plugins/dbg.py:586
+msgid "get data error"
 msgstr ""
 
-#: parameters.py:57
-msgid "Settings"
+#: plugins/protocol.py:46
+msgid "Input remark"
 msgstr ""
 
-#: parameters.py:58
-msgid "Need Update"
+#: plugins/protocol.py:57 plugins/protocol.py:82
+msgid "Select icon"
 msgstr ""
 
-#: parameters.py:59
-msgid "update now?"
+#: plugins/protocol.py:59
+msgid "Shortcut"
 msgstr ""
 
-#: parameters.py:60
-msgid "uninstall app"
+#: plugins/protocol.py:61
+msgid "Press key to record, or click Cancel"
+msgstr ""
+
+#: plugins/protocol.py:65 plugins/protocol.py:95
+msgid "Cancel"
+msgstr ""
+
+#: plugins/protocol.py:158
+msgid "protocol"
+msgstr ""
+
+#: plugins/protocol.py:306
+msgid "En-decoding settings"
+msgstr ""
+
+#: plugins/protocol.py:310
+msgid "Custom, input name"
+msgstr ""
+
+#: plugins/protocol.py:311
+msgid "Load defaults"
+msgstr ""
+
+#: plugins/protocol.py:314 plugins/protocol.py:618 plugins/protocol.py:633
+#: plugins/protocol.py:652
+msgid "Save"
+msgstr ""
+
+#: plugins/protocol.py:315
+msgid "Delete"
+msgstr ""
+
+#: plugins/protocol.py:319
+msgid "Defaults"
+msgstr ""
+
+#: plugins/protocol.py:321
+msgid "Code"
+msgstr ""
+
+#: plugins/protocol.py:325
+msgid "Send settings"
+msgstr ""
+
+#: plugins/protocol.py:358
+msgid "Load config"
+msgstr ""
+
+#: plugins/protocol.py:359
+msgid "Share config"
+msgstr ""
+
+#: plugins/protocol.py:370 plugins/protocol.py:380
+msgid "json file (*.json);;config file (*.conf);;All Files (*)"
+msgstr ""
+
+#: plugins/protocol.py:392
+msgid "Restart to load config?"
+msgstr ""
+
+#: plugins/protocol.py:549
+msgid "Run decode error"
+msgstr ""
+
+#: plugins/protocol.py:563
+msgid "Run encode error"
+msgstr ""
+
+#: plugins/protocol.py:625
+msgid "decode and encode method should be in code"
+msgstr ""
+
+#: plugins/protocol.py:628
+msgid "Method error"
+msgstr ""
+
+#: plugins/protocol.py:639
+msgid "Please input code profile name first"
+msgstr ""
+
+#: plugins/protocol.py:660
+msgid "Please select a code profile name first to delete"
 msgstr ""
 
 #~ msgid "Pack date:"
@@ -389,5 +548,23 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "New versioin detected, please see more and update here:"
+#~ msgstr ""
+
+#~ msgid "Send"
+#~ msgstr ""
+
+#~ msgid "See more on"
+#~ msgstr ""
+
+#~ msgid "Serial Settings"
+#~ msgstr ""
+
+#~ msgid "ClearReceive"
+#~ msgstr ""
+
+#~ msgid "+"
+#~ msgstr ""
+
+#~ msgid "Please select a code profile name first to delte"
 #~ msgstr ""
 

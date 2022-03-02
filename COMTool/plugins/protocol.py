@@ -657,7 +657,7 @@ class Plugin(Plugin_Base):
         itemsConfig = [self.codeItemCustomStr, self.codeItemLoadDefaultsStr]
         # QMessageBox.infomation()
         if name in itemsConfig or not name:
-            self.hintSignal.emit("warning", _("Warning"), _("Please select a code profile name first to delte"))
+            self.hintSignal.emit("warning", _("Warning"), _("Please select a code profile name first to delete"))
             self.editingDefaults = False
             return
         idx = self.codeItems.findText(name)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-08 19:07+0800\n"
+"POT-Creation-Date: 2022-03-02 22:17+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,129 +18,400 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:192
+#: Main.py:217
+msgid "Connection"
+msgstr "连接"
+
+#: Main.py:283 Main.py:443
+msgid "Sent"
+msgstr "已发送"
+
+#: Main.py:283 Main.py:284 Main.py:443 Main.py:444
+msgid "bytes"
+msgstr "字节"
+
+#: Main.py:284 Main.py:444
+msgid "Received"
+msgstr "已接收"
+
+#: Main.py:314
+msgid "New Window"
+msgstr "新窗口"
+
+#: Main.py:368 Main.py:373 Main.py:428 Main.py:439 Main.py:685
+#: conn/conn_serial.py:320 plugins/base.py:109 plugins/base.py:114
+#: plugins/base.py:130 plugins/base.py:167 plugins/base.py:185
+#: plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
+#: plugins/protocol.py:549 plugins/protocol.py:563 plugins/protocol.py:629
+msgid "Error"
+msgstr "错误"
+
+#: Main.py:428
+msgid "Open file failed!"
+msgstr "打开失败"
+
+#: Main.py:468 Main.py:477
+msgid "Restart now?"
+msgstr "现在就重启？"
+
+#: Main.py:469
+msgid "language changed to: "
+msgstr "语言更改为: "
+
+#: Main.py:469
+msgid "Restart software to take effect now?"
+msgstr "现在就重启软件以生效？"
+
+#: Main.py:602
+msgid "About"
+msgstr "关于"
+
+#: Main.py:611
+msgid "New versioin detected, please click learn more to download"
+msgstr "检测到了新版本， 请点击 了解更多 以下载"
+
+#: Main.py:612
+msgid "Learn More"
+msgstr "了解更多"
+
+#: Main.py:613
+msgid "Skip this version"
+msgstr "跳过此版本"
+
+#: Main.py:614
+msgid "Remind me next time"
+msgstr "下次提醒我"
+
+#: Main.py:615
+msgid "Need update"
+msgstr "需要更新"
+
+#: helpAbout.py:43
+msgid "Config path"
+msgstr "配置路径"
+
+#: helpAbout.py:45
+msgid "COMTool is a Open source project create by"
+msgstr "COMTool 是一个开源程序， 创建者："
+
+#: helpAbout.py:47
+msgid "Welcome to improve it together"
+msgstr "欢迎一起改进"
+
+#: helpAbout.py:48
+msgid "See more details on"
+msgstr "更详细看这里"
+
+#: helpAbout.py:49
+msgid "Donate"
+msgstr "捐献"
+
+#: helpAbout.py:50
+msgid "Have problem? see"
+msgstr "有疑问？看"
+
+#: helpAbout.py:51
+msgid "Shortcut:"
+msgstr "快捷键："
+
+#: helpAbout.py:52
+msgid "Full screen"
+msgstr "全屏"
+
+#: helpAbout.py:53
+msgid "Send data"
+msgstr "发送数据"
+
+#: helpAbout.py:54
+msgid "Clear Send Area"
+msgstr "清除发送区"
+
+#: helpAbout.py:55
+msgid "Clear Receive Area"
+msgstr "清除接收区"
+
+#: parameters.py:27
+msgid "Receive"
+msgstr "接收"
+
+#: parameters.py:28 plugins/dbg.py:160
+msgid "Send Settings"
+msgstr "发送设置"
+
+#: parameters.py:29 plugins/dbg.py:131
+msgid "Receive Settings"
+msgstr "接收设置"
+
+#: parameters.py:30
+msgid "Functional Send"
+msgstr "其它发送功能"
+
+#: parameters.py:31
+msgid "Closed"
+msgstr "已关闭"
+
+#: parameters.py:32
+msgid "Ready"
+msgstr "就绪"
+
+#: parameters.py:33
+msgid "HELP"
+msgstr "帮助"
+
+#: parameters.py:34
+msgid "ABOUT"
+msgstr "关于"
+
+#: parameters.py:35
+msgid "Settings"
+msgstr "设置"
+
+#: parameters.py:36
+msgid "Need Update"
+msgstr "需要更新"
+
+#: parameters.py:37
+msgid "update now?"
+msgstr "现在就更新？"
+
+#: parameters.py:38
+msgid "uninstall app"
+msgstr "卸载应用"
+
+#: conn/conn_serial.py:74
+msgid "Custom, input baudrate"
+msgstr "自定义，输入波特率"
+
+#: conn/conn_serial.py:98
+msgid "Port"
+msgstr "端口"
+
+#: conn/conn_serial.py:99
+msgid "Baudrate"
+msgstr "波特率"
+
+#: conn/conn_serial.py:100
+msgid "DataBytes"
+msgstr "数据字节"
+
+#: conn/conn_serial.py:101
+msgid "Parity"
+msgstr "奇偶校验"
+
+#: conn/conn_serial.py:102
+msgid "Stopbits"
+msgstr "停止位"
+
+#: conn/conn_serial.py:103
 msgid "Flow control"
 msgstr "流控"
 
-#: Main.py:226 Main.py:227
+#: conn/conn_serial.py:137 conn/conn_serial.py:138
 msgid "Check to enable(usually output low level)"
 msgstr "选中以使能（通常会输出低电平）"
 
-#: Main.py:250
+#: conn/conn_serial.py:139 conn/conn_serial.py:285 conn/conn_serial.py:376
+msgid "OPEN"
+msgstr "打开"
+
+#: conn/conn_serial.py:193 conn/conn_serial.py:319
+msgid "Open Failed"
+msgstr "打开失败"
+
+#: conn/conn_serial.py:379 conn/conn_serial.py:382
+msgid "CLOSE"
+msgstr "关闭"
+
+#: conn/conn_serial.py:416
+msgid "Reconnected"
+msgstr "已重连"
+
+#: conn/conn_serial.py:445
+msgid "Connection lose!"
+msgstr "连接丢失！"
+
+#: plugins/base.py:130
+msgid "Format error, should be like 00 01 02 03"
+msgstr "格式错误，格式应该应该如 00 01 02 03"
+
+#: plugins/base.py:167 plugins/base.py:185
+msgid "Escape is on, but escape error:"
+msgstr "转移符支持已打开，但是转义时错误"
+
+#: plugins/dbg.py:48
+msgid "Send Receive"
+msgstr "收发"
+
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:327
+msgid "ASCII"
+msgstr "ASCII"
+
+#: plugins/dbg.py:133
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "使用可见字符显示收到的数据，在右上角选择解码的方法"
 
-#: Main.py:252
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:328
+msgid "HEX"
+msgstr "HEX"
+
+#: plugins/dbg.py:135
 msgid "Show recived data as hex format"
 msgstr "使用十六进制表示方法显示收到的数据"
 
-#: Main.py:255 Main.py:258
+#: plugins/dbg.py:137
+msgid ""
+"Auto\n"
+"Linefeed\n"
+"ms"
+msgstr "自动换行"
+
+#: plugins/dbg.py:138 plugins/dbg.py:141
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超过这个时间自动换行，单位：ms"
 
-#: Main.py:261
+#: plugins/dbg.py:144
 msgid "Timestamp"
 msgstr "时间戳"
 
-#: Main.py:262
+#: plugins/dbg.py:145
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr "在收到的数据前添加时间戳， 会自动使能自动换行"
 
-#: Main.py:263
+#: plugins/dbg.py:146
 msgid "Color"
 msgstr "颜色"
 
-#: Main.py:264
+#: plugins/dbg.py:147
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "使能 unix 终端颜色支持，比如：\\33[31;43mhello\\33[0m"
 
-#: Main.py:278
+#: plugins/dbg.py:163 plugins/protocol.py:329
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可见字符的方式获取将要发送的数据，在右上角选择编码的方法"
 
-#: Main.py:279
+#: plugins/dbg.py:164 plugins/protocol.py:330
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六进制的格式获取将要发送的数据，比如 十六进制的'31 32 33' 和 ascii编码的 '123' 等效"
 
-#: Main.py:282 Main.py:285
+#: plugins/dbg.py:166
+msgid ""
+"Timed Send\n"
+"ms"
+msgstr "定时发送"
+
+#: plugins/dbg.py:167 plugins/dbg.py:170
 msgid "Timed send, unit: ms"
 msgstr "定时发送，单位：ms"
 
-#: Main.py:289
+#: plugins/dbg.py:173 plugins/protocol.py:332
+msgid "<CRLF>"
+msgstr "<CRLF>"
+
+#: plugins/dbg.py:174 plugins/protocol.py:333
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "选中发送 \\r\\n 而不是 \\n"
 
-#: Main.py:291
+#: plugins/dbg.py:176 plugins/protocol.py:54 plugins/protocol.py:101
 msgid "Record"
 msgstr "记录"
 
-#: Main.py:292
+#: plugins/dbg.py:177
 msgid "Record send data"
 msgstr "记录发送的数据"
 
-#: Main.py:293
+#: plugins/dbg.py:178 plugins/protocol.py:335
 msgid "Escape"
 msgstr "转义符"
 
-#: Main.py:294
+#: plugins/dbg.py:179 plugins/protocol.py:336
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "使能转义字符支持，比如 \\t \\r \\n \\x01 \\001"
 
-#: Main.py:311
-msgid "Open File"
-msgstr "打开文件"
+#: plugins/dbg.py:180
+msgid "Newline"
+msgstr "新行"
 
-#: Main.py:312 parameters.py:47
-msgid "Send File"
-msgstr "发送文件"
+#: plugins/dbg.py:181
+msgid "Auto add new line when send"
+msgstr "发送时自动添加回车符"
 
-#: Main.py:313
-msgid "Clear History"
-msgstr "清除历史"
-
-#: Main.py:321
-msgid "Save log"
-msgstr "保存日志"
-
-#: Main.py:324
-msgid "Cutom send"
-msgstr "自定义发送"
-
-#: Main.py:352
-msgid "Log path"
-msgstr "日志路径"
-
-#: Main.py:430
+#: plugins/dbg.py:210
 msgid "Auto line feed value error, must be integer"
 msgstr "自动换行值错误，必须是整数"
 
-#: Main.py:431
+#: plugins/dbg.py:211
 msgid "Timed send value error, must be integer"
 msgstr "定时发送值错误，必须是整数"
 
-#: Main.py:599
-msgid "Format error, should be like 00 01 02 03"
-msgstr "格式错误，格式应该应该如 00 01 02 03"
+#: plugins/dbg.py:221
+msgid "Open File"
+msgstr "打开文件"
 
-#: Main.py:637 Main.py:655
-msgid "Escape is on, but escape error:"
-msgstr "转移符支持已打开，但是转义时错误"
+#: plugins/dbg.py:222
+msgid "Send File"
+msgstr "发送文件"
 
-#: Main.py:740 parameters.py:52
-msgid "Ready"
-msgstr "就绪"
+#: plugins/dbg.py:223
+msgid "Clear History"
+msgstr "清除历史"
 
-#: Main.py:759
-msgid "Connection lose!"
-msgstr "连接丢失！"
+#: plugins/dbg.py:226
+msgid "Sendding File"
+msgstr "发送文件中"
 
-#: Main.py:819
+#: plugins/dbg.py:232
+msgid "Save log"
+msgstr "保存日志"
+
+#: plugins/dbg.py:235
+msgid "Cutom send"
+msgstr "自定义发送"
+
+#: plugins/dbg.py:266
+msgid "Log path"
+msgstr "日志路径"
+
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:639
+#: plugins/protocol.py:660
+msgid "Warning"
+msgstr "警告"
+
+#: plugins/dbg.py:349
+msgid "linefeed always on if timestamp or record send is on"
+msgstr "当时间戳和记录发送时，自动换行需要打开"
+
+#: plugins/dbg.py:377 plugins/protocol.py:64 plugins/protocol.py:82
+msgid "OK"
+msgstr "完成"
+
+#: plugins/dbg.py:377
+msgid "History cleared!"
+msgstr "历史已清除"
+
+#: plugins/dbg.py:382
+msgid "Send file"
+msgstr "发送文件"
+
+#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:368
+#: plugins/protocol.py:378
+msgid "Select file"
+msgstr "选择文件"
+
+#: plugins/dbg.py:398
+msgid "All Files (*)"
+msgstr "所有文件 (*)"
+
+#: plugins/dbg.py:412
+msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
+msgstr "日志文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
+
+#: plugins/dbg.py:504
 msgid ""
 "File path error\n"
 "path"
@@ -148,232 +419,121 @@ msgstr ""
 "文件路径错误\n"
 "路径"
 
-#: Main.py:822
+#: plugins/dbg.py:507
 msgid "Connect first please"
 msgstr "请先连接"
 
-#: Main.py:854
-msgid "Open file failed!"
-msgstr "打开失败"
-
-#: Main.py:1027
-msgid "linefeed always on if timestamp or record send is on"
-msgstr "当时间戳和记录发送时，自动换行需要打开"
-
-#: Main.py:1050
-msgid "Restart now?"
-msgstr "现在就重启？"
-
-#: Main.py:1051
-msgid "language changed to: "
-msgstr "语言更改为: "
-
-#: Main.py:1051
-msgid "Restart software to take effect now?"
-msgstr "现在就重启软件以生效？"
-
-#: Main.py:1250 parameters.py:26
-msgid "Send"
-msgstr "发送"
-
-#: Main.py:1330
-msgid "About"
-msgstr "关于"
-
-#: Main.py:1336 Main.py:1350
-msgid "Select file"
-msgstr "选择文件"
-
-#: Main.py:1338
-msgid "All Files (*)"
-msgstr "所有文件 (*)"
-
-#: Main.py:1352
-msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
-msgstr "日志文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
-
-#: Main.py:1368
-msgid "History cleared!"
-msgstr "历史已清除"
-
-#: Main.py:1377
-msgid "New versioin detected, please click learn more to download"
-msgstr "检测到了新版本， 请点击 了解更多 以下载"
-
-#: Main.py:1378
-msgid "Learn More"
-msgstr "了解更多"
-
-#: Main.py:1379
-msgid "Skip this version"
-msgstr "跳过此版本"
-
-#: Main.py:1380
-msgid "Remind me next time"
-msgstr "下次提醒我"
-
-#: Main.py:1381
-msgid "Need update"
-msgstr "需要更新"
-
-#: Main.py:1456
-msgid "Error"
-msgstr "错误"
-
-#: helpAbout.py:38
-msgid "COMTool is a Open source project create by"
-msgstr "COMTool 是一个开源程序， 创建者："
-
-#: helpAbout.py:40
-msgid "See more on"
-msgstr "更多请看"
-
-#: helpAbout.py:41
-msgid "Welcome to improve it together"
-msgstr "欢迎一起改进"
-
-#: helpAbout.py:42
-msgid "Shortcut:"
-msgstr "快捷键："
-
-#: helpAbout.py:43
-msgid "Send data"
-msgstr "发送数据"
-
-#: helpAbout.py:44
-msgid "Clear Send Area"
-msgstr "清除发送区"
-
-#: helpAbout.py:45
-msgid "Clear Receive Area"
-msgstr "清除接收区"
-
-#: parameters.py:25
-msgid "bytes"
-msgstr "字节"
-
-#: parameters.py:27
-msgid "Receive"
-msgstr "接收"
-
-#: parameters.py:28
-msgid "Port"
-msgstr "端口"
-
-#: parameters.py:29
-msgid "Baudrate"
-msgstr "波特率"
-
-#: parameters.py:30
-msgid "DataBytes"
-msgstr "数据字节"
-
-#: parameters.py:31
-msgid "Parity"
-msgstr "奇偶校验"
-
-#: parameters.py:32
-msgid "Stopbits"
-msgstr "停止位"
-
-#: parameters.py:33
-msgid "ASCII"
-msgstr "ASCII"
-
-#: parameters.py:34
-msgid "HEX"
-msgstr "HEX"
-
-#: parameters.py:35 parameters.py:43
-msgid "Send Settings"
-msgstr "发送设置"
-
-#: parameters.py:36 parameters.py:42
-msgid "Receive Settings"
-msgstr "接收设置"
-
-#: parameters.py:37
-msgid "OPEN"
-msgstr "打开"
-
-#: parameters.py:38
-msgid "CLOSE"
-msgstr "关闭"
-
-#: parameters.py:39
-msgid ""
-"Auto\n"
-"Linefeed\n"
-"ms"
-msgstr "自动换行"
-
-#: parameters.py:40
-msgid ""
-"Timed Send\n"
-"ms"
-msgstr "定时发送"
-
-#: parameters.py:41
-msgid "Serial Settings"
-msgstr "串口设置"
-
-#: parameters.py:44
-msgid "ClearReceive"
-msgstr "清除接收区"
-
-#: parameters.py:45
-msgid "+"
-msgstr "+"
-
-#: parameters.py:46
-msgid "Functional Send"
-msgstr "其它发送功能"
-
-#: parameters.py:48
-msgid "Sendding File"
+#: plugins/dbg.py:510
+msgid "Sending file"
 msgstr "发送文件中"
 
-#: parameters.py:49
-msgid "Open Failed"
-msgstr "打开失败"
-
-#: parameters.py:50
-msgid "Closed"
-msgstr "已关闭"
-
-#: parameters.py:51
-msgid "Send Error"
-msgstr "发送出错"
-
-#: parameters.py:53
-msgid "<CRLF>"
-msgstr "<CRLF>"
-
-#: parameters.py:54
+#: plugins/dbg.py:521
 msgid "Time format error"
 msgstr "时间格式错误"
 
-#: parameters.py:55
-msgid "HELP"
-msgstr "帮助"
+#: plugins/dbg.py:578
+msgid "Send Error"
+msgstr "发送出错"
 
-#: parameters.py:56
-msgid "ABOUT"
-msgstr "关于"
+#: plugins/dbg.py:586
+msgid "get data error"
+msgstr "获取数据错误"
 
-#: parameters.py:57
-msgid "Settings"
-msgstr "设置"
+#: plugins/protocol.py:46
+msgid "Input remark"
+msgstr "输入标记"
 
-#: parameters.py:58
-msgid "Need Update"
-msgstr "需要更新"
+#: plugins/protocol.py:57 plugins/protocol.py:82
+msgid "Select icon"
+msgstr "选择文件"
 
-#: parameters.py:59
-msgid "update now?"
-msgstr "现在就更新？"
+#: plugins/protocol.py:59
+msgid "Shortcut"
+msgstr "快捷键"
 
-#: parameters.py:60
-msgid "uninstall app"
-msgstr "卸载应用"
+#: plugins/protocol.py:61
+msgid "Press key to record, or click Cancel"
+msgstr "按键以记录，或点击取消按钮"
+
+#: plugins/protocol.py:65 plugins/protocol.py:95
+msgid "Cancel"
+msgstr "取消"
+
+#: plugins/protocol.py:158
+msgid "protocol"
+msgstr "协议"
+
+#: plugins/protocol.py:306
+msgid "En-decoding settings"
+msgstr "发送设置"
+
+#: plugins/protocol.py:310
+msgid "Custom, input name"
+msgstr "自定义，输入名字"
+
+#: plugins/protocol.py:311
+msgid "Load defaults"
+msgstr "加载默认项"
+
+#: plugins/protocol.py:314 plugins/protocol.py:618 plugins/protocol.py:633
+#: plugins/protocol.py:652
+msgid "Save"
+msgstr "保存"
+
+#: plugins/protocol.py:315
+msgid "Delete"
+msgstr "删除"
+
+#: plugins/protocol.py:319
+msgid "Defaults"
+msgstr "默认项"
+
+#: plugins/protocol.py:321
+msgid "Code"
+msgstr "代码"
+
+#: plugins/protocol.py:325
+msgid "Send settings"
+msgstr "发送设置"
+
+#: plugins/protocol.py:358
+msgid "Load config"
+msgstr "加载配置"
+
+#: plugins/protocol.py:359
+msgid "Share config"
+msgstr "分享配置"
+
+#: plugins/protocol.py:370 plugins/protocol.py:380
+msgid "json file (*.json);;config file (*.conf);;All Files (*)"
+msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
+
+
+#: plugins/protocol.py:392
+msgid "Restart to load config?"
+msgstr "重启以加载配置"
+
+#: plugins/protocol.py:549
+msgid "Run decode error"
+msgstr "执行解码错误"
+
+#: plugins/protocol.py:563
+msgid "Run encode error"
+msgstr "执行编码错误"
+
+#: plugins/protocol.py:625
+msgid "decode and encode method should be in code"
+msgstr "编解码方法未提供"
+
+#: plugins/protocol.py:628
+msgid "Method error"
+msgstr "方法错误"
+
+#: plugins/protocol.py:639
+msgid "Please input code profile name first"
+msgstr "请先输入代码存档名"
+
+#: plugins/protocol.py:660
+msgid "Please select a code profile name first to delete"
+msgstr "请先选择要删除的存档名"
 
