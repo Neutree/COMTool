@@ -243,9 +243,8 @@ msgid "Escape is on, but escape error:"
 msgstr "轉義符支持已打開，但是轉義時出現了問題"
 
 #: plugins/dbg.py:48
-#, fuzzy
 msgid "Send Receive"
-msgstr "清除接收區"
+msgstr "收发"
 
 #: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:327
 msgid "ASCII"

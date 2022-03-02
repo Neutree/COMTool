@@ -45,7 +45,7 @@ class Plugin(Plugin_Base):
     connParent = "main"
     connChilds = []
     id = "dbg"
-    name = _("Send Receive")
+    name = "Send Receive"
     #
     receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
     sendFileOkSignal = pyqtSignal(bool, str)

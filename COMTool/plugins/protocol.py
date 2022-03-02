@@ -155,7 +155,7 @@ class Plugin(Plugin_Base):
     connParent = "dbg"       # parent id
     connChilds = []          # children ids
     id = "protocol"
-    name = _("protocol")
+    name = "protocol"
 
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
