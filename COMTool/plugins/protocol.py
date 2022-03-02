@@ -236,7 +236,6 @@ class Plugin(Plugin_Base):
         self.codeGlobals = {"unpack": unpack, "pack": pack, "crc": crc, "encoding": self.configGlobal["encoding"], "print": self.print}
         self.encodeMethod = lambda x:x
         self.decodeMethod = lambda x:x
-        self.shortcuts = []
         self.pressedKeys = []
 
     def print(self, *args, **kw_args):
@@ -431,22 +430,25 @@ class Plugin(Plugin_Base):
         # send by shortcut
         key = event.key()
         self.pressedKeys.append(key)
-        for keys, idx in self.shortcuts:
-            if len(keys) == len(self.pressedKeys):
+        for item in self.config["customSendItems"]:
+            if not "shortcut" in item:
+                continue
+            shortcut = item["shortcut"]
+            if len(shortcut) == len(self.pressedKeys):
                 same = True
-                for i in range(len(keys)):
-                    if keys[i][0] != self.pressedKeys[i]:
+                for i in range(len(shortcut)):
+                    if shortcut[i][0] != self.pressedKeys[i]:
                         same = False
                         break
                 if same:
-                    self.sendCustomItem(self.config["customSendItems"][idx])
+                    self.sendCustomItem(item)
 
     def onKeyReleaseEvent(self, event):
         key = event.key()
         if key in self.pressedKeys:
             self.pressedKeys.remove(key)
 
-    def insertSendItem(self, item = {"text": "", "remark": None, "icon": None}, load = False):
+    def insertSendItem(self, item = None, load = False):
         # itemsNum = self.customSendItemsLayout.count() + 1
         # height = parameters.customSendItemHeight * (itemsNum + 1) + 20
         # topHeight = self.receiveWidget.height() + 100
@@ -455,6 +457,8 @@ class Plugin(Plugin_Base):
         # if height < 0:
         #     height = self.funcParent.height() // 3
         # self.customSendScroll.setMinimumHeight(height)
+        if not item:
+            item = {"text": "", "remark": None, "icon": None}
         if type(item) == str:
             item = {
                 "text": item,
@@ -475,8 +479,6 @@ class Plugin(Plugin_Base):
             item["icon"] = "fa.send"
         if not "shortcut" in item:
             item["shortcut"] = []
-        itemIdx = self.customSendItemsLayout.indexOf(itemWidget)
-        self.shortcuts.append((item["shortcut"], itemIdx))
         utils_ui.setButtonIcon(send, item["icon"])
         editRemark = QPushButton("")
         utils_ui.setButtonIcon(editRemark, "ei.pencil")
@@ -487,7 +489,7 @@ class Plugin(Plugin_Base):
         send.setProperty("class", "smallBtn")
         def sendCustomData(idx):
             self.sendCustomItem(self.config["customSendItems"][idx])
-        send.clicked.connect(lambda: sendCustomData(itemIdx))
+        send.clicked.connect(lambda: sendCustomData(self.customSendItemsLayout.indexOf(itemWidget)))
         delete = QPushButton("")
         utils_ui.setButtonIcon(delete, "fa.close")
         delete.setProperty("class", "deleteBtn")
