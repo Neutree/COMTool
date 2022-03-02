@@ -442,7 +442,9 @@ class Plugin(Plugin_Base):
                     self.sendCustomItem(self.config["customSendItems"][idx])
 
     def onKeyReleaseEvent(self, event):
-        self.pressedKeys.remove(event.key())
+        key = event.key()
+        if key in self.pressedKeys:
+            self.pressedKeys.remove(key)
 
     def insertSendItem(self, item = {"text": "", "remark": None, "icon": None}, load = False):
         # itemsNum = self.customSendItemsLayout.count() + 1
