@@ -54,7 +54,7 @@ A cross platform serial debug tools written by python
 - [x] night theme and White theme
 - [x] rts & dtr control by hand
 - [x] protocol with customable encoding and decoding method support, 
-- [ ] multiple auto send (order and disorder)
+- [x] Custom shortcut send(in protocol plugin)
 - [ ] real time data graphic display
 - [ ] TCP UDP support
 - [ ] plugin support

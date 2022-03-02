@@ -3,7 +3,7 @@ from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QInputDialog, QDialog)
-from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QFontMetricsF
+from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QFontMetricsF, QKeySequence
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 
 try:
@@ -33,11 +33,13 @@ import os, json
 from struct import unpack, pack
 
 class EditRemarDialog(QDialog):
-    def __init__(self, remark = "", icon=None) -> None:
+    def __init__(self, remark = "", icon=None, shortcut = []) -> None:
         super().__init__()
         self.remark = remark
         self.icon = icon
         self.ok = False
+        self.settingShortcut = False
+        self.shortcut = shortcut
 
         layout = QGridLayout()
         self.setLayout(layout)
@@ -46,13 +48,23 @@ class EditRemarDialog(QDialog):
         self.iconBtn = QPushButton(self.remark)
         if self.icon:
             self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
+        if self.shortcut:
+            name = "+".join([str(name) for v,name in self.shortcut])
+        else:
+            name = _("Record")
+        self.shortcutBtn = QPushButton(name)
         layout.addWidget(remarkInput, 0, 1, 1, 1)
         layout.addWidget(QLabel(_("Select icon")), 1, 0, 1, 1)
         layout.addWidget(self.iconBtn, 1, 1, 1, 1)
+        layout.addWidget(QLabel(_("Shortcut")), 2, 0, 1, 1)
+        layout.addWidget(self.shortcutBtn, 2, 1, 1, 1)
+        self.shortcutHint = QLabel(_("Press key to record, or click Cancel"))
+        self.shortcutHint.hide()
+        layout.addWidget(self.shortcutHint, 3, 0, 1, 2)
         okBtn = QPushButton(_("OK"))
         cancelBtn = QPushButton(_("Cancel"))
-        layout.addWidget(okBtn, 2, 0, 1, 1)
-        layout.addWidget(cancelBtn, 2, 1, 1, 1)
+        layout.addWidget(okBtn, 4, 0, 1, 1)
+        layout.addWidget(cancelBtn, 4, 1, 1, 1)
 
         def ok():
             self.ok = True
@@ -64,6 +76,7 @@ class EditRemarDialog(QDialog):
             self.iconBtn.setText(self.remark)
         remarkInput.textChanged.connect(updateRemark)
         self.iconBtn.clicked.connect(lambda: self.selectIcon())
+        self.shortcutBtn.clicked.connect(self.setShortcut)
 
     def selectIcon(self):
         self.icon = selectIcon(parent = self, title = _("Select icon"), btnName = _("OK"), color = utils_ui.getStyleVar("iconSelectorColor"))
@@ -74,8 +87,51 @@ class EditRemarDialog(QDialog):
 
     def exec(self):
         super().exec()
-        return self.ok, self.remark, self.icon
+        return self.ok, self.remark, self.icon, self.shortcut
 
+    def setShortcut(self):
+        if not self.settingShortcut:
+            self.shortcut = []
+            self.shortcutBtn.setText(_("Cancel"))
+            self.shortcutHint.show()
+            self.settingShortcut = True
+            self.shortcutBtn.setProperty("class", "deleteBtn")
+            self.updateStyle(self.shortcutBtn)
+        else:
+            self.shortcutBtn.setText(_("Record"))
+            self.shortcutHint.hide()
+            self.shortcut = []
+            self.settingShortcut = False
+            self.shortcutBtn.setProperty("class", "")
+            self.updateStyle(self.shortcutBtn)
+
+    def keyPressEvent(self, event):
+        if not self.settingShortcut:
+            return
+        key = event.key()
+        name = QKeySequence(key).toString()
+        if key == Qt.Key_Control:
+            name = "Ctrl"
+        elif key == Qt.Key_Shift:
+            name = "Shift"
+        elif key == Qt.Key_Alt:
+            name = "Alt"
+        self.shortcut.append((key, name))
+        keys = "+".join([str(name) for v,name in self.shortcut])
+        self.shortcutBtn.setText(keys)
+    
+    def keyReleaseEvent(self,event):
+        if not self.settingShortcut:
+            return
+        self.shortcutBtn.setProperty("class", "")
+        self.shortcutHint.hide()
+        self.updateStyle(self.shortcutBtn)
+        self.settingShortcut = False
+
+    def updateStyle(self, widget):
+        self.style().unpolish(widget)
+        self.style().polish(widget)
+        self.update()
         
 
 class Plugin(Plugin_Base):
@@ -146,15 +202,15 @@ class Plugin(Plugin_Base):
                 },{
                     "text": "\\x02",
                     "remark": "apps",
-                    "icon": "fa.send"
+                    "icon": "ri.apps-2-fill"
                 },{
                     "text": "\\x03",
                     "remark": "curApp",
-                    "icon": "fa.send"
+                    "icon": "mdi.application"
                 },{
                     "text": "\\x04\\xFFface",
                     "remark": "appInfo",
-                    "icon": "fa.send"
+                    "icon": "ei.info-circle"
                 },{
                     "text": "\\x05\\xFFface",
                     "remark": "start",
@@ -180,6 +236,8 @@ class Plugin(Plugin_Base):
         self.codeGlobals = {"unpack": unpack, "pack": pack, "crc": crc, "encoding": self.configGlobal["encoding"], "print": self.print}
         self.encodeMethod = lambda x:x
         self.decodeMethod = lambda x:x
+        self.shortcuts = []
+        self.pressedKeys = []
 
     def print(self, *args, **kw_args):
         end = "\n"
@@ -370,10 +428,21 @@ class Plugin(Plugin_Base):
         self.codeWidget.textChanged.connect(self.onCodeChanged)
 
     def onKeyPressEvent(self, event):
-        pass
+        # send by shortcut
+        key = event.key()
+        self.pressedKeys.append(key)
+        for keys, idx in self.shortcuts:
+            if len(keys) == len(self.pressedKeys):
+                same = True
+                for i in range(len(keys)):
+                    if keys[i][0] != self.pressedKeys[i]:
+                        same = False
+                        break
+                if same:
+                    self.sendCustomItem(self.config["customSendItems"][idx])
 
     def onKeyReleaseEvent(self, event):
-        pass
+        self.pressedKeys.remove(event.key())
 
     def insertSendItem(self, item = {"text": "", "remark": None, "icon": None}, load = False):
         # itemsNum = self.customSendItemsLayout.count() + 1
@@ -402,6 +471,10 @@ class Plugin(Plugin_Base):
             send = QPushButton("")
         if (not "icon" in item) or not item["icon"]:
             item["icon"] = "fa.send"
+        if not "shortcut" in item:
+            item["shortcut"] = []
+        itemIdx = self.customSendItemsLayout.indexOf(itemWidget)
+        self.shortcuts.append((item["shortcut"], itemIdx))
         utils_ui.setButtonIcon(send, item["icon"])
         editRemark = QPushButton("")
         utils_ui.setButtonIcon(editRemark, "ei.pencil")
@@ -412,7 +485,7 @@ class Plugin(Plugin_Base):
         send.setProperty("class", "smallBtn")
         def sendCustomData(idx):
             self.sendCustomItem(self.config["customSendItems"][idx])
-        send.clicked.connect(lambda: sendCustomData(self.customSendItemsLayout.indexOf(itemWidget)))
+        send.clicked.connect(lambda: sendCustomData(itemIdx))
         delete = QPushButton("")
         utils_ui.setButtonIcon(delete, "fa.close")
         delete.setProperty("class", "deleteBtn")
@@ -424,7 +497,10 @@ class Plugin(Plugin_Base):
         def changeRemark(idx, obj):
             if not "icon" in self.config["customSendItems"][idx]:
                 self.config["customSendItems"][idx]["icon"] = None
-            ok, remark, icon = EditRemarDialog(obj.text(), self.config["customSendItems"][idx]["icon"]).exec()
+            shortcut = []
+            if "shortcut" in self.config["customSendItems"][idx]:
+                shortcut = self.config["customSendItems"][idx]["shortcut"]
+            ok, remark, icon, shortcut = EditRemarDialog(obj.text(), self.config["customSendItems"][idx]["icon"], shortcut).exec()
             if ok:
                 obj.setText(remark)
                 if icon:
@@ -433,6 +509,7 @@ class Plugin(Plugin_Base):
                     obj.setIcon(QIcon())
                 self.config["customSendItems"][idx]["remark"] = remark
                 self.config["customSendItems"][idx]["icon"] = icon
+                self.config["customSendItems"][idx]["shortcut"] = shortcut
         editRemark.clicked.connect(lambda: changeRemark(self.customSendItemsLayout.indexOf(itemWidget), send))
         self.customSendItemsLayout.addWidget(itemWidget)
         if not load:
