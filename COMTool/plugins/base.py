@@ -41,7 +41,6 @@ class Plugin_Base(QObject):
         super().__init__()
         if not self.id:
             raise ValueError(f"var id of Plugin {self} should be set")
-        self.name = _(self.name)
 
     def onInit(self, config, plugins):
         '''

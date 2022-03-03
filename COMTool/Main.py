@@ -4,11 +4,27 @@ if sys.version_info < (3, 7):
     print("only support python >= 3.7, but now is {}".format(sys.version_info))
     sys.exit(1)
 
+# Init lanuage first to ensure use function _  works correctly
+try:
+    import parameters
+    import i18n
+except ImportError:
+    from COMTool import parameters
+    from COMTool import i18n
+
+def loadConfig():
+    paramObj = parameters.Parameters()
+    paramObj.load(parameters.configFilePath)
+    return paramObj
+
+print("-- loading config from", parameters.configFilePath)
+programConfig = loadConfig()
+print("-- loading config complete")
+i18n.set_locale(programConfig.basic["locale"])
 
 try:
-    import parameters,helpAbout,autoUpdate
+    import helpAbout,autoUpdate
     from Combobox import ComboBox
-    import i18n
     from i18n import _
     import version
     import utils_ui
@@ -16,9 +32,8 @@ try:
     from plugins import plugins
     from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 except ImportError:
-    from COMTool import parameters,helpAbout,autoUpdate, utils_ui
+    from COMTool import helpAbout,autoUpdate, utils_ui
     from COMTool.Combobox import ComboBox
-    from COMTool import i18n
     from COMTool.i18n import _
     from COMTool import version
     from COMTool.conn.conn_serial import Serial
@@ -53,13 +68,12 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
     app = None
     needRestart = False
 
-    def __init__(self,app, eventFilter):
+    def __init__(self,app, eventFilter, config):
         QMainWindow.__init__(self)
         self.app = app
         self.eventFilter = eventFilter
         self.DataPath = parameters.dataPath
-        self.config = self.loadConfig()
-        i18n.set_locale(self.config.basic["locale"])
+        self.config = config
         self.initVar()
         self.initConn(self.config.basic["connId"], self.config.conns)
         self.initPlugins(self.config.basic["plugins"], self.config.basic["activePlugin"], self.config.plugins)
@@ -305,7 +319,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         print("config file path:",parameters.configFilePath)
 
     def add_new_window(self):
-        mainWindow = MainWindow(self.app, self.eventFilter)
+        import copy
+        mainWindow = MainWindow(self.app, self.eventFilter, copy.deepcopy(self.config))
         self.eventFilter.listenWindow(mainWindow)
         g_all_windows.append(mainWindow)
 
@@ -521,12 +536,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.config.save(parameters.configFilePath)
         print("save config compelte")
 
-    def loadConfig(self):
-        paramObj = parameters.Parameters()
-        paramObj.load(parameters.configFilePath)
-        self.config = paramObj
-        return self.config
-
     def uiLoadConfigs(self, config):
         config = config.basic
         # language
@@ -658,7 +667,7 @@ def main():
                 gen_tranlate_files(curr_dir)
             app = QApplication(sys.argv)
             eventFilter = EventFilter()
-            mainWindow = MainWindow(app, eventFilter)
+            mainWindow = MainWindow(app, eventFilter, programConfig)
             eventFilter.listenWindow(mainWindow)
             app.installEventFilter(eventFilter)
             g_all_windows.append(mainWindow)

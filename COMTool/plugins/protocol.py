@@ -201,6 +201,10 @@ class Plugin(Plugin_Base):
             "currCode": "default",
             "customSendItems": [
                 {
+                    "text": "hello",
+                    "remark": "hello",
+                    "icon": "fa5.hand-paper"
+                },{
                     "text": "\\x01\\x03\\x03\\x03\\x03\\x01",
                     "remark": "pre",
                     "icon": "ei.arrow-left",
@@ -220,32 +224,6 @@ class Plugin(Plugin_Base):
                     "remark": "ret",
                     "icon": "ei.return-key",
                     "shortcut": [[16777216, "Esc"]]
-                },{
-                    "text": "\\x02",
-                    "remark": "apps",
-                    "icon": "ri.apps-2-fill"
-                },{
-                    "text": "\\x03",
-                    "remark": "curApp",
-                    "icon": "mdi.application"
-                },{
-                    "text": "\\x04\\xFFface",
-                    "remark": "appInfo",
-                    "icon": "ei.info-circle"
-                },{
-                    "text": "\\x05\\xFFface",
-                    "remark": "start",
-                    "icon": "mdi.rocket-launch"
-                },{
-                    "text": "\\x06",
-                    "remark": "exit",
-                    "icon": "mdi.exit-to-app"
-                },{
-                    "text": "\\x08\\x00",
-                    "remark": ""
-                },{
-                    "text": "\\x08\\x01",
-                    "remark": ""
                 }
             ]
         }
@@ -342,13 +320,11 @@ class Plugin(Plugin_Base):
         def keyModeOn(event):
             self.keyModeBtn.setProperty("class", "deleteBtn")
             utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
-            print("on")
             self.keyModeClickTimes = time.time()
 
         def keyModeOff(event):
             self.keyModeBtn.setProperty("class", "")
             utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
-            print("off")
             self.keyModeClickTimes = 0
 
         def keyModeTuggle():

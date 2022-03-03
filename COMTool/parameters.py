@@ -68,7 +68,7 @@ class Parameters:
     basic = {
         "skin": "light",
         "locale": "en",
-        "encoding": "ASCII",
+        "encoding": "UTF-8",
         "skipVersion": None,
         "connId": "serial",
         "plugins": [],          # enabled plugins ID

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-02 22:17+0800\n"
+"POT-Creation-Date: 2022-03-03 18:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,71 +17,71 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:217
+#: Main.py:231
 msgid "Connection"
 msgstr ""
 
-#: Main.py:283 Main.py:443
+#: Main.py:297 Main.py:458
 msgid "Sent"
 msgstr ""
 
-#: Main.py:283 Main.py:284 Main.py:443 Main.py:444
+#: Main.py:297 Main.py:298 Main.py:458 Main.py:459
 msgid "bytes"
 msgstr ""
 
-#: Main.py:284 Main.py:444
+#: Main.py:298 Main.py:459
 msgid "Received"
 msgstr ""
 
-#: Main.py:314
+#: Main.py:329
 msgid "New Window"
 msgstr ""
 
-#: Main.py:368 Main.py:373 Main.py:428 Main.py:439 Main.py:685
+#: Main.py:383 Main.py:388 Main.py:443 Main.py:454 Main.py:694
 #: conn/conn_serial.py:320 plugins/base.py:109 plugins/base.py:114
 #: plugins/base.py:130 plugins/base.py:167 plugins/base.py:185
 #: plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
-#: plugins/protocol.py:549 plugins/protocol.py:563 plugins/protocol.py:629
+#: plugins/protocol.py:637 plugins/protocol.py:651 plugins/protocol.py:717
 msgid "Error"
 msgstr ""
 
-#: Main.py:428
+#: Main.py:443
 msgid "Open file failed!"
 msgstr ""
 
-#: Main.py:468 Main.py:477
+#: Main.py:483 Main.py:492
 msgid "Restart now?"
 msgstr ""
 
-#: Main.py:469
+#: Main.py:484
 msgid "language changed to: "
 msgstr ""
 
-#: Main.py:469
+#: Main.py:484
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: Main.py:602
+#: Main.py:611
 msgid "About"
 msgstr ""
 
-#: Main.py:611
+#: Main.py:620
 msgid "New versioin detected, please click learn more to download"
 msgstr ""
 
-#: Main.py:612
+#: Main.py:621
 msgid "Learn More"
 msgstr ""
 
-#: Main.py:613
+#: Main.py:622
 msgid "Skip this version"
 msgstr ""
 
-#: Main.py:614
+#: Main.py:623
 msgid "Remind me next time"
 msgstr ""
 
-#: Main.py:615
+#: Main.py:624
 msgid "Need update"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgstr ""
 msgid "Send Receive"
 msgstr ""
 
-#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:327
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:393
 msgid "ASCII"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgid ""
 "corner"
 msgstr ""
 
-#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:328
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:394
 msgid "HEX"
 msgstr ""
 
@@ -288,13 +288,13 @@ msgstr ""
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr ""
 
-#: plugins/dbg.py:163 plugins/protocol.py:329
+#: plugins/dbg.py:163 plugins/protocol.py:395
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: plugins/dbg.py:164 plugins/protocol.py:330
+#: plugins/dbg.py:164 plugins/protocol.py:396
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
@@ -308,15 +308,15 @@ msgstr ""
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: plugins/dbg.py:173 plugins/protocol.py:332
+#: plugins/dbg.py:173 plugins/protocol.py:398
 msgid "<CRLF>"
 msgstr ""
 
-#: plugins/dbg.py:174 plugins/protocol.py:333
+#: plugins/dbg.py:174 plugins/protocol.py:399
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
-#: plugins/dbg.py:176 plugins/protocol.py:54 plugins/protocol.py:101
+#: plugins/dbg.py:176 plugins/protocol.py:54 plugins/protocol.py:117
 msgid "Record"
 msgstr ""
 
@@ -324,11 +324,11 @@ msgstr ""
 msgid "Record send data"
 msgstr ""
 
-#: plugins/dbg.py:178 plugins/protocol.py:335
+#: plugins/dbg.py:178 plugins/protocol.py:401
 msgid "Escape"
 msgstr ""
 
-#: plugins/dbg.py:179 plugins/protocol.py:336
+#: plugins/dbg.py:179 plugins/protocol.py:402
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr ""
 
@@ -376,8 +376,8 @@ msgstr ""
 msgid "Log path"
 msgstr ""
 
-#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:639
-#: plugins/protocol.py:660
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:728
+#: plugins/protocol.py:750
 msgid "Warning"
 msgstr ""
 
@@ -385,7 +385,7 @@ msgstr ""
 msgid "linefeed always on if timestamp or record send is on"
 msgstr ""
 
-#: plugins/dbg.py:377 plugins/protocol.py:64 plugins/protocol.py:82
+#: plugins/dbg.py:377 plugins/protocol.py:65 plugins/protocol.py:83
 msgid "OK"
 msgstr ""
 
@@ -397,8 +397,8 @@ msgstr ""
 msgid "Send file"
 msgstr ""
 
-#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:368
-#: plugins/protocol.py:378
+#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:434
+#: plugins/protocol.py:444
 msgid "Select file"
 msgstr ""
 
@@ -440,96 +440,100 @@ msgstr ""
 msgid "Input remark"
 msgstr ""
 
-#: plugins/protocol.py:57 plugins/protocol.py:82
+#: plugins/protocol.py:58 plugins/protocol.py:83
 msgid "Select icon"
 msgstr ""
 
-#: plugins/protocol.py:59
+#: plugins/protocol.py:60
 msgid "Shortcut"
 msgstr ""
 
-#: plugins/protocol.py:61
+#: plugins/protocol.py:62
 msgid "Press key to record, or click Cancel"
 msgstr ""
 
-#: plugins/protocol.py:65 plugins/protocol.py:95
+#: plugins/protocol.py:66 plugins/protocol.py:105
 msgid "Cancel"
 msgstr ""
 
-#: plugins/protocol.py:158
+#: plugins/protocol.py:175
 msgid "protocol"
 msgstr ""
 
-#: plugins/protocol.py:306
+#: plugins/protocol.py:296
+msgid "Key mode"
+msgstr ""
+
+#: plugins/protocol.py:371
 msgid "En-decoding settings"
 msgstr ""
 
-#: plugins/protocol.py:310
+#: plugins/protocol.py:375
 msgid "Custom, input name"
 msgstr ""
 
-#: plugins/protocol.py:311
+#: plugins/protocol.py:376
 msgid "Load defaults"
 msgstr ""
 
-#: plugins/protocol.py:314 plugins/protocol.py:618 plugins/protocol.py:633
-#: plugins/protocol.py:652
+#: plugins/protocol.py:379 plugins/protocol.py:705 plugins/protocol.py:721
+#: plugins/protocol.py:741
 msgid "Save"
 msgstr ""
 
-#: plugins/protocol.py:315
+#: plugins/protocol.py:381
 msgid "Delete"
 msgstr ""
 
-#: plugins/protocol.py:319
+#: plugins/protocol.py:385
 msgid "Defaults"
 msgstr ""
 
-#: plugins/protocol.py:321
+#: plugins/protocol.py:387
 msgid "Code"
 msgstr ""
 
-#: plugins/protocol.py:325
+#: plugins/protocol.py:391
 msgid "Send settings"
 msgstr ""
 
-#: plugins/protocol.py:358
+#: plugins/protocol.py:424
 msgid "Load config"
 msgstr ""
 
-#: plugins/protocol.py:359
+#: plugins/protocol.py:425
 msgid "Share config"
 msgstr ""
 
-#: plugins/protocol.py:370 plugins/protocol.py:380
+#: plugins/protocol.py:436 plugins/protocol.py:446
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr ""
 
-#: plugins/protocol.py:392
+#: plugins/protocol.py:458
 msgid "Restart to load config?"
 msgstr ""
 
-#: plugins/protocol.py:549
+#: plugins/protocol.py:637
 msgid "Run decode error"
 msgstr ""
 
-#: plugins/protocol.py:563
+#: plugins/protocol.py:651
 msgid "Run encode error"
 msgstr ""
 
-#: plugins/protocol.py:625
+#: plugins/protocol.py:713
 msgid "decode and encode method should be in code"
 msgstr ""
 
-#: plugins/protocol.py:628
+#: plugins/protocol.py:716
 msgid "Method error"
 msgstr ""
 
-#: plugins/protocol.py:639
+#: plugins/protocol.py:728
 msgid "Please input code profile name first"
 msgstr ""
 
-#: plugins/protocol.py:660
+#: plugins/protocol.py:750
 msgid "Please select a code profile name first to delete"
 msgstr ""
 

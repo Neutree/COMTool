@@ -2,14 +2,14 @@ try:
     import parameters,helpAbout,autoUpdate
     from Combobox import ComboBox
     import i18n
-    from i18n import _
+    from i18n import _, tr
     import version
     import utils, utils_ui
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate, utils, utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool import i18n
-    from COMTool.i18n import _
+    from COMTool.i18n import _, tr
     from COMTool import version
 
 try:
@@ -45,7 +45,7 @@ class Plugin(Plugin_Base):
     connParent = "main"
     connChilds = []
     id = "dbg"
-    name = "Send Receive"
+    name = _("Send Receive")
     #
     receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
     sendFileOkSignal = pyqtSignal(bool, str)
