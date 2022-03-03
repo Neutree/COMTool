@@ -236,7 +236,7 @@ class Plugin(Plugin_Base):
         self.encodeMethod = lambda x:x
         self.decodeMethod = lambda x:x
         self.pressedKeys = []
-        self.keyModeClickTimes = 0
+        self.keyModeClickTime = 0
 
     def print(self, *args, **kw_args):
         end = "\n"
@@ -297,12 +297,12 @@ class Plugin(Plugin_Base):
         customSendItemsLayoutWrapper.setContentsMargins(0,0,0,0)
         cutomSendItemsWraper.setLayout(customSendItemsLayoutWrapper)
         # items container
-        customItems = QWidget()
+        self.customItems = QWidget()
         self.customSendItemsLayout = QVBoxLayout()
         self.customSendItemsLayout.setContentsMargins(0,0,0,0)
-        customItems.setLayout(self.customSendItemsLayout)
+        self.customItems.setLayout(self.customSendItemsLayout)
 
-        customSendItemsLayoutWrapper.addWidget(customItems)
+        customSendItemsLayoutWrapper.addWidget(self.customItems)
         customSendItemsLayoutWrapper.addWidget(self.addButton)
         customSendItemsLayoutWrapper.addStretch(0)
 
@@ -320,16 +320,26 @@ class Plugin(Plugin_Base):
         def keyModeOn(event):
             self.keyModeBtn.setProperty("class", "deleteBtn")
             utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
-            self.keyModeClickTimes = time.time()
+            self.keyModeClickTime = time.time()
+            # show all shortcut
+            widgets = self.customItems.findChildren(QPushButton, "editRemark")
+            for i, w in enumerate(widgets):
+                shortcut = "+".join((name for v, name in self.config["customSendItems"][i]["shortcut"]))
+                w.setText(shortcut)
+                utils_ui.updateStyle(self.mainWidget, w)
 
         def keyModeOff(event):
             self.keyModeBtn.setProperty("class", "")
             utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
-            self.keyModeClickTimes = 0
+            self.keyModeClickTime = 0
+            # hide all shortcut
+            widgets = self.customItems.findChildren(QPushButton, "editRemark")
+            for w in widgets:
+                w.setText("")
 
         def keyModeTuggle():
             if self.keyModeBtn.property("class") == "deleteBtn":
-                if time.time() - self.keyModeClickTimes < 0.2:
+                if time.time() - self.keyModeClickTime < 0.2:
                     return
                 else:
                     self.keyModeBtn.clearFocus()
@@ -550,6 +560,7 @@ class Plugin(Plugin_Base):
             item["shortcut"] = []
         utils_ui.setButtonIcon(send, item["icon"])
         editRemark = QPushButton("")
+        editRemark.setObjectName("editRemark")
         utils_ui.setButtonIcon(editRemark, "ei.pencil")
         editRemark.setProperty("class", "remark")
         cmd.setToolTip(text)
