@@ -231,12 +231,18 @@ QGroupBox::title {
 
 QPushButton {
     font-family:Tahoma,Optima,"Trebuchet MS";
-    border: 2px solid #383636;
+    border: 2px solid #0865b1;
     border-radius: 5px;
-    background-color: #3a3a3a;
+    background-color: #0865b1;
     min-width: 80px;
     height:30px;
     min-height:25px;
+}
+
+QPushButton:disabled {
+    border: 2px solid #2e2d2d;
+    background-color: #2e2d2d;
+    color: #838383;
 }
 
 QPushButton:hover {

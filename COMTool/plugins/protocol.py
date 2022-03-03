@@ -377,6 +377,7 @@ class Plugin(Plugin_Base):
         self.codeItems.setEditable(True)
         self.codeWidget = PlainTextEdit()
         self.saveCodeBtn = QPushButton(_("Save"))
+        self.saveCodeBtn.setEnabled(False)
         self.deleteCodeBtn = QPushButton(_("Delete"))
         btnLayout = QHBoxLayout()
         btnLayout.addWidget(self.saveCodeBtn)
@@ -702,6 +703,7 @@ class Plugin(Plugin_Base):
             self.encodeMethod = e
             self.decodeMethod = d
         self.saveCodeBtn.setText(_("Save"))
+        self.saveCodeBtn.setEnabled(False)
 
     def getEnDecodeMethod(self, code):
         func = lambda x:x
@@ -717,6 +719,7 @@ class Plugin(Plugin_Base):
 
     def onCodeChanged(self):
         self.saveCodeBtn.setText(_("Save") + " *")
+        self.saveCodeBtn.setEnabled(True)
 
     def saveCode(self):
         self.editingDefaults = True
@@ -736,6 +739,7 @@ class Plugin(Plugin_Base):
             self.decodeMethod = d
             self.config["code"][name] = code
             self.saveCodeBtn.setText(_("Save"))
+            self.saveCodeBtn.setEnabled(False)
 
     def deleteCode(self):
         self.editingDefaults = True
