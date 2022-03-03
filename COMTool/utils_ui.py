@@ -51,3 +51,8 @@ def getStyleVar(var):
     global _skin, _buttonIcons
 
     return parameters.styleForCode[_skin][var]
+
+def updateStyle(parent, widget):
+    parent.style().unpolish(widget)
+    parent.style().polish(widget)
+    parent.update()

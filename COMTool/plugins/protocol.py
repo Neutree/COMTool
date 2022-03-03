@@ -1,9 +1,9 @@
 
-from PyQt5.QtCore import QObject, Qt, pyqtSignal
+from PyQt5.QtCore import QObject, Qt, pyqtSignal, QEvent
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QInputDialog, QDialog)
-from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QFontMetricsF, QKeySequence
+from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QFontMetricsF, QKeySequence, QFocusEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 
 try:
@@ -29,7 +29,7 @@ except Exception:
     from . import crc
     from .protocols import defaultProtocols
 
-import os, json
+import os, json, time
 from struct import unpack, pack
 
 class EditRemarDialog(QDialog):
@@ -44,7 +44,7 @@ class EditRemarDialog(QDialog):
         layout = QGridLayout()
         self.setLayout(layout)
         layout.addWidget(QLabel(_("Input remark")), 0, 0, 1, 1)
-        remarkInput = QLineEdit(self.remark)
+        self.remarkInput = QLineEdit(self.remark)
         self.iconBtn = QPushButton(self.remark)
         if self.icon:
             self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
@@ -53,7 +53,8 @@ class EditRemarDialog(QDialog):
         else:
             name = _("Record")
         self.shortcutBtn = QPushButton(name)
-        layout.addWidget(remarkInput, 0, 1, 1, 1)
+        self.shortcutBtn.setFocusPolicy(Qt.NoFocus)
+        layout.addWidget(self.remarkInput, 0, 1, 1, 1)
         layout.addWidget(QLabel(_("Select icon")), 1, 0, 1, 1)
         layout.addWidget(self.iconBtn, 1, 1, 1, 1)
         layout.addWidget(QLabel(_("Shortcut")), 2, 0, 1, 1)
@@ -61,20 +62,20 @@ class EditRemarDialog(QDialog):
         self.shortcutHint = QLabel(_("Press key to record, or click Cancel"))
         self.shortcutHint.hide()
         layout.addWidget(self.shortcutHint, 3, 0, 1, 2)
-        okBtn = QPushButton(_("OK"))
-        cancelBtn = QPushButton(_("Cancel"))
-        layout.addWidget(okBtn, 4, 0, 1, 1)
-        layout.addWidget(cancelBtn, 4, 1, 1, 1)
+        self.okBtn = QPushButton(_("OK"))
+        self.cancelBtn = QPushButton(_("Cancel"))
+        layout.addWidget(self.okBtn, 4, 0, 1, 1)
+        layout.addWidget(self.cancelBtn, 4, 1, 1, 1)
 
         def ok():
             self.ok = True
             self.close()
-        okBtn.clicked.connect(lambda : ok())
-        cancelBtn.clicked.connect(lambda : self.close())
+        self.okBtn.clicked.connect(lambda : ok())
+        self.cancelBtn.clicked.connect(lambda : self.close())
         def updateRemark(text):
             self.remark = text
             self.iconBtn.setText(self.remark)
-        remarkInput.textChanged.connect(updateRemark)
+        self.remarkInput.textChanged.connect(updateRemark)
         self.iconBtn.clicked.connect(lambda: self.selectIcon())
         self.shortcutBtn.clicked.connect(self.setShortcut)
 
@@ -91,19 +92,34 @@ class EditRemarDialog(QDialog):
 
     def setShortcut(self):
         if not self.settingShortcut:
-            self.shortcut = []
-            self.shortcutBtn.setText(_("Cancel"))
-            self.shortcutHint.show()
-            self.settingShortcut = True
-            self.shortcutBtn.setProperty("class", "deleteBtn")
-            self.updateStyle(self.shortcutBtn)
+            self.onRecordShortcut()
         else:
+            self.onRecordShortcutEnd()
+
+    def onRecordShortcut(self):
+        self.shortcut = []
+        self.remarkInput.setEnabled(False)
+        self.iconBtn.setEnabled(False)
+        self.okBtn.setEnabled(False)
+        self.cancelBtn.setEnabled(False)
+        self.shortcutBtn.setText(_("Cancel"))
+        self.shortcutHint.show()
+        self.settingShortcut = True
+        self.shortcutBtn.setProperty("class", "deleteBtn")
+        self.updateStyle(self.shortcutBtn)
+
+    def onRecordShortcutEnd(self, setOk=False):
+        self.remarkInput.setEnabled(True)
+        self.iconBtn.setEnabled(True)
+        self.okBtn.setEnabled(True)
+        self.cancelBtn.setEnabled(True)
+        if not setOk:
             self.shortcutBtn.setText(_("Record"))
-            self.shortcutHint.hide()
             self.shortcut = []
-            self.settingShortcut = False
-            self.shortcutBtn.setProperty("class", "")
-            self.updateStyle(self.shortcutBtn)
+        self.shortcutHint.hide()
+        self.settingShortcut = False
+        self.shortcutBtn.setProperty("class", "")
+        self.updateStyle(self.shortcutBtn)
 
     def keyPressEvent(self, event):
         if not self.settingShortcut:
@@ -116,23 +132,24 @@ class EditRemarDialog(QDialog):
             name = "Shift"
         elif key == Qt.Key_Alt:
             name = "Alt"
+        elif key == Qt.Key_Super_L:
+            name = "Super_L"
+        elif key == Qt.Key_Super_R:
+            name = "Super_R"
         self.shortcut.append((key, name))
         keys = "+".join([str(name) for v,name in self.shortcut])
         self.shortcutBtn.setText(keys)
-    
+
     def keyReleaseEvent(self,event):
         if not self.settingShortcut:
             return
-        self.shortcutBtn.setProperty("class", "")
-        self.shortcutHint.hide()
-        self.updateStyle(self.shortcutBtn)
-        self.settingShortcut = False
+        self.onRecordShortcutEnd(setOk = True)
 
     def updateStyle(self, widget):
         self.style().unpolish(widget)
         self.style().polish(widget)
         self.update()
-        
+
 
 class Plugin(Plugin_Base):
     '''
@@ -155,7 +172,7 @@ class Plugin(Plugin_Base):
     connParent = "dbg"       # parent id
     connChilds = []          # children ids
     id = "protocol"
-    name = "protocol"
+    name = _("protocol")
 
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
@@ -186,19 +203,23 @@ class Plugin(Plugin_Base):
                 {
                     "text": "\\x01\\x03\\x03\\x03\\x03\\x01",
                     "remark": "pre",
-                    "icon": "ei.arrow-left"
+                    "icon": "ei.arrow-left",
+                    "shortcut": [[16777234, "Left"]]
                 },{
                     "text": "\\x01\\x04\\x04\\x04\\x04\\x01",
                     "remark": "next",
-                    "icon": "ei.arrow-right"
+                    "icon": "ei.arrow-right",
+                    "shortcut": [[16777236, "Right"]]
                 },{
                     "text": "\\x01\\x01\\x01\\x01\\x01\\x01",
                     "remark": "ok",
-                    "icon": "fa.circle-o"
+                    "icon": "fa.circle-o",
+                    "shortcut": [[16777220, "Return"]]
                 },{
                     "text": "\\x01\\x02\\x02\\x02\\x02\\x01",
                     "remark": "ret",
-                    "icon": "ei.return-key"
+                    "icon": "ei.return-key",
+                    "shortcut": [[16777216, "Esc"]]
                 },{
                     "text": "\\x02",
                     "remark": "apps",
@@ -237,6 +258,7 @@ class Plugin(Plugin_Base):
         self.encodeMethod = lambda x:x
         self.decodeMethod = lambda x:x
         self.pressedKeys = []
+        self.keyModeClickTimes = 0
 
     def print(self, *args, **kw_args):
         end = "\n"
@@ -247,7 +269,21 @@ class Plugin(Plugin_Base):
             start = kw_args["start"]
         string = start  + " ".join(map(str, args)) + end
         self.showReceiveDataSignal.emit(string)
-        
+
+
+    class ModeButton(QPushButton):
+        onFocusIn = pyqtSignal(QFocusEvent)
+        onFocusOut = pyqtSignal(QFocusEvent)
+
+        def __init__(self, text, eventFilter, parent = None) -> None:
+            super().__init__(text, parent)
+            self.installEventFilter(eventFilter)
+
+        def focusInEvent(self, event):
+            self.onFocusIn.emit(event)
+
+        def focusOutEvent(self, event):
+            self.onFocusOut.emit(event)
 
     def onWidgetMain(self, parent, rootWindow):
         self.mainWidget = QSplitter(Qt.Vertical)
@@ -256,6 +292,13 @@ class Plugin(Plugin_Base):
         self.receiveWidget.setFont(font)
         self.receiveWidget.setLineWrapMode(TextEdit.NoWrap)
         self.clearBtn = QPushButton("")
+        self.keyBtneventFilter = self.ModeButtonEventFilter(self.onModeBtnKeyPressEvent, self.onModeBtnKeyReleaseEvent)
+        self.keyModeBtn = self.ModeButton(_("Key mode"), self.keyBtneventFilter)
+        layoutClearMode = QHBoxLayout()
+        layoutClearMode.addWidget(self.clearBtn)
+        layoutClearMode.addWidget(self.keyModeBtn)
+        clearModeWidget = QWidget()
+        clearModeWidget.setLayout(layoutClearMode)
         utils_ui.setButtonIcon(self.clearBtn, "mdi6.broom")
         self.addButton = QPushButton("")
         utils_ui.setButtonIcon(self.addButton, "fa.plus")
@@ -286,7 +329,7 @@ class Plugin(Plugin_Base):
         customSendItemsLayoutWrapper.addStretch(0)
 
         self.mainWidget.addWidget(self.receiveWidget)
-        self.mainWidget.addWidget(self.clearBtn)
+        self.mainWidget.addWidget(clearModeWidget)
         self.mainWidget.addWidget(cutomSendItemsWraper0)
         self.mainWidget.setStretchFactor(0, 2)
         self.mainWidget.setStretchFactor(1, 1)
@@ -296,6 +339,28 @@ class Plugin(Plugin_Base):
         def clearReceived():
             self.receiveWidget.clear();self.clearCountSignal.emit()
         self.clearBtn.clicked.connect(clearReceived)
+        def keyModeOn(event):
+            self.keyModeBtn.setProperty("class", "deleteBtn")
+            utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
+            print("on")
+            self.keyModeClickTimes = time.time()
+
+        def keyModeOff(event):
+            self.keyModeBtn.setProperty("class", "")
+            utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
+            print("off")
+            self.keyModeClickTimes = 0
+
+        def keyModeTuggle():
+            if self.keyModeBtn.property("class") == "deleteBtn":
+                if time.time() - self.keyModeClickTimes < 0.2:
+                    return
+                else:
+                    self.keyModeBtn.clearFocus()
+
+        self.keyModeBtn.onFocusIn.connect(keyModeOn)
+        self.keyModeBtn.onFocusOut.connect(keyModeOff)
+        self.keyModeBtn.clicked.connect(keyModeTuggle)
         return self.mainWidget
 
     def onWidgetSettings(self, parent):
@@ -426,7 +491,23 @@ class Plugin(Plugin_Base):
         self.codeItems.currentIndexChanged.connect(self.onCodeItemChanged) # add here to avoid self.selectCode trigger
         self.codeWidget.textChanged.connect(self.onCodeChanged)
 
-    def onKeyPressEvent(self, event):
+    class ModeButtonEventFilter(QObject):
+        def __init__(self, keyPressCb, keyReleaseCb) -> None:
+            super().__init__()
+            self.keyPressCb = keyPressCb
+            self.keyReleaseCb = keyReleaseCb
+
+        def eventFilter(self, obj, evt):
+            if evt.type() == QEvent.KeyPress:
+                # prevent default key events
+                self.keyPressCb(evt)
+                return True
+            elif evt.type() == QEvent.KeyRelease:
+                self.keyReleaseCb(evt)
+                return True
+            return False
+
+    def onModeBtnKeyPressEvent(self, event):
         # send by shortcut
         key = event.key()
         self.pressedKeys.append(key)
@@ -443,10 +524,16 @@ class Plugin(Plugin_Base):
                 if same:
                     self.sendCustomItem(item)
 
-    def onKeyReleaseEvent(self, event):
+    def onModeBtnKeyReleaseEvent(self, event):
         key = event.key()
         if key in self.pressedKeys:
             self.pressedKeys.remove(key)
+
+    def onKeyPressEvent(self, event):
+        pass
+
+    def onKeyReleaseEvent(self, event):
+        pass
 
     def insertSendItem(self, item = None, load = False):
         # itemsNum = self.customSendItemsLayout.count() + 1
@@ -575,11 +662,10 @@ class Plugin(Plugin_Base):
         text = edit.text()
         edit.setToolTip(text)
         send.setToolTip(text)
-        item = {
+        self.config["customSendItems"][idx].update({
             "text": text,
             "remark": send.text()
-        }
-        self.config["customSendItems"][idx] = item
+        })
 
     def onCodeItemChanged(self):
         if self.editingDefaults:
@@ -650,7 +736,7 @@ class Plugin(Plugin_Base):
             self.decodeMethod = d
             self.config["code"][name] = code
             self.saveCodeBtn.setText(_("Save"))
-        
+
     def deleteCode(self):
         self.editingDefaults = True
         name = self.codeItems.currentText()

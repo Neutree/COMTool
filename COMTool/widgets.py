@@ -1,6 +1,6 @@
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
