@@ -27,6 +27,5 @@ for file in os.listdir(protocols_dir):
         with open(os.path.join(protocols_dir, file)) as f:
             code = f.read()
             defaultProtocols[name] = code
-print(defaultProtocols.keys())
 
 

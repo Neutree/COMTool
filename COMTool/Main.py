@@ -233,7 +233,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             connSettingsGroupBox = QGroupBox(_("Connection"))
             layout = QVBoxLayout()
             connSettingsGroupBox.setLayout(layout)
-            layout.addWidget(connectionWidget)
+            if connectionWidget:
+                layout.addWidget(connectionWidget)
             settingLayout.addWidget(connSettingsGroupBox)
             #  other settings
             widget = plugin.onWidgetSettings(settingLayout)
