@@ -699,8 +699,19 @@ class Plugin(Plugin_Base):
         return False, func, func
 
     def onCodeChanged(self):
-        self.saveCodeBtn.setText(_("Save") + " *")
-        self.saveCodeBtn.setEnabled(True)
+        changed = True
+        name = self.codeItems.currentText()
+        if name in self.config["code"]:
+            codeSaved = self.config["code"][name]
+            code = self.codeWidget.toPlainText()
+            if code == codeSaved:
+                changed = False
+        if changed:
+            self.saveCodeBtn.setText(_("Save") + " *")
+            self.saveCodeBtn.setEnabled(True)
+        else:
+            self.saveCodeBtn.setText(_("Save"))
+            self.saveCodeBtn.setEnabled(False)
 
     def saveCode(self):
         self.editingDefaults = True
