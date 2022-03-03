@@ -425,6 +425,11 @@ class Plugin(Plugin_Base):
                     config = json.load( f)
                     self.oldConfig = self.config.copy()
                     self.config.clear()
+                    if "plugins" in config and self.id in config["plugins"]: # global config file
+                        config = config["plugins"][self.id]
+                    if (not "plugin_id" in config) or not config["plugin_id"] == self.id:
+                        self.hintSignal.emit("error", _("Error"), _("config file format error"))
+                        return
                     for k in config:
                         self.config[k] = config[k]
                     def onClose(ok):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-03 18:57+0800\n"
+"POT-Creation-Date: 2022-03-03 22:06+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,73 +18,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:231
+#: Main.py:233
 #, fuzzy
 msgid "Connection"
 msgstr "接続が失われます！"
 
-#: Main.py:297 Main.py:458
+#: Main.py:299 Main.py:460
 msgid "Sent"
 msgstr ""
 
-#: Main.py:297 Main.py:298 Main.py:458 Main.py:459
+#: Main.py:299 Main.py:300 Main.py:460 Main.py:461
 msgid "bytes"
 msgstr "バイト"
 
-#: Main.py:298 Main.py:459
+#: Main.py:300 Main.py:461
 #, fuzzy
 msgid "Received"
 msgstr "受信"
 
-#: Main.py:329
+#: Main.py:331
 msgid "New Window"
 msgstr ""
 
-#: Main.py:383 Main.py:388 Main.py:443 Main.py:454 Main.py:694
+#: Main.py:385 Main.py:390 Main.py:445 Main.py:456 Main.py:696
 #: conn/conn_serial.py:320 plugins/base.py:109 plugins/base.py:114
 #: plugins/base.py:130 plugins/base.py:167 plugins/base.py:185
 #: plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
-#: plugins/protocol.py:637 plugins/protocol.py:651 plugins/protocol.py:717
+#: plugins/protocol.py:431 plugins/protocol.py:618 plugins/protocol.py:632
+#: plugins/protocol.py:698
 msgid "Error"
 msgstr "間違い"
 
-#: Main.py:443
+#: Main.py:445
 msgid "Open file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: Main.py:483 Main.py:492
+#: Main.py:485 Main.py:494
 msgid "Restart now?"
 msgstr "今すぐ再起動しますか？"
 
-#: Main.py:484
+#: Main.py:486
 msgid "language changed to: "
 msgstr "言語が次のように変更されました："
 
-#: Main.py:484
+#: Main.py:486
 msgid "Restart software to take effect now?"
 msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
 
-#: Main.py:611
+#: Main.py:613
 msgid "About"
 msgstr "だいたい"
 
-#: Main.py:620
+#: Main.py:622
 msgid "New versioin detected, please click learn more to download"
 msgstr ""
 
-#: Main.py:621
+#: Main.py:623
 msgid "Learn More"
 msgstr "もっと詳しく知る"
 
-#: Main.py:622
+#: Main.py:624
 msgid "Skip this version"
 msgstr "このバージョンをスキップ"
 
-#: Main.py:623
+#: Main.py:625
 msgid "Remind me next time"
 msgstr "次回リマインダー"
 
-#: Main.py:624
+#: Main.py:626
 msgid "Need update"
 msgstr "更新が必要"
 
@@ -247,7 +248,7 @@ msgstr "エスケープはオンですが、エスケープエラー："
 msgid "Send Receive"
 msgstr "清除接収区"
 
-#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:393
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:369
 msgid "ASCII"
 msgstr "ASCII"
 
@@ -257,7 +258,7 @@ msgid ""
 "corner"
 msgstr "表示されている文字を使用して受信データを表示し、右上隅でデコード方法を選択します"
 
-#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:394
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:370
 msgid "HEX"
 msgstr "HEX"
 
@@ -297,13 +298,13 @@ msgstr "顔色"
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "UNIX端末の色のサポートを有効にする, 例えば \\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:163 plugins/protocol.py:395
+#: plugins/dbg.py:163 plugins/protocol.py:371
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "表示文字形式で送信するデータを取得し、右上隅でエンコード方法を選択します"
 
-#: plugins/dbg.py:164 plugins/protocol.py:396
+#: plugins/dbg.py:164 plugins/protocol.py:372
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "16進数の「313233」などの16進数形式で送信するデータを取得し、ASCIIコードの「123」は同等です。"
 
@@ -319,11 +320,11 @@ msgstr ""
 msgid "Timed send, unit: ms"
 msgstr "定時間P送、単位：ms"
 
-#: plugins/dbg.py:173 plugins/protocol.py:398
+#: plugins/dbg.py:173 plugins/protocol.py:374
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:174 plugins/protocol.py:399
+#: plugins/dbg.py:174 plugins/protocol.py:375
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選択中ρ送信\\ r \\ n圧電不是\\ n"
 
@@ -335,11 +336,11 @@ msgstr "記録"
 msgid "Record send data"
 msgstr "送信データを記録する"
 
-#: plugins/dbg.py:178 plugins/protocol.py:401
+#: plugins/dbg.py:178 plugins/protocol.py:377
 msgid "Escape"
 msgstr "エスケープ"
 
-#: plugins/dbg.py:179 plugins/protocol.py:402
+#: plugins/dbg.py:179 plugins/protocol.py:378
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "\\t \\r \\n \\x01 \\001 のようなエスケープ文字のサポートを有効にする"
 
@@ -387,8 +388,8 @@ msgstr "カスタム送信"
 msgid "Log path"
 msgstr "ログパス"
 
-#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:728
-#: plugins/protocol.py:750
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:709
+#: plugins/protocol.py:731
 msgid "Warning"
 msgstr ""
 
@@ -409,8 +410,8 @@ msgstr "履歴がクリアされました！"
 msgid "Send file"
 msgstr "ファイルを送信"
 
-#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:434
-#: plugins/protocol.py:444
+#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:410
+#: plugins/protocol.py:420
 msgid "Select file"
 msgstr "ファイルを選択"
 
@@ -478,86 +479,91 @@ msgstr ""
 msgid "protocol"
 msgstr ""
 
-#: plugins/protocol.py:296
+#: plugins/protocol.py:274
 msgid "Key mode"
 msgstr ""
 
-#: plugins/protocol.py:371
+#: plugins/protocol.py:347
 #, fuzzy
 msgid "En-decoding settings"
 msgstr "送信設定"
 
-#: plugins/protocol.py:375
+#: plugins/protocol.py:351
 msgid "Custom, input name"
 msgstr ""
 
-#: plugins/protocol.py:376
+#: plugins/protocol.py:352
 msgid "Load defaults"
 msgstr ""
 
-#: plugins/protocol.py:379 plugins/protocol.py:705 plugins/protocol.py:721
-#: plugins/protocol.py:741
+#: plugins/protocol.py:355 plugins/protocol.py:686 plugins/protocol.py:702
+#: plugins/protocol.py:722
 #, fuzzy
 msgid "Save"
 msgstr "エスケープ"
 
-#: plugins/protocol.py:381
+#: plugins/protocol.py:357
 msgid "Delete"
 msgstr ""
 
-#: plugins/protocol.py:385
+#: plugins/protocol.py:361
 msgid "Defaults"
 msgstr ""
 
-#: plugins/protocol.py:387
+#: plugins/protocol.py:363
 #, fuzzy
 msgid "Code"
 msgstr "記録"
 
-#: plugins/protocol.py:391
+#: plugins/protocol.py:367
 #, fuzzy
 msgid "Send settings"
 msgstr "送信設定"
 
-#: plugins/protocol.py:424
+#: plugins/protocol.py:400
 msgid "Load config"
 msgstr ""
 
-#: plugins/protocol.py:425
+#: plugins/protocol.py:401
 msgid "Share config"
 msgstr ""
 
-#: plugins/protocol.py:436 plugins/protocol.py:446
+#: plugins/protocol.py:412 plugins/protocol.py:422
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr ""
 
-#: plugins/protocol.py:458
+#: plugins/protocol.py:431
+#, fuzzy
+msgid "config file format error"
+msgstr "タイムフォーマットエラー"
+
+#: plugins/protocol.py:439
 msgid "Restart to load config?"
 msgstr ""
 
-#: plugins/protocol.py:637
+#: plugins/protocol.py:618
 msgid "Run decode error"
 msgstr ""
 
-#: plugins/protocol.py:651
+#: plugins/protocol.py:632
 #, fuzzy
 msgid "Run encode error"
 msgstr "エラーの送信"
 
-#: plugins/protocol.py:713
+#: plugins/protocol.py:694
 msgid "decode and encode method should be in code"
 msgstr ""
 
-#: plugins/protocol.py:716
+#: plugins/protocol.py:697
 #, fuzzy
 msgid "Method error"
 msgstr "エラーの送信"
 
-#: plugins/protocol.py:728
+#: plugins/protocol.py:709
 msgid "Please input code profile name first"
 msgstr ""
 
-#: plugins/protocol.py:750
+#: plugins/protocol.py:731
 msgid "Please select a code profile name first to delete"
 msgstr ""
 

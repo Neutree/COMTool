@@ -119,7 +119,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             plugin.clearCountSignal = self.clearCountSignal
             plugin.reloadWindowSignal = self.reloadWindowSignal
             plugin.configGlobal = self.config.basic
-            config = {}
+            config = {
+                "plugin_id": plugin.id
+            }
             if plugin.id in configs:
                 config = configs[plugin.id]
             else: # add new dict obj for plugin to use

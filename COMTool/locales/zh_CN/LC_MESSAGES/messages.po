@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-03 18:57+0800\n"
+"POT-Creation-Date: 2022-03-03 22:06+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,71 +18,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:231
+#: Main.py:233
 msgid "Connection"
 msgstr "连接"
 
-#: Main.py:297 Main.py:458
+#: Main.py:299 Main.py:460
 msgid "Sent"
 msgstr "已发送"
 
-#: Main.py:297 Main.py:298 Main.py:458 Main.py:459
+#: Main.py:299 Main.py:300 Main.py:460 Main.py:461
 msgid "bytes"
 msgstr "字节"
 
-#: Main.py:298 Main.py:459
+#: Main.py:300 Main.py:461
 msgid "Received"
 msgstr "已接收"
 
-#: Main.py:329
+#: Main.py:331
 msgid "New Window"
 msgstr "新窗口"
 
-#: Main.py:383 Main.py:388 Main.py:443 Main.py:454 Main.py:694
+#: Main.py:385 Main.py:390 Main.py:445 Main.py:456 Main.py:696
 #: conn/conn_serial.py:320 plugins/base.py:109 plugins/base.py:114
 #: plugins/base.py:130 plugins/base.py:167 plugins/base.py:185
 #: plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
-#: plugins/protocol.py:637 plugins/protocol.py:651 plugins/protocol.py:717
+#: plugins/protocol.py:431 plugins/protocol.py:618 plugins/protocol.py:632
+#: plugins/protocol.py:698
 msgid "Error"
 msgstr "错误"
 
-#: Main.py:443
+#: Main.py:445
 msgid "Open file failed!"
 msgstr "打开失败"
 
-#: Main.py:483 Main.py:492
+#: Main.py:485 Main.py:494
 msgid "Restart now?"
 msgstr "现在就重启？"
 
-#: Main.py:484
+#: Main.py:486
 msgid "language changed to: "
 msgstr "语言更改为: "
 
-#: Main.py:484
+#: Main.py:486
 msgid "Restart software to take effect now?"
 msgstr "现在就重启软件以生效？"
 
-#: Main.py:611
+#: Main.py:613
 msgid "About"
 msgstr "关于"
 
-#: Main.py:620
+#: Main.py:622
 msgid "New versioin detected, please click learn more to download"
 msgstr "检测到了新版本， 请点击 了解更多 以下载"
 
-#: Main.py:621
+#: Main.py:623
 msgid "Learn More"
 msgstr "了解更多"
 
-#: Main.py:622
+#: Main.py:624
 msgid "Skip this version"
 msgstr "跳过此版本"
 
-#: Main.py:623
+#: Main.py:625
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: Main.py:624
+#: Main.py:626
 msgid "Need update"
 msgstr "需要更新"
 
@@ -242,7 +243,7 @@ msgstr "转移符支持已打开，但是转义时错误"
 msgid "Send Receive"
 msgstr "收发"
 
-#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:393
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:369
 msgid "ASCII"
 msgstr "ASCII"
 
@@ -252,7 +253,7 @@ msgid ""
 "corner"
 msgstr "使用可见字符显示收到的数据，在右上角选择解码的方法"
 
-#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:394
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:370
 msgid "HEX"
 msgstr "HEX"
 
@@ -289,13 +290,13 @@ msgstr "颜色"
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "使能 unix 终端颜色支持，比如：\\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:163 plugins/protocol.py:395
+#: plugins/dbg.py:163 plugins/protocol.py:371
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可见字符的方式获取将要发送的数据，在右上角选择编码的方法"
 
-#: plugins/dbg.py:164 plugins/protocol.py:396
+#: plugins/dbg.py:164 plugins/protocol.py:372
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六进制的格式获取将要发送的数据，比如 十六进制的'31 32 33' 和 ascii编码的 '123' 等效"
 
@@ -309,11 +310,11 @@ msgstr "定时发送"
 msgid "Timed send, unit: ms"
 msgstr "定时发送，单位：ms"
 
-#: plugins/dbg.py:173 plugins/protocol.py:398
+#: plugins/dbg.py:173 plugins/protocol.py:374
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:174 plugins/protocol.py:399
+#: plugins/dbg.py:174 plugins/protocol.py:375
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "选中发送 \\r\\n 而不是 \\n"
 
@@ -325,11 +326,11 @@ msgstr "记录"
 msgid "Record send data"
 msgstr "记录发送的数据"
 
-#: plugins/dbg.py:178 plugins/protocol.py:401
+#: plugins/dbg.py:178 plugins/protocol.py:377
 msgid "Escape"
 msgstr "转义符"
 
-#: plugins/dbg.py:179 plugins/protocol.py:402
+#: plugins/dbg.py:179 plugins/protocol.py:378
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "使能转义字符支持，比如 \\t \\r \\n \\x01 \\001"
 
@@ -377,8 +378,8 @@ msgstr "自定义发送"
 msgid "Log path"
 msgstr "日志路径"
 
-#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:728
-#: plugins/protocol.py:750
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:709
+#: plugins/protocol.py:731
 msgid "Warning"
 msgstr "警告"
 
@@ -398,8 +399,8 @@ msgstr "历史已清除"
 msgid "Send file"
 msgstr "发送文件"
 
-#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:434
-#: plugins/protocol.py:444
+#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:410
+#: plugins/protocol.py:420
 msgid "Select file"
 msgstr "选择文件"
 
@@ -463,80 +464,84 @@ msgstr "取消"
 msgid "protocol"
 msgstr "协议"
 
-#: plugins/protocol.py:296
+#: plugins/protocol.py:274
 msgid "Key mode"
 msgstr "按键模式"
 
-#: plugins/protocol.py:371
+#: plugins/protocol.py:347
 msgid "En-decoding settings"
 msgstr "发送设置"
 
-#: plugins/protocol.py:375
+#: plugins/protocol.py:351
 msgid "Custom, input name"
 msgstr "自定义，输入名字"
 
-#: plugins/protocol.py:376
+#: plugins/protocol.py:352
 msgid "Load defaults"
 msgstr "加载默认项"
 
-#: plugins/protocol.py:379 plugins/protocol.py:705 plugins/protocol.py:721
-#: plugins/protocol.py:741
+#: plugins/protocol.py:355 plugins/protocol.py:686 plugins/protocol.py:702
+#: plugins/protocol.py:722
 msgid "Save"
 msgstr "保存"
 
-#: plugins/protocol.py:381
+#: plugins/protocol.py:357
 msgid "Delete"
 msgstr "删除"
 
-#: plugins/protocol.py:385
+#: plugins/protocol.py:361
 msgid "Defaults"
 msgstr "默认项"
 
-#: plugins/protocol.py:387
+#: plugins/protocol.py:363
 msgid "Code"
 msgstr "代码"
 
-#: plugins/protocol.py:391
+#: plugins/protocol.py:367
 msgid "Send settings"
 msgstr "发送设置"
 
-#: plugins/protocol.py:424
+#: plugins/protocol.py:400
 msgid "Load config"
 msgstr "加载配置"
 
-#: plugins/protocol.py:425
+#: plugins/protocol.py:401
 msgid "Share config"
 msgstr "分享配置"
 
-#: plugins/protocol.py:436 plugins/protocol.py:446
+#: plugins/protocol.py:412 plugins/protocol.py:422
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
 
-#: plugins/protocol.py:458
+#: plugins/protocol.py:431
+msgid "config file format error"
+msgstr "配置文件格式错误"
+
+#: plugins/protocol.py:439
 msgid "Restart to load config?"
 msgstr "重启以加载配置"
 
-#: plugins/protocol.py:637
+#: plugins/protocol.py:618
 msgid "Run decode error"
 msgstr "执行解码错误"
 
-#: plugins/protocol.py:651
+#: plugins/protocol.py:632
 msgid "Run encode error"
 msgstr "执行编码错误"
 
-#: plugins/protocol.py:713
+#: plugins/protocol.py:694
 msgid "decode and encode method should be in code"
 msgstr "编解码方法未提供"
 
-#: plugins/protocol.py:716
+#: plugins/protocol.py:697
 msgid "Method error"
 msgstr "方法错误"
 
-#: plugins/protocol.py:728
+#: plugins/protocol.py:709
 msgid "Please input code profile name first"
 msgstr "请先输入代码存档名"
 
-#: plugins/protocol.py:750
+#: plugins/protocol.py:731
 msgid "Please select a code profile name first to delete"
 msgstr "请先选择要删除的存档名"
 
