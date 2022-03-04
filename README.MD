@@ -203,6 +203,11 @@ grep 'dialout' /etc/group
 reboot #must reboot to take effect
 ```
 
+## Manually add app to start menu on Linux
+
+* Copy [tool/comtool.desktop](tool/comtool.desktop) to `/usr/share/applications` folder(may need `root` user to do this)
+* Edit `/usr/share/applications/comtool.desktop`, change icon path `Icon=/usr/local/COMTool/assets/logo.ico` to actual [icon](COMTool/assets/logo.ico) path, you can also use your love icon
+* Then you can find comtool app in start menu(or app center)
 
 ## Pack binary
 

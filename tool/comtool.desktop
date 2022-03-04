@@ -1,11 +1,19 @@
 [Desktop Entry]
-Version=1.0
+Version=2.3
 Type=Application
-Name=ComTool
+Name=comtool
 Comment=comtool serial communication debug tool
 Exec=comtool %U
-Icon=/usr/local/COMToolData/assets/logo.ico
-Categories=Development;
+Icon=/usr/local/COMTool/assets/logo.ico
+Categories=Development;Utility;
 Terminal=false
 StartupNotify=true
-MimeType=application/x-executable;
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New Window
+Name[zh_CN]=新建窗口
+Name[zh_TW]=開新視窗
+Name[ja]=新規ウインドウ
+Exec=comtool %U
+

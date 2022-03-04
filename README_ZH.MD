@@ -202,6 +202,12 @@ grep 'dialout' /etc/group
 reboot #must reboot to take effect
 ```
 
+## Linux 手动添加程序图标到开始菜单
+
+* 复制 [tool/comtool.desktop](tool/comtool.desktop) 文件到`/usr/share/applications`目录（可能需要 `root` 权限）
+* 修改`/usr/share/applications/comtool.desktop`，替换里面的图标路径 `Icon=/usr/local/COMTool/assets/logo.ico` 为实际的[图标](COMTool/assets/logo.ico)路径或者你喜欢的图标，保存即可
+* 在开始菜单里面就可以找到 comtool 应用了
+
 ## 打包成可执行文件
 
 
