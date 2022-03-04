@@ -332,6 +332,8 @@ class Plugin(Plugin_Base):
             self.keyModeBtn.setProperty("class", "")
             utils_ui.updateStyle(self.mainWidget, self.keyModeBtn)
             self.keyModeClickTime = 0
+            # remove all preesed keys even them not release actually, to avoid window swith by ALT+TAB bug
+            self.pressedKeys = []
             # hide all shortcut
             widgets = self.customItems.findChildren(QPushButton, "editRemark")
             for w in widgets:
