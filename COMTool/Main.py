@@ -92,7 +92,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         for conn in self.connections:
             conn.onReceived = self.onReceived
             conn.configGlobal = self.config.basic
-            conn.hintSignal = self.hintSignal
+            conn.hintSignal.connect(self.showHint)
             conn.onConnectionStatus.connect(self.onShowConnStatus)
             config = {}
             if conn.id in configs:

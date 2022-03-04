@@ -22,7 +22,7 @@ class COMM(QObject):
     '''
     onReceived     = lambda self, data:None   # data: bytes
     onConnectionStatus = pyqtSignal(ConnectionStatus, str)    # connected, msg
-    hintSignal = None                         # hintSignal.emit(type(error, warning, info), title, msg)
+    hintSignal = pyqtSignal(str, str, str)                    # hintSignal.emit(type(error, warning, info), title, msg)
     configGlobal = {}
     id = ""
 

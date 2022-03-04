@@ -18,3 +18,7 @@
 程序执行时先从文件加载配置，设置语言，再初始化其它内容，目的是保证在代码任何地方都能通过 i18n 模块正确地获取到翻译
 
 
+## TCP UDP 连接支持
+
+使用模块化（/插件化）开发， 在[conn/conn_tcp_udp.py](../conn/conn_tcp_udp.py) 中定义了这个类，可以直接执行 [conn/test_tcp_udp.py](../conn/test_tcp_udp.py) 测试模块
+
