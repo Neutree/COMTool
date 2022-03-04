@@ -4,9 +4,9 @@ COMTool
 English | [中文](./README_ZH.MD)
 
  ![GitHub](https://img.shields.io/github/license/neutree/comtool) [![PyPI](https://img.shields.io/pypi/v/comtool.svg)](https://pypi.python.org/pypi/comtool/) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/neutree/comtool/pack) ![GitHub repo size](https://img.shields.io/github/repo-size/neutree/comtool) ![GitHub Repo stars](https://img.shields.io/github/stars/neutree/comtool?style=social)
- 
+
  [![GitHub all releases](https://img.shields.io/github/downloads/neutree/comtool/total?label=release%20downloads)](https://github.com/Neutree/COMTool/releases) [![PyPI - Downloads](https://img.shields.io/pypi/dm/comtool?label=pypi%20downloads)](https://pypi.org/project/COMTool/) [![SourceForge](https://img.shields.io/sourceforge/dt/comtool?label=sourceforge%20downloads)](https://sourceforge.net/projects/comtool)
- 
+
 
 A cross platform serial debug tools written by python
 
@@ -18,9 +18,10 @@ A cross platform serial debug tools written by python
  | |
 
 
-| White theme | Dark theme |
-| ----------- | ---------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) |
+| White theme | Dark theme | protocol plugin |
+| ----------- | ---------- | ----------- |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) |
+
 
 
 
@@ -68,7 +69,7 @@ A cross platform serial debug tools written by python
 
 ### Linux
 
-* Arch Linux and its derivative versions are installed online through the AUR repository：
+* Arch Linux and its derivative distributions can install from AUR：
 
 ```bash
 # Release version
@@ -78,10 +79,10 @@ yay -S python-comtool-git
 ```
 
 > Linux has too much version, so we only compile binary for ubuntu.
-> Other distribution please install from pypi or source code.
+> Other distribution please [install from pypi or source code](#Install-python-package).
 > If you have any idea to pack cross platform binary like flatpak or appimage, you can contribute a pull request or add an issue to tell me how to
 
-* Download release at [release](https://github.com/Neutree/COMTool/releases) page  or [sourceforge](https://sourceforge.net/projects/comtool/files/)
+* Download release at [release](https://github.com/Neutree/COMTool/releases) page, and extract files from `.zip` file, and click `comtool` to run
 
 * Add current user to dialout group to avoid `sudo` command
 ```shell
@@ -89,8 +90,6 @@ sudo usermod -a -G dialout $USER
 grep 'dialout' /etc/group
 reboot #must reboot to take effect
 ```
-
-* Unzip `.zip` file, and click `comtool` to run
 
 ### Rasberry Pi
 
@@ -195,6 +194,13 @@ pip3 install wheel
 python setup.py bdist_wheel
 pip install dist/COMTool-*.*.*-py3-none-any.whl
 comtool
+```
+
+* By the way, you should add current user to dialout group to avoid `sudo` command
+```shell
+sudo usermod -a -G dialout $USER
+grep 'dialout' /etc/group
+reboot #must reboot to take effect
 ```
 
 

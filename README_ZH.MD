@@ -4,9 +4,9 @@ COMTool
 [English](./README.MD) | 中文
 
  ![GitHub](https://img.shields.io/github/license/neutree/comtool) [![PyPI](https://img.shields.io/pypi/v/comtool.svg)](https://pypi.python.org/pypi/comtool/) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/neutree/comtool/pack) ![GitHub repo size](https://img.shields.io/github/repo-size/neutree/comtool) ![GitHub Repo stars](https://img.shields.io/github/stars/neutree/comtool?style=social)
- 
+
  [![GitHub all releases](https://img.shields.io/github/downloads/neutree/comtool/total?label=release%20downloads)](https://github.com/Neutree/COMTool/releases) [![PyPI - Downloads](https://img.shields.io/pypi/dm/comtool?label=pypi%20downloads)](https://pypi.org/project/COMTool/) [![SourceForge](https://img.shields.io/sourceforge/dt/comtool?label=sourceforge%20downloads)](https://sourceforge.net/projects/comtool)
- 
+
 
 跨平台开源串口调试助手，使用 python 编写
 
@@ -18,9 +18,9 @@ COMTool
  | |
 
 
-| 白色主题 | 黑色主题 |
-| ----------- | ---------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) |
+| 白色主题 | 黑色主题 | 协议插件 |
+| ----------- | ---------- | ---------- |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) |
 
 
 > 截图可能不是最新的版本， 最新的版本只会更好用更好看
@@ -66,7 +66,7 @@ COMTool
 
 ### Linux
 
-* Arch Linux 及其衍生版本通过 AUR 仓库在线安装：
+* Arch Linux 及其衍生版本可以通过 AUR 仓库在线安装：
 
 ```bash
 # 发行版
@@ -76,7 +76,7 @@ yay -S python-comtool-git
 ```
 
 > Linux版本太多，我们只为ubuntu编译二进制。
-> 其他发行版请从 pypi 或源码安装。
+> 其他发行版请[从 pypi 或源码安装](#以-python-包形式安装)。
 > 如果你有什么好的跨平台打包想法，比如 flatpak 或 appimage，你可以贡献一个 PR 或添加一个 issue 来告诉我如何可以做到
 
 * 在 [release](https://github.com/Neutree/COMTool/releases) 页面或 [sourceforge](https://sourceforge.net/projects/comtool/files/) 下载最新版本
@@ -193,6 +193,13 @@ pip3 install wheel
 python setup.py bdist_wheel
 pip install dist/COMTool-*.*.*-py3-none-any.whl
 comtool
+```
+
+* 如果不想使用`sudo`命令自动软件，则需要将当前用户添加到`dialout`组
+```shell
+sudo usermod -a -G dialout $USER
+grep 'dialout' /etc/group
+reboot #must reboot to take effect
 ```
 
 ## 打包成可执行文件
