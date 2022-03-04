@@ -28,7 +28,7 @@ try:
     from i18n import _
     import version
     import utils_ui
-    from conn.conn_serial import Serial
+    from conn import Serial, ConnectionStatus
     from plugins import plugins
     from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 except ImportError:
@@ -36,7 +36,7 @@ except ImportError:
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
     from COMTool import version
-    from COMTool.conn.conn_serial import Serial
+    from COMTool.conn import Serial, ConnectionStatus
     from COMTool.plugins import plugins
     from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 
@@ -93,6 +93,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             conn.onReceived = self.onReceived
             conn.configGlobal = self.config.basic
             conn.hintSignal = self.hintSignal
+            conn.onConnectionStatus.connect(self.onShowConnStatus)
             config = {}
             if conn.id in configs:
                 config = configs[conn.id]
@@ -460,6 +461,14 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
     def onUpdateCountUi(self, send, receive):
         self.statusBarSendCount.setText('{}({}): {}'.format(_("Sent"), _("bytes"), send))
         self.statusBarReceiveCount.setText('{}({}): {}'.format(_("Received"), _("bytes"), receive))
+
+    def onShowConnStatus(self, status, msg):
+        if status == ConnectionStatus.CONNECTED:
+            self.onstatusBarText("info", msg)
+        elif status == ConnectionStatus.CLOSED:
+            self.onstatusBarText("info", msg)
+        else:
+            self.onstatusBarText("warning", msg)
 
     def onstatusBarText(self, msg_type, msg):
         if msg_type == "info":

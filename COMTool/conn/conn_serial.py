@@ -414,6 +414,7 @@ class Serial(COMM):
                         print("-- reopen serial")
                         waitingReconnect = False
                         self.onConnectionStatus.emit(ConnectionStatus.CONNECTED, _("Reconnected"))
+                        self.showSwitchSignal.emit(ConnectionStatus.CONNECTED)
                         continue
                     except Exception as e:
                         pass
@@ -443,7 +444,8 @@ class Serial(COMM):
                         pass
                     waitingReconnect = True
                     self.onConnectionStatus.emit(ConnectionStatus.LOSE, _("Connection lose!"))
-                    
+                    self.showSwitchSignal.emit(ConnectionStatus.LOSE)
+
 
     def send(self, data : bytes):
         self.com.write(data)
