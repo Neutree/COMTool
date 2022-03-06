@@ -47,7 +47,7 @@ class TCP_UDP(COMM):
         default = {
             "protocol" : "tcp",
             "mode" : "client",
-            "target" : "127.0.0.1:2345",
+            "target" : ["127.0.0.1:2345", ["127.0.0.1:2345"]],
             "port": 2345,
             "auto_reconnect": False,
             "auto_reconnect_interval": 1.0
@@ -98,7 +98,8 @@ class TCP_UDP(COMM):
         protocolLabel = QLabel(_("Protocol"))
         modeLabel = QLabel(_("Mode"))
         self.targetLabel = QLabel(_("Target"))
-        self.targetEdit = QLineEdit()
+        self.targetCombobox = ComboBox()
+        self.targetCombobox.setEditable(True)
         self.portLabel = QLabel(_("Port"))
         self.portLabel.hide()
         self.porttEdit = QLineEdit()
@@ -130,7 +131,7 @@ class TCP_UDP(COMM):
         serialSettingsLayout.addWidget(modeLabel, 1, 0)
         serialSettingsLayout.addWidget(modeWidget, 1, 1, 1, 2)
         serialSettingsLayout.addWidget(self.targetLabel, 2, 0)
-        serialSettingsLayout.addWidget(self.targetEdit, 2, 1, 1, 2)
+        serialSettingsLayout.addWidget(self.targetCombobox, 2, 1, 1, 2)
         serialSettingsLayout.addWidget(self.portLabel, 3, 0)
         serialSettingsLayout.addWidget(self.porttEdit, 3, 1, 1, 2)
         serialSettingsLayout.addWidget(self.clientsCombobox, 4, 0, 1, 2)
@@ -142,7 +143,7 @@ class TCP_UDP(COMM):
         serialSetting.setLayout(serialSettingsLayout)
         self.widgetConfMap["protocol"]       = self.protoclTcpRadioBtn
         self.widgetConfMap["mode"]    = self.modeClientRadioBtn
-        self.widgetConfMap["target"]    = self.targetEdit
+        self.widgetConfMap["target"]    = self.targetCombobox
         self.widgetConfMap["port"]    = self.porttEdit
         self.widgetConfMap["auto_reconnect"] = self.autoReconnect
         self.widgetConfMap["auto_reconnect_interval"] = self.autoReconnectIntervalEdit
@@ -152,7 +153,6 @@ class TCP_UDP(COMM):
 
     def initEvet(self):
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
-        self.targetEdit.textChanged.connect(self.onTargetChanged)
         self.porttEdit.textChanged.connect(self.onPortChanged)
         self.showSwitchSignal.connect(self.showSwitch)
         self.updateTargetSignal.connect(self.updateTarget)
@@ -163,13 +163,14 @@ class TCP_UDP(COMM):
         self.disconnetClientBtn.clicked.connect(self.serverModeDisconnectClient)
         self.autoReconnect.stateChanged.connect(lambda x: self.setVar("auto_reconnect", value = x))
         self.autoReconnectIntervalEdit.textChanged.connect(lambda: self.setVar("auto_reconnect_interval"))
+        self.targetCombobox.currentTextChanged.connect(self.onTargetChanged)
 
     def changeMode(self, mode, init=False):
         if init or mode != self.config["mode"]:
             if self.isConnected():
                 self.openCloseSerial()
             if mode == "server":
-                self.targetEdit.hide()
+                self.targetCombobox.hide()
                 self.targetLabel.hide()
                 self.porttEdit.show()
                 self.portLabel.show()
@@ -179,7 +180,7 @@ class TCP_UDP(COMM):
                 self.autoReconnectIntervalEdit.hide()
                 self.autoReconnetLable.hide()
             else:
-                self.targetEdit.show()
+                self.targetCombobox.show()
                 self.targetLabel.show()
                 self.porttEdit.hide()
                 self.portLabel.hide()
@@ -191,15 +192,16 @@ class TCP_UDP(COMM):
             self.config["mode"] = mode
 
     def onTargetChanged(self):
-        text = self.targetEdit.text()
-        # correct chinese ： to english :
-        if text.endswith("："):
-            text = text[:-1] + ":"
-        self.targetEdit.setText(text)
-        self.config["target"] = text
+        text = self.targetCombobox.currentText()
+        self.config["target"][0] = text
 
     def updateTarget(self, new):
-        self.targetEdit.setText(new)
+        idx = self.targetCombobox.findText(new)
+        if idx < 0:
+            self.targetCombobox.addItem(new)
+            self.config["target"][1].append(new)
+        self.targetCombobox.setEditText(new)
+        self.config["target"][0] = new
 
     def updateClients(self, add:bool, addr:tuple):
         host, port = addr
@@ -258,7 +260,9 @@ class TCP_UDP(COMM):
                 obj.setChecked(False)
                 self.changeMode("server", init=True)
         elif conf_type == "target":
-            obj.setText(value)
+            for i, target in enumerate(self.config["target"][1]):
+                self.targetCombobox.addItem(target)
+            self.targetCombobox.setCurrentText(self.config["target"][0])
         elif conf_type == "port":
             obj.setText(str(value))
         elif conf_type == "auto_reconnect":
@@ -310,10 +314,9 @@ class TCP_UDP(COMM):
             try:
                 if self.config["mode"] == "client":
                     print("-- connect")
-                    target = self.checkTarget(self.config["target"])
+                    target = self.checkTarget(self.config["target"][0])
                     if not target:
                         raise Exception(_("Target error" + ": " + self.config["target"]))
-                    self.updateTargetSignal.emit(f'{target[0]}:{target[1]}')
                     print("-- connect", target)
                     self.conn = socket.socket()
                     self.conn.connect(target)
@@ -353,17 +356,24 @@ class TCP_UDP(COMM):
             return None
         host = target
         port = 80
+        target = target.replace("：", ":")
+        if target.endswith(":"):
+            target = target[:-1]
         _host = re.match('http(.*)://(.*)', target)
         if _host:
+            print(_host)
             s, target = _host.groups()
             host = target
         _host = re.match('(.*):(\d*)', target)
         if _host:
+            print(_host)
             host, port = _host.groups()
             port = int(port)
         if host.endswith("/"):
             host = host[:-1]
         target = (host, port)
+        target_str = f'{host}:{port}'
+        self.updateTargetSignal.emit(target_str)
         return target
 
     # @pyqtSlot(ConnectionStatus)
@@ -410,10 +420,9 @@ class TCP_UDP(COMM):
         while self.status != ConnectionStatus.CLOSED:
             if waitingReconnect:
                 try:
-                    target = self.checkTarget(self.config["target"])
+                    target = self.checkTarget(self.config["target"][0])
                     if not target:
                         raise Exception(_("Target error" + ": " + self.config["target"]))
-                    self.updateTargetSignal.emit(f'{target[0]}:{target[1]}')
                     conn = socket.socket()
                     conn.connect(target)
                     conn.settimeout(0.1)
