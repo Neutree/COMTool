@@ -1,9 +1,10 @@
 
-from PyQt5.QtCore import pyqtSignal,Qt, QRect, QMargins, QObject, pyqtSlot
+from os import remove
+from PyQt5.QtCore import pyqtSignal,Qt, QRect, QMargins, QObject, pyqtSlot, QRegExp
 from PyQt5.QtWidgets import (QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
-from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
+from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QRegExpValidator
 try:
     import parameters,helpAbout,autoUpdate
     from Combobox import ComboBox
@@ -39,14 +40,17 @@ class TCP_UDP(COMM):
     id = "tcp_udp"
     showSwitchSignal = pyqtSignal(ConnectionStatus)
     updateTargetSignal = pyqtSignal(str)
+    updateClientsSignal = pyqtSignal(bool, tuple)
     def onInit(self, config):
         self.conn = None
         self.config = config
         default = {
             "protocol" : "tcp",
             "mode" : "client",
-            "target" : "127.0.0.1:3456",
-            "auto_reconnect": False
+            "target" : "127.0.0.1:2345",
+            "port": 2345,
+            "auto_reconnect": False,
+            "auto_reconnect_interval": 1.0
         }
         for k in default:
             if not k in self.config:
@@ -55,12 +59,18 @@ class TCP_UDP(COMM):
             "protocol" : None,
             "mode" : None,
             "target" : None,
-            "auto_reconnect": None
+            "port": None,
+            "auto_reconnect": None,
+            "auto_reconnect_interval": None
         }
         self.isOpened = False
         self.busy = False
         self.status = ConnectionStatus.CLOSED
         self.widget = None
+        self.serverModeClientsConns = {
+            # "127.0.0.1:76534": conn
+        }
+        self.serverModeSelectedClient = None # None means all clients, or ip:port string
 
     def __del__(self):
         try:
@@ -89,6 +99,9 @@ class TCP_UDP(COMM):
         modeLabel = QLabel(_("Mode"))
         self.targetLabel = QLabel(_("Target"))
         self.targetEdit = QLineEdit()
+        self.portLabel = QLabel(_("Port"))
+        self.portLabel.hide()
+        self.porttEdit = QLineEdit()
         protocolWidget = QWidget()
         modeWidget = QWidget()
         layoutProtocol = QHBoxLayout()
@@ -105,45 +118,76 @@ class TCP_UDP(COMM):
         self.modeClientRadioBtn.setChecked(True)
         layoutMode.addWidget(self.modeClientRadioBtn)
         layoutMode.addWidget(self.modeServerRadioBtn)
-        self.autoReconnect = QCheckBox(_("Auto reconnect"))
+        self.clientsCombobox = ComboBox()
+        self.clientsCombobox.addItem(_("All clients") + "(0)")
+        self.disconnetClientBtn = QPushButton(_("Disconnect"))
+        self.autoReconnetLable = QLabel(_("Auto reconnect"))
+        self.autoReconnect = QCheckBox()
+        self.autoReconnectIntervalEdit = QLineEdit("1.0")
         self.serialOpenCloseButton = QPushButton(_("OPEN"))
         serialSettingsLayout.addWidget(protocolLabel,0,0)
+        serialSettingsLayout.addWidget(protocolWidget, 0, 1, 1, 2)
         serialSettingsLayout.addWidget(modeLabel, 1, 0)
+        serialSettingsLayout.addWidget(modeWidget, 1, 1, 1, 2)
         serialSettingsLayout.addWidget(self.targetLabel, 2, 0)
         serialSettingsLayout.addWidget(self.targetEdit, 2, 1, 1, 2)
-        serialSettingsLayout.addWidget(protocolWidget, 0, 1, 1, 2)
-        serialSettingsLayout.addWidget(modeWidget, 1, 1, 1, 2)
-        serialSettingsLayout.addWidget(self.autoReconnect, 3, 0, 1, 3)
-        serialSettingsLayout.addWidget(self.serialOpenCloseButton, 4, 0, 1, 3)
+        serialSettingsLayout.addWidget(self.portLabel, 3, 0)
+        serialSettingsLayout.addWidget(self.porttEdit, 3, 1, 1, 2)
+        serialSettingsLayout.addWidget(self.clientsCombobox, 4, 0, 1, 2)
+        serialSettingsLayout.addWidget(self.disconnetClientBtn, 4, 2, 1, 1)
+        serialSettingsLayout.addWidget(self.autoReconnetLable, 5, 0, 1, 1)
+        serialSettingsLayout.addWidget(self.autoReconnect, 5, 1, 1, 1)
+        serialSettingsLayout.addWidget(self.autoReconnectIntervalEdit, 5, 2, 1, 1)
+        serialSettingsLayout.addWidget(self.serialOpenCloseButton, 6, 0, 1, 3)
         serialSetting.setLayout(serialSettingsLayout)
         self.widgetConfMap["protocol"]       = self.protoclTcpRadioBtn
         self.widgetConfMap["mode"]    = self.modeClientRadioBtn
         self.widgetConfMap["target"]    = self.targetEdit
+        self.widgetConfMap["port"]    = self.porttEdit
         self.widgetConfMap["auto_reconnect"] = self.autoReconnect
+        self.widgetConfMap["auto_reconnect_interval"] = self.autoReconnectIntervalEdit
         self.initEvet()
         self.widget = serialSetting
         return serialSetting
 
     def initEvet(self):
-        # self.protoclTcpRadioBtn.clicked.connect(lambda: self.onSerialConfigChanged("rts", self.checkBoxRTS, bool))
-        # self.checkBoxDTR.clicked.connect(lambda: self.onSerialConfigChanged("dtr", self.checkBoxDTR, bool))
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
         self.targetEdit.textChanged.connect(self.onTargetChanged)
+        self.porttEdit.textChanged.connect(self.onPortChanged)
         self.showSwitchSignal.connect(self.showSwitch)
         self.updateTargetSignal.connect(self.updateTarget)
+        self.updateClientsSignal.connect(self.updateClients)
         self.modeServerRadioBtn.clicked.connect(lambda: self.changeMode("server"))
         self.modeClientRadioBtn.clicked.connect(lambda: self.changeMode("client"))
+        self.clientsCombobox.currentIndexChanged.connect(self.serverModeClientChanged)
+        self.disconnetClientBtn.clicked.connect(self.serverModeDisconnectClient)
+        self.autoReconnect.stateChanged.connect(lambda x: self.setVar("auto_reconnect", value = x))
+        self.autoReconnectIntervalEdit.textChanged.connect(lambda: self.setVar("auto_reconnect_interval"))
 
-    def changeMode(self, mode):
-        if mode != self.config["mode"]:
+    def changeMode(self, mode, init=False):
+        if init or mode != self.config["mode"]:
             if self.isConnected():
                 self.openCloseSerial()
             if mode == "server":
                 self.targetEdit.hide()
                 self.targetLabel.hide()
+                self.porttEdit.show()
+                self.portLabel.show()
+                self.clientsCombobox.show()
+                self.disconnetClientBtn.show()
+                self.autoReconnect.hide()
+                self.autoReconnectIntervalEdit.hide()
+                self.autoReconnetLable.hide()
             else:
                 self.targetEdit.show()
                 self.targetLabel.show()
+                self.porttEdit.hide()
+                self.portLabel.hide()
+                self.clientsCombobox.hide()
+                self.disconnetClientBtn.hide()
+                self.autoReconnect.show()
+                self.autoReconnectIntervalEdit.show()
+                self.autoReconnetLable.show()
             self.config["mode"] = mode
 
     def onTargetChanged(self):
@@ -157,6 +201,46 @@ class TCP_UDP(COMM):
     def updateTarget(self, new):
         self.targetEdit.setText(new)
 
+    def updateClients(self, add:bool, addr:tuple):
+        host, port = addr
+        if add:
+            self.clientsCombobox.addItem(f'{host}:{port}')
+        else:
+            idx = self.clientsCombobox.findText(f'{host}:{port}')
+            if idx > 0:
+                self.clientsCombobox.removeItem(idx)
+        self.clientsCombobox.setItemText(0, _("All clients") + "({})".format(self.clientsCombobox.count() - 1))
+
+    def serverModeClientChanged(self):
+        if self.clientsCombobox.currentIndex() == 0:
+            self.serverModeSelectedClient = None
+        else:
+            self.serverModeSelectedClient = self.clientsCombobox.currentText()
+
+    def serverModeDisconnectClient(self):
+        if not self.serverModeSelectedClient:
+            for addr, conn in self.serverModeClientsConns.items():
+                try:
+                    conn.close()
+                except Exception:
+                    pass
+        else:
+            conn = self.serverModeClientsConns[self.serverModeSelectedClient]
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+    def onPortChanged(self):
+        text = self.porttEdit.text()
+        while 1:
+            try:
+                port = int(text)
+                break
+            except Exception:
+                text = text[:-1]
+        self.porttEdit.setText(text)
+
     def onSerialConfigChanged(self, conf_type, obj, value_type, caller=""):
         pass
 
@@ -169,12 +253,31 @@ class TCP_UDP(COMM):
         elif conf_type == "mode":
             if value == "client":
                 obj.setChecked(True)
+                self.changeMode("client", init=True)
             else:
                 obj.setChecked(False)
+                self.changeMode("server", init=True)
         elif conf_type == "target":
             obj.setText(value)
+        elif conf_type == "port":
+            obj.setText(str(value))
         elif conf_type == "auto_reconnect":
             obj.setChecked(value)
+        elif conf_type == "auto_reconnect_interval":
+            obj.setText("%.3f" %(value))
+
+    def setVar(self, key, value = None):
+        if key == "auto_reconnect":
+            self.config[key] = value
+        elif key == "auto_reconnect_interval":
+            text = self.autoReconnectIntervalEdit.text()
+            try:
+                interval = float(text)
+                self.config[key] = interval
+            except Exception:
+                text = "".join(re.findall('[\d\.]*', text))
+                self.autoReconnectIntervalEdit.setText(text)
+                
 
     def openCloseSerial(self):
         if self.busy:
@@ -205,22 +308,32 @@ class TCP_UDP(COMM):
             self.showSwitchSignal.emit(self.status)
         else:
             try:
-                print("-- connect")
-                target = self.checkTarget(self.config["target"])
-                if not target:
-                    raise Exception(_("Target error" + ": " + self.config["target"]))
-                self.updateTargetSignal.emit(f'{target[0]}:{target[1]}')
-                print("-- connect", target)
-                self.conn = socket.socket()
-                self.conn.connect(target)
-                self.conn.settimeout(0.1)
-                print("-- connect success")
-                self.status = ConnectionStatus.CONNECTED
+                if self.config["mode"] == "client":
+                    print("-- connect")
+                    target = self.checkTarget(self.config["target"])
+                    if not target:
+                        raise Exception(_("Target error" + ": " + self.config["target"]))
+                    self.updateTargetSignal.emit(f'{target[0]}:{target[1]}')
+                    print("-- connect", target)
+                    self.conn = socket.socket()
+                    self.conn.connect(target)
+                    self.status = ConnectionStatus.CONNECTED
+                    print("-- connect success")
+                    self.receiveProcess = threading.Thread(target=self.receiveDataProcess, args=(self.conn, ))
+                    self.receiveProcess.setDaemon(True)
+                    self.receiveProcess.start()
+                else:
+                    print("-- server mode, wait client connect")
+                    self.conn = socket.socket()
+                    self.conn.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+                    self.conn.bind(("0.0.0.0", self.config["port"]))
+                    self.conn.listen(100)
+                    self.status = ConnectionStatus.CONNECTED
+                    self.waitClentsProcess = threading.Thread(target=self.waitClientsProcess)
+                    self.waitClentsProcess.setDaemon(True)
+                    self.waitClentsProcess.start()
                 self.onConnectionStatus.emit(self.status, "")
                 self.showSwitchSignal.emit(self.status)
-                self.receiveProcess = threading.Thread(target=self.receiveDataProcess)
-                self.receiveProcess.setDaemon(True)
-                self.receiveProcess.start()
             except Exception as e:
                 print("----", e)
                 try:
@@ -271,17 +384,40 @@ class TCP_UDP(COMM):
         self.widget.style().polish(widget)
         self.widget.update()
 
+    def waitClientsProcess(self):
+        while self.status != ConnectionStatus.CLOSED:
+            print("-- wait for client connect")
+            try:
+                conn, addr = self.conn.accept()
+            except Exception as e:
+                if self.status != ConnectionStatus.CLOSED:
+                    print("-- accept connection fail:", str(e))
+                continue
+            print("-- client connected, ip:", addr)
+            addr_str = f'{addr[0]}:{addr[1]}'
+            self.updateClientsSignal.emit(True, addr)
+            self.onConnectionStatus.emit(ConnectionStatus.CONNECTED, _("Client connected:") + " " + addr_str)
+            self.serverModeClientsConns[addr_str] = conn
+            t = threading.Thread(target=self.receiveDataProcess, args=(conn, addr))
+            t.setDaemon(True)
+            t.start()
 
-    def receiveDataProcess(self):
+    def receiveDataProcess(self, conn, remote_addr:tuple = None):
         waitingReconnect = False
         buffer = b''
         t = 0
+        conn.settimeout(0.1)
         while self.status != ConnectionStatus.CLOSED:
             if waitingReconnect:
                 try:
-                    self.conn = socket.socket()
-                    self.conn.connect()
-                    self.conn.settimeout(0.1)
+                    target = self.checkTarget(self.config["target"])
+                    if not target:
+                        raise Exception(_("Target error" + ": " + self.config["target"]))
+                    self.updateTargetSignal.emit(f'{target[0]}:{target[1]}')
+                    conn = socket.socket()
+                    conn.connect(target)
+                    conn.settimeout(0.1)
+                    self.conn = conn
                     print("-- reconnect")
                     waitingReconnect = False
                     self.onConnectionStatus.emit(ConnectionStatus.CONNECTED, _("Reconnected"))
@@ -289,12 +425,12 @@ class TCP_UDP(COMM):
                     continue
                 except Exception as e:
                     pass
-                time.sleep(0.01)
+                time.sleep(self.config["auto_reconnect_interval"])
                 continue
             try:
                 # length = max(1, self.conn.in_waiting)
                 try:
-                    data = self.conn.recv(4096)
+                    data = conn.recv(4096)
                     if data == b'': # closed by peer(peer send FIN, now we can close this connection)
                         if buffer:
                             self.onReceived(buffer)
@@ -316,27 +452,50 @@ class TCP_UDP(COMM):
             except Exception as e:
                 print("-- recv error:", e, type(e))
                 if not self.config["auto_reconnect"]:
-                    self.status = ConnectionStatus.CLOSED
-                    self.onConnectionStatus.emit(self.status, _("Connection closed!") + " " + str(e))
-                    self.showSwitchSignal.emit(self.status)
+                    over = False
+                    if self.config["mode"] == "server":
+                        self.onConnectionStatus.emit(ConnectionStatus.CLOSED, _("Connection") + f' {remote_addr[0]}:{remote_addr[1]} ' + _("closed!"))
+                        over = True
+                    else:
+                        self.status = ConnectionStatus.CLOSED
+                        self.onConnectionStatus.emit(self.status, _("Connection closed!") + " " + str(e))
+                        self.showSwitchSignal.emit(self.status)
                     try:
-                        self.conn.close()
+                        conn.close()
                     except Exception:
                         pass
+                    if over:
+                        break
                 elif (self.status != ConnectionStatus.CLOSED):
                     # close as fast as we can to release port
                     try:
-                        self.conn.close()
+                        conn.close()
                     except Exception:
                         pass
                     waitingReconnect = True
                     self.onConnectionStatus.emit(ConnectionStatus.LOSE, _("Connection lose!"))
                     self.showSwitchSignal.emit(ConnectionStatus.LOSE)
+                    time.sleep(self.config["auto_reconnect_interval"])
+        # server mode remove client
+        if self.config["mode"] == "server":
+            remote_str = f'{remote_addr[0]}:{remote_addr[1]}'
+            print(f"-- client {remote_str} disconnect")
+            self.updateClientsSignal.emit(False, remote_addr)
+            if remote_str == self.serverModeSelectedClient:
+                self.serverModeSelectedClient = None
+            self.serverModeClientsConns.pop(remote_str)
         print("-- receiveDataProcess exit")
 
     def send(self, data : bytes):
         if self.conn:
-            self.conn.sendall(data)
+            if self.config["mode"] == "client":
+                self.conn.sendall(data)
+            else:
+                if not self.serverModeSelectedClient:
+                    for addr, conn in self.serverModeClientsConns.items():
+                        conn.sendall(data)
+                else:
+                    self.serverModeClientsConns[self.serverModeSelectedClient].sendall(data)
 
     def isConnected(self):
         return self.status == ConnectionStatus.CONNECTED
