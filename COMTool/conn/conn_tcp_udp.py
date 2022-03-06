@@ -94,9 +94,9 @@ class TCP_UDP(COMM):
 
     def onWidget(self):
         serialSetting = QWidget()
-        serialSettingsLayout = QGridLayout()
+        self.serialSettingsLayout = QGridLayout()
         protocolLabel = QLabel(_("Protocol"))
-        modeLabel = QLabel(_("Mode"))
+        self.modeLabel = QLabel(_("Mode"))
         self.targetLabel = QLabel(_("Target"))
         self.targetCombobox = ComboBox()
         self.targetCombobox.setEditable(True)
@@ -126,21 +126,21 @@ class TCP_UDP(COMM):
         self.autoReconnect = QCheckBox()
         self.autoReconnectIntervalEdit = QLineEdit("1.0")
         self.serialOpenCloseButton = QPushButton(_("OPEN"))
-        serialSettingsLayout.addWidget(protocolLabel,0,0)
-        serialSettingsLayout.addWidget(protocolWidget, 0, 1, 1, 2)
-        serialSettingsLayout.addWidget(modeLabel, 1, 0)
-        serialSettingsLayout.addWidget(modeWidget, 1, 1, 1, 2)
-        serialSettingsLayout.addWidget(self.targetLabel, 2, 0)
-        serialSettingsLayout.addWidget(self.targetCombobox, 2, 1, 1, 2)
-        serialSettingsLayout.addWidget(self.portLabel, 3, 0)
-        serialSettingsLayout.addWidget(self.porttEdit, 3, 1, 1, 2)
-        serialSettingsLayout.addWidget(self.clientsCombobox, 4, 0, 1, 2)
-        serialSettingsLayout.addWidget(self.disconnetClientBtn, 4, 2, 1, 1)
-        serialSettingsLayout.addWidget(self.autoReconnetLable, 5, 0, 1, 1)
-        serialSettingsLayout.addWidget(self.autoReconnect, 5, 1, 1, 1)
-        serialSettingsLayout.addWidget(self.autoReconnectIntervalEdit, 5, 2, 1, 1)
-        serialSettingsLayout.addWidget(self.serialOpenCloseButton, 6, 0, 1, 3)
-        serialSetting.setLayout(serialSettingsLayout)
+        self.serialSettingsLayout.addWidget(protocolLabel,0,0)
+        self.serialSettingsLayout.addWidget(protocolWidget, 0, 1, 1, 2)
+        self.serialSettingsLayout.addWidget(self.modeLabel, 1, 0)
+        self.serialSettingsLayout.addWidget(modeWidget, 1, 1, 1, 2)
+        self.serialSettingsLayout.addWidget(self.targetLabel, 2, 0)
+        self.serialSettingsLayout.addWidget(self.targetCombobox, 2, 1, 1, 2)
+        self.serialSettingsLayout.addWidget(self.portLabel, 3, 0)
+        self.serialSettingsLayout.addWidget(self.porttEdit, 3, 1, 1, 2)
+        self.serialSettingsLayout.addWidget(self.clientsCombobox, 4, 0, 1, 2)
+        self.serialSettingsLayout.addWidget(self.disconnetClientBtn, 4, 2, 1, 1)
+        self.serialSettingsLayout.addWidget(self.autoReconnetLable, 5, 0, 1, 1)
+        self.serialSettingsLayout.addWidget(self.autoReconnect, 5, 1, 1, 1)
+        self.serialSettingsLayout.addWidget(self.autoReconnectIntervalEdit, 5, 2, 1, 1)
+        self.serialSettingsLayout.addWidget(self.serialOpenCloseButton, 6, 0, 1, 3)
+        serialSetting.setLayout(self.serialSettingsLayout)
         self.widgetConfMap["protocol"]       = self.protoclTcpRadioBtn
         self.widgetConfMap["mode"]    = self.modeClientRadioBtn
         self.widgetConfMap["target"]    = self.targetCombobox
@@ -157,6 +157,8 @@ class TCP_UDP(COMM):
         self.showSwitchSignal.connect(self.showSwitch)
         self.updateTargetSignal.connect(self.updateTarget)
         self.updateClientsSignal.connect(self.updateClients)
+        self.protoclTcpRadioBtn.clicked.connect(lambda: self.changeProtocol("tcp"))
+        self.protoclUdpRadioBtn.clicked.connect(lambda: self.changeProtocol("udp"))
         self.modeServerRadioBtn.clicked.connect(lambda: self.changeMode("server"))
         self.modeClientRadioBtn.clicked.connect(lambda: self.changeMode("client"))
         self.clientsCombobox.currentIndexChanged.connect(self.serverModeClientChanged)
@@ -164,6 +166,31 @@ class TCP_UDP(COMM):
         self.autoReconnect.stateChanged.connect(lambda x: self.setVar("auto_reconnect", value = x))
         self.autoReconnectIntervalEdit.textChanged.connect(lambda: self.setVar("auto_reconnect_interval"))
         self.targetCombobox.currentTextChanged.connect(self.onTargetChanged)
+
+    def changeProtocol(self, protocol, init=False):
+        if init or protocol != self.config["protocol"]:
+            if self.isConnected():
+                self.openCloseSerial()
+            if protocol == "tcp":
+                self.modeClientRadioBtn.show()
+                self.modeServerRadioBtn.show()
+                self.modeLabel.show()
+                self.changeMode(self.config["mode"], init=True)
+            else:
+                self.targetCombobox.show()
+                self.targetLabel.show()
+                self.porttEdit.show()
+                self.portLabel.show()
+                self.clientsCombobox.hide()
+                self.disconnetClientBtn.hide()
+                self.autoReconnect.hide()
+                self.autoReconnectIntervalEdit.hide()
+                self.autoReconnetLable.hide()
+                self.modeClientRadioBtn.hide()
+                self.modeServerRadioBtn.hide()
+                self.modeLabel.hide()
+                self.widget.adjustSize()
+            self.config["protocol"] = protocol
 
     def changeMode(self, mode, init=False):
         if init or mode != self.config["mode"]:
@@ -189,6 +216,7 @@ class TCP_UDP(COMM):
                 self.autoReconnect.show()
                 self.autoReconnectIntervalEdit.show()
                 self.autoReconnetLable.show()
+            self.widget.adjustSize()
             self.config["mode"] = mode
 
     def onTargetChanged(self):
@@ -312,29 +340,38 @@ class TCP_UDP(COMM):
             self.showSwitchSignal.emit(self.status)
         else:
             try:
-                if self.config["mode"] == "client":
-                    print("-- connect")
-                    target = self.checkTarget(self.config["target"][0])
-                    if not target:
-                        raise Exception(_("Target error" + ": " + self.config["target"]))
-                    print("-- connect", target)
-                    self.conn = socket.socket()
-                    self.conn.connect(target)
+                if self.config["protocol"] == "tcp":
+                    if self.config["mode"] == "client":
+                        print("-- connect")
+                        target = self.checkTarget(self.config["target"][0])
+                        if not target:
+                            raise Exception(_("Target error") + ": " + self.config["target"][0])
+                        print("-- connect", target)
+                        self.conn = socket.socket()
+                        self.conn.connect(target)
+                        self.status = ConnectionStatus.CONNECTED
+                        print("-- connect success")
+                        self.receiveProcess = threading.Thread(target=self.receiveDataProcess, args=(self.conn, ))
+                        self.receiveProcess.setDaemon(True)
+                        self.receiveProcess.start()
+                    else:
+                        print("-- server mode, wait client connect")
+                        self.conn = socket.socket()
+                        self.conn.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+                        self.conn.bind(("0.0.0.0", self.config["port"]))
+                        self.conn.listen(100)
+                        self.status = ConnectionStatus.CONNECTED
+                        self.waitClentsProcess = threading.Thread(target=self.waitClientsProcess)
+                        self.waitClentsProcess.setDaemon(True)
+                        self.waitClentsProcess.start()
+                else:
+                    print("-- UPD protocol")
+                    self.conn = socket.socket(type=socket.SOCK_DGRAM)
+                    self.conn.bind(("0.0.0.0", self.config["port"]))
                     self.status = ConnectionStatus.CONNECTED
-                    print("-- connect success")
                     self.receiveProcess = threading.Thread(target=self.receiveDataProcess, args=(self.conn, ))
                     self.receiveProcess.setDaemon(True)
                     self.receiveProcess.start()
-                else:
-                    print("-- server mode, wait client connect")
-                    self.conn = socket.socket()
-                    self.conn.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-                    self.conn.bind(("0.0.0.0", self.config["port"]))
-                    self.conn.listen(100)
-                    self.status = ConnectionStatus.CONNECTED
-                    self.waitClentsProcess = threading.Thread(target=self.waitClientsProcess)
-                    self.waitClentsProcess.setDaemon(True)
-                    self.waitClentsProcess.start()
                 self.onConnectionStatus.emit(self.status, "")
                 self.showSwitchSignal.emit(self.status)
             except Exception as e:
@@ -361,12 +398,10 @@ class TCP_UDP(COMM):
             target = target[:-1]
         _host = re.match('http(.*)://(.*)', target)
         if _host:
-            print(_host)
             s, target = _host.groups()
             host = target
         _host = re.match('(.*):(\d*)', target)
         if _host:
-            print(_host)
             host, port = _host.groups()
             port = int(port)
         if host.endswith("/"):
@@ -412,17 +447,19 @@ class TCP_UDP(COMM):
             t.setDaemon(True)
             t.start()
 
+
     def receiveDataProcess(self, conn, remote_addr:tuple = None):
         waitingReconnect = False
         buffer = b''
         t = 0
         conn.settimeout(0.1)
+        protocolIsTcp = self.config["protocol"] == "tcp"
         while self.status != ConnectionStatus.CLOSED:
             if waitingReconnect:
                 try:
                     target = self.checkTarget(self.config["target"][0])
                     if not target:
-                        raise Exception(_("Target error" + ": " + self.config["target"]))
+                        raise Exception(_("Target error") + ": " + self.config["target"][0])
                     conn = socket.socket()
                     conn.connect(target)
                     conn.settimeout(0.1)
@@ -439,7 +476,10 @@ class TCP_UDP(COMM):
             try:
                 # length = max(1, self.conn.in_waiting)
                 try:
-                    data = conn.recv(4096)
+                    if protocolIsTcp:
+                        data = conn.recv(4096)
+                    else:
+                        data, target = conn.recvfrom(4096)
                     if data == b'': # closed by peer(peer send FIN, now we can close this connection)
                         if buffer:
                             self.onReceived(buffer)
@@ -462,7 +502,7 @@ class TCP_UDP(COMM):
                 print("-- recv error:", e, type(e))
                 if not self.config["auto_reconnect"]:
                     over = False
-                    if self.config["mode"] == "server":
+                    if self.config["protocol"] == "tcp" and self.config["mode"] == "server":
                         self.onConnectionStatus.emit(ConnectionStatus.CLOSED, _("Connection") + f' {remote_addr[0]}:{remote_addr[1]} ' + _("closed!"))
                         over = True
                     else:
@@ -497,14 +537,20 @@ class TCP_UDP(COMM):
 
     def send(self, data : bytes):
         if self.conn:
-            if self.config["mode"] == "client":
-                self.conn.sendall(data)
-            else:
-                if not self.serverModeSelectedClient:
-                    for addr, conn in self.serverModeClientsConns.items():
-                        conn.sendall(data)
+            if self.config["protocol"] == "tcp":
+                if self.config["mode"] == "client":
+                    self.conn.sendall(data)
                 else:
-                    self.serverModeClientsConns[self.serverModeSelectedClient].sendall(data)
+                    if not self.serverModeSelectedClient:
+                        for addr, conn in self.serverModeClientsConns.items():
+                            conn.sendall(data)
+                    else:
+                        self.serverModeClientsConns[self.serverModeSelectedClient].sendall(data)
+            else:
+                target = self.checkTarget(self.config["target"][0])
+                if not target:
+                    self.hintSignal.emit("error", _("Target error"), _("Target error") + ": " + self.config["target"])
+                self.conn.sendto(data, target)
 
     def isConnected(self):
         return self.status == ConnectionStatus.CONNECTED
