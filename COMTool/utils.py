@@ -4,7 +4,7 @@ import binascii
 import re
 
 def datetime_format_ms(dt):
-    res = dt.strftime("%Y-%m-%d %H:%M:%S.%M")
+    res = dt.strftime("%Y-%m-%d %H:%M:%S")
     return '{}.{:03d}'.format(res, int(round(dt.microsecond/1000)))
 
 def hexlify(bs, sed=b' '):
