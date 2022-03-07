@@ -1,7 +1,7 @@
 
 major = 2
-minor = 3
-dev   = 2
+minor = 4
+dev   = 0
 
 __version__ = "{}.{}.{}".format(major, minor, dev)
 

@@ -38,6 +38,7 @@ class TCP_UDP(COMM):
             getConfig
     '''
     id = "tcp_udp"
+    name = "TCP UDP"
     showSwitchSignal = pyqtSignal(ConnectionStatus)
     updateTargetSignal = pyqtSignal(str)
     updateClientsSignal = pyqtSignal(bool, tuple)
@@ -286,6 +287,7 @@ class TCP_UDP(COMM):
                 self.changeMode("client", init=True)
             else:
                 obj.setChecked(False)
+                self.modeServerRadioBtn.setChecked(True)
                 self.changeMode("server", init=True)
         elif conf_type == "target":
             for i, target in enumerate(self.config["target"][1]):
@@ -454,6 +456,10 @@ class TCP_UDP(COMM):
         t = 0
         conn.settimeout(0.1)
         protocolIsTcp = self.config["protocol"] == "tcp"
+        modeIsServer = self.config["mode"] == "server"
+        remoteStr = ""
+        if remote_addr:
+            remoteStr = f'{remote_addr[0]}:{remote_addr[1]}'
         while self.status != ConnectionStatus.CLOSED:
             if waitingReconnect:
                 try:
@@ -478,6 +484,9 @@ class TCP_UDP(COMM):
                 try:
                     if protocolIsTcp:
                         data = conn.recv(4096)
+                        # ignore not selected target's msg
+                        if modeIsServer and self.serverModeSelectedClient and (remoteStr != self.serverModeSelectedClient):
+                            data = None
                     else:
                         data, target = conn.recvfrom(4096)
                     if data == b'': # closed by peer(peer send FIN, now we can close this connection)
@@ -500,9 +509,9 @@ class TCP_UDP(COMM):
                     buffer = b''
             except Exception as e:
                 print("-- recv error:", e, type(e))
-                if not self.config["auto_reconnect"]:
+                if modeIsServer or not self.config["auto_reconnect"]:
                     over = False
-                    if self.config["protocol"] == "tcp" and self.config["mode"] == "server":
+                    if protocolIsTcp and modeIsServer:
                         self.onConnectionStatus.emit(ConnectionStatus.CLOSED, _("Connection") + f' {remote_addr[0]}:{remote_addr[1]} ' + _("closed!"))
                         over = True
                     else:

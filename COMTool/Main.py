@@ -28,7 +28,7 @@ try:
     from i18n import _
     import version
     import utils_ui
-    from conn import Serial, ConnectionStatus
+    from conn import Serial, ConnectionStatus, TCP_UDP
     from plugins import plugins
     from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 except ImportError:
@@ -36,7 +36,7 @@ except ImportError:
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
     from COMTool import version
-    from COMTool.conn import Serial, ConnectionStatus
+    from COMTool.conn import Serial, ConnectionStatus, TCP_UDP
     from COMTool.plugins import plugins
     from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 
@@ -75,21 +75,35 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.DataPath = parameters.dataPath
         self.config = config
         self.initVar()
-        self.initConn(self.config.basic["connId"], self.config.conns)
         self.initPlugins(self.config.basic["plugins"], self.config.basic["activePlugin"], self.config.plugins)
         self.initWindow()
+        self.initConn(self.config.basic["connId"], self.config.conns)
         self.uiLoadConfigs(self.config)
         self.initEvent()
         self.uiInitDone()
 
-    def __del__(self):
-        pass
+    def initVar(self):
+        self.strings = parameters.Strings(self.config.basic["locale"])
+        self.dataToSend = []
+        self.fileToSend = []
+        self.connSelectComboboxes = []
+        self.changingConn = False
+        self.connectionWidget = None
 
     def initConn(self, connId, configs):
         # get all conn info
-        self.connections = [Serial()]
+        self.connections = [Serial(), TCP_UDP()]
+        # add conn select combobox
+        self.changingConn = True
+        for i, conn in enumerate(self.connections):
+            for combobox in self.connSelectComboboxes:
+                combobox.addItem(conn.name)
+                if conn.id == connId:
+                    combobox.setCurrentIndex(i)
+        self.changingConn = False
         # init connections
-        for conn in self.connections:
+        activeConn = self.connections[0]
+        for i, conn in enumerate(self.connections):
             conn.onReceived = self.onReceived
             conn.configGlobal = self.config.basic
             conn.hintSignal.connect(self.showHint)
@@ -100,14 +114,11 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             else: # add new dict obj for conn to use
                 configs[conn.id] = config
             conn.onInit(config)
-        # init last used one
-        self.connection = None
-        for conn in self.connections:
+            conn.onWidget()
             if conn.id == connId:
-                self.connection = conn
-        if not self.connection:
-            self.connection = self.connections[0]
-
+                activeConn = conn
+        # init last used one
+        self.changeConn(activeConn)
 
     def initPlugins(self, enabled, activeId, configs):
         if not enabled:
@@ -117,6 +128,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         for plugin in self.plugins:
             plugin.hintSignal = self.hintSignal
             plugin.send = self.sendData
+            plugin.isConnected = self.isConnected
             plugin.clearCountSignal = self.clearCountSignal
             plugin.reloadWindowSignal = self.reloadWindowSignal
             plugin.configGlobal = self.config.basic
@@ -145,11 +157,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         plugin.active = True
         parent = None
         if (not "main" in plugin.connParent) and plugin.connParent:
-            plugin.isConnected = self.connection.isConnected
             for pluginParent in self.plugins:
                 if pluginParent.id == plugin.connParent:
                     pluginParent.active = True
-                    pluginParent.isConnected = self.connection.isConnected
                     pluginParent.send = self.sendData
                     if not plugin in pluginParent.connChilds:
                         pluginParent.connChilds.append(plugin)
@@ -157,17 +167,12 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                     break
             plugin.send = parent.sendData
         if not parent:
-            plugin.isConnected = self.connection.isConnected
             plugin.send = self.sendData
         self.config.basic["activePlugin"] = plugin.id
 
-    def initVar(self):
-        self.strings = parameters.Strings(self.config.basic["locale"])
-        self.dataToSend = []
-        self.fileToSend = []
-
     def uiInitDone(self):
-        self.connection.onUiInitDone()
+        for conn in self.connections:
+            conn.onUiInitDone()
         for plugin in self.plugins:
             plugin.onUiInitDone()
         # always hide functional, and show before init complete so we can get its width height
@@ -231,11 +236,21 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             settingLayout = QVBoxLayout()
             settingWidget.setLayout(settingLayout)
             #    connection settings
+            connSelectCommbox = ComboBox()
+            self.connSelectComboboxes.append(connSelectCommbox)
+            connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
             connSettingsGroupBox = QGroupBox(_("Connection"))
             layout = QVBoxLayout()
             connSettingsGroupBox.setLayout(layout)
+            layout.addWidget(connSelectCommbox)
+            layout.setContentsMargins(1, 6, 0, 0)
+            connectionWidgetWrapper = QWidget()
+            layout2 = QVBoxLayout()
+            layout2.setContentsMargins(0, 0, 0, 0)
+            connectionWidgetWrapper.setLayout(layout2)
+            layout.addWidget(connectionWidgetWrapper)
             if connectionWidget:
-                layout.addWidget(connectionWidget)
+                layout2.addWidget(connectionWidget)
             settingLayout.addWidget(connSettingsGroupBox)
             #  other settings
             widget = plugin.onWidgetSettings(settingLayout)
@@ -250,7 +265,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             contentWidget.setStretchFactor(0, 1)
             contentWidget.setStretchFactor(1, 2)
             contentWidget.setStretchFactor(2, 1)
-            return contentWidget, connSettingsGroupBox
+            return contentWidget, connectionWidgetWrapper
         self.tabWidget = QTabWidget()
         # self.contentLayout.setSpacing(0)
         # self.contentLayout.setContentsMargins(0,0,0,0)
@@ -278,17 +293,13 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.contentLayout.addWidget(self.tabWidget)
         # get widgets from plugins
             # widget main
-        self.connectionWidget = self.connection.onWidget()
         self.tabWidgets = []
         self.connParentWidgets = []
         for i, plugin in enumerate(self.plugins):
             active = False
             if plugin.id == self.config.basic["activePlugin"]:
                 active = True
-                conn = self.connectionWidget
-            else:
-                conn = None
-            w, connParent = addTabPanel(self.tabWidget, plugin.name, plugin, conn)
+            w, connParent = addTabPanel(self.tabWidget, plugin.name, plugin, None)
             self.tabWidgets.append(w)
             self.connParentWidgets.append(connParent)
             if active:
@@ -395,16 +406,49 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def changeConnToTab(self, idx):
         print("-- switch to tab", idx)
+        # remove from old container
         parent = self.connectionWidget.parentWidget()
-        if parent.layout().indexOf(self.connectionWidget) >= 0:
-            parent.layout().removeWidget(self.connectionWidget)
+        parent.layout().removeWidget(self.connectionWidget)
+        # add to new container
         newParent = self.connParentWidgets[idx]
         newParent.layout().addWidget(self.connectionWidget)
         self.updateStyle(parent)
         self.updateStyle(newParent)
         self.activePlugin(self.plugins[idx])
 
-    def sendData(self, data_bytes=None, file_path=None, callback=lambda ok,msg:None):
+    def changeConn(self, connection:object):
+        # remove conn widget from the container
+        parent = None
+        if self.connectionWidget:
+            parent = self.connectionWidget.parentWidget()
+            parent.layout().removeWidget(self.connectionWidget)
+            self.connectionWidget.setParent(None)
+            self.updateStyle(parent)
+        # add new conn widget to container
+        self.connection = connection
+        self.connectionWidget = connection.widget
+        if not parent:
+            parent = self.connParentWidgets[self.tabWidget.currentIndex()]
+        parent.layout().addWidget(self.connectionWidget)
+        self.updateStyle(parent)
+
+    def onConnChanged(self, idx):
+        '''
+            combobox changed item
+        '''
+        if self.changingConn:
+            return
+        self.changingConn = True
+        # update all tab's connSelectCombobox widget show
+        for w in self.connSelectComboboxes:
+            w.setCurrentIndex(idx)
+        # change connection
+        print("-- change conn to", self.connections[idx].id)
+        self.changeConn(self.connections[idx])
+        self.config.basic["connId"] = self.connections[idx].id
+        self.changingConn = False
+
+    def sendData(self, data_bytes=None, file_path=None, callback=lambda ok, msg:None):
         if data_bytes:
             self.dataToSend.insert(0, (data_bytes, callback))
         if file_path:
@@ -422,6 +466,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             if plugin.active:
                 plugin.onReceived(data)
 
+    def isConnected(self):
+        return self.connection.isConnected()
 
     def sendDataProcess(self):
         self.receiveProgressStop = False

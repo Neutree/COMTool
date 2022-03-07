@@ -25,10 +25,11 @@ class COMM(QObject):
     hintSignal = pyqtSignal(str, str, str)                    # hintSignal.emit(type(error, warning, info), title, msg)
     configGlobal = {}
     id = ""
+    name = ""
 
     def __init__(self) -> None:
         super().__init__()
-        if not self.id:
+        if (not self.id) or not self.name:
             raise ValueError(f"var id of {self} should be set")
 
     def onInit(self, config):

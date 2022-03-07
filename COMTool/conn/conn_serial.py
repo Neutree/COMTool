@@ -38,6 +38,7 @@ class Serial(COMM):
             getConfig
     '''
     id = "serial"
+    name = _("Serial")
     showSerialComboboxSignal = pyqtSignal(list)
     showSwitchSignal = pyqtSignal(ConnectionStatus)
     def onInit(self, config):
@@ -93,7 +94,7 @@ class Serial(COMM):
         self.detectSerialPort()
 
     def onWidget(self):
-        serialSetting = QWidget()
+        self.widget = QWidget()
         serialSettingsLayout = QGridLayout()
         serialPortLabek = QLabel(_("Port"))
         serailBaudrateLabel = QLabel(_("Baudrate"))
@@ -152,7 +153,7 @@ class Serial(COMM):
         serialSettingsLayout.addWidget(self.checkBoxRTS, 6, 0,1,1)
         serialSettingsLayout.addWidget(self.checkBoxDTR, 6, 1,1,1)
         serialSettingsLayout.addWidget(self.serialOpenCloseButton, 7, 0,1,2)
-        serialSetting.setLayout(serialSettingsLayout)
+        self.widget.setLayout(serialSettingsLayout)
         self.widgetConfMap["port"]       = self.serialPortCombobox
         self.widgetConfMap["baudrate"]    = self.serailBaudrateCombobox
         self.widgetConfMap["bytesize"]    = self.serailBytesCombobox
@@ -162,8 +163,7 @@ class Serial(COMM):
         self.widgetConfMap["rts"]         = self.checkBoxRTS
         self.widgetConfMap["dtr"]         = self.checkBoxDTR
         self.initEvet()
-        self.widget = serialSetting
-        return serialSetting
+        return self.widget
 
     def initEvet(self):
         self.serialPortCombobox.clicked.connect(self.detectSerialPort)
