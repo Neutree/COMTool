@@ -18,8 +18,8 @@ COMTool
  | |
 
 
-| 白色主题 | 黑色主题 | 协议插件 |
-| ----------- | ---------- | ---------- |
+| 白色主题 | 黑色主题 | 协议插件 | TCP/UDP |
+| ------ | ------- | ------- | ------- |
 | ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) |
 
 
@@ -52,8 +52,8 @@ COMTool
 - [x] `rts` 和 `dtr` 手动控制
 - [x] 自定义协议编解码支持
 - [x] 自定义快捷键发送（在协议功能里面）
+- [x] TCP UDP 支持
 - [ ] 实时图像数据显示
-- [ ] TCP UDP 支持
 - [ ] 插件支持
 
 

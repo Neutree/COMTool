@@ -18,9 +18,9 @@ A cross platform serial debug tools written by python
  | |
 
 
-| White theme | Dark theme | protocol plugin |
-| ----------- | ---------- | ----------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) |
+| White theme | Dark theme | protocol plugin | TCP/UDP |
+| ----------- | ---------- | --------------- | ------- |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png)
 
 
 
@@ -56,8 +56,8 @@ A cross platform serial debug tools written by python
 - [x] rts & dtr control by hand
 - [x] protocol with customable encoding and decoding method support, 
 - [x] Custom shortcut send(in protocol plugin)
+- [x] TCP UDP support
 - [ ] real time data graphic display
-- [ ] TCP UDP support
 - [ ] plugin support
 
 ## Install binary
