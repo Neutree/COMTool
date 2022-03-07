@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-03 22:06+0800\n"
+"POT-Creation-Date: 2022-03-07 15:52+0800\n"
 "PO-Revision-Date: 2021-12-04 15:21+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,72 +18,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:233
+#: Main.py:242 conn/conn_tcp_udp.py:515
 msgid "Connection"
 msgstr ""
 
-#: Main.py:299 Main.py:460
+#: Main.py:312 Main.py:508
 msgid "Sent"
 msgstr ""
 
-#: Main.py:299 Main.py:300 Main.py:460 Main.py:461
+#: Main.py:312 Main.py:313 Main.py:508 Main.py:509
 msgid "bytes"
 msgstr ""
 
-#: Main.py:300 Main.py:461
+#: Main.py:313 Main.py:509
 msgid "Received"
 msgstr ""
 
-#: Main.py:331
+#: Main.py:344
 msgid "New Window"
 msgstr ""
 
-#: Main.py:385 Main.py:390 Main.py:445 Main.py:456 Main.py:696
-#: conn/conn_serial.py:320 plugins/base.py:109 plugins/base.py:114
-#: plugins/base.py:130 plugins/base.py:167 plugins/base.py:185
-#: plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
-#: plugins/protocol.py:431 plugins/protocol.py:618 plugins/protocol.py:632
-#: plugins/protocol.py:698
+#: Main.py:398 Main.py:403 Main.py:493 Main.py:504 Main.py:752
+#: conn/conn_serial.py:320 conn/conn_tcp_udp.py:387 plugins/base.py:109
+#: plugins/base.py:114 plugins/base.py:130 plugins/base.py:167
+#: plugins/base.py:185 plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578
+#: plugins/dbg.py:586 plugins/protocol.py:443 plugins/protocol.py:631
+#: plugins/protocol.py:645 plugins/protocol.py:711
 msgid "Error"
 msgstr ""
 
-#: Main.py:445
+#: Main.py:493
 msgid "Open file failed!"
 msgstr ""
 
-#: Main.py:485 Main.py:494
+#: Main.py:541 Main.py:550
 msgid "Restart now?"
 msgstr ""
 
-#: Main.py:486
+#: Main.py:542
 msgid "language changed to: "
 msgstr ""
 
-#: Main.py:486
+#: Main.py:542
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: Main.py:613
+#: Main.py:669
 msgid "About"
 msgstr ""
 
-#: Main.py:622
+#: Main.py:678
 msgid "New versioin detected, please click learn more to download"
 msgstr ""
 
-#: Main.py:623
+#: Main.py:679
 msgid "Learn More"
 msgstr ""
 
-#: Main.py:624
+#: Main.py:680
 msgid "Skip this version"
 msgstr ""
 
-#: Main.py:625
+#: Main.py:681
 msgid "Remind me next time"
 msgstr ""
 
-#: Main.py:626
+#: Main.py:682
 msgid "Need update"
 msgstr ""
 
@@ -179,39 +179,44 @@ msgstr ""
 msgid "uninstall app"
 msgstr ""
 
-#: conn/conn_serial.py:74
+#: conn/conn_serial.py:41
+msgid "Serial"
+msgstr ""
+
+#: conn/conn_serial.py:75
 msgid "Custom, input baudrate"
 msgstr ""
 
-#: conn/conn_serial.py:98
+#: conn/conn_serial.py:99 conn/conn_tcp_udp.py:104
 msgid "Port"
 msgstr ""
 
-#: conn/conn_serial.py:99
+#: conn/conn_serial.py:100
 msgid "Baudrate"
 msgstr ""
 
-#: conn/conn_serial.py:100
+#: conn/conn_serial.py:101
 msgid "DataBytes"
 msgstr ""
 
-#: conn/conn_serial.py:101
+#: conn/conn_serial.py:102
 msgid "Parity"
 msgstr ""
 
-#: conn/conn_serial.py:102
+#: conn/conn_serial.py:103
 msgid "Stopbits"
 msgstr ""
 
-#: conn/conn_serial.py:103
+#: conn/conn_serial.py:104
 msgid "Flow control"
 msgstr ""
 
-#: conn/conn_serial.py:137 conn/conn_serial.py:138
+#: conn/conn_serial.py:138 conn/conn_serial.py:139
 msgid "Check to enable(usually output low level)"
 msgstr ""
 
-#: conn/conn_serial.py:139 conn/conn_serial.py:285 conn/conn_serial.py:376
+#: conn/conn_serial.py:140 conn/conn_serial.py:285 conn/conn_serial.py:376
+#: conn/conn_tcp_udp.py:129 conn/conn_tcp_udp.py:320 conn/conn_tcp_udp.py:419
 msgid "OPEN"
 msgstr ""
 
@@ -219,16 +224,65 @@ msgstr ""
 msgid "Open Failed"
 msgstr ""
 
-#: conn/conn_serial.py:379 conn/conn_serial.py:382
+#: conn/conn_serial.py:379 conn/conn_serial.py:382 conn/conn_tcp_udp.py:422
+#: conn/conn_tcp_udp.py:425
 msgid "CLOSE"
 msgstr ""
 
-#: conn/conn_serial.py:416
+#: conn/conn_serial.py:416 conn/conn_tcp_udp.py:475
 msgid "Reconnected"
 msgstr ""
 
-#: conn/conn_serial.py:445
+#: conn/conn_serial.py:446 conn/conn_tcp_udp.py:534
 msgid "Connection lose!"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:99
+msgid "Protocol"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:100
+msgid "Mode"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:101
+msgid "Target"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:124 conn/conn_tcp_udp.py:243
+msgid "All clients"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:125
+msgid "Disconnect"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:126
+msgid "Auto reconnect"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:350 conn/conn_tcp_udp.py:468 conn/conn_tcp_udp.py:561
+msgid "Target error"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:386
+msgid "Connect Failed"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:446
+msgid "Client connected:"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:495
+msgid "Closed by peer"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:515
+msgid "closed!"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:519
+msgid "Connection closed!"
 msgstr ""
 
 #: plugins/base.py:130
@@ -243,7 +297,7 @@ msgstr ""
 msgid "Send Receive"
 msgstr ""
 
-#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:369
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:381
 msgid "ASCII"
 msgstr ""
 
@@ -253,7 +307,7 @@ msgid ""
 "corner"
 msgstr ""
 
-#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:370
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:382
 msgid "HEX"
 msgstr ""
 
@@ -294,13 +348,13 @@ msgstr ""
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr ""
 
-#: plugins/dbg.py:163 plugins/protocol.py:371
+#: plugins/dbg.py:163 plugins/protocol.py:383
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: plugins/dbg.py:164 plugins/protocol.py:372
+#: plugins/dbg.py:164 plugins/protocol.py:384
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
@@ -314,11 +368,11 @@ msgstr ""
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: plugins/dbg.py:173 plugins/protocol.py:374
+#: plugins/dbg.py:173 plugins/protocol.py:386
 msgid "<CRLF>"
 msgstr ""
 
-#: plugins/dbg.py:174 plugins/protocol.py:375
+#: plugins/dbg.py:174 plugins/protocol.py:387
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
@@ -330,11 +384,11 @@ msgstr ""
 msgid "Record send data"
 msgstr ""
 
-#: plugins/dbg.py:178 plugins/protocol.py:377
+#: plugins/dbg.py:178 plugins/protocol.py:389
 msgid "Escape"
 msgstr ""
 
-#: plugins/dbg.py:179 plugins/protocol.py:378
+#: plugins/dbg.py:179 plugins/protocol.py:390
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr ""
 
@@ -382,8 +436,8 @@ msgstr ""
 msgid "Log path"
 msgstr ""
 
-#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:709
-#: plugins/protocol.py:731
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:733
+#: plugins/protocol.py:755
 msgid "Warning"
 msgstr ""
 
@@ -403,8 +457,8 @@ msgstr ""
 msgid "Send file"
 msgstr ""
 
-#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:410
-#: plugins/protocol.py:420
+#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:422
+#: plugins/protocol.py:432
 msgid "Select file"
 msgstr ""
 
@@ -470,80 +524,80 @@ msgstr ""
 msgid "Key mode"
 msgstr ""
 
-#: plugins/protocol.py:347
+#: plugins/protocol.py:359
 msgid "En-decoding settings"
 msgstr ""
 
-#: plugins/protocol.py:351
+#: plugins/protocol.py:363
 msgid "Custom, input name"
 msgstr ""
 
-#: plugins/protocol.py:352
+#: plugins/protocol.py:364
 msgid "Load defaults"
 msgstr ""
 
-#: plugins/protocol.py:355 plugins/protocol.py:686 plugins/protocol.py:702
-#: plugins/protocol.py:722
+#: plugins/protocol.py:367 plugins/protocol.py:699 plugins/protocol.py:723
+#: plugins/protocol.py:726 plugins/protocol.py:746
 msgid "Save"
 msgstr ""
 
-#: plugins/protocol.py:357
+#: plugins/protocol.py:369
 msgid "Delete"
 msgstr ""
 
-#: plugins/protocol.py:361
+#: plugins/protocol.py:373
 msgid "Defaults"
 msgstr ""
 
-#: plugins/protocol.py:363
+#: plugins/protocol.py:375
 msgid "Code"
 msgstr ""
 
-#: plugins/protocol.py:367
+#: plugins/protocol.py:379
 msgid "Send settings"
 msgstr ""
 
-#: plugins/protocol.py:400
+#: plugins/protocol.py:412
 msgid "Load config"
 msgstr ""
 
-#: plugins/protocol.py:401
+#: plugins/protocol.py:413
 msgid "Share config"
 msgstr ""
 
-#: plugins/protocol.py:412 plugins/protocol.py:422
+#: plugins/protocol.py:424 plugins/protocol.py:434
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr ""
 
-#: plugins/protocol.py:431
+#: plugins/protocol.py:443
 msgid "config file format error"
 msgstr ""
 
-#: plugins/protocol.py:439
+#: plugins/protocol.py:451
 msgid "Restart to load config?"
 msgstr ""
 
-#: plugins/protocol.py:618
+#: plugins/protocol.py:631
 msgid "Run decode error"
 msgstr ""
 
-#: plugins/protocol.py:632
+#: plugins/protocol.py:645
 msgid "Run encode error"
 msgstr ""
 
-#: plugins/protocol.py:694
+#: plugins/protocol.py:707
 msgid "decode and encode method should be in code"
 msgstr ""
 
-#: plugins/protocol.py:697
+#: plugins/protocol.py:710
 msgid "Method error"
 msgstr ""
 
-#: plugins/protocol.py:709
+#: plugins/protocol.py:733
 msgid "Please input code profile name first"
 msgstr ""
 
-#: plugins/protocol.py:731
+#: plugins/protocol.py:755
 msgid "Please select a code profile name first to delete"
 msgstr ""
 
