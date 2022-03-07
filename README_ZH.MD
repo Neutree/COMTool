@@ -20,7 +20,7 @@ COMTool
 
 | 白色主题 | 黑色主题 | 协议插件 | TCP/UDP |
 | ------ | ------- | ------- | ------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) |
 
 
 > 截图可能不是最新的版本， 最新的版本只会更好用更好看
