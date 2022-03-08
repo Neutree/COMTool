@@ -1,9 +1,7 @@
+import os
 import gettext
-import os, sys
 import babel
 from collections import OrderedDict
-from babel.messages.frontend import extract_messages, init_catalog, compile_catalog, update_catalog
-from distutils.errors import DistutilsOptionError, DistutilsSetupError
 
 locales=["en", "zh_CN", "zh_TW", "ja"]
 
@@ -33,6 +31,8 @@ def get_languages():
     return languages
 
 def extract(src_path, config_file_path, out_path):
+    from distutils.errors import DistutilsOptionError
+    from babel.messages.frontend import extract_messages
     cmdinst = extract_messages()
     cmdinst.initialize_options()
     cmdinst.mapping_file = config_file_path
@@ -45,6 +45,8 @@ def extract(src_path, config_file_path, out_path):
         raise err
 
 def init(template_path, out_dir, locale, domain="messages"):
+    from distutils.errors import DistutilsOptionError
+    from babel.messages.frontend import init_catalog
     cmdinst = init_catalog()
     cmdinst.initialize_options()
     cmdinst.input_file = template_path
@@ -58,6 +60,8 @@ def init(template_path, out_dir, locale, domain="messages"):
         raise err
 
 def update(template_path, out_dir, locale, domain="messages"):
+    from distutils.errors import DistutilsOptionError
+    from babel.messages.frontend import update_catalog
     cmdinst = update_catalog()
     cmdinst.initialize_options()
     cmdinst.input_file = template_path
@@ -71,6 +75,8 @@ def update(template_path, out_dir, locale, domain="messages"):
         raise err
 
 def compile(translate_dir, locale, domain="messages"):
+    from distutils.errors import DistutilsOptionError
+    from babel.messages.frontend import compile_catalog
     cmdinst = compile_catalog()
     cmdinst.initialize_options()
     cmdinst.directory = translate_dir

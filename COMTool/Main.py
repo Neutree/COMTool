@@ -43,8 +43,8 @@ except ImportError:
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget, QMenu)
-from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget, QMenu, QSplashScreen)
+from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QCloseEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import threading
 import time
@@ -713,6 +713,33 @@ def load_fonts(paths):
         fonts = QtGui.QFontDatabase.applicationFontFamilies(id)
         print("load fonts:", fonts)
 
+class Splash(QSplashScreen):
+    '''
+        show splash when window is loading
+    '''
+    def __init__(self, app) -> None:
+        super().__init__(QPixmap(os.path.join(parameters.assetsDir, "logo.png")))
+        self.app = app
+        self.exit = False
+        self.show()
+        t = threading.Thread(target=self._processEventsProcess)
+        t.setDaemon(True)
+        t.start()
+
+    def event(self, e):
+        if type(e) == QCloseEvent:
+            self.exit = True
+        return super().event(e)
+
+    def finish(self, w):
+        self.exit = True
+        return super().finish(w)
+
+    def _processEventsProcess(self):
+        while not self.exit:
+            self.app.processEvents()
+            time.sleep(0.001)
+
 def main():
     ret = 1
     try:
@@ -724,6 +751,7 @@ def main():
             if not os.path.exists(mo_path):
                 gen_tranlate_files(curr_dir)
             app = QApplication(sys.argv)
+            splash = Splash(app)
             eventFilter = EventFilter()
             mainWindow = MainWindow(app, eventFilter, programConfig)
             eventFilter.listenWindow(mainWindow)
@@ -741,6 +769,7 @@ def main():
             t = threading.Thread(target=mainWindow.autoUpdateDetect)
             t.setDaemon(True)
             t.start()
+            splash.finish(mainWindow)
             ret = app.exec_()
             if not mainWindow.needRestart:
                 app.removeEventFilter(eventFilter)

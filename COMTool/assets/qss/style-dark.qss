@@ -152,7 +152,7 @@ QWidget {
 QComboBox {
     border: 1px solid #272727;
     border-radius: 5px;
-    padding: 1px 18px 1px 3px;
+    padding: 1px 1px 1px 3px;
     min-height:25px;
     min-width:60px;
 }

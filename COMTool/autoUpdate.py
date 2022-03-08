@@ -1,5 +1,3 @@
-import webbrowser
-import requests, json
 try:
     import version
 except ImportError:
@@ -18,6 +16,7 @@ class AutoUpdate:
         return need, v
     
     def checkUpdate_github(self):
+        import requests, json
         latest = version.Version()
         try:
             page = requests.get(self.releaseApiUrl)
@@ -46,6 +45,7 @@ class AutoUpdate:
         return False, latest
 
     def checkUpdate_neucrack(self):
+        import requests, json
         latest = version.Version()
         try:
             page = requests.post(self.releaseApiUrl2)
@@ -74,6 +74,7 @@ class AutoUpdate:
         return False
 
     def OpenBrowser(self):
+        import webbrowser
         webbrowser.open(self.updateUrl, new=0, autoraise=True)
         return
 
