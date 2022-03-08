@@ -121,7 +121,7 @@ class TCP_UDP(COMM):
         layoutMode.addWidget(self.modeClientRadioBtn)
         layoutMode.addWidget(self.modeServerRadioBtn)
         self.clientsCombobox = ComboBox()
-        self.clientsCombobox.addItem(_("All clients") + "(0)")
+        self.clientsCombobox.addItem("0 | " + _("All clients"))
         self.disconnetClientBtn = QPushButton(_("Disconnect"))
         self.autoReconnetLable = QLabel(_("Auto reconnect"))
         self.autoReconnect = QCheckBox()
@@ -240,7 +240,7 @@ class TCP_UDP(COMM):
             idx = self.clientsCombobox.findText(f'{host}:{port}')
             if idx > 0:
                 self.clientsCombobox.removeItem(idx)
-        self.clientsCombobox.setItemText(0, _("All clients") + "({})".format(self.clientsCombobox.count() - 1))
+        self.clientsCombobox.setItemText(0, "{} | ".format(self.clientsCombobox.count() - 1) + _("All clients"))
 
     def serverModeClientChanged(self):
         if self.clientsCombobox.currentIndex() == 0:
@@ -333,8 +333,16 @@ class TCP_UDP(COMM):
                 self.status = ConnectionStatus.CLOSED
                 if not self.conn is None:
                     time.sleep(0.1) # wait receive thread exit
-                    self.conn.close()
+                    try:
+                        self.conn.close()
+                    except Exception:
+                        pass
                     self.conn = None
+                for _, conn in self.serverModeClientsConns.items():
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
             except Exception as e:
                 print(e)
                 pass
@@ -448,6 +456,7 @@ class TCP_UDP(COMM):
             t = threading.Thread(target=self.receiveDataProcess, args=(conn, addr))
             t.setDaemon(True)
             t.start()
+        print("-- wait connection thread exit")
 
 
     def receiveDataProcess(self, conn, remote_addr:tuple = None):
