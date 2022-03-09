@@ -666,6 +666,12 @@ class Plugin(Plugin_Base):
         return color, bg
 
     def _texSplitByColor(self, text:bytes):
+        ignoreCodes = [rb'\x1b\[\?.*?h', rb'\x1b\[\?.*?l']
+        text = text.replace(b"\x1b[K", b"")
+        for code in ignoreCodes:
+            colorFmt = re.findall(code, text)
+            for fmt in colorFmt:
+                text = text.replace(fmt, b"")
         colorFmt = re.findall(rb'\x1b\[.*?m', text)
         plaintext = text
         for fmt in colorFmt:

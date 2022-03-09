@@ -21,6 +21,7 @@ class Plugin_Base(QObject):
             onUiInitDone
                 send
                 onReceived
+            onDel
     '''
     # vars set by caller
     isConnected = lambda : False
@@ -54,6 +55,9 @@ class Plugin_Base(QObject):
         for p in self.plugins:
             if p.id in self.connChilds:
                 self.plugins_info[p.id] = p
+
+    def onDel(self):
+        pass
 
     def onWidgetMain(self, parent, rootWindow):
         raise NotImplementedError()

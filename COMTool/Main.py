@@ -28,7 +28,7 @@ try:
     from i18n import _
     import version
     import utils_ui
-    from conn import Serial, ConnectionStatus, TCP_UDP
+    from conn import Serial, ConnectionStatus, TCP_UDP, SSH
     from plugins import plugins
     from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 except ImportError:
@@ -36,7 +36,7 @@ except ImportError:
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
     from COMTool import version
-    from COMTool.conn import Serial, ConnectionStatus, TCP_UDP
+    from COMTool.conn import Serial, ConnectionStatus, TCP_UDP, SSH
     from COMTool.plugins import plugins
     from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
 
@@ -92,7 +92,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def initConn(self, connId, configs):
         # get all conn info
-        self.connections = [Serial(), TCP_UDP()]
+        self.connections = [Serial(), TCP_UDP(), SSH()]
         # add conn select combobox
         self.changingConn = True
         for i, conn in enumerate(self.connections):
@@ -584,6 +584,11 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         #                              QMessageBox.No, QMessageBox.No)
         if 1: # reply == QMessageBox.Yes:
             self.receiveProgressStop = True
+            # inform plugins
+            for p in self.plugins:
+                p.onDel()
+            for c in self.connections:
+                c.onDel()
             self.saveConfig()
             event.accept()
         else:

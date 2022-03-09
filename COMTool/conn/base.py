@@ -19,6 +19,7 @@ class COMM(QObject):
                 isConnected
                 send
             getConfig
+            onDel
     '''
     onReceived     = lambda self, data:None   # data: bytes
     onConnectionStatus = pyqtSignal(ConnectionStatus, str)    # connected, msg
@@ -63,3 +64,5 @@ class COMM(QObject):
         '''
         return {}
 
+    def onDel(self):
+        pass
