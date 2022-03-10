@@ -26,7 +26,7 @@ import socket, threading, time, re
 
 
 class SSH_CONN:
-    def connect(self, host, port, user, password, ssh_key_file=None, pty_width=800, pty_height=600):
+    def connect(self, host, port, user, password, ssh_key_file=None, pty_width=80, pty_height=40):
         print("-- ssh connect")
         if not password:
             password = None
@@ -141,6 +141,7 @@ class SSH(COMM):
         self.portInput = QLineEdit()
         self.userInput = QLineEdit()
         self.passwdInput = QLineEdit()
+        self.passwdInput.setEchoMode(QLineEdit.EchoMode.Password)
         self.sshKeyInput = QLineEdit()
         self.sshKeyInputBtn = QPushButton(_("File"))
         self.savedCombobox = ComboBox()
