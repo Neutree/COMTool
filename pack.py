@@ -81,7 +81,9 @@ def pack():
     elif sys.platform.startswith("darwin"):
         # macos not case insensitive, so can not contain comtool file and COMTool dir, so we copy to binary root dir
         cmd = 'pyi-makespec --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="COMTool/protocols:protocols" --add-data="README_ZH.MD:./" --add-data="README.MD:./" -i="COMTool/assets/logo.icns" -w COMTool/Main.py  -n comtool'
-        os.system(cmd)
+        ret = os.system(cmd)
+        if ret != 0:
+            raise Exception("pack failed")
         print("-- update bundle for macos build")
         upadte_spec_bundle("comtool.spec", 
             items = {
@@ -97,20 +99,26 @@ def pack():
         cmd = 'pyinstaller --hidden-import babel.numbers -p "COMTool" --add-data="COMTool/assets:assets" --add-data="COMTool/locales:locales" --add-data="COMTool/protocols:protocols" --add-data="README.MD:./" --add-data="README_ZH.MD:./" -i="COMTool/assets/logo.ico" -w COMTool/Main.py -n comtool'
 
     print("-- execute:", cmd)
-    os.system(cmd)
+    ret = os.system(cmd)
+    if ret != 0:
+        raise Exception("pack failed")
 
     if sys.platform.startswith("darwin"):
         if os.path.exists("./dist/comtool 0.0.0.dmg"):
             os.remove("./dist/comtool 0.0.0.dmg")
             
-        os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
+        ret = os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
+        if ret != 0:
+            raise Exception("pack failed")
         print("files in dist dir:", os.listdir("dist"))
         shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
         zip(windows_out, "dist/comtool")
     else:
         cmd = "cd dist && tar -Jcf {} comtool/ && mv {} ../ && cd ..".format(linux_out, linux_out)
-        os.system(cmd)
+        ret = os.system(cmd)
+        if ret != 0:
+            raise Exception("pack failed")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

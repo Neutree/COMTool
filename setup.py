@@ -18,15 +18,21 @@ systemPlatform = platform.platform()
     
 if "Linux" in systemPlatform and "arm" in systemPlatform :
     print("platform is arm linux: will install lib first")
-    os.system("sudo apt install python3 python3-pip python3-pyqt5")
-    os.system("sudo pip3 install --upgrade pyserial")
+    ret = os.system("sudo apt install python3 python3-pip python3-pyqt5")
+    if ret != 0:
+        raise Exception("install python3 pyqt5 failed")
+    ret = os.system("sudo pip3 install --upgrade pyserial requests Babel qtawesome paramiko pyte")
+    if ret != 0:
+        raise Exception("install packages failed")
     installRequires = []
 else:
     installRequires = ['pyqt5>=5',
                       'pyserial>=3.4',
                       'requests',
                       'Babel',
-                      'qtawesome'
+                      'qtawesome',
+                      'paramiko',
+                      'pyte'
                       ]
 
 setup(
