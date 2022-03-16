@@ -107,9 +107,12 @@ def pack():
         if os.path.exists("./dist/comtool 0.0.0.dmg"):
             os.remove("./dist/comtool 0.0.0.dmg")
             
-        ret = os.system('npm install --global create-dmg && create-dmg ./dist/comtool.app ./dist')
+        ret = os.system('npm install --global create-dmg')
         if ret != 0:
             raise Exception("pack failed")
+        ret = os.system('create-dmg ./dist/comtool.app ./dist')
+        # not check ret, for create-dmg no certifacate will cause fail too, if generate fail
+        # the next copy command will fail
         print("files in dist dir:", os.listdir("dist"))
         shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
