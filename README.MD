@@ -320,4 +320,5 @@ And used these open source projects as libraries:
 * [requests](https://github.com/psf/requests): [Apache 2.0](https://github.com/psf/requests/blob/main/LICENSE)
 * [Babel](https://github.com/python-babel/babel): [BSD](https://github.com/python-babel/babel/blob/master/LICENSE)
 * [qtawesome](https://github.com/spyder-ide/qtawesome): [MIT](https://github.com/spyder-ide/qtawesome/blob/master/LICENSE.txt)
-
+* [pyte]()
+* [paramiko]()

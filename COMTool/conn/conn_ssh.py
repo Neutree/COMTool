@@ -26,7 +26,7 @@ import socket, threading, time, re
 
 
 class SSH_CONN:
-    def connect(self, host, port, user, password, ssh_key_file=None, pty_width=80, pty_height=40):
+    def connect(self, host, port, user, password, ssh_key_file=None, pty_width=70, pty_height=20):
         print("-- ssh connect")
         if not password:
             password = None
@@ -37,7 +37,7 @@ class SSH_CONN:
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.client.connect(host, port=port, username=user, password=password, key_filename=ssh_key_file)
         self.channel = self.client.get_transport().open_session()
-        self.channel.get_pty(width=pty_width, height=pty_height)
+        self.channel.get_pty(term="linux", width=pty_width, height=pty_height)
         self.channel.invoke_shell()
 
     def settimeout(self, timeout):
@@ -56,6 +56,9 @@ class SSH_CONN:
             return data
         time.sleep(0.001)
         return None
+
+    def isConnected(self):
+        return not self.channel.closed
 
     def set_pty_size(self, w, h):
         self.channel.resize_pty(width=w, height=h)
@@ -139,6 +142,7 @@ class SSH(COMM):
         savedLabel = QLabel(_("Saved"))
         self.hostInput = QLineEdit()
         self.portInput = QLineEdit()
+        self.portInput.setInputMethodHints(Qt.ImhDigitsOnly | Qt.ImhLatinOnly | Qt.ImhPreferNumbers)
         self.userInput = QLineEdit()
         self.passwdInput = QLineEdit()
         self.passwdInput.setEchoMode(QLineEdit.EchoMode.Password)
@@ -200,7 +204,10 @@ class SSH(COMM):
         self.sshKeyInput.setText(conf["ssh_key"])
 
     def inputChanged(self, conf_type, obj, convertType=str):
-        self.config[conf_type] = convertType(obj.text().strip())
+        try:
+            self.config[conf_type] = convertType(obj.text().strip())
+        except:
+            self.hintSignal.emit("error", _("Input error"), _("Input") + f' {conf_type} ' + _("error"))
 
     def onDel(self):
         # remove passwd for safty
@@ -357,12 +364,15 @@ class SSH(COMM):
                     #     buffer += data
                     #     continue
                     buffer += data
-                if buffer and (time.time() - t > 0.001): # no new data in 1ms
+                closed = not self.conn.isConnected()
+                if buffer and (closed or (time.time() - t > 0.001)): # no new data in 1ms
                     try:
                         self.onReceived(buffer)
                     except Exception as e:
                         print("-- error in onReceived callback:", e)
                     buffer = b''
+                if closed:
+                    raise Exception(_("Closed by peer"))
             except Exception as e:
                 print("-- recv error:", e, type(e))
                 if not self.config["auto_reconnect"]:

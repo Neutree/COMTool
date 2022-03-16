@@ -34,6 +34,7 @@ class Plugin_Base(QObject):
     connParent = "main"      # parent id
     connChilds = []          # children ids
     id = ""
+    name = ""
 
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
@@ -69,6 +70,9 @@ class Plugin_Base(QObject):
         return None
 
     def onReceived(self, data : bytes):
+        '''
+            call in receive thread, not UI thread
+        '''
         for id in self.connChilds:
             self.plugins_info[id].onReceived(data)
 

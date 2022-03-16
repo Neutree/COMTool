@@ -338,7 +338,7 @@ class TCP_UDP(COMM):
                     except Exception:
                         pass
                     self.conn = None
-                for _, conn in self.serverModeClientsConns.items():
+                for k, conn in self.serverModeClientsConns.items():
                     try:
                         conn.close()
                     except Exception:

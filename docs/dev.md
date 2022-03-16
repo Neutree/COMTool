@@ -22,3 +22,12 @@
 
 使用模块化（/插件化）开发， 在[conn/conn_tcp_udp.py](../conn/conn_tcp_udp.py) 中定义了这个类，可以直接执行 [conn/test_tcp_udp.py](../conn/test_tcp_udp.py) 测试模块
 
+## 终端
+
+使用了 `paramiko` 作为 `ssh`连接的后端，解析接收到的数据（`VT100`格式）使用了`pyte`， 根据`pyte`获取到的输出使用一个`pixmap`进行绘制，然后将`pixmap`刷到`QWidget`上实现显示
+
+这里需要注意的是关于刷新和绘制，为了同步数据以及防止界面卡死：
+接收和解析以及绘制`pixmap`都在`onReceived`函数中进行，这个函数在接收线程中执行，没在`UI`线程中执行，所以在绘制`pixmap`过程中不要直接调用任何直接操作界面的方法，所有操作都对这个`pixmap`进行操作，等绘制完成后再用`update()`函数通知`UI`线程，在`paintEvent`函数中将`pixmap`画到`widget`上
+
+
+

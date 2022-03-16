@@ -122,7 +122,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def initPlugins(self, enabled, activeId, configs):
         if not enabled:
-            enabled = ["dbg", "protocol"]
+            enabled = ["dbg", "protocol", "terminal"]
         self.connChilds = []
         self.plugins = [Plugin() for Plugin in plugins]
         for plugin in self.plugins:
