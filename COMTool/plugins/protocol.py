@@ -289,6 +289,7 @@ class Plugin(Plugin_Base):
         self.customSendScroll.setWidget(cutomSendItemsWraper)
         #   wrapper widget
         cutomSendItemsWraper0 = QWidget()
+        cutomSendItemsWraper0.setProperty("class", "scrollbar2")
         layout0 = QVBoxLayout()
         layout0.setContentsMargins(0,8,0,0)
         cutomSendItemsWraper0.setLayout(layout0)

@@ -26,7 +26,7 @@ import socket, threading, time, re
 
 
 class SSH_CONN:
-    def connect(self, host, port, user, password, ssh_key_file=None, pty_width=70, pty_height=20):
+    def connect(self, host, port, user, password, ssh_key_file=None, pty_width=60, pty_height=20):
         print("-- ssh connect")
         if not password:
             password = None

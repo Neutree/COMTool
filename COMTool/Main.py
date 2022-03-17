@@ -524,6 +524,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             self.onstatusBarText("info", msg)
         else:
             self.onstatusBarText("warning", msg)
+        for plugin in self.plugins:
+            if plugin.active:
+                plugin.onConnChanged(status, msg)
 
     def onstatusBarText(self, msg_type, msg):
         if msg_type == "info":

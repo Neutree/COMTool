@@ -6,27 +6,30 @@
 from PyQt5.QtCore import QObject, Qt, QRect
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QScrollBar)
 from PyQt5.QtGui import (QColor, QPixmap, QFontMetrics, QFont, QBrush, QPen, QPainter,
-                        QKeyEvent)
+                        QKeyEvent, QWheelEvent)
 
 try:
     from .base import Plugin_Base
     from Combobox import ComboBox
     from i18n import _
     import utils, parameters
+    from conn.base import ConnectionStatus
 except ImportError:
     from COMTool.plugins.base import Plugin_Base
     from COMTool import utils, parameters
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
+    from COMTool.conn.base import  ConnectionStatus
+
 import pyte
 from wcwidth import wcswidth
 import threading
 
 class Terminal_Backend:
     def __init__(self) -> None:
-        self.screen = pyte.HistoryScreen(70, 20)
+        self.screen = pyte.HistoryScreen(60, 20, history=40, ratio = 0.05)
         self.screen.set_mode(pyte.modes.LNM)
         self.stream = pyte.ByteStream(self.screen)
 
@@ -35,6 +38,7 @@ class Terminal_Backend:
 
     def resize(self, width, height):
         self.screen.resize(columns=width, lines=height)
+        self.screen.history = self.screen.history._replace(ratio = 1.0/height)
 
 class Terminal_Frontend(QWidget):
     def __init__(self, send_func, resizeConnFunc) -> None:
@@ -114,7 +118,9 @@ class Terminal_Frontend(QWidget):
         self.pixmap = QPixmap(self.width(), self.height())
         self.pixmap.fill(self.theme["bg"])
         # scroll
-        self.scroll = None
+        self.scrollBar = None
+        self.scrollEventSet = False
+        self.scrollStatus = (0, 0)
         # timer for check change
         self.startTimer(100)
         self.updatePixmapLock = threading.Lock()
@@ -263,6 +269,38 @@ class Terminal_Frontend(QWidget):
             painter.setPen(self.get_pen(keyword="bg"))
             painter.drawText(rect, align, char)
 
+    def wheelEvent(self, event: QWheelEvent):
+        try:
+            y = event.angleDelta().y()
+            if y > 0:
+                self.backend.screen.prev_page()
+            else:
+                self.backend.screen.next_page()
+            self.update()
+        except:
+            import traceback
+            traceback.print_exc()
+
+    def onScrolled(self, curr):
+        top = len(self.backend.screen.history.top)
+        bottom = len(self.backend.screen.history.bottom)
+        maxlen = self.backend.screen.history.size
+        if top + bottom + self._rows > maxlen:
+            newBottom = maxlen - self._rows - curr
+        else:
+            newBottom = top + bottom - curr
+        while 1:
+            if newBottom > bottom:
+                self.backend.screen.prev_page()
+            elif newBottom < bottom:
+                self.backend.screen.next_page()
+            else:
+                break
+            # move up 1 line(ratio must set to move on line every prev_page)
+            bottom = len(self.backend.screen.history.bottom)
+            if newBottom == 10:
+                break
+
 
     def paintEvent(self, event):
         '''
@@ -270,6 +308,26 @@ class Terminal_Frontend(QWidget):
         '''
         painter = QPainter(self)
         painter.drawPixmap(0, 0, self.pixmap)
+        # set scrollbar
+        top = len(self.backend.screen.history.top)
+        bottom = len(self.backend.screen.history.bottom)
+        maxlen = self.backend.screen.history.size
+        if top + bottom + self._rows > maxlen:
+            barCount = maxlen - self._rows
+            curr = maxlen - bottom - self._rows
+        else:
+            barCount = top + bottom
+            curr = top
+        # prevent scrollbar event
+        if self.scrollStatus != (curr, barCount):
+            if self.scrollEventSet:
+                self.scrollBar.valueChanged.disconnect()
+            self.scrollBar.setMaximum(barCount)
+            self.scrollBar.setMinimum(0)
+            self.scrollBar.setSliderPosition(curr)
+            self.scrollBar.valueChanged.connect(self.onScrolled)
+            self.scrollEventSet = True
+            self.scrollStatus = (curr, barCount)
 
     def timerEvent(self, event):
         '''
@@ -337,6 +395,31 @@ class Terminal_Frontend(QWidget):
             import traceback
             traceback.print_exc()
 
+    def setScrollBar(self, scrollBar):
+        self.scrollBar = scrollBar
+        self.scrollBar.setMinimum(0)
+        height = len(self.backend.screen.history.top) + len(self.backend.screen.history.bottom) - self._rows
+        self.scrollBar.setMaximum(height if height > 0 else 0)
+        self.scrollBar.setMinimum(0)
+        if not self.scrollEventSet:
+            self.scrollBar.valueChanged.connect(self.onScrolled)
+            self.scrollEventSet = True
+
+class Scroll_Terminal(QWidget):
+    def __init__(self, sendFunc, resizeConnFunc) -> None:
+        super().__init__()
+        self.terminal = Terminal_Frontend(sendFunc, resizeConnFunc)
+        self.scrollBar = QScrollBar(Qt.Vertical, self.terminal)
+        self.terminal.setScrollBar(self.scrollBar)
+        self.scrollBar.setProperty("class", "scrollbar2")
+        layout = QHBoxLayout()
+        self.setLayout(layout)
+        layout.addWidget(self.terminal)
+        layout.addWidget(self.scrollBar)
+
+    def onReceived(self, data):
+        self.terminal.onReceived(data)
+
 class Plugin(Plugin_Base):
     '''
         call sequence:
@@ -389,7 +472,7 @@ class Plugin(Plugin_Base):
         pass
 
     def onWidgetMain(self, parent, rootWindow):
-        self.widget = Terminal_Frontend(self.send, self.resizeConnOutput)
+        self.widget = Scroll_Terminal(self.send, self.resizeConnOutput)
         return self.widget
 
     def onWidgetSettings(self, parent):
@@ -403,6 +486,7 @@ class Plugin(Plugin_Base):
 
     def onWidgetFunctional(self, parent):
         self.funcWidget = QWidget()
+        self.funcWidget.hide()
         return self.funcWidget
 
     def onReceived(self, data : bytes):
@@ -423,4 +507,11 @@ class Plugin(Plugin_Base):
         '''
         pass
 
+    def onConnChanged(self, status:ConnectionStatus, msg:str):
+        '''
+            call in UI thread, be carefully!!
+        '''
+        if status == ConnectionStatus.CONNECTED:
+            # set pty size when first connect
+            self.widget.terminal.resizeEvent("")
 

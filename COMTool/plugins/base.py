@@ -7,10 +7,12 @@ try:
     from Combobox import ComboBox
     from i18n import _
     import utils, parameters
+    from conn.base import ConnectionStatus
 except ImportError:
     from COMTool import utils, parameters
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
+    from COMTool.conn.base import  ConnectionStatus
 
 class Plugin_Base(QObject):
     '''
@@ -60,6 +62,12 @@ class Plugin_Base(QObject):
                 self.plugins_info[p.id] = p
 
     def onDel(self):
+        pass
+
+    def onConnChanged(self, status:ConnectionStatus, msg:str):
+        '''
+            call in UI thread, be carefully!!
+        '''
         pass
 
     def onWidgetMain(self, parent, rootWindow):
