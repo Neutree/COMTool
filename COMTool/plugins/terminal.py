@@ -29,7 +29,7 @@ import threading
 
 class Terminal_Backend:
     def __init__(self) -> None:
-        self.screen = pyte.HistoryScreen(60, 20, history=40, ratio = 0.05)
+        self.screen = pyte.HistoryScreen(60, 20, history=9999, ratio = 0.05)
         self.screen.set_mode(pyte.modes.LNM)
         self.stream = pyte.ByteStream(self.screen)
 
