@@ -89,6 +89,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.connSelectComboboxes = []
         self.changingConn = False
         self.connectionWidget = None
+        self.connection = None
+        self.closeTimerId = None
 
     def initConn(self, connId, configs):
         # get all conn info
@@ -128,6 +130,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         for plugin in self.plugins:
             plugin.hintSignal = self.hintSignal
             plugin.send = self.sendData
+            plugin.ctrlConn = self.ctrlConn
             plugin.isConnected = self.isConnected
             plugin.clearCountSignal = self.clearCountSignal
             plugin.reloadWindowSignal = self.reloadWindowSignal
@@ -211,8 +214,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         title = parameters.appName+" v"+version.__version__
         iconPath = self.DataPath+"/"+parameters.appIcon
         print("-- icon path: " + iconPath)
-        titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.aboutButton], []])
-        CustomTitleBarWindowMixin.__init__(self, titleBar=titleBar, init = True)
+        self.titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.aboutButton], []])
+        CustomTitleBarWindowMixin.__init__(self, titleBar=self.titleBar, init = True)
 
         # root layout
         self.frameWidget = QWidget()
@@ -304,6 +307,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             self.connParentWidgets.append(connParent)
             if active:
                 self.tabWidget.setCurrentWidget(w)
+                plugin.onActive()
 
         # main window
         self.statusBarStauts = QLabel()
@@ -412,6 +416,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # add to new container
         newParent = self.connParentWidgets[idx]
         newParent.layout().addWidget(self.connectionWidget)
+        self.plugins[idx].onActive()
         self.updateStyle(parent)
         self.updateStyle(newParent)
         self.activePlugin(self.plugins[idx])
@@ -453,6 +458,10 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             self.dataToSend.insert(0, (data_bytes, callback))
         if file_path:
             self.fileToSend.insert(0, (file_path, callback))
+
+    def ctrlConn(self, k, v):
+        if self.connection:
+            self.connection.ctrl(k, v)
 
     def onSent(self, data):
         self.sendCount += len(data)
@@ -578,6 +587,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             QMessageBox.critical(self, title, msg)
 
     def closeEvent(self, event):
+        if self.closeTimerId:
+            event.accept()
+            return
         print("----- close event")
         # reply = QMessageBox.question(self, 'Sure To Quit?',
         #                              "Are you sure to quit?", QMessageBox.Yes |
@@ -590,9 +602,18 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             for c in self.connections:
                 c.onDel()
             self.saveConfig()
-            event.accept()
+            # actual exit after 500ms
+            self.closeTimerId = self.startTimer(500)
+            self.setWindowTitle(_("Closing ..."))
+            self.titleBar.setTitle(_("Closing ..."))
+            self.setEnabled(False)
+            event.ignore()
         else:
             event.ignore()
+
+    def timerEvent(self, e):
+        self.killTimer(self.closeTimerId)
+        self.close()
 
     def saveConfig(self):
         # print("save config:", self.config)

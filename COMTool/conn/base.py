@@ -64,5 +64,11 @@ class COMM(QObject):
         '''
         return {}
 
+    def ctrl(self, k, v):
+        pass
+
     def onDel(self):
+        '''
+            del all things and wait all thread to exit
+        '''
         pass

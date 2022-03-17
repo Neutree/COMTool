@@ -244,6 +244,11 @@ QPushButton:disabled {
     background-color: #2e2d2d;
     color: #838383;
 }
+.TitleBar QPushButton:disabled {
+    border: none;
+    background-color: #2e2d2d;
+}
+
 
 QPushButton:hover {
     background-color: #0f88eb;

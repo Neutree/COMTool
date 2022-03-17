@@ -60,7 +60,7 @@ class SSH_CONN:
     def isConnected(self):
         return not self.channel.closed
 
-    def set_pty_size(self, w, h):
+    def resize(self, w, h):
         self.channel.resize_pty(width=w, height=h)
 
 
@@ -401,4 +401,12 @@ class SSH(COMM):
 
     def isConnected(self):
         return self.status == ConnectionStatus.CONNECTED
+
+    def ctrl(self, k, v):
+        if not self.conn:
+            return
+        if k == "resize":
+            w, h = v
+            self.conn.resize(w, h)
+
 

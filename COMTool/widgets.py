@@ -163,6 +163,9 @@ class TitleBar(QWidget):
         p = QPainter(self)
         self.style().drawPrimitive(QStyle.PE_Widget, opt, p, self)
 
+    def setTitle(self, title):
+        self.title.setText(title)
+
 class EventFilter(QObject):
     Margins = 5  # 边缘边距
     windows = []

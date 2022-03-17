@@ -32,15 +32,15 @@ class Terminal_Backend:
 
     def feed(self, data:bytes):
         self.stream.feed(data)
-        # print("---", self.screen.dirty)
-        # for idx, line in enumerate(self.screen.display, 1):
-        #     print("{0:2d} {1} ¶".format(idx, line))
-        # print("===", self.screen.dirty)
+
+    def resize(self, width, height):
+        self.screen.resize(columns=width, lines=height)
 
 class Terminal_Frontend(QWidget):
-    def __init__(self, send_func) -> None:
+    def __init__(self, send_func, resizeConnFunc) -> None:
         super().__init__()
         self.send = send_func
+        self.resizeConn = resizeConnFunc
         self.theme = {
             "bg": QColor("#212121"),
             "color": QColor(255, 255, 255),
@@ -89,7 +89,8 @@ class Terminal_Frontend(QWidget):
         }
         self.setAttribute(Qt.WA_InputMethodEnabled)
         self.resize(580, 380)
-        print(self.width(), self.height())
+        self.setMinimumWidth(40)
+        self.setMinimumHeight(40)
         self.backend = Terminal_Backend()
         self.setCursor(Qt.IBeamCursor)
         self.setFocusPolicy(Qt.StrongFocus)
@@ -159,18 +160,27 @@ class Terminal_Frontend(QWidget):
         y = row * self._char_height
         return x, y
 
+    def paint_full_pixmap(self):
+        painter = QPainter(self.pixmap)
+        screen = self.backend.screen
+        self.paint_full_text(painter, screen)
+        self.paint_cursor(painter, screen)
+
     def paint_part_pixmap(self):
         painter = QPainter(self.pixmap)
         screen = self.backend.screen
         self.paint_dirty_text(painter, screen)
         self.paint_cursor(painter, screen)
 
+    def paint_full_text(self, painter, screen):
+        painter.setFont(self.font)
+        for line_num in range(self._rows):
+            self.paint_line_text(painter, screen, line_num, clear=True)
+
     def paint_dirty_text(self, painter, screen):
         painter.setFont(self.font)
-
         # 重绘旧光标所在行
         screen.dirty.add(self.cursor_y)
-
         for line_num in screen.dirty:
             self.paint_line_text(painter, screen, line_num, clear=True)
         # clear paint dirty info mannually
@@ -222,22 +232,25 @@ class Terminal_Frontend(QWidget):
         cursor = screen.cursor
         self.cursor_x = cursor.x
         self.cursor_y = cursor.y
-        line = screen.display[self.cursor_y]
-        # to get actual text before cursor.x
-        x = self.cursor_x
-        while 1:
-            w = wcswidth(line[:x])
-            if w > self.cursor_x:
-                x -= 1
-            elif w < self.cursor_x:
-                x += 1
-            else:
-                break
-        text = line[:x]
-        char = line[x]
-        cursor_x_pixel_width = self.fm.width(text)
-        # pcol = QColor(0x00, 0xaa, 0x00)
-        # pen = QPen(pcol)
+        char = ""
+        if self.cursor_y >= len(screen.display):
+            cursor_x_pixel_width = 0
+        else:
+            line = screen.display[self.cursor_y]
+            # to get actual text before cursor.x
+            x = self.cursor_x
+            while 1:
+                w = wcswidth(line[:x])
+                if w > self.cursor_x:
+                    x -= 1
+                elif w < self.cursor_x:
+                    x += 1
+                else:
+                    break
+            text = line[:x]
+            if x < len(line):
+                char = line[x]
+            cursor_x_pixel_width = self.fm.width(text)
         bcol = self.theme["cursor"]
         brush = QBrush(bcol)
 
@@ -246,8 +259,9 @@ class Terminal_Frontend(QWidget):
         painter.setPen(Qt.NoPen)
         painter.setBrush(brush)
         painter.drawRect(rect)
-        painter.setPen(self.get_pen(keyword="bg"))
-        painter.drawText(rect, align, char)
+        if char:
+            painter.setPen(self.get_pen(keyword="bg"))
+            painter.drawText(rect, align, char)
 
 
     def paintEvent(self, event):
@@ -309,6 +323,20 @@ class Terminal_Frontend(QWidget):
                 self.send(s)
         event.accept()
 
+    def resizeEvent(self, event):
+        try:
+            self.updatePixmapLock.acquire()
+            self._columns, self._rows = self._pixel2pos(self.width(), self.height())
+            self.backend.resize(self._columns, self._rows)
+            self.resizeConn(self._columns, self._rows)
+            self.pixmap = QPixmap(self.width(), self.height())
+            self.pixmap.fill(self.theme["bg"])
+            self.paint_full_pixmap()
+            self.updatePixmapLock.release()
+        except:
+            import traceback
+            traceback.print_exc()
+
 class Plugin(Plugin_Base):
     '''
         call sequence:
@@ -354,16 +382,24 @@ class Plugin(Plugin_Base):
             if p.id in self.connChilds:
                 self.plugins_info[p.id] = p
 
+    def onActive(self):
+        pass
+
     def onDel(self):
         pass
 
     def onWidgetMain(self, parent, rootWindow):
-        self.widget = Terminal_Frontend(self.send)
+        self.widget = Terminal_Frontend(self.send, self.resizeConnOutput)
         return self.widget
 
     def onWidgetSettings(self, parent):
         self.settingWidget = QWidget()
+        self.settingWidget.hide()
         return self.settingWidget
+
+    def resizeConnOutput(self, w, h):
+        if self.isConnected:
+            self.ctrlConn("resize", (w, h))
 
     def onWidgetFunctional(self, parent):
         self.funcWidget = QWidget()

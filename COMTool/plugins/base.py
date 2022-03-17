@@ -19,6 +19,7 @@ class Plugin_Base(QObject):
             onInit
             onWidget
             onUiInitDone
+            onActive
                 send
                 onReceived
             onDel
@@ -26,6 +27,7 @@ class Plugin_Base(QObject):
     # vars set by caller
     isConnected = lambda : False
     send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None)
+    ctrlConn = lambda k,v:None      # call ctrl func of connection
     hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
     clearCountSignal = None         # clearCountSignal.emit()
     reloadWindowSignal = None       # reloadWindowSignal.emit(title, msg, callback(close or not)), reload window to load new configs
@@ -86,6 +88,12 @@ class Plugin_Base(QObject):
         '''
             UI init done, you can update your widget here
             this method runs in UI thread, do not block too long
+        '''
+        pass
+
+    def onActive(self):
+        '''
+            plugin active
         '''
         pass
 
