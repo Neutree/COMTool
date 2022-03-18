@@ -67,18 +67,18 @@ COMTool
 
 ### Linux
 
-* Arch Linux 及其衍生版本可以通过 AUR 仓库在线安装：
 
-```bash
-# 发行版
-yay -S python-comtool
-# 开发版
-yay -S python-comtool-git
-```
+Linux版本太多，我们只为ubuntu编译二进制。
+其他发行版请[从 pypi 或源码安装](#以-python-包形式安装)。
+如果你有什么好的跨平台打包想法，比如 flatpak 或 appimage，你可以贡献一个 PR 或添加一个 issue 来告诉我如何可以做到
 
-> Linux版本太多，我们只为ubuntu编译二进制。
-> 其他发行版请[从 pypi 或源码安装](#以-python-包形式安装)。
-> 如果你有什么好的跨平台打包想法，比如 flatpak 或 appimage，你可以贡献一个 PR 或添加一个 issue 来告诉我如何可以做到
+> Arch Linux 及其衍生版本可以通过 AUR 仓库在线安装：(目前由 [taotieren](https://github.com/Neutree/COMTool/issues/44) 维护)：
+> ```bash
+> # 发行版
+> yay -S python-comtool
+> # 开发版
+> yay -S python-comtool-git
+> ```
 
 * 在 [release](https://github.com/Neutree/COMTool/releases) 页面或 [sourceforge](https://sourceforge.net/projects/comtool/files/) 下载最新版本
 * 如果不想使用`sudo`命令自动软件，则需要将当前用户添加到`dialout`组

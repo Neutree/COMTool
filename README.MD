@@ -70,18 +70,17 @@ A cross platform serial debug tools written by python
 
 ### Linux
 
-* Arch Linux and its derivative distributions can install from AUR：
+Linux has too much version, so we only compile binary for ubuntu.
+Other distribution please [install from pypi or source code](#Install-python-package).
+If you have any idea to pack cross platform binary like flatpak or appimage, you can contribute a pull request or add an issue to tell me how to
 
-```bash
-# Release version
-yay -S python-comtool
-# Development version
-yay -S python-comtool-git
-```
-
-> Linux has too much version, so we only compile binary for ubuntu.
-> Other distribution please [install from pypi or source code](#Install-python-package).
-> If you have any idea to pack cross platform binary like flatpak or appimage, you can contribute a pull request or add an issue to tell me how to
+> Arch Linux and its derivative distributions can install from AUR(maintained by [taotieren](https://github.com/Neutree/COMTool/issues/44))：
+> ```bash
+> # Release version
+> yay -S python-comtool
+> # Development version
+> yay -S python-comtool-git
+> ```
 
 * Download release at [release](https://github.com/Neutree/COMTool/releases) page, and extract files from `.zip` file, and click `comtool` to run
 
