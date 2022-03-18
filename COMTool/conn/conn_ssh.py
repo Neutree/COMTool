@@ -260,6 +260,7 @@ class SSH(COMM):
             self.showSwitchSignal.emit(self.status)
         else:
             try:
+                self.onConnectionStatus.emit(ConnectionStatus.CONNECTING, "")
                 self.checkAndConnect()
                 self.status = ConnectionStatus.CONNECTED
                 print("-- connect success")
@@ -342,6 +343,7 @@ class SSH(COMM):
         while self.status != ConnectionStatus.CLOSED:
             if waitingReconnect:
                 try:
+                    self.onConnectionStatus.emit(ConnectionStatus.CONNECTING, "")
                     self.checkAndConnect()
                     conn = self.conn
                     conn.settimeout(0.1)

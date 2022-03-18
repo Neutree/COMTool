@@ -8,6 +8,7 @@ class ConnectionStatus(Enum):
     CLOSED = 0
     CONNECTED = 1
     LOSE = 2 
+    CONNECTING = 3
 
 
 class COMM(QObject):

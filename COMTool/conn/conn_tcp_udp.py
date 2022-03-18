@@ -361,6 +361,7 @@ class TCP_UDP(COMM):
                         if not target:
                             raise Exception(_("Target error") + ": " + self.config["target"][0])
                         print("-- connect", target)
+                        self.onConnectionStatus.emit(ConnectionStatus.CONNECTING, "")
                         self.conn = socket.socket()
                         self.conn.connect(target)
                         self.status = ConnectionStatus.CONNECTED
@@ -479,6 +480,7 @@ class TCP_UDP(COMM):
                     target = self.checkTarget(self.config["target"][0])
                     if not target:
                         raise Exception(_("Target error") + ": " + self.config["target"][0])
+                    self.onConnectionStatus.emit(ConnectionStatus.CONNECTING, "")
                     conn = socket.socket()
                     conn.connect(target)
                     conn.settimeout(0.1)

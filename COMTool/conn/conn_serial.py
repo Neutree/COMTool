@@ -308,6 +308,7 @@ class Serial(COMM):
         else:
             try:
                 print("-- open serial")
+                self.onConnectionStatus.emit(ConnectionStatus.CONNECTING, "")
                 self.com.open()
                 self.status = ConnectionStatus.CONNECTED
                 self.onConnectionStatus.emit(self.status, "")
@@ -414,6 +415,7 @@ class Serial(COMM):
             if waitingReconnect:
                 if self.portExits(self.com.port):
                     try:
+                        self.onConnectionStatus.emit(ConnectionStatus.CONNECTING, "")
                         self.com.open()
                         print("-- reopen serial")
                         waitingReconnect = False

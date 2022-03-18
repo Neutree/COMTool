@@ -519,9 +519,13 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def onShowConnStatus(self, status, msg):
         if status == ConnectionStatus.CONNECTED:
-            self.onstatusBarText("info", msg)
+            self.onstatusBarText("info", '{} {}'.format(_("Connected"), msg))
         elif status == ConnectionStatus.CLOSED:
-            self.onstatusBarText("info", msg)
+            self.onstatusBarText("info", '{} {}'.format(_("Closed"), msg))
+        elif status == ConnectionStatus.CONNECTING:
+            self.onstatusBarText("info", '{} {}'.format(_("Connecting"), msg))
+        elif status == ConnectionStatus.LOSE:
+            self.onstatusBarText("warning", '{} {}'.format(_("Connection lose"), msg))
         else:
             self.onstatusBarText("warning", msg)
         for plugin in self.plugins:
