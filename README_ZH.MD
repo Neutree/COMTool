@@ -253,6 +253,18 @@ git clone https://github.com/Neutree/COMTool.git
 
 推荐使用 `PyCharm` IDE 或 `vscode` 开始
 
+运行方法：
+需要先生成翻译所需要的二进制文件(`.mo`)
+
+```
+python COMTool/i18n.py finish
+```
+
+然后执行主程序即可
+
+```
+python COMTool/Main.py
+```
 
 5. 创建合并请求
 

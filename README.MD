@@ -255,6 +255,18 @@ git clone https://github.com/Neutree/COMTool.git
 
 Recommended `PyCharm` IDE or `vscode` to get start
 
+How to run:
+Generate translate binary files first(`.mo`)
+
+```
+python COMTool/i18n.py finish
+```
+
+Then execute main program
+
+```
+python COMTool/Main.py
+```
 
 5. pull request
 

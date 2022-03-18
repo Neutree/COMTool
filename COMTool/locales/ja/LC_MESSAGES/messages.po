@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-07 15:52+0800\n"
+"POT-Creation-Date: 2022-03-18 19:39+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,74 +18,98 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:242 conn/conn_tcp_udp.py:515
+#: Main.py:245 conn/conn_tcp_udp.py:530
 #, fuzzy
 msgid "Connection"
 msgstr "接続が失われます！"
 
-#: Main.py:312 Main.py:508
+#: Main.py:316 Main.py:517
 msgid "Sent"
 msgstr ""
 
-#: Main.py:312 Main.py:313 Main.py:508 Main.py:509
+#: Main.py:316 Main.py:317 Main.py:517 Main.py:518
 msgid "bytes"
 msgstr "バイト"
 
-#: Main.py:313 Main.py:509
+#: Main.py:317 Main.py:518
 #, fuzzy
 msgid "Received"
 msgstr "受信"
 
-#: Main.py:344
+#: Main.py:348
 msgid "New Window"
 msgstr ""
 
-#: Main.py:398 Main.py:403 Main.py:493 Main.py:504 Main.py:752
-#: conn/conn_serial.py:320 conn/conn_tcp_udp.py:387 plugins/base.py:109
-#: plugins/base.py:114 plugins/base.py:130 plugins/base.py:167
-#: plugins/base.py:185 plugins/dbg.py:504 plugins/dbg.py:521 plugins/dbg.py:578
-#: plugins/dbg.py:586 plugins/protocol.py:443 plugins/protocol.py:631
-#: plugins/protocol.py:645 plugins/protocol.py:711
+#: Main.py:402 Main.py:407 Main.py:502 Main.py:513 Main.py:815
+#: conn/conn_serial.py:325 conn/conn_ssh.py:280 conn/conn_tcp_udp.py:400
+#: plugins/base.py:133 plugins/base.py:138 plugins/base.py:154
+#: plugins/base.py:191 plugins/base.py:209 plugins/dbg.py:504
+#: plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
+#: plugins/protocol.py:444 plugins/protocol.py:632 plugins/protocol.py:646
+#: plugins/protocol.py:712
 msgid "Error"
 msgstr "間違い"
 
-#: Main.py:493
+#: Main.py:502
 msgid "Open file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: Main.py:541 Main.py:550
+#: Main.py:522
+#, fuzzy
+msgid "Connected"
+msgstr "接続が失われます！"
+
+#: Main.py:524 parameters.py:31
+msgid "Closed"
+msgstr "クローズ"
+
+#: Main.py:526
+#, fuzzy
+msgid "Connecting"
+msgstr "接続が失われます！"
+
+#: Main.py:528
+#, fuzzy
+msgid "Connection lose"
+msgstr "接続が失われます！"
+
+#: Main.py:557 Main.py:566
 msgid "Restart now?"
 msgstr "今すぐ再起動しますか？"
 
-#: Main.py:542
+#: Main.py:558
 msgid "language changed to: "
 msgstr "言語が次のように変更されました："
 
-#: Main.py:542
+#: Main.py:558
 msgid "Restart software to take effect now?"
 msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
 
-#: Main.py:669
+#: Main.py:614 Main.py:615
+msgid "Closing ..."
+msgstr ""
+
+#: Main.py:703
 msgid "About"
 msgstr "だいたい"
 
-#: Main.py:678
+#: Main.py:712
 msgid "New versioin detected, please click learn more to download"
 msgstr ""
 
-#: Main.py:679
+#: Main.py:713
 msgid "Learn More"
 msgstr "もっと詳しく知る"
 
-#: Main.py:680
+#: Main.py:714
 msgid "Skip this version"
 msgstr "このバージョンをスキップ"
 
-#: Main.py:681
+#: Main.py:715
 msgid "Remind me next time"
 msgstr "次回リマインダー"
 
-#: Main.py:682
+#: Main.py:716
 msgid "Need update"
 msgstr "更新が必要"
 
@@ -151,10 +175,6 @@ msgstr "受信設定"
 msgid "Functional Send"
 msgstr "機能送信"
 
-#: parameters.py:31
-msgid "Closed"
-msgstr "クローズ"
-
 #: parameters.py:32
 msgid "Ready"
 msgstr "準備完了"
@@ -191,115 +211,174 @@ msgstr ""
 msgid "Custom, input baudrate"
 msgstr ""
 
-#: conn/conn_serial.py:99 conn/conn_tcp_udp.py:104
+#: conn/conn_serial.py:103 conn/conn_ssh.py:138 conn/conn_tcp_udp.py:108
 msgid "Port"
 msgstr "ポート"
 
-#: conn/conn_serial.py:100
+#: conn/conn_serial.py:104
 msgid "Baudrate"
 msgstr "ボーレート"
 
-#: conn/conn_serial.py:101
+#: conn/conn_serial.py:105
 msgid "DataBytes"
 msgstr "データ文字节"
 
-#: conn/conn_serial.py:102
+#: conn/conn_serial.py:106
 msgid "Parity"
 msgstr "パリティ"
 
-#: conn/conn_serial.py:103
+#: conn/conn_serial.py:107
 msgid "Stopbits"
 msgstr "ストップビット"
 
-#: conn/conn_serial.py:104
+#: conn/conn_serial.py:108
 msgid "Flow control"
 msgstr "フロー制御"
 
-#: conn/conn_serial.py:138 conn/conn_serial.py:139
+#: conn/conn_serial.py:142 conn/conn_serial.py:143
 msgid "Check to enable(usually output low level)"
 msgstr "チェックして有効にします（通常は低レベルを出力します）"
 
-#: conn/conn_serial.py:140 conn/conn_serial.py:285 conn/conn_serial.py:376
-#: conn/conn_tcp_udp.py:129 conn/conn_tcp_udp.py:320 conn/conn_tcp_udp.py:419
+#: conn/conn_serial.py:144 conn/conn_serial.py:289 conn/conn_serial.py:381
+#: conn/conn_ssh.py:152 conn/conn_ssh.py:235 conn/conn_ssh.py:323
+#: conn/conn_tcp_udp.py:133 conn/conn_tcp_udp.py:324 conn/conn_tcp_udp.py:432
 msgid "OPEN"
 msgstr "打込み"
 
-#: conn/conn_serial.py:193 conn/conn_serial.py:319
+#: conn/conn_serial.py:197 conn/conn_serial.py:324
 msgid "Open Failed"
 msgstr "開くことができませんでした"
 
-#: conn/conn_serial.py:379 conn/conn_serial.py:382 conn/conn_tcp_udp.py:422
-#: conn/conn_tcp_udp.py:425
+#: conn/conn_serial.py:384 conn/conn_serial.py:387 conn/conn_ssh.py:326
+#: conn/conn_ssh.py:329 conn/conn_tcp_udp.py:435 conn/conn_tcp_udp.py:438
 msgid "CLOSE"
 msgstr "関闭"
 
-#: conn/conn_serial.py:416 conn/conn_tcp_udp.py:475
+#: conn/conn_serial.py:422 conn/conn_ssh.py:352 conn/conn_tcp_udp.py:490
 msgid "Reconnected"
 msgstr ""
 
-#: conn/conn_serial.py:446 conn/conn_tcp_udp.py:534
+#: conn/conn_serial.py:452 conn/conn_ssh.py:397 conn/conn_tcp_udp.py:549
 msgid "Connection lose!"
 msgstr "接続が失われます！"
 
-#: conn/conn_tcp_udp.py:99
-msgid "Protocol"
+#: conn/conn_ssh.py:137
+msgid "Host"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:100
+#: conn/conn_ssh.py:139
+msgid "User"
+msgstr ""
+
+#: conn/conn_ssh.py:140
+msgid "Password"
+msgstr ""
+
+#: conn/conn_ssh.py:141
+msgid "SSH key"
+msgstr ""
+
+#: conn/conn_ssh.py:142
 #, fuzzy
-msgid "Mode"
-msgstr "記録"
+msgid "Saved"
+msgstr "エスケープ"
 
-#: conn/conn_tcp_udp.py:101
-msgid "Target"
-msgstr ""
-
-#: conn/conn_tcp_udp.py:124 conn/conn_tcp_udp.py:243
-msgid "All clients"
-msgstr ""
-
-#: conn/conn_tcp_udp.py:125
+#: conn/conn_ssh.py:150
 #, fuzzy
-msgid "Disconnect"
-msgstr "接続が失われます！"
+msgid "File"
+msgstr "ファイルを送信"
 
-#: conn/conn_tcp_udp.py:126
-msgid "Auto reconnect"
-msgstr ""
-
-#: conn/conn_tcp_udp.py:350 conn/conn_tcp_udp.py:468 conn/conn_tcp_udp.py:561
+#: conn/conn_ssh.py:210
 #, fuzzy
-msgid "Target error"
+msgid "Input error"
 msgstr "タイムフォーマットエラー"
 
-#: conn/conn_tcp_udp.py:386
+#: conn/conn_ssh.py:210
+msgid "Input"
+msgstr ""
+
+#: conn/conn_ssh.py:210
+#, fuzzy
+msgid "error"
+msgstr "間違い"
+
+#: conn/conn_ssh.py:223 plugins/dbg.py:396 plugins/dbg.py:410
+#: plugins/protocol.py:423 plugins/protocol.py:433
+msgid "Select file"
+msgstr "ファイルを選択"
+
+#: conn/conn_ssh.py:225 plugins/dbg.py:398
+msgid "All Files (*)"
+msgstr ""
+
+#: conn/conn_ssh.py:279 conn/conn_tcp_udp.py:399
 #, fuzzy
 msgid "Connect Failed"
 msgstr "最初に接続してください"
 
-#: conn/conn_tcp_udp.py:446
-msgid "Client connected:"
+#: conn/conn_ssh.py:290
+#, fuzzy
+msgid "Config error"
+msgstr "タイムフォーマットエラー"
+
+#: conn/conn_ssh.py:317
+msgid "SSH pub key file path error"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:495
+#: conn/conn_ssh.py:379 conn/conn_tcp_udp.py:510
 msgid "Closed by peer"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:515
-#, fuzzy
-msgid "closed!"
-msgstr "クローズ"
-
-#: conn/conn_tcp_udp.py:519
+#: conn/conn_ssh.py:384 conn/conn_tcp_udp.py:534
 #, fuzzy
 msgid "Connection closed!"
 msgstr "接続が失われます！"
 
-#: plugins/base.py:130
+#: conn/conn_tcp_udp.py:103
+msgid "Protocol"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:104
+#, fuzzy
+msgid "Mode"
+msgstr "記録"
+
+#: conn/conn_tcp_udp.py:105
+msgid "Target"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:128 conn/conn_tcp_udp.py:247
+msgid "All clients"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:129
+#, fuzzy
+msgid "Disconnect"
+msgstr "接続が失われます！"
+
+#: conn/conn_tcp_udp.py:130
+msgid "Auto reconnect"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:362 conn/conn_tcp_udp.py:482 conn/conn_tcp_udp.py:576
+#, fuzzy
+msgid "Target error"
+msgstr "タイムフォーマットエラー"
+
+#: conn/conn_tcp_udp.py:459
+msgid "Client connected:"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:530
+#, fuzzy
+msgid "closed!"
+msgstr "クローズ"
+
+#: plugins/base.py:154
 msgid "Format error, should be like 00 01 02 03"
 msgstr "フォーマットエラー、00 01 02 03 のようになります"
 
-#: plugins/base.py:167 plugins/base.py:185
+#: plugins/base.py:191 plugins/base.py:209
 msgid "Escape is on, but escape error:"
 msgstr "エスケープはオンですが、エスケープエラー："
 
@@ -308,7 +387,7 @@ msgstr "エスケープはオンですが、エスケープエラー："
 msgid "Send Receive"
 msgstr "清除接収区"
 
-#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:381
+#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:382
 msgid "ASCII"
 msgstr "ASCII"
 
@@ -318,7 +397,7 @@ msgid ""
 "corner"
 msgstr "表示されている文字を使用して受信データを表示し、右上隅でデコード方法を選択します"
 
-#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:382
+#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:383
 msgid "HEX"
 msgstr "HEX"
 
@@ -358,13 +437,13 @@ msgstr "顔色"
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "UNIX端末の色のサポートを有効にする, 例えば \\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:163 plugins/protocol.py:383
+#: plugins/dbg.py:163 plugins/protocol.py:384
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "表示文字形式で送信するデータを取得し、右上隅でエンコード方法を選択します"
 
-#: plugins/dbg.py:164 plugins/protocol.py:384
+#: plugins/dbg.py:164 plugins/protocol.py:385
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "16進数の「313233」などの16進数形式で送信するデータを取得し、ASCIIコードの「123」は同等です。"
 
@@ -380,11 +459,11 @@ msgstr ""
 msgid "Timed send, unit: ms"
 msgstr "定時間P送、単位：ms"
 
-#: plugins/dbg.py:173 plugins/protocol.py:386
+#: plugins/dbg.py:173 plugins/protocol.py:387
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:174 plugins/protocol.py:387
+#: plugins/dbg.py:174 plugins/protocol.py:388
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選択中ρ送信\\ r \\ n圧電不是\\ n"
 
@@ -396,11 +475,11 @@ msgstr "記録"
 msgid "Record send data"
 msgstr "送信データを記録する"
 
-#: plugins/dbg.py:178 plugins/protocol.py:389
+#: plugins/dbg.py:178 plugins/protocol.py:390
 msgid "Escape"
 msgstr "エスケープ"
 
-#: plugins/dbg.py:179 plugins/protocol.py:390
+#: plugins/dbg.py:179 plugins/protocol.py:391
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "\\t \\r \\n \\x01 \\001 のようなエスケープ文字のサポートを有効にする"
 
@@ -448,8 +527,8 @@ msgstr "カスタム送信"
 msgid "Log path"
 msgstr "ログパス"
 
-#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:733
-#: plugins/protocol.py:755
+#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:734
+#: plugins/protocol.py:756
 msgid "Warning"
 msgstr ""
 
@@ -469,15 +548,6 @@ msgstr "履歴がクリアされました！"
 #, fuzzy
 msgid "Send file"
 msgstr "ファイルを送信"
-
-#: plugins/dbg.py:396 plugins/dbg.py:410 plugins/protocol.py:422
-#: plugins/protocol.py:432
-msgid "Select file"
-msgstr "ファイルを選択"
-
-#: plugins/dbg.py:398
-msgid "All Files (*)"
-msgstr ""
 
 #: plugins/dbg.py:412
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
@@ -543,88 +613,92 @@ msgstr ""
 msgid "Key mode"
 msgstr ""
 
-#: plugins/protocol.py:359
+#: plugins/protocol.py:360
 #, fuzzy
 msgid "En-decoding settings"
 msgstr "送信設定"
 
-#: plugins/protocol.py:363
+#: plugins/protocol.py:364
 msgid "Custom, input name"
 msgstr ""
 
-#: plugins/protocol.py:364
+#: plugins/protocol.py:365
 msgid "Load defaults"
 msgstr ""
 
-#: plugins/protocol.py:367 plugins/protocol.py:699 plugins/protocol.py:723
-#: plugins/protocol.py:726 plugins/protocol.py:746
+#: plugins/protocol.py:368 plugins/protocol.py:700 plugins/protocol.py:724
+#: plugins/protocol.py:727 plugins/protocol.py:747
 #, fuzzy
 msgid "Save"
 msgstr "エスケープ"
 
-#: plugins/protocol.py:369
+#: plugins/protocol.py:370
 msgid "Delete"
 msgstr ""
 
-#: plugins/protocol.py:373
+#: plugins/protocol.py:374
 msgid "Defaults"
 msgstr ""
 
-#: plugins/protocol.py:375
+#: plugins/protocol.py:376
 #, fuzzy
 msgid "Code"
 msgstr "記録"
 
-#: plugins/protocol.py:379
+#: plugins/protocol.py:380
 #, fuzzy
 msgid "Send settings"
 msgstr "送信設定"
 
-#: plugins/protocol.py:412
+#: plugins/protocol.py:413
 msgid "Load config"
 msgstr ""
 
-#: plugins/protocol.py:413
+#: plugins/protocol.py:414
 msgid "Share config"
 msgstr ""
 
-#: plugins/protocol.py:424 plugins/protocol.py:434
+#: plugins/protocol.py:425 plugins/protocol.py:435
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr ""
 
-#: plugins/protocol.py:443
+#: plugins/protocol.py:444
 #, fuzzy
 msgid "config file format error"
 msgstr "タイムフォーマットエラー"
 
-#: plugins/protocol.py:451
+#: plugins/protocol.py:452
 msgid "Restart to load config?"
 msgstr ""
 
-#: plugins/protocol.py:631
+#: plugins/protocol.py:632
 msgid "Run decode error"
 msgstr ""
 
-#: plugins/protocol.py:645
+#: plugins/protocol.py:646
 #, fuzzy
 msgid "Run encode error"
 msgstr "エラーの送信"
 
-#: plugins/protocol.py:707
+#: plugins/protocol.py:708
 msgid "decode and encode method should be in code"
 msgstr ""
 
-#: plugins/protocol.py:710
+#: plugins/protocol.py:711
 #, fuzzy
 msgid "Method error"
 msgstr "エラーの送信"
 
-#: plugins/protocol.py:733
+#: plugins/protocol.py:734
 msgid "Please input code profile name first"
 msgstr ""
 
-#: plugins/protocol.py:755
+#: plugins/protocol.py:756
 msgid "Please select a code profile name first to delete"
+msgstr ""
+
+#: plugins/terminal.py:674
+msgid "terminal"
 msgstr ""
 
 #~ msgid "Send"
