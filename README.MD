@@ -18,9 +18,9 @@ A cross platform serial debug tools written by python
  | |
 
 
-| White theme | Dark theme | protocol plugin | TCP/UDP |
-| ----------- | ---------- | --------------- | ------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png)
+| White theme | Dark theme | protocol plugin | TCP/UDP | Terminal |
+| ----------- | ---------- | --------------- | ------- | -------- |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) | ![terminal](./COMTool/assets/screenshot_terminal.png) |
 
 
 
@@ -57,6 +57,7 @@ A cross platform serial debug tools written by python
 - [x] protocol with customable encoding and decoding method support, 
 - [x] Custom shortcut send(in protocol plugin)
 - [x] TCP UDP support
+- [x] Terminal mode support
 - [ ] real time data graphic display
 - [ ] plugin support
 
@@ -320,5 +321,6 @@ And used these open source projects as libraries:
 * [requests](https://github.com/psf/requests): [Apache 2.0](https://github.com/psf/requests/blob/main/LICENSE)
 * [Babel](https://github.com/python-babel/babel): [BSD](https://github.com/python-babel/babel/blob/master/LICENSE)
 * [qtawesome](https://github.com/spyder-ide/qtawesome): [MIT](https://github.com/spyder-ide/qtawesome/blob/master/LICENSE.txt)
-* [pyte]()
-* [paramiko]()
+* [pyte](https://github.com/selectel/pyte): [LGPL 3.0](https://github.com/selectel/pyte/blob/master/LICENSE)
+* [paramiko](https://github.com/paramiko/paramiko): [LGPL 2.1](https://github.com/paramiko/paramiko/blob/main/LICENSE)
+* [pyperclip](https://github.com/asweigart/pyperclip): [BSD-3-Clause](https://github.com/asweigart/pyperclip/blob/master/LICENSE.txt)

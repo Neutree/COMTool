@@ -18,9 +18,9 @@ COMTool
  | |
 
 
-| 白色主题 | 黑色主题 | 协议插件 | TCP/UDP |
-| ------ | ------- | ------- | ------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) |
+| 白色主题 | 黑色主题 | 协议插件 | TCP/UDP | 终端 |
+| ------ | ------- | ------- | ------- | ------ |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) | ![terminal](./COMTool/assets/screenshot_terminal.png) |
 
 
 > 截图可能不是最新的版本， 最新的版本只会更好用更好看
@@ -53,6 +53,7 @@ COMTool
 - [x] 自定义协议编解码支持
 - [x] 自定义快捷键发送（在协议功能里面）
 - [x] TCP UDP 支持
+- [x] 终端模式支持
 - [ ] 实时图像数据显示
 - [ ] 插件支持
 
@@ -316,4 +317,7 @@ python i18n.py finish
 * [requests](https://github.com/psf/requests): [Apache 2.0](https://github.com/psf/requests/blob/main/LICENSE)
 * [Babel](https://github.com/python-babel/babel): [BSD](https://github.com/python-babel/babel/blob/master/LICENSE)
 * [qtawesome](https://github.com/spyder-ide/qtawesome): [MIT](https://github.com/spyder-ide/qtawesome/blob/master/LICENSE.txt)
+* [pyte](https://github.com/selectel/pyte): [LGPL 3.0](https://github.com/selectel/pyte/blob/master/LICENSE)
+* [paramiko](https://github.com/paramiko/paramiko): [LGPL 2.1](https://github.com/paramiko/paramiko/blob/main/LICENSE)
+* [pyperclip](https://github.com/asweigart/pyperclip): [BSD-3-Clause](https://github.com/asweigart/pyperclip/blob/master/LICENSE.txt)
 

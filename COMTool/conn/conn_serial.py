@@ -74,6 +74,10 @@ class Serial(COMM):
         self.widget = None
         self.baudrateCustomStr = _("Custom, input baudrate")
 
+    def onDel(self):
+        if self.isConnected():
+            self.openCloseSerial()
+
     def __del__(self):
         try:
             self.com.close()

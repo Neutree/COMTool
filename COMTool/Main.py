@@ -615,6 +615,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             event.ignore()
 
     def timerEvent(self, e):
+        print("-- Close window, time:", time.time())
         self.killTimer(self.closeTimerId)
         self.close()
 

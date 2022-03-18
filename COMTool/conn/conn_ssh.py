@@ -212,6 +212,8 @@ class SSH(COMM):
     def onDel(self):
         # remove passwd for safty
         self.config["passwd"] = ""
+        if self.isConnected():
+            self.openCloseSerial()
 
     def selectSshKeyFile(self):
         oldPath = self.sshKeyInputBtn.text()
@@ -374,7 +376,7 @@ class SSH(COMM):
                 if closed:
                     raise Exception(_("Closed by peer"))
             except Exception as e:
-                print("-- recv error:", e, type(e))
+                print("-- recv error:", e, type(e), time.time())
                 if not self.config["auto_reconnect"]:
                     self.status = ConnectionStatus.CLOSED
                     self.onConnectionStatus.emit(self.status, _("Connection closed!") + " " + str(e))

@@ -5,3 +5,4 @@ Babel>=2.9.1
 qtawesome
 paramiko
 pyte
+pyperclip

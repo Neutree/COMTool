@@ -73,6 +73,10 @@ class TCP_UDP(COMM):
         }
         self.serverModeSelectedClient = None # None means all clients, or ip:port string
 
+    def onDel(self):
+        if self.isConnected():
+            self.openCloseSerial()
+
     def __del__(self):
         try:
             self.status = ConnectionStatus.CLOSED
