@@ -495,8 +495,7 @@ class Terminal_Frontend(QWidget):
         return content
 
     def mousePressEvent(self, e):
-        if not self.isConnected():
-            return
+        self.mouseButton = e.button()
         x = e.x(); y = e.y()
         col, row, scroll = self._pos_pix2colrow(x, y)
         col, row = self._pos_to_absolute(col, row)
@@ -526,7 +525,7 @@ class Terminal_Frontend(QWidget):
         return item
 
     def mouseMoveEvent(self, e):
-        if not self.isConnected():
+        if self.mouseButton != Qt.LeftButton: # e.button() not work here, so use variable
             return
         self.updatePixmapLock.acquire()
         x = e.x(); y = e.y()
@@ -583,6 +582,9 @@ class Terminal_Frontend(QWidget):
         # update last selection
         self.lastSelection = newSelection
         self.update()
+
+    def mouseReleaseEvent(self, e):
+        self.mouseButton = None
 
     def _get_line(self, row):
         if row < len(self.backend.screen.history.top):
