@@ -30,4 +30,22 @@
 接收和解析以及绘制`pixmap`都在`onReceived`函数中进行，这个函数在接收线程中执行，没在`UI`线程中执行，所以在绘制`pixmap`过程中不要直接调用任何直接操作界面的方法，所有操作都对这个`pixmap`进行操作，等绘制完成后再用`update()`函数通知`UI`线程，在`paintEvent`函数中将`pixmap`画到`widget`上
 
 
+## 不同插件继承数据
+
+每个插件都可以使用连接，即用户在界面点击连接后，当前的插件就可以通过`send`和`onReceived`函数发送和接收数据了
+
+另外也支持继承关系，比如`protocol`插件继承自`bdg`插件（即`protocol`插件的`connParent`为`dbg`），当我们使用`protocol`插件收发数据时，接收到数据会先发给`dbg`，然后`dbg`在`onReceived`函数中转发给`connChilds`即`protocol`插件，`protocol`发送数据时会先转发给`dbg`插件的`sendData`。
+
+需要注意的是这个功能是一个试验性的功能，目前只支持两级，比如这里的`dbg`插件的`connParent`是`main`， `protocol`的`connParent`是`dbg`，**不可以**再有继承于`protocol`的插件了，因为是试验性功能，如果要支持更多层级继承需要修改代码使用递归实现
+
+另外也需要注意，这里在`protocol`收发消息会经过`dbg`，但是在`dbg`收发不会转发给子插件也就是`protocol`
+
+
+
+
+
+
+
+
+
 

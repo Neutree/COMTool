@@ -240,7 +240,10 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                         pluginParent.connChilds.append(plugin)
                     parent = pluginParent
                     break
-            plugin.send = parent.send
+            if parent:
+                plugin.send = parent.sendData
+            else:
+                self.hintSignal.emit("error", _("Error"), f"Plugin {plugin.id}'s connParent error")
         if not parent:
             plugin.send = self.sendData
         self.config.basic["activePlugin"] = plugin.id

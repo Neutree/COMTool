@@ -90,6 +90,13 @@ class Plugin_Base(QObject):
         for plugin in self.connChilds:
             plugin.onReceived(data)
 
+    def sendData(self, data:bytes):
+        '''
+            send data, chidren call send will invoke this function
+            if you send data in this plugin, you can directly call self.send
+        '''
+        self.send(data)
+
     def onKeyPressEvent(self, event):
         pass
 
