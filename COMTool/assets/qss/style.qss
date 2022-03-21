@@ -282,6 +282,12 @@ QPushButton:default {
 .smallBtn {
     min-width: 30px;
 }
+.smallBtn2 {
+    min-width: 24px;
+    min-height: 24px;
+    width: 24px;
+    height: 24px;
+}
 
 .remark {
     min-width: 10px;

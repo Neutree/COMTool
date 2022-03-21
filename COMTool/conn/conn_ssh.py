@@ -195,8 +195,7 @@ class SSH(COMM):
                 item = '{}:{} - {}'.format(v["host"], v["port"], v["user"])
                 self.savedCombobox.addItem(item)
 
-    def loadSavedItem(self):
-        idx = self.savedCombobox.currentIndex()
+    def loadSavedItem(self, idx):
         conf = self.config["saved"][idx]
         self.hostInput.setText(conf["host"])
         self.portInput.setText(str(conf["port"]))

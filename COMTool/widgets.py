@@ -1,13 +1,15 @@
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow, QComboBox, QListView
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
 try:
     import utils_ui
+    from Combobox import ComboBox
 except Exception:
     from COMTool import utils_ui
+    from COMTool.Combobox import ComboBox
 
 class TitleBar(QWidget):
     def __init__(self, parent, icon=None, title="", height=35,
@@ -405,6 +407,96 @@ class PlainTextEdit(QPlainTextEdit):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = False
 
+class _ListView(QListView):
+    focusout = pyqtSignal()
+
+    def focusOutEvent(self, event):
+        self.focusout.emit()
+
+class _Combobox(QComboBox):
+    clicked = pyqtSignal()
+    listvieFocusout = pyqtSignal()
+    def __init__(self):
+        super().__init__()
+        listView = _ListView()
+        listView.executeDelayedItemsLayout()
+        listView.focusout.connect(lambda: self.listvieFocusout.emit())
+        self.setView(listView)
+
+    def mouseReleaseEvent(self, QMouseEvent):
+        self.showItems()
+
+    def showPopup(self):
+        # self.popupAboutToBeShown.emit()
+        # prevent show popup, manually call it in mouse release event
+        pass
+
+    def _showPopup(self):
+        max_w = 0
+        for i in range(self.count()):
+            w = self.view().sizeHintForColumn(i)
+            if w > max_w:
+                max_w = w
+        self.view().setMinimumWidth(max_w + 50)
+        super().showPopup()
+    
+    def showItems(self):
+        self._showPopup()
+
+    def mousePressEvent(self, QMouseEvent):
+        self.clicked.emit()
+
+
+class ButtonCombbox(QWidget):
+    activated = pyqtSignal(int)
+    currentIndexChanged = pyqtSignal()
+    def __init__(self, text="", icon = None, btnClass="smallBtn") -> None:
+        super().__init__()
+        layout = QHBoxLayout()
+        layout.setContentsMargins(2,2,2,2)
+        self.setLayout(layout)
+        self.button = QPushButton(text)
+        self.button.setProperty("class", btnClass)
+        if icon:
+            utils_ui.setButtonIcon(self.button, icon)
+        self.list = _Combobox()
+        layout.addWidget(self.button)
+        layout.addWidget(self.list)
+        self.list.hide()
+        self.button.clicked.connect(lambda:self._ctrl("show"))
+        def onAvtivated(idx):
+            self.activated.emit(idx)
+            self._ctrl("hide")
+        self.list.activated.connect(lambda idx: onAvtivated(idx))
+        self.list.currentIndexChanged.connect(lambda:self.currentIndexChanged.emit())
+        self.list.listvieFocusout.connect(self._listFocusout)
+    
+    def _ctrl(self, cmd):
+        if cmd == "show":
+            if self.list.count() == 0:
+                return
+            self.button.hide()
+            self.list.show()
+            self.list.showItems()
+            self.list.setFocus()
+        elif cmd == "hide":
+            self.list.hide()
+            self.button.show()
+
+    def _listFocusout(self):
+        self._ctrl("hide")
+
+    def addItem(self, item):
+        self.list.addItem(item)
+
+    def currentIndex(self):
+        return self.list.currentIndex()
+
+    def setCurrentIndex(self, idx):
+        self.list.setCurrentIndex(idx)
+
+    def currentText(self):
+        return self.list.currentText()
 
 if __name__ == "__main__":
     import sys

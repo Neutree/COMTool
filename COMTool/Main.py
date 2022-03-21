@@ -28,17 +28,17 @@ try:
     from i18n import _
     import version
     import utils_ui
-    from conn import Serial, ConnectionStatus, TCP_UDP, SSH
+    from conn import ConnectionStatus, conns
     from plugins import plugins
-    from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
+    from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox
 except ImportError:
     from COMTool import helpAbout,autoUpdate, utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
     from COMTool import version
-    from COMTool.conn import Serial, ConnectionStatus, TCP_UDP, SSH
+    from COMTool.conn import ConnectionStatus, conns
     from COMTool.plugins import plugins
-    from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter
+    from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox
 
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -75,7 +75,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.DataPath = parameters.dataPath
         self.config = config
         self.initVar()
-        self.initPlugins(self.config.basic["plugins"], self.config.basic["activePlugin"], self.config.plugins)
+        self.initPlugins(self.config.basic["pluginsInfo"], self.config.basic["activePlugin"], self.config.plugins)
         self.initWindow()
         self.initConn(self.config.basic["connId"], self.config.conns)
         self.uiLoadConfigs(self.config)
@@ -94,7 +94,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def initConn(self, connId, configs):
         # get all conn info
-        self.connections = [Serial(), TCP_UDP(), SSH()]
+        self.connections = []
+        for conn in conns:
+            self.connections.append(conn())
         # add conn select combobox
         self.changingConn = True
         for i, conn in enumerate(self.connections):
@@ -122,31 +124,101 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # init last used one
         self.changeConn(activeConn)
 
-    def initPlugins(self, enabled, activeId, configs):
-        if not enabled:
-            enabled = ["dbg", "protocol", "terminal"]
+    def _importPlugin(self, path):
+        if not os.path.exists(path):
+            return None
+        dir = os.path.dirname(path)
+        name = os.path.splitext(os.path.basename(path))[0]
+        sys.path.insert(0, dir)
+        pluginClass = __import__(name).Plugin
+        return pluginClass
+
+    def initPlugins(self, pluginsInfo, activeId, configs):
+        enabled = []
+        # find enabled builtin plugin
+        for plugin in plugins:
+            if (not plugin.id in pluginsInfo["builtin"]) or pluginsInfo["builtin"][plugin.id]["enabled"]:
+                enabled.append(plugin.id)
+        # load external enabled plugins
+        invalidPlugin = []
+        for uid, info in pluginsInfo["external"].items():
+            if info["enabled"]:
+                pluginClass = self._importPlugin(info["path"])
+                if pluginClass:
+                    enabled.append(pluginClass.id)
+                    if not pluginClass in plugins: # judge for multiple instance, for pluings is global var
+                        plugins.append(pluginClass)
+                else:
+                    invalidPlugin.append(uid)
+        # remove invalid external plugins
+        for uid in invalidPlugin:
+            pluginsInfo["external"].pop(uid)
+        # init plugins
         self.connChilds = []
-        self.plugins = [Plugin() for Plugin in plugins]
-        for plugin in self.plugins:
-            plugin.hintSignal = self.hintSignal
-            plugin.send = self.sendData
-            plugin.ctrlConn = self.ctrlConn
-            plugin.isConnected = self.isConnected
-            plugin.clearCountSignal = self.clearCountSignal
-            plugin.reloadWindowSignal = self.reloadWindowSignal
-            plugin.configGlobal = self.config.basic
-            config = {
-                "plugin_id": plugin.id
+        self.plugins = []
+        for pluinClass in plugins:
+            if pluinClass.id in enabled:
+                plugin = self.loadPlugin(pluinClass)
+
+    def loadPlugin(self, pluginClass, init = True):
+        print("-- load plugin:", pluginClass.id)
+        plugin = pluginClass()
+        self.plugins.append(plugin)
+        plugin.hintSignal = self.hintSignal
+        plugin.send = self.sendData
+        plugin.ctrlConn = self.ctrlConn
+        plugin.isConnected = self.isConnected
+        plugin.clearCountSignal = self.clearCountSignal
+        plugin.reloadWindowSignal = self.reloadWindowSignal
+        plugin.configGlobal = self.config.basic
+        config = {
+            "plugin_id": plugin.id
+        }
+        configs = self.config.plugins
+        if plugin.id in configs:
+            config = configs[plugin.id]
+        else: # add new dict obj for plugin to use
+            configs[plugin.id] = config
+        plugin.onInit(config)
+        self.enablePlugin(plugin)
+        if plugin.id == self.config.basic["activePlugin"]:
+            self.activePlugin(plugin)
+        if not init:
+            plugin.onUiInitDone()
+            self.addPluginTab(plugin, active=True)
+            # load connections
+            combobox = self.connSelectComboboxes[-1]
+            self.changingConn = True
+            for i, conn in enumerate(self.connections):
+                combobox.addItem(conn.name)
+                if conn.id == self.config.basic["connId"]:
+                    combobox.setCurrentIndex(i)
+            self.changingConn = False
+        return plugin
+
+    def loadExternalPlugin(self, path):
+        extPlugsInfo = self.config.basic["pluginsInfo"]["external"]
+        found = False
+        for uid, info in extPlugsInfo.items():
+            if info["path"] == path:
+                if not info["enabled"]:
+                    info["enabled"] = True
+                    found = True
+                else:
+                    for w, _uid in self.tabWidgets:
+                        if uid == _uid:
+                            self.tabWidget.setCurrentWidget(w)
+                    return True, ""
+        pluginClass = self._importPlugin(path)
+        if not pluginClass:
+            return False, _("Load plugin fail")
+        if not found:
+            extPlugsInfo[pluginClass.id] = {
+                "enabled": True,
+                "path": path
             }
-            if plugin.id in configs:
-                config = configs[plugin.id]
-            else: # add new dict obj for plugin to use
-                configs[plugin.id] = config
-            plugin.onInit(config, self.plugins)
-            if plugin.id in enabled:
-                self.enablePlugin(plugin)
-            if plugin.id == activeId:
-                self.activePlugin(plugin)
+        self.loadPlugin(pluginClass, init=False)
+        return True, ""
 
     def enablePlugin(self, plugin):
         plugin.enabled = True
@@ -168,10 +240,23 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                         pluginParent.connChilds.append(plugin)
                     parent = pluginParent
                     break
-            plugin.send = parent.sendData
+            plugin.send = parent.send
         if not parent:
             plugin.send = self.sendData
         self.config.basic["activePlugin"] = plugin.id
+
+    def onPluginSelectorChanged(self, idx):
+        text = self.pluginsSelector.currentText()
+        if text == self.loadPluginStr:
+            oldPath = os.getcwd()
+            fileName_choose, filetype = QFileDialog.getOpenFileName(self,
+                                    _("Select file"),
+                                    oldPath,
+                                    _("python script (*.py)"))
+            if fileName_choose != "":
+                ok, msg = self.loadExternalPlugin(fileName_choose)
+                if not ok:
+                    self.hintSignal.emit("error", _("Error"), f'{_("Load plugin error")}: {msg}')
 
     def uiInitDone(self):
         for conn in self.connections:
@@ -191,7 +276,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # menu layout
         self.settingsButton = QPushButton()
         self.skinButton = QPushButton("")
-        self.languageCombobox = ComboBox()
+        self.languageCombobox = ButtonCombbox(icon="fa.language", btnClass="smallBtn2")
         self.languages = i18n.get_languages()
         for locale in self.languages:
             self.languageCombobox.addItem(self.languages[locale])
@@ -209,6 +294,11 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.skinButton.setObjectName("menuItem")
         self.aboutButton.setObjectName("menuItem")
         self.functionalButton.setObjectName("menuItem")
+        # plugins slector
+        self.pluginsSelector = ButtonCombbox(icon="fa.plus", btnClass="smallBtn2")
+        self.loadPluginStr = _("Load plugin from file")
+        self.pluginsSelector.addItem(self.loadPluginStr)
+        self.pluginsSelector.activated.connect(self.onPluginSelectorChanged)
 
         # title bar
         title = parameters.appName+" v"+version.__version__
@@ -223,52 +313,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.frameWidget.setLayout(self.rootLayout)
         self.setCentralWidget(self.frameWidget)
         # tab widgets
-        def addTabPanel(tabWidget, name, plugin, connectionWidget = None):
-            '''
-                @return panenl widget, connectionWidget parent
-            '''
-            contentWidget = QSplitter(Qt.Horizontal)
-            contentWidget.setProperty("class", "contentWrapper")
-            # contentWidget.setContentsMargins(5,5,5,5)
-            tabWidget.addTab(contentWidget, name)
-            mainWidget = plugin.onWidgetMain(contentWidget, self)
-
-            # widgets settings
-            settingWidget = QWidget()
-            settingWidget.setProperty("class","settingWidget")
-            settingLayout = QVBoxLayout()
-            settingWidget.setLayout(settingLayout)
-            #    connection settings
-            connSelectCommbox = ComboBox()
-            self.connSelectComboboxes.append(connSelectCommbox)
-            connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
-            connSettingsGroupBox = QGroupBox(_("Connection"))
-            layout = QVBoxLayout()
-            connSettingsGroupBox.setLayout(layout)
-            layout.addWidget(connSelectCommbox)
-            layout.setContentsMargins(1, 6, 0, 0)
-            connectionWidgetWrapper = QWidget()
-            layout2 = QVBoxLayout()
-            layout2.setContentsMargins(0, 0, 0, 0)
-            connectionWidgetWrapper.setLayout(layout2)
-            layout.addWidget(connectionWidgetWrapper)
-            if connectionWidget:
-                layout2.addWidget(connectionWidget)
-            settingLayout.addWidget(connSettingsGroupBox)
-            #  other settings
-            widget = plugin.onWidgetSettings(settingLayout)
-            settingLayout.addWidget(widget)
-            settingLayout.setContentsMargins(0,0,0,0)
-
-            # right functional layout
-            functionalWidget = plugin.onWidgetFunctional(contentWidget)
-            contentWidget.addWidget(settingWidget)
-            contentWidget.addWidget(mainWidget)
-            contentWidget.addWidget(functionalWidget)
-            contentWidget.setStretchFactor(0, 1)
-            contentWidget.setStretchFactor(1, 2)
-            contentWidget.setStretchFactor(2, 1)
-            return contentWidget, connectionWidgetWrapper
         self.tabWidget = QTabWidget()
         # self.contentLayout.setSpacing(0)
         # self.contentLayout.setContentsMargins(0,0,0,0)
@@ -285,6 +329,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         tabConerLayoutRight.setSpacing(0)
         tabConerLayoutRight.setContentsMargins(0, 0, 0, 0)
         tabConerWidgetRight.setLayout(tabConerLayoutRight)
+        tabConerLayoutRight.addWidget(self.pluginsSelector)
         tabConerLayoutRight.addWidget(self.languageCombobox)
         tabConerLayoutRight.addWidget(self.encodingCombobox)
         tabConerLayoutRight.addWidget(self.functionalButton)
@@ -302,12 +347,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             active = False
             if plugin.id == self.config.basic["activePlugin"]:
                 active = True
-            w, connParent = addTabPanel(self.tabWidget, plugin.name, plugin, None)
-            self.tabWidgets.append(w)
-            self.connParentWidgets.append(connParent)
-            if active:
-                self.tabWidget.setCurrentWidget(w)
-                plugin.onActive()
+            self.addPluginTab(plugin, active=active)
 
         # main window
         self.statusBarStauts = QLabel()
@@ -336,6 +376,63 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.MoveToCenter()
         self.show()
         print("config file path:",parameters.configFilePath)
+
+    def addPluginTab(self, plugin, active = False):
+        w, connParent = self.addTabPanel(self.tabWidget, plugin.name, plugin, None)
+        self.tabWidgets.append((w, plugin.id))
+        self.connParentWidgets.append(connParent)
+        if active:
+            self.tabWidget.setCurrentWidget(w)
+            plugin.onActive()
+
+    def addTabPanel(self, tabWidget, name, plugin, connectionWidget = None):
+        '''
+            @return panenl widget, connectionWidget parent
+        '''
+        contentWidget = QSplitter(Qt.Horizontal)
+        contentWidget.setProperty("class", "contentWrapper")
+        # contentWidget.setContentsMargins(5,5,5,5)
+        tabWidget.addTab(contentWidget, name)
+        mainWidget = plugin.onWidgetMain(contentWidget, self)
+
+        # widgets settings
+        settingWidget = QWidget()
+        settingWidget.setProperty("class","settingWidget")
+        settingLayout = QVBoxLayout()
+        settingWidget.setLayout(settingLayout)
+        #    connection settings
+        connSelectCommbox = ComboBox()
+        self.connSelectComboboxes.append(connSelectCommbox)
+        connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
+        connSettingsGroupBox = QGroupBox(_("Connection"))
+        layout = QVBoxLayout()
+        connSettingsGroupBox.setLayout(layout)
+        layout.addWidget(connSelectCommbox)
+        layout.setContentsMargins(1, 6, 0, 0)
+        connectionWidgetWrapper = QWidget()
+        layout2 = QVBoxLayout()
+        layout2.setContentsMargins(0, 0, 0, 0)
+        connectionWidgetWrapper.setLayout(layout2)
+        layout.addWidget(connectionWidgetWrapper)
+        if connectionWidget:
+            layout2.addWidget(connectionWidget)
+        settingLayout.addWidget(connSettingsGroupBox)
+        #  other settings
+        widget = plugin.onWidgetSettings(settingLayout)
+        if not widget is None:
+            settingLayout.addWidget(widget)
+        settingLayout.setContentsMargins(0,0,0,0)
+
+        # right functional layout
+        functionalWidget = plugin.onWidgetFunctional(contentWidget)
+        contentWidget.addWidget(settingWidget)
+        contentWidget.addWidget(mainWidget)
+        if not functionalWidget is None:
+            contentWidget.addWidget(functionalWidget)
+        contentWidget.setStretchFactor(0, 1)
+        contentWidget.setStretchFactor(1, 2)
+        contentWidget.setStretchFactor(2, 1)
+        return contentWidget, connectionWidgetWrapper
 
     def add_new_window(self):
         import copy
@@ -672,6 +769,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def toggleFunctional(self):
         widget = self.tabWidget.currentWidget().widget(2)
+        if widget is None:
+            return
         if widget.isVisible():
             self.hideFunctional()
         else:
@@ -679,13 +778,15 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def showFunctional(self):
         widget = self.tabWidget.currentWidget().widget(2)
-        widget.show()
+        if not widget is None:
+            widget.show()
         self.functionalButton.setStyleSheet(
             parameters.strStyleShowHideButtonRight.replace("$DataPath",self.DataPath))
 
     def hideFunctional(self):
         widget = self.tabWidget.currentWidget().widget(2)
-        widget.hide()
+        if not widget is None:
+            widget.hide()
         self.functionalButton.setStyleSheet(
             parameters.strStyleShowHideButtonLeft.replace("$DataPath", self.DataPath))
 

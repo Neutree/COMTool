@@ -683,18 +683,13 @@ class Plugin(Plugin_Base):
         if not self.id:
             raise ValueError(f"var id of Plugin {self} should be set")
 
-    def onInit(self, config, plugins):
+    def onInit(self, config):
         '''
             init params, DO NOT take too long time in this func
             @config dict type, just change this var's content,
                                when program exit, this config will be auto save to config file
         '''
         self.config = config
-        self.plugins = plugins
-        self.plugins_info = {}
-        for p in self.plugins:
-            if p.id in self.connChilds:
-                self.plugins_info[p.id] = p
 
     def onActive(self):
         pass
@@ -706,24 +701,14 @@ class Plugin(Plugin_Base):
         self.widget = Scroll_Terminal(self.send, self.resizeConnOutput, self.isConnected)
         return self.widget
 
-    def onWidgetSettings(self, parent):
-        self.settingWidget = QWidget()
-        self.settingWidget.hide()
-        return self.settingWidget
-
     def resizeConnOutput(self, w, h):
         if self.isConnected:
             self.ctrlConn("resize", (w, h))
 
-    def onWidgetFunctional(self, parent):
-        self.funcWidget = QWidget()
-        self.funcWidget.hide()
-        return self.funcWidget
-
     def onReceived(self, data : bytes):
         self.widget.onReceived(data)
-        for id in self.connChilds:
-            self.plugins_info[id].onReceived(data)
+        for plugin in self.connChilds:
+            plugin.onReceived(data)
 
     def onKeyPressEvent(self, event):
         pass

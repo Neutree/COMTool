@@ -58,8 +58,8 @@ class Plugin(Plugin_Base):
     defaultColor = None
     defaultBg = None
 
-    def onInit(self, config, plugins):
-        super().onInit(config, plugins)
+    def onInit(self, config):
+        super().onInit(config)
         self.keyControlPressed = False
         self.isScheduledSending = False
         self.config = config
@@ -367,7 +367,7 @@ class Plugin(Plugin_Base):
     def onSetColorChanged(self):
         self.config["color"] = self.receiveSettingsColor.isChecked()
 
-    def onSendHistoryIndexChanged(self):
+    def onSendHistoryIndexChanged(self, idx):
         self.sendArea.clear()
         self.sendArea.insertPlainText(self.sendHistory.currentText())
 

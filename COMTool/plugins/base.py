@@ -28,7 +28,7 @@ class Plugin_Base(QObject):
     '''
     # vars set by caller
     isConnected = lambda : False
-    send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None)
+    send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None), can call in UI thread directly
     ctrlConn = lambda k,v:None      # call ctrl func of connection
     hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
     clearCountSignal = None         # clearCountSignal.emit()
@@ -48,18 +48,13 @@ class Plugin_Base(QObject):
         if not self.id:
             raise ValueError(f"var id of Plugin {self} should be set")
 
-    def onInit(self, config, plugins):
+    def onInit(self, config):
         '''
             init params, DO NOT take too long time in this func
             @config dict type, just change this var's content,
                                when program exit, this config will be auto save to config file
         '''
         self.config = config
-        self.plugins = plugins
-        self.plugins_info = {}
-        for p in self.plugins:
-            if p.id in self.connChilds:
-                self.plugins_info[p.id] = p
 
     def onDel(self):
         pass
@@ -71,20 +66,29 @@ class Plugin_Base(QObject):
         pass
 
     def onWidgetMain(self, parent, rootWindow):
+        '''
+            main widget, just return a QWidget object
+        '''
         raise NotImplementedError()
 
     def onWidgetSettings(self, parent):
-        raise NotImplementedError()
+        '''
+            setting widget, just return a QWidget object or None
+        '''
+        return None
 
     def onWidgetFunctional(self, parent):
+        '''
+            functional widget, just return a QWidget object or None
+        '''
         return None
 
     def onReceived(self, data : bytes):
         '''
             call in receive thread, not UI thread
         '''
-        for id in self.connChilds:
-            self.plugins_info[id].onReceived(data)
+        for plugin in self.connChilds:
+            plugin.onReceived(data)
 
     def onKeyPressEvent(self, event):
         pass
@@ -104,9 +108,6 @@ class Plugin_Base(QObject):
             plugin active
         '''
         pass
-
-    def sendData(self, data_bytes=None, file_path=None):
-        self.send(data_bytes, file_path)
 
     def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False):
         objType = type(uiObj)

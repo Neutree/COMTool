@@ -184,15 +184,10 @@ class Plugin(Plugin_Base):
         if not self.id:
             raise ValueError(f"var id of Plugin {self} should be set")
 
-    def onInit(self, config, plugins):
+    def onInit(self, config):
         '''
             init params, DO NOT take too long time in this func
         '''
-        self.plugins = plugins
-        self.plugins_info = {}
-        for p in self.plugins:
-            if p.id in self.connChilds:
-                self.plugins_info[p.id] = p
         default = {
             "sendAscii" : True,
             "useCRLF" : False,
@@ -633,8 +628,8 @@ class Plugin(Plugin_Base):
             return
         if not data:
             return
-        for id in self.connChilds:
-            self.plugins_info[id].onReceived(data)
+        for plugin in self.connChilds:
+            plugin.onReceived(data)
         if type(data) != str:
             data = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], self.config["sendEscape"])
         self.showReceiveDataSignal.emit(data + "\n")

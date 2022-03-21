@@ -71,8 +71,21 @@ class Parameters:
         "encoding": "UTF-8",
         "skipVersion": None,
         "connId": "serial",
-        "plugins": [],          # enabled plugins ID
-        "activePlugin": "dbg" 
+        "pluginsInfo": {          # enabled plugins ID
+            "builtin": {
+                # "dbg": {
+                #     "enabled": True
+                # }
+            },
+            "external": {
+                # "myplugin2": {
+                #     "enabled": True,
+                #     # "package": "myplugin",  # package installed as a python package
+                #     "path": "E:\main\projects\COMTool\COMTool\plugins\myplugin2\myplugin2.py"
+                # }
+            }
+        },
+        "activePlugin": "dbg",
     }
     conns = {
         # "serial": {
