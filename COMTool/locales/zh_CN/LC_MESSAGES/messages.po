@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/Neutree/COMTool/issues\n"
-"POT-Creation-Date: 2022-03-18 19:39+0800\n"
+"POT-Creation-Date: 2022-03-29 23:02+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,93 +18,75 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:245 conn/conn_tcp_udp.py:530
-msgid "Connection"
-msgstr "连接"
+#: Main.py:91
+msgid "Load plugin from file"
+msgstr "从文件加载插件"
 
-#: Main.py:316 Main.py:517
-msgid "Sent"
-msgstr "已发送"
+#: Main.py:277
+msgid "Load plugin fail"
+msgstr "加载插件失败"
 
-#: Main.py:316 Main.py:317 Main.py:517 Main.py:518
-msgid "bytes"
-msgstr "字节"
+#: Main.py:319 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
+#: plugins/protocol.py:419 plugins/protocol.py:429
+msgid "Select file"
+msgstr "选择文件"
 
-#: Main.py:317 Main.py:518
-msgid "Received"
-msgstr "已接收"
+#: Main.py:321
+msgid "python script (*.py)"
+msgstr "python 脚本 (*.py)"
 
-#: Main.py:348
-msgid "New Window"
-msgstr "新窗口"
-
-#: Main.py:402 Main.py:407 Main.py:502 Main.py:513 Main.py:815
-#: conn/conn_serial.py:325 conn/conn_ssh.py:280 conn/conn_tcp_udp.py:400
-#: plugins/base.py:133 plugins/base.py:138 plugins/base.py:154
-#: plugins/base.py:191 plugins/base.py:209 plugins/dbg.py:504
-#: plugins/dbg.py:521 plugins/dbg.py:578 plugins/dbg.py:586
-#: plugins/protocol.py:444 plugins/protocol.py:632 plugins/protocol.py:646
+#: Main.py:325 Main.py:342 Main.py:555 Main.py:560 Main.py:1011
+#: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
+#: pluginItems.py:187 pluginItems.py:199 plugins/base.py:155
+#: plugins/base.py:160 plugins/base.py:176 plugins/base.py:213
+#: plugins/base.py:231 plugins/dbg.py:510 plugins/dbg.py:527 plugins/dbg.py:584
+#: plugins/dbg.py:592 plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
+#: plugins/protocol.py:440 plugins/protocol.py:632 plugins/protocol.py:646
 #: plugins/protocol.py:712
 msgid "Error"
 msgstr "错误"
 
-#: Main.py:502
-msgid "Open file failed!"
-msgstr "打开失败"
+#: Main.py:501
+msgid "New Window"
+msgstr "新窗口"
 
-#: Main.py:522
-msgid "Connected"
-msgstr "已连接"
-
-#: Main.py:524 parameters.py:31
-msgid "Closed"
-msgstr "已关闭"
-
-#: Main.py:526
-msgid "Connecting"
-msgstr "连接中"
-
-#: Main.py:528
-msgid "Connection lose"
-msgstr "连接丢失"
-
-#: Main.py:557 Main.py:566
+#: Main.py:734 Main.py:743
 msgid "Restart now?"
 msgstr "现在就重启？"
 
-#: Main.py:558
+#: Main.py:735
 msgid "language changed to: "
 msgstr "语言更改为: "
 
-#: Main.py:558
+#: Main.py:735
 msgid "Restart software to take effect now?"
 msgstr "现在就重启软件以生效？"
 
-#: Main.py:614 Main.py:615
+#: Main.py:792 Main.py:793
 msgid "Closing ..."
 msgstr "关闭中 ..."
 
-#: Main.py:703
+#: Main.py:899
 msgid "About"
 msgstr "关于"
 
-#: Main.py:712
+#: Main.py:908
 msgid "New versioin detected, please click learn more to download"
 msgstr "检测到了新版本， 请点击 了解更多 以下载"
 
-#: Main.py:713
+#: Main.py:909
 msgid "Learn More"
 msgstr "了解更多"
 
-#: Main.py:714
+#: Main.py:910
 msgid "Skip this version"
 msgstr "跳过此版本"
 
-#: Main.py:715
+#: Main.py:911
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: Main.py:716
+#: Main.py:912
 msgid "Need update"
 msgstr "需要更新"
 
@@ -125,12 +107,12 @@ msgid "See more details on"
 msgstr "更详细看这里"
 
 #: helpAbout.py:49
-msgid "Donate"
-msgstr "捐献"
-
-#: helpAbout.py:50
 msgid "Have problem? see"
 msgstr "有疑问？看"
+
+#: helpAbout.py:50
+msgid "Buy me half a cup of coffee"
+msgstr "感谢大爷赏赐半杯咖啡吧"
 
 #: helpAbout.py:51
 msgid "Shortcut:"
@@ -152,49 +134,25 @@ msgstr "清除发送区"
 msgid "Clear Receive Area"
 msgstr "清除接收区"
 
-#: parameters.py:27
-msgid "Receive"
-msgstr "接收"
+#: conn/conn_tcp_udp.py:534 pluginItems.py:87
+msgid "Connection"
+msgstr "连接"
 
-#: parameters.py:28 plugins/dbg.py:160
-msgid "Send Settings"
-msgstr "发送设置"
+#: pluginItems.py:187
+msgid "Open file failed!"
+msgstr "打开失败"
 
-#: parameters.py:29 plugins/dbg.py:131
-msgid "Receive Settings"
-msgstr "接收设置"
+#: widgets.py:532 widgets.py:553
+msgid "Received"
+msgstr "已接收"
 
-#: parameters.py:30
-msgid "Functional Send"
-msgstr "其它发送功能"
+#: widgets.py:532 widgets.py:533 widgets.py:553 widgets.py:560
+msgid "bytes"
+msgstr "字节"
 
-#: parameters.py:32
-msgid "Ready"
-msgstr "就绪"
-
-#: parameters.py:33
-msgid "HELP"
-msgstr "帮助"
-
-#: parameters.py:34
-msgid "ABOUT"
-msgstr "关于"
-
-#: parameters.py:35
-msgid "Settings"
-msgstr "设置"
-
-#: parameters.py:36
-msgid "Need Update"
-msgstr "需要更新"
-
-#: parameters.py:37
-msgid "update now?"
-msgstr "现在就更新？"
-
-#: parameters.py:38
-msgid "uninstall app"
-msgstr "卸载应用"
+#: widgets.py:533 widgets.py:560
+msgid "Sent"
+msgstr "已发送"
 
 #: conn/conn_serial.py:41
 msgid "Serial"
@@ -204,331 +162,350 @@ msgstr "串口"
 msgid "Custom, input baudrate"
 msgstr "自定义，输入波特率"
 
-#: conn/conn_serial.py:103 conn/conn_ssh.py:138 conn/conn_tcp_udp.py:108
+#: conn/conn_serial.py:107 conn/conn_ssh.py:144 conn/conn_tcp_udp.py:112
 msgid "Port"
 msgstr "端口"
 
-#: conn/conn_serial.py:104
+#: conn/conn_serial.py:108
 msgid "Baudrate"
 msgstr "波特率"
 
-#: conn/conn_serial.py:105
+#: conn/conn_serial.py:109
 msgid "DataBytes"
 msgstr "数据字节"
 
-#: conn/conn_serial.py:106
+#: conn/conn_serial.py:110
 msgid "Parity"
 msgstr "奇偶校验"
 
-#: conn/conn_serial.py:107
+#: conn/conn_serial.py:111
 msgid "Stopbits"
 msgstr "停止位"
 
-#: conn/conn_serial.py:108
+#: conn/conn_serial.py:112
 msgid "Flow control"
 msgstr "流控"
 
-#: conn/conn_serial.py:142 conn/conn_serial.py:143
+#: conn/conn_serial.py:146 conn/conn_serial.py:147
 msgid "Check to enable(usually output low level)"
 msgstr "选中以使能（通常会输出低电平）"
 
-#: conn/conn_serial.py:144 conn/conn_serial.py:289 conn/conn_serial.py:381
-#: conn/conn_ssh.py:152 conn/conn_ssh.py:235 conn/conn_ssh.py:323
-#: conn/conn_tcp_udp.py:133 conn/conn_tcp_udp.py:324 conn/conn_tcp_udp.py:432
+#: conn/conn_serial.py:148 conn/conn_serial.py:293 conn/conn_serial.py:385
+#: conn/conn_ssh.py:158 conn/conn_ssh.py:244 conn/conn_ssh.py:332
+#: conn/conn_tcp_udp.py:137 conn/conn_tcp_udp.py:328 conn/conn_tcp_udp.py:436
 msgid "OPEN"
 msgstr "打开"
 
-#: conn/conn_serial.py:197 conn/conn_serial.py:324
+#: conn/conn_serial.py:201 conn/conn_serial.py:328
 msgid "Open Failed"
 msgstr "打开失败"
 
-#: conn/conn_serial.py:384 conn/conn_serial.py:387 conn/conn_ssh.py:326
-#: conn/conn_ssh.py:329 conn/conn_tcp_udp.py:435 conn/conn_tcp_udp.py:438
+#: conn/conn_serial.py:388 conn/conn_serial.py:391 conn/conn_ssh.py:335
+#: conn/conn_ssh.py:338 conn/conn_tcp_udp.py:439 conn/conn_tcp_udp.py:442
 msgid "CLOSE"
 msgstr "关闭"
 
-#: conn/conn_serial.py:422 conn/conn_ssh.py:352 conn/conn_tcp_udp.py:490
+#: conn/conn_serial.py:426 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:494
 msgid "Reconnected"
 msgstr "已重连"
 
-#: conn/conn_serial.py:452 conn/conn_ssh.py:397 conn/conn_tcp_udp.py:549
+#: conn/conn_serial.py:456 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:553
 msgid "Connection lose!"
 msgstr "连接丢失！"
 
-#: conn/conn_ssh.py:137
+#: conn/conn_ssh.py:143
 msgid "Host"
 msgstr "主机"
 
-#: conn/conn_ssh.py:139
+#: conn/conn_ssh.py:145
 msgid "User"
 msgstr "用户"
 
-#: conn/conn_ssh.py:140
+#: conn/conn_ssh.py:146
 msgid "Password"
 msgstr "密码"
 
-#: conn/conn_ssh.py:141
+#: conn/conn_ssh.py:147
 msgid "SSH key"
 msgstr "SSH 公钥"
 
-#: conn/conn_ssh.py:142
+#: conn/conn_ssh.py:148
 msgid "Saved"
 msgstr "已保存"
 
-#: conn/conn_ssh.py:150
+#: conn/conn_ssh.py:156
 msgid "File"
 msgstr "文件"
 
-#: conn/conn_ssh.py:210
+#: conn/conn_ssh.py:215
 msgid "Input error"
 msgstr "输入错误"
 
-#: conn/conn_ssh.py:210
+#: conn/conn_ssh.py:215
 msgid "Input"
 msgstr "输入"
 
-#: conn/conn_ssh.py:210
+#: conn/conn_ssh.py:215
 msgid "error"
 msgstr "错误"
 
-#: conn/conn_ssh.py:223 plugins/dbg.py:396 plugins/dbg.py:410
-#: plugins/protocol.py:423 plugins/protocol.py:433
-msgid "Select file"
-msgstr "选择文件"
-
-#: conn/conn_ssh.py:225 plugins/dbg.py:398
+#: conn/conn_ssh.py:234 plugins/dbg.py:404
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: conn/conn_ssh.py:279 conn/conn_tcp_udp.py:399
+#: conn/conn_ssh.py:288 conn/conn_tcp_udp.py:403
 msgid "Connect Failed"
 msgstr "连接失败"
 
-#: conn/conn_ssh.py:290
+#: conn/conn_ssh.py:299
 msgid "Config error"
 msgstr "配置错误"
 
-#: conn/conn_ssh.py:317
+#: conn/conn_ssh.py:326
 msgid "SSH pub key file path error"
 msgstr "SSH 公钥文件路径错误"
 
-#: conn/conn_ssh.py:379 conn/conn_tcp_udp.py:510
+#: conn/conn_ssh.py:388 conn/conn_tcp_udp.py:514
 msgid "Closed by peer"
 msgstr "对方主动关闭连接"
 
-#: conn/conn_ssh.py:384 conn/conn_tcp_udp.py:534
+#: conn/conn_ssh.py:393 conn/conn_tcp_udp.py:538
 msgid "Connection closed!"
 msgstr "连接已关闭！"
 
-#: conn/conn_tcp_udp.py:103
+#: conn/conn_tcp_udp.py:107
 msgid "Protocol"
 msgstr "协议"
 
-#: conn/conn_tcp_udp.py:104
+#: conn/conn_tcp_udp.py:108
 msgid "Mode"
 msgstr "模式"
 
-#: conn/conn_tcp_udp.py:105
+#: conn/conn_tcp_udp.py:109
 msgid "Target"
 msgstr "目标"
 
-#: conn/conn_tcp_udp.py:128 conn/conn_tcp_udp.py:247
+#: conn/conn_tcp_udp.py:132 conn/conn_tcp_udp.py:251
 msgid "All clients"
 msgstr "所有客户端"
 
-#: conn/conn_tcp_udp.py:129
+#: conn/conn_tcp_udp.py:133
 msgid "Disconnect"
 msgstr "断开连接"
 
-#: conn/conn_tcp_udp.py:130
+#: conn/conn_tcp_udp.py:134
 msgid "Auto reconnect"
 msgstr "自动重连"
 
-#: conn/conn_tcp_udp.py:362 conn/conn_tcp_udp.py:482 conn/conn_tcp_udp.py:576
+#: conn/conn_tcp_udp.py:366 conn/conn_tcp_udp.py:486 conn/conn_tcp_udp.py:580
 msgid "Target error"
 msgstr "目标错误"
 
-#: conn/conn_tcp_udp.py:459
+#: conn/conn_tcp_udp.py:463
 msgid "Client connected:"
 msgstr "客户端已连接"
 
-#: conn/conn_tcp_udp.py:530
+#: conn/conn_tcp_udp.py:534
 msgid "closed!"
 msgstr "已关闭!"
 
-#: plugins/base.py:154
+#: plugins/base.py:68
+msgid "Connected"
+msgstr "已连接"
+
+#: plugins/base.py:70
+msgid "Closed"
+msgstr "已关闭"
+
+#: plugins/base.py:72
+msgid "Connecting"
+msgstr "连接中"
+
+#: plugins/base.py:74
+msgid "Connection lose"
+msgstr "连接丢失"
+
+#: plugins/base.py:176
 msgid "Format error, should be like 00 01 02 03"
 msgstr "格式错误，格式应该应该如 00 01 02 03"
 
-#: plugins/base.py:191 plugins/base.py:209
+#: plugins/base.py:213 plugins/base.py:231
 msgid "Escape is on, but escape error:"
 msgstr "转移符支持已打开，但是转义时错误"
 
-#: plugins/dbg.py:48
+#: plugins/dbg.py:51
 msgid "Send Receive"
 msgstr "收发"
 
-#: plugins/dbg.py:132 plugins/dbg.py:161 plugins/protocol.py:382
+#: plugins/dbg.py:134
+msgid "Receive Settings"
+msgstr "接收设置"
+
+#: plugins/dbg.py:135 plugins/dbg.py:164 plugins/protocol.py:379
 msgid "ASCII"
 msgstr "ASCII"
 
-#: plugins/dbg.py:133
+#: plugins/dbg.py:136
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "使用可见字符显示收到的数据，在右上角选择解码的方法"
 
-#: plugins/dbg.py:134 plugins/dbg.py:162 plugins/protocol.py:383
+#: plugins/dbg.py:137 plugins/dbg.py:165 plugins/protocol.py:380
 msgid "HEX"
 msgstr "HEX"
 
-#: plugins/dbg.py:135
+#: plugins/dbg.py:138
 msgid "Show recived data as hex format"
 msgstr "使用十六进制表示方法显示收到的数据"
 
-#: plugins/dbg.py:137
+#: plugins/dbg.py:140
 msgid ""
 "Auto\n"
 "Linefeed\n"
 "ms"
 msgstr "自动换行"
 
-#: plugins/dbg.py:138 plugins/dbg.py:141
+#: plugins/dbg.py:141 plugins/dbg.py:144
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超过这个时间自动换行，单位：ms"
 
-#: plugins/dbg.py:144
+#: plugins/dbg.py:147
 msgid "Timestamp"
 msgstr "时间戳"
 
-#: plugins/dbg.py:145
+#: plugins/dbg.py:148
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr "在收到的数据前添加时间戳， 会自动使能自动换行"
 
-#: plugins/dbg.py:146
+#: plugins/dbg.py:149
 msgid "Color"
 msgstr "颜色"
 
-#: plugins/dbg.py:147
+#: plugins/dbg.py:150
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "使能 unix 终端颜色支持，比如：\\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:163 plugins/protocol.py:384
+#: plugins/dbg.py:163
+msgid "Send Settings"
+msgstr "发送设置"
+
+#: plugins/dbg.py:166 plugins/protocol.py:381
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可见字符的方式获取将要发送的数据，在右上角选择编码的方法"
 
-#: plugins/dbg.py:164 plugins/protocol.py:385
+#: plugins/dbg.py:167 plugins/protocol.py:382
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六进制的格式获取将要发送的数据，比如 十六进制的'31 32 33' 和 ascii编码的 '123' 等效"
 
-#: plugins/dbg.py:166
+#: plugins/dbg.py:169
 msgid ""
 "Timed Send\n"
 "ms"
 msgstr "定时发送"
 
-#: plugins/dbg.py:167 plugins/dbg.py:170
+#: plugins/dbg.py:170 plugins/dbg.py:173
 msgid "Timed send, unit: ms"
 msgstr "定时发送，单位：ms"
 
-#: plugins/dbg.py:173 plugins/protocol.py:387
+#: plugins/dbg.py:176 plugins/protocol.py:384
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:174 plugins/protocol.py:388
+#: plugins/dbg.py:177 plugins/protocol.py:385
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "选中发送 \\r\\n 而不是 \\n"
 
-#: plugins/dbg.py:176 plugins/protocol.py:54 plugins/protocol.py:117
+#: plugins/dbg.py:179 plugins/protocol.py:56 plugins/protocol.py:119
 msgid "Record"
 msgstr "记录"
 
-#: plugins/dbg.py:177
+#: plugins/dbg.py:180
 msgid "Record send data"
 msgstr "记录发送的数据"
 
-#: plugins/dbg.py:178 plugins/protocol.py:390
+#: plugins/dbg.py:181 plugins/protocol.py:387
 msgid "Escape"
 msgstr "转义符"
 
-#: plugins/dbg.py:179 plugins/protocol.py:391
+#: plugins/dbg.py:182 plugins/protocol.py:388
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "使能转义字符支持，比如 \\t \\r \\n \\x01 \\001"
 
-#: plugins/dbg.py:180
+#: plugins/dbg.py:183
 msgid "Newline"
 msgstr "新行"
 
-#: plugins/dbg.py:181
+#: plugins/dbg.py:184
 msgid "Auto add new line when send"
 msgstr "发送时自动添加回车符"
 
-#: plugins/dbg.py:210
+#: plugins/dbg.py:212
 msgid "Auto line feed value error, must be integer"
 msgstr "自动换行值错误，必须是整数"
 
-#: plugins/dbg.py:211
+#: plugins/dbg.py:213
 msgid "Timed send value error, must be integer"
 msgstr "定时发送值错误，必须是整数"
 
-#: plugins/dbg.py:221
+#: plugins/dbg.py:223
 msgid "Open File"
 msgstr "打开文件"
 
-#: plugins/dbg.py:222
+#: plugins/dbg.py:224
 msgid "Send File"
 msgstr "发送文件"
 
-#: plugins/dbg.py:223
+#: plugins/dbg.py:225
 msgid "Clear History"
 msgstr "清除历史"
 
-#: plugins/dbg.py:226
+#: plugins/dbg.py:228
 msgid "Sendding File"
 msgstr "发送文件中"
 
-#: plugins/dbg.py:232
+#: plugins/dbg.py:234
 msgid "Save log"
 msgstr "保存日志"
 
-#: plugins/dbg.py:235
+#: plugins/dbg.py:237
 msgid "Cutom send"
 msgstr "自定义发送"
 
-#: plugins/dbg.py:266
+#: plugins/dbg.py:268
 msgid "Log path"
 msgstr "日志路径"
 
-#: plugins/dbg.py:349 plugins/dbg.py:507 plugins/protocol.py:734
+#: plugins/dbg.py:354 plugins/dbg.py:513 plugins/protocol.py:734
 #: plugins/protocol.py:756
 msgid "Warning"
 msgstr "警告"
 
-#: plugins/dbg.py:349
+#: plugins/dbg.py:354
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "当时间戳和记录发送时，自动换行需要打开"
 
-#: plugins/dbg.py:377 plugins/protocol.py:65 plugins/protocol.py:83
+#: plugins/dbg.py:382 plugins/protocol.py:67 plugins/protocol.py:85
 msgid "OK"
 msgstr "完成"
 
-#: plugins/dbg.py:377
+#: plugins/dbg.py:382
 msgid "History cleared!"
 msgstr "历史已清除"
 
-#: plugins/dbg.py:382
+#: plugins/dbg.py:387
 msgid "Send file"
 msgstr "发送文件"
 
-#: plugins/dbg.py:412
+#: plugins/dbg.py:418
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr "日志文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
 
-#: plugins/dbg.py:504
+#: plugins/dbg.py:510
 msgid ""
 "File path error\n"
 "path"
@@ -536,104 +513,116 @@ msgstr ""
 "文件路径错误\n"
 "路径"
 
-#: plugins/dbg.py:507
+#: plugins/dbg.py:513
 msgid "Connect first please"
 msgstr "请先连接"
 
-#: plugins/dbg.py:510
+#: plugins/dbg.py:516
 msgid "Sending file"
 msgstr "发送文件中"
 
-#: plugins/dbg.py:521
+#: plugins/dbg.py:527
 msgid "Time format error"
 msgstr "时间格式错误"
 
-#: plugins/dbg.py:578
+#: plugins/dbg.py:584
 msgid "Send Error"
 msgstr "发送出错"
 
-#: plugins/dbg.py:586
+#: plugins/dbg.py:592
 msgid "get data error"
 msgstr "获取数据错误"
 
-#: plugins/protocol.py:46
+#: plugins/myplugin.py:22
+msgid "my plugin"
+msgstr ""
+
+#: plugins/myplugin.py:43 plugins/myplugin2/myplugin2.py:43
+msgid "Send"
+msgstr "发送"
+
+#: plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
+msgid "Input data first please"
+msgstr "请先输入数据"
+
+#: plugins/protocol.py:48
 msgid "Input remark"
 msgstr "输入标记"
 
-#: plugins/protocol.py:58 plugins/protocol.py:83
+#: plugins/protocol.py:60 plugins/protocol.py:85
 msgid "Select icon"
 msgstr "选择文件"
 
-#: plugins/protocol.py:60
+#: plugins/protocol.py:62
 msgid "Shortcut"
 msgstr "快捷键"
 
-#: plugins/protocol.py:62
+#: plugins/protocol.py:64
 msgid "Press key to record, or click Cancel"
 msgstr "按键以记录，或点击取消按钮"
 
-#: plugins/protocol.py:66 plugins/protocol.py:105
+#: plugins/protocol.py:68 plugins/protocol.py:107
 msgid "Cancel"
 msgstr "取消"
 
-#: plugins/protocol.py:175
+#: plugins/protocol.py:176
 msgid "protocol"
 msgstr "协议"
 
-#: plugins/protocol.py:274
+#: plugins/protocol.py:271
 msgid "Key mode"
 msgstr "按键模式"
 
-#: plugins/protocol.py:360
+#: plugins/protocol.py:357
 msgid "En-decoding settings"
 msgstr "发送设置"
 
-#: plugins/protocol.py:364
+#: plugins/protocol.py:361
 msgid "Custom, input name"
 msgstr "自定义，输入名字"
 
-#: plugins/protocol.py:365
+#: plugins/protocol.py:362
 msgid "Load defaults"
 msgstr "加载默认项"
 
-#: plugins/protocol.py:368 plugins/protocol.py:700 plugins/protocol.py:724
+#: plugins/protocol.py:365 plugins/protocol.py:700 plugins/protocol.py:724
 #: plugins/protocol.py:727 plugins/protocol.py:747
 msgid "Save"
 msgstr "保存"
 
-#: plugins/protocol.py:370
+#: plugins/protocol.py:367
 msgid "Delete"
 msgstr "删除"
 
-#: plugins/protocol.py:374
+#: plugins/protocol.py:371
 msgid "Defaults"
 msgstr "默认项"
 
-#: plugins/protocol.py:376
+#: plugins/protocol.py:373
 msgid "Code"
 msgstr "代码"
 
-#: plugins/protocol.py:380
+#: plugins/protocol.py:377
 msgid "Send settings"
 msgstr "发送设置"
 
-#: plugins/protocol.py:413
+#: plugins/protocol.py:409
 msgid "Load config"
 msgstr "加载配置"
 
-#: plugins/protocol.py:414
+#: plugins/protocol.py:410
 msgid "Share config"
 msgstr "分享配置"
 
-#: plugins/protocol.py:425 plugins/protocol.py:435
+#: plugins/protocol.py:421 plugins/protocol.py:431
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
 
-#: plugins/protocol.py:444
+#: plugins/protocol.py:440
 msgid "config file format error"
 msgstr "配置文件格式错误"
 
-#: plugins/protocol.py:452
+#: plugins/protocol.py:448
 msgid "Restart to load config?"
 msgstr "重启以加载配置"
 
@@ -661,7 +650,41 @@ msgstr "请先输入代码存档名"
 msgid "Please select a code profile name first to delete"
 msgstr "请先选择要删除的存档名"
 
-#: plugins/terminal.py:674
+#: plugins/terminal.py:676
 msgid "terminal"
 msgstr "终端"
+
+#: plugins/myplugin2/myplugin2.py:22
+msgid "my plugin2"
+msgstr ""
+
+#~ msgid "Donate"
+#~ msgstr "捐献"
+
+#~ msgid "Receive"
+#~ msgstr "接收"
+
+#~ msgid "Functional Send"
+#~ msgstr "其它发送功能"
+
+#~ msgid "Ready"
+#~ msgstr "就绪"
+
+#~ msgid "HELP"
+#~ msgstr "帮助"
+
+#~ msgid "ABOUT"
+#~ msgstr "关于"
+
+#~ msgid "Settings"
+#~ msgstr "设置"
+
+#~ msgid "Need Update"
+#~ msgstr "需要更新"
+
+#~ msgid "update now?"
+#~ msgstr "现在就更新？"
+
+#~ msgid "uninstall app"
+#~ msgstr "卸载应用"
 

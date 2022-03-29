@@ -647,6 +647,7 @@ class Scroll_Terminal(QWidget):
         self.setLayout(layout)
         layout.addWidget(self.terminal)
         layout.addWidget(self.scrollBar)
+        self.resize(self.terminal.size())
 
     def onReceived(self, data):
         self.terminal.onReceived(data)
@@ -666,7 +667,6 @@ class Plugin(Plugin_Base):
     isConnected = lambda : False
     send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None)
     hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
-    clearCountSignal = None         # clearCountSignal.emit()
     reloadWindowSignal = None       # reloadWindowSignal.emit(title, msg, callback(close or not)), reload window to load new configs
     configGlobal = {}
     # other vars
@@ -697,7 +697,7 @@ class Plugin(Plugin_Base):
     def onDel(self):
         pass
 
-    def onWidgetMain(self, parent, rootWindow):
+    def onWidgetMain(self, parent):
         self.widget = Scroll_Terminal(self.send, self.resizeConnOutput, self.isConnected)
         return self.widget
 
@@ -727,6 +727,7 @@ class Plugin(Plugin_Base):
         '''
             call in UI thread, be carefully!!
         '''
+        super().onConnChanged(status, msg)
         if status == ConnectionStatus.CONNECTED:
             # set pty size when first connect
             self.widget.terminal.resizeEvent("")

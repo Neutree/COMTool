@@ -21,4 +21,5 @@ comtool.*.json
 *.tar.xz
 *.dmg
 *.zip
-
+*.log
+config.*.json

@@ -6,3 +6,4 @@ qtawesome
 paramiko
 pyte
 pyperclip
+coloredlogs

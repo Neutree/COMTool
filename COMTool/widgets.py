@@ -1,3 +1,5 @@
+from audioop import add
+import ctypes
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow, QComboBox, QListView
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent
@@ -7,9 +9,12 @@ import os, sys
 try:
     import utils_ui
     from Combobox import ComboBox
+    from i18n import _
 except Exception:
     from COMTool import utils_ui
     from COMTool.Combobox import ComboBox
+    from COMTool.i18n import _
+
 
 class TitleBar(QWidget):
     def __init__(self, parent, icon=None, title="", height=35,
@@ -275,6 +280,12 @@ class CustomTitleBarWindowMixin:
         self.root.setMouseTracking(True)
         self.titleBar.setMouseTracking(True)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinimizeButtonHint)
+        if sys.platform == "win32":
+            try:
+                from win32_utils import addShadowEffect
+            except Exception:
+                from COMTool.win32_utils import addShadowEffect
+            addShadowEffect(self.winId())
         self.init_vars()
 
     def changeEvent(self, event):
@@ -489,6 +500,15 @@ class ButtonCombbox(QWidget):
     def addItem(self, item):
         self.list.addItem(item)
 
+    def insertItem(self, idx, item):
+        self.list.insertItem(idx, item)
+
+    def count(self):
+        return self.list.count()
+
+    def findText(self, text):
+        return self.list.findText(text)
+
     def currentIndex(self):
         return self.list.currentIndex()
 
@@ -497,6 +517,60 @@ class ButtonCombbox(QWidget):
 
     def currentText(self):
         return self.list.currentText()
+
+class statusBar(QWidget):
+    updateUiSignal = pyqtSignal(str, str)
+    def __init__(self, rxTxCount = False):
+        super().__init__()
+        self.rxTxCount = rxTxCount
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        self.msg = QLabel()
+        layout.addWidget(self.msg)
+        if rxTxCount:
+            self.rx = QLabel('{}({}): {}'.format(_("Received"), _("bytes"), 0))
+            self.tx = QLabel('{}({}): {}'.format(_("Sent"), _("bytes"), 0))
+            layout.addWidget(self.tx)
+            layout.addWidget(self.rx)
+        self.updateUiSignal.connect(self._updateUi)
+        self.setProperty("class", "statusBar")
+        self.rxCount = 0
+        self.txCount = 0
+
+    def _updateUi(self, updateType, msg):
+        if updateType == "rx":
+            self.rx.setText(msg)
+        elif updateType == "tx":
+            self.tx.setText(msg)
+        elif updateType == "msg":
+            self.msg.setText(msg)
+
+    def addRx(self, count):
+        if not self.rxTxCount:
+            return
+        self.rxCount += count
+        msg = '{}({}): {}'.format(_("Received"), _("bytes"), self.rxCount)
+        self.updateUiSignal.emit("rx", msg)
+
+    def addTx(self, count):
+        if not self.rxTxCount:
+            return
+        self.rxCount += count
+        msg = '{}({}): {}'.format(_("Sent"), _("bytes"), self.rxCount)
+        self.updateUiSignal.emit("tx", msg)
+
+    def setMsg(self, level, msg):
+        if level == "info":
+            color = "#008200"
+        elif level == "warning":
+            color = "#fb8c00"
+        elif level == "error":
+            color = "#f44336"
+        else:
+            color = "#008200"
+        msg = '<font color={}>{}</font>'.format(color, msg)
+        self.updateUiSignal.emit("msg", msg)
 
 if __name__ == "__main__":
     import sys

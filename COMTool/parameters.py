@@ -1,9 +1,13 @@
-import sys, os
+import shutil
+import sys, os, time
 import json
+
 try:
     from i18n import _, set_locale
+    from logger import Logger
 except ImportError:
     from COMTool.i18n import _, set_locale
+    from COMTool.logger import Logger
 
 appName = "COMTool"
 appIcon = "assets/logo.png"
@@ -20,23 +24,6 @@ encodings = ["ASCII", "UTF-8", "UTF-16", "GBK", "GB2312", "GB18030"]
 customSendItemHeight = 40
 
 author = "Neucrack"
-
-class Strings:
-    def __init__(self, locale):
-        set_locale(locale)
-        self.strReceive = _("Receive")
-        self.strSendSettings = _("Send Settings")
-        self.strReceiveSettings = _("Receive Settings")
-        self.strFunctionalSend = _("Functional Send")
-        self.strClosed = _("Closed")
-        self.strReady = _("Ready")
-        self.strHelp = _("HELP")
-        self.strAbout = _("ABOUT")
-        self.strSettings = _("Settings")
-        self.strNeedUpdate = _("Need Update")
-        self.strUpdateNow = _("update now?")
-        self.strUninstallApp = _("uninstall app")
-
 
 def get_config_path(configFileName):
     configFilePath = configFileName
@@ -55,17 +42,17 @@ if sys.platform.startswith('linux') or sys.platform.startswith('darwin') or sys.
     configFileDir = os.path.join(os.getenv("HOME"), ".config/comtool")
     configFilePath = get_config_path(configFileName)
 else:
-    files = os.listdir(os.getcwd())
-    if "comtool.exe" in files:
-        configFilePath  = os.path.join(os.getcwd(), configFileName)
-    else:
-        configFilePath = get_config_path(configFileName)
+    configFileDir = os.path.abspath(os.getcwd())
+    configFilePath  = os.path.join(configFileDir, configFileName)
 
-print("-- config path:", configFilePath)
+logPath = os.path.join(configFileDir, "run.log")
+log = Logger(file_path=logPath)
+log.i("Config path:", configFilePath)
+log.i("Log path:", logPath)
 
 
 class Parameters:
-    basic = {
+    config = {
         "skin": "light",
         "locale": "en",
         "encoding": "UTF-8",
@@ -74,65 +61,58 @@ class Parameters:
         "pluginsInfo": {          # enabled plugins ID
             "builtin": {
                 # "dbg": {
-                #     "enabled": True
                 # }
             },
             "external": {
                 # "myplugin2": {
-                #     "enabled": True,
                 #     # "package": "myplugin",  # package installed as a python package
                 #     "path": "E:\main\projects\COMTool\COMTool\plugins\myplugin2\myplugin2.py"
                 # }
             }
         },
-        "activePlugin": "dbg",
-    }
-    conns = {
-        # "serial": {
-        # },
-        # "tcpudp": {
-        # }
-    }
-    plugins = {
-        # "dbg": {
-        # },
-    }
+        "activeItem": "dbg-1",
+        "items": [
+            # {
+            #     "itemId": "dbg-1",
+            #     "pluginId": "dbg",
+            #     "config": {
+            #         "conns": {
 
+            #         },
+            #         "plugin": {
+
+            #         }
+            #     }
+            # }
+        ]
+    }
 
     def save(self, path):
         path = os.path.abspath(path)
-        obj = {}
-        for k in Parameters.__dict__.keys():
-            if k.startswith("__"):
-                continue
-            v = getattr(self, k)
-            if callable(v):
-                continue
-            obj[k] = v
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(obj, f, indent=4, ensure_ascii=False)
+            json.dump(self.config, f, indent=4, ensure_ascii=False)
 
     def load(self, path):
         if not os.path.exists(path):
             return
         with open(path, encoding="utf-8") as f:
-            obj = json.load(f)
-        if "basic" in obj:
-            self.basic.update(obj["basic"])
-        if "conns" in obj:
-            self.conns.update(obj["conns"])
-        if "plugins" in obj:
-            self.plugins.update(obj["plugins"])
+            config = json.load(f)
+            if not "basic" in config:
+                self.config = config
+            else: # for old config, just backup
+                shutil.copyfile(path, "{}.bak.{:.3f}.json".format(path, time.time()))
+        return
+
+    def __getitem__(self, idx):
+        return self.config[idx]
+
+    def __setitem__(self, idx, v):
+        self.config[idx] = v
 
     def __str__(self) -> str:
-        obj = {
-            "basic": self.basic,
-            "conns": self.conns,
-            "plugins": self.plugins
-        }
-        return json.dumps(obj)
+        return json.dumps(self.config)
         
 
 strStyleShowHideButtonLeft = '''

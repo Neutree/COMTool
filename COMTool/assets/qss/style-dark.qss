@@ -412,6 +412,34 @@ QTabWidget::tab-bar {
    alignment: left;
 }
 
+QTabBar::close-button {
+    subcontrol-position: right;
+    border-radius: 7px;
+    background: #a13c3c;
+    image: url("$DataPath/assets/close.png")
+}
+QTabBar::close-button:hover {
+    background: #8b1c1c;
+    image: url("$DataPath/assets/close.png")
+}
+QTabBar QToolButton {
+    border-radius: 3px;
+    background-color: #0865b1;
+}
+QTabBar QToolButton:hover {
+    background-color: #114977;
+}
+QTabBar QToolButton:disabled {
+    background-color: #242b31;
+}
+QTabBar QToolButton::right-arrow { /* the arrow mark in the tool buttons */
+    image: url("$DataPath/assets/right.png")
+}
+
+QTabBar QToolButton::left-arrow {
+    image: url("$DataPath/assets/left.png")
+}
+
 /* Style the tab using the tab sub-control. Note that
     it reads QTabBar _not_ QTabWidget */
 QTabBar::tab {
@@ -421,7 +449,7 @@ QTabBar::tab {
     border-bottom: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    min-width: 8ex;
+    min-width: 22ex;
     min-height: 34px;
     padding-left: 2ex;
     padding-right: 2ex;

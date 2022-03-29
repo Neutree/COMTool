@@ -1,8 +1,10 @@
 try:
     import version
+    import parameters
 except ImportError:
     from COMTool import version, parameters
 
+log = parameters.log
 
 class AutoUpdate:
     updateUrl = "https://github.com/Neutree/COMTool/releases"
@@ -11,7 +13,7 @@ class AutoUpdate:
     def detectNewVersion(self):
         need, v = self.checkUpdate_neucrack() # github api may change, but this will not
         if not v:
-            print("get version info from neucrack fail, now get from github")
+            log.i("get version info from neucrack fail, now get from github")
             need , v = self.checkUpdate_github()
         return need, v
     
@@ -21,7 +23,7 @@ class AutoUpdate:
         try:
             page = requests.get(self.releaseApiUrl)
             if page.status_code != 200:
-                print("request {} fail, check update fail!".format(self.releaseApiUrl))
+                log.i("request {} fail, check update fail!".format(self.releaseApiUrl))
                 return False, None
             releases = json.loads(page.content)
             releasesInfo = []
@@ -41,7 +43,7 @@ class AutoUpdate:
             import traceback
             traceback.print_exc()
             return False, None
-        print("Already latest version!")
+        log.i("Already latest version!")
         return False, latest
 
     def checkUpdate_neucrack(self):
@@ -50,7 +52,7 @@ class AutoUpdate:
         try:
             page = requests.post(self.releaseApiUrl2)
             if page.status_code != 200:
-                print("request {} fail, check update fail!".format(self.releaseApiUrl))
+                log.i("request {} fail, check update fail!".format(self.releaseApiUrl))
                 return False, None
             release = json.loads(page.content)
             latest.load_dict(release)
@@ -60,7 +62,7 @@ class AutoUpdate:
             import traceback
             traceback.print_exc()
             return False, None
-        print("Already latest version!")
+        log.i("Already latest version!")
         return False, latest
 
     def decodeTag(self, tag, name, body):

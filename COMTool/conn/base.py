@@ -58,6 +58,9 @@ class COMM(QObject):
     def isConnected(self):
         raise NotImplementedError()
 
+    def disconnect(self):
+        raise NotImplementedError()
+
     def getConfig(self):
         '''
             get config, dict type

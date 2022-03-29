@@ -8,11 +8,13 @@ try:
     from i18n import _
     import utils, parameters
     from conn.base import ConnectionStatus
+    from widgets import statusBar
 except ImportError:
     from COMTool import utils, parameters
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
     from COMTool.conn.base import  ConnectionStatus
+    from COMTool.widgets import statusBar
 
 class Plugin_Base(QObject):
     '''
@@ -27,11 +29,10 @@ class Plugin_Base(QObject):
             onDel
     '''
     # vars set by caller
-    isConnected = lambda : False
-    send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None), can call in UI thread directly
-    ctrlConn = lambda k,v:None      # call ctrl func of connection
+    isConnected = lambda o: False
+    send = lambda o,x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None), can call in UI thread directly
+    ctrlConn = lambda o,k,v:None      # call ctrl func of connection
     hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
-    clearCountSignal = None         # clearCountSignal.emit()
     reloadWindowSignal = None       # reloadWindowSignal.emit(title, msg, callback(close or not)), reload window to load new configs
     configGlobal = {}
     # other vars
@@ -63,9 +64,18 @@ class Plugin_Base(QObject):
         '''
             call in UI thread, be carefully!!
         '''
-        pass
+        if status == ConnectionStatus.CONNECTED:
+            self.statusBar.setMsg("info", '{} {}'.format(_("Connected"), msg))
+        elif status == ConnectionStatus.CLOSED:
+            self.statusBar.setMsg("info", '{} {}'.format(_("Closed"), msg))
+        elif status == ConnectionStatus.CONNECTING:
+            self.statusBar.setMsg("info", '{} {}'.format(_("Connecting"), msg))
+        elif status == ConnectionStatus.LOSE:
+            self.statusBar.setMsg("warning", '{} {}'.format(_("Connection lose"), msg))
+        else:
+            self.statusBar.setMsg("warning", msg)
 
-    def onWidgetMain(self, parent, rootWindow):
+    def onWidgetMain(self, parent):
         '''
             main widget, just return a QWidget object
         '''
@@ -82,6 +92,10 @@ class Plugin_Base(QObject):
             functional widget, just return a QWidget object or None
         '''
         return None
+
+    def onWidgetStatusBar(self, parent):
+        self.statusBar = statusBar(rxTxCount=False)
+        return self.statusBar
 
     def onReceived(self, data : bytes):
         '''

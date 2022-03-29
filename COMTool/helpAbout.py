@@ -27,8 +27,8 @@ def strAbout():
 </div>
 {}<br>
 {} <b><a style="color:#009688;" href="https://github.com/neutree/COMTool">Github</a></b><br>
-{} <b><a style="color:#009688;" href="https://neucrack.com/donate"> neucrack.com/donate</a></b><br>
-{} <b><a style="color:#009688;" href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br><br>
+{} <b><a style="color:#009688;" href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br><br><br>
+{} <b><a style="color:#009688;" href="https://neucrack.com/donate"> neucrack.com/donate</a></b><br><br>
 {}<br>
  <b style="color:#ef5350;"><kbd>F11</kbd></b>: {}<br>
  <b style="color:#ef5350;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
@@ -46,8 +46,8 @@ def strAbout():
     '{}/{}'.format(parameters.dataPath, parameters.appLogo2),
     _('Welcome to improve it together'),
     _('See more details on'),
-    _("Donate"),
     _("Have problem? see"),
+    _("Buy me half a cup of coffee"),
     _('Shortcut:'),
     _('Full screen'),
     _('Send data'),

@@ -25,14 +25,14 @@ class Plugin(Plugin_Base):
     def onConnChanged(self, status:ConnectionStatus, msg:str):
         print("-- connection changed: {}, msg: {}".format(status, msg))
 
-    def onWidgetMain(self, parent, rootWindow):
+    def onWidgetMain(self, parent):
         '''
             main widget, just return a QWidget object
         '''
         self.widget = QWidget()
         layout = QVBoxLayout()
         # receive widget
-        self.receiveArea = QTextEdit("data")
+        self.receiveArea = QTextEdit("")
         font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
         self.receiveArea.setFont(font)
         self.receiveArea.setLineWrapMode(QTextEdit.NoWrap)

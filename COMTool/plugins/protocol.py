@@ -13,12 +13,14 @@ try:
     from widgets import TextEdit, PlainTextEdit
     import utils_ui
     from qta_icon_browser import selectIcon
+    from widgets import statusBar
 except ImportError:
     from COMTool import parameters, utils_ui
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
     from COMTool.widgets import TextEdit, PlainTextEdit
     from COMTool.qta_icon_browser import selectIcon
+    from COMTool.widgets import statusBar
 
 try:
     from base import Plugin_Base
@@ -166,7 +168,6 @@ class Plugin(Plugin_Base):
     isConnected = lambda : False
     send = lambda x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None)
     hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
-    clearCountSignal = None         # clearCountSignal.emit()
     configGlobal = {}
     # other vars
     connParent = "dbg"       # parent id
@@ -178,6 +179,7 @@ class Plugin(Plugin_Base):
     active  = False          # using this plugin
 
     showReceiveDataSignal = pyqtSignal(str)
+    clearCountSignal = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -258,7 +260,7 @@ class Plugin(Plugin_Base):
         def focusOutEvent(self, event):
             self.onFocusOut.emit(event)
 
-    def onWidgetMain(self, parent, rootWindow):
+    def onWidgetMain(self, parent):
         self.mainWidget = QSplitter(Qt.Vertical)
         self.receiveWidget = TextEdit()
         font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
@@ -402,7 +404,6 @@ class Plugin(Plugin_Base):
         return root
 
     def onWidgetFunctional(self, parent):
-        self.funcParent = parent
         self.funcWidget = QWidget()
         layout0 = QVBoxLayout()
         loadConfigBtn = QPushButton(_("Load config"))
@@ -450,6 +451,10 @@ class Plugin(Plugin_Base):
         loadConfigBtn.clicked.connect(lambda : selectLoadfile())
         shareConfigBtn.clicked.connect(lambda : selectSharefile())
         return self.funcWidget
+
+    def onWidgetStatusBar(self, parent):
+        self.statusBar = statusBar(rxTxCount=True)
+        return self.statusBar
 
     def onUiInitDone(self):
         '''

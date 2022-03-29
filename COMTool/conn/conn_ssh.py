@@ -26,6 +26,9 @@ import socket, threading, time, re
 
 
 class SSH_CONN:
+    def __init__(self) -> None:
+        self.channel = None
+
     def connect(self, host, port, user, password, ssh_key_file=None, pty_width=60, pty_height=20):
         print("-- ssh connect")
         if not password:
@@ -58,10 +61,13 @@ class SSH_CONN:
         return None
 
     def isConnected(self):
+        if not self.channel:
+            return False
         return not self.channel.closed
 
     def resize(self, w, h):
-        self.channel.resize_pty(width=w, height=h)
+        if self.channel:
+            self.channel.resize_pty(width=w, height=h)
 
 
 class SSH(COMM):
@@ -207,6 +213,10 @@ class SSH(COMM):
             self.config[conf_type] = convertType(obj.text().strip())
         except:
             self.hintSignal.emit("error", _("Input error"), _("Input") + f' {conf_type} ' + _("error"))
+
+    def disconnect(self):
+        if self.isConnected():
+            self.openCloseSerial()
 
     def onDel(self):
         # remove passwd for safty

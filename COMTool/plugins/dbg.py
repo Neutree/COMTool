@@ -5,12 +5,16 @@ try:
     from i18n import _, tr
     import version
     import utils, utils_ui
+    from conn.base import ConnectionStatus
+    from widgets import statusBar
 except ImportError:
     from COMTool import parameters,helpAbout,autoUpdate, utils, utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool import i18n
     from COMTool.i18n import _, tr
     from COMTool import version
+    from COMTool.conn.base import ConnectionStatus
+    from COMTool.widgets import statusBar
 
 try:
     from base import Plugin_Base
@@ -39,7 +43,6 @@ class Plugin(Plugin_Base):
     # vars set by caller
     send = None              # send(data_bytes=None, file_path=None)
     hintSignal = None       # hintSignal.emit(title, msg)
-    clearCountSignal = None  # clearCountSignal.emit()
     configGlobal = {}
     # other vars
     connParent = "main"
@@ -48,7 +51,6 @@ class Plugin(Plugin_Base):
     name = _("Send Receive")
     #
     receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
-    sendFileOkSignal = pyqtSignal(bool, str)
     receiveProgressStop = False
     receivedData = []
     lock = threading.Lock()
@@ -57,6 +59,7 @@ class Plugin(Plugin_Base):
     lastBg = None
     defaultColor = None
     defaultBg = None
+    clearCountSignal = pyqtSignal()
 
     def onInit(self, config):
         super().onInit(config)
@@ -85,8 +88,7 @@ class Plugin(Plugin_Base):
             if not k in self.config:
                 self.config[k] = default[k]
 
-    def onWidgetMain(self, parent, rootWindow):
-        self.rootWindow = rootWindow
+    def onWidgetMain(self, parent):
         self.mainWidget = QSplitter(Qt.Vertical)
         # widgets receive and send area
         self.receiveArea = QTextEdit()
@@ -121,6 +123,7 @@ class Plugin(Plugin_Base):
         self.sendButton.clicked.connect(self.onSendData)
         self.clearReceiveButtion.clicked.connect(self.clearReceiveBuffer)
         self.receiveUpdateSignal.connect(self.updateReceivedDataDisplay)
+        self.sendHistory.activated.connect(self.onSendHistoryIndexChanged)
 
         return self.mainWidget
 
@@ -205,7 +208,6 @@ class Plugin(Plugin_Base):
         self.sendSettingsAppendNewLine.clicked.connect(lambda: self.bindVar(self.sendSettingsAppendNewLine, self.config, "sendAutoNewline"))
         self.sendSettingsEscape.clicked.connect(lambda: self.bindVar(self.sendSettingsEscape, self.config, "sendEscape"))
         self.sendSettingsCRLF.clicked.connect(lambda: self.bindVar(self.sendSettingsCRLF, self.config, "useCRLF"))
-        self.sendHistory.activated.connect(self.onSendHistoryIndexChanged)
         self.receiveSettingsColor.clicked.connect(self.onSetColorChanged)
         self.receiveSettingsAutoLinefeedTime.textChanged.connect(lambda: self.bindVar(self.receiveSettingsAutoLinefeedTime, self.config, "receiveAutoLindefeedTime", vtype=int, vErrorMsg=_("Auto line feed value error, must be integer")))
         self.sendSettingsScheduled.textChanged.connect(lambda: self.bindVar(self.sendSettingsScheduled, self.config, "sendScheduledTime", vtype=int, vErrorMsg=_("Timed send value error, must be integer")))
@@ -277,7 +279,6 @@ class Plugin(Plugin_Base):
         self.funcWidget.setLayout(sendFunctionalLayout)
         # event
         self.sendFileButton.clicked.connect(self.sendFile)
-        self.sendFileOkSignal.connect(self.onSentFile)
         self.saveLogCheckbox.clicked.connect(self.setSaveLog)
         self.logFileBtn.clicked.connect(self.selectLogFile)
         self.openFileButton.clicked.connect(self.selectFile)
@@ -285,6 +286,10 @@ class Plugin(Plugin_Base):
         self.clearHistoryButton.clicked.connect(self.clearHistory)
         self.funcParent = parent
         return self.funcWidget
+
+    def onWidgetStatusBar(self, parent):
+        self.statusBar = statusBar(rxTxCount=True)
+        return self.statusBar
 
     def onUiInitDone(self):
         paramObj = self.config
@@ -377,10 +382,11 @@ class Plugin(Plugin_Base):
         self.hintSignal.emit("info", _("OK"), _("History cleared!"))
 
 
-    def onSentFile(self, ok, path):
+    def onSentFile(self, ok, msg, length, path):
         print("file sent {}, path: {}".format('ok' if ok else 'fail', path))
         self.sendFileButton.setText(_("Send file"))
         self.sendFileButton.setDisabled(False)
+        self.statusBar.addTx(length)
 
     def setSaveLog(self):
         if self.saveLogCheckbox.isChecked():
@@ -508,7 +514,7 @@ class Plugin(Plugin_Base):
         else:
             self.sendFileButton.setDisabled(True)
             self.sendFileButton.setText(_("Sending file"))
-            self.send(file_path=filename, callback = lambda ok, msg: self.onSentFile(ok, filename))
+            self.send(file_path=filename, callback = lambda ok, msg, length, path: self.onSentFile(ok, msg, length, path))
 
 
     def scheduledSend(self):
@@ -719,9 +725,7 @@ class Plugin(Plugin_Base):
 
     def onReceived(self, data : bytes):
         self.receivedData.append(data)
-        for plugin in self.connChilds:
-            if plugin.active:
-                plugin.onReceived(data)
+        self.statusBar.addRx(len(data))
         self.lock.release()
 
     def receiveDataProcess(self):
