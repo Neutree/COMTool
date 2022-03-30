@@ -81,7 +81,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.initWindow()
         self.uiLoadConfigs()
         log.i("init main window complete")
+        self.loadPluginsInfoList()
         self.loadPluginItems()
+        log.i("load plugin items complete")
         self.initEvent()
         # self.initPlugins(self.config.basic["pluginsInfo"], self.config.basic["activePlugin"], self.config.plugins)
         # self.initConn(self.config.basic["connId"], self.config.conns)
@@ -108,8 +110,20 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         else:  # load builtin plugins
             for id, pluginClass in builtinPlugins.items(): 
                 self.addItem(pluginClass)
-                self.addPluginInfo(pluginClass)
                 self.pluginClasses.append(pluginClass)
+
+    def loadPluginsInfoList(self):
+        for id, pluginClass in builtinPlugins.items(): 
+            self.addPluginInfo(pluginClass)
+        rm = []
+        for uid, info in self.config["pluginsInfo"]["external"].items():
+            pluginClass = self._importPlugin(info["path"], test=True)
+            if pluginClass:
+                self.addPluginInfo(pluginClass)
+            else:
+                rm.append(uid)
+        for uid in rm:
+            self.config["pluginsInfo"]["external"].pop(uid)
 
     def addItem(self, pluginClass, setCurrent = False):
         numbers = []
@@ -334,7 +348,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                     break
             # find in external plugins
             if not found:
-                infos = self.config.basic["pluginsInfo"]
+                infos = self.config["pluginsInfo"]
                 for id, info in infos["external"].items():
                     if id == loadID:
                         ok, msg = self.loadExternalPlugin(info["path"])
@@ -816,16 +830,16 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # encoding
         self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(self.config["encoding"]))
 
-    def loadPluginList(self):
-        # load disabled plugins name to plugin list
-        infos = self.config.basic["pluginsInfo"]
-        for id, info in infos["builtin"].items():
-            if self.pluginsSelector.findText(f'{id} - ') < 0:
-                self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1, f'{id} - {builtinPlugins[id].name}')
-        for id, info in infos["external"].items():
-            if self.pluginsSelector.findText(f'{id} - ') < 0:
-                c = self._importPlugin(info["path"], test = True)
-                self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1, f'{id} - {c.name}')
+    # def loadPluginList(self):
+    #     # load disabled plugins name to plugin list
+    #     infos = self.config.basic["pluginsInfo"]
+    #     for id, info in infos["builtin"].items():
+    #         if self.pluginsSelector.findText(f'{id} - ') < 0:
+    #             self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1, f'{id} - {builtinPlugins[id].name}')
+    #     for id, info in infos["external"].items():
+    #         if self.pluginsSelector.findText(f'{id} - ') < 0:
+    #             c = self._importPlugin(info["path"], test = True)
+    #             self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1, f'{id} - {c.name}')
 
     def keyPressEvent(self, event):
         CustomTitleBarWindowMixin.keyPressEvent(self, event)

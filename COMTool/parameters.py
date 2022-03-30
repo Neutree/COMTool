@@ -59,10 +59,6 @@ class Parameters:
         "skipVersion": None,
         "connId": "serial",
         "pluginsInfo": {          # enabled plugins ID
-            "builtin": {
-                # "dbg": {
-                # }
-            },
             "external": {
                 # "myplugin2": {
                 #     # "package": "myplugin",  # package installed as a python package
