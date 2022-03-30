@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-29 23:02+0800\n"
+"POT-Creation-Date: 2022-03-31 00:58+0800\n"
 "PO-Revision-Date: 2021-12-04 15:21+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,26 +18,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:91
+#: Main.py:93
 msgid "Load plugin from file"
 msgstr ""
 
-#: Main.py:277
+#: Main.py:328
 msgid "Load plugin fail"
 msgstr ""
 
-#: Main.py:319 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
+#: Main.py:370 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
 #: plugins/protocol.py:419 plugins/protocol.py:429
 msgid "Select file"
 msgstr ""
 
-#: Main.py:321
+#: Main.py:372
 msgid "python script (*.py)"
 msgstr ""
 
-#: Main.py:325 Main.py:342 Main.py:555 Main.py:560 Main.py:1011
+#: Main.py:376 Main.py:393 Main.py:606 Main.py:611 Main.py:1063
 #: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: pluginItems.py:187 pluginItems.py:199 plugins/base.py:155
+#: pluginItems.py:205 pluginItems.py:217 plugins/base.py:155
 #: plugins/base.py:160 plugins/base.py:176 plugins/base.py:213
 #: plugins/base.py:231 plugins/dbg.py:510 plugins/dbg.py:527 plugins/dbg.py:584
 #: plugins/dbg.py:592 plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
@@ -46,99 +46,103 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: Main.py:501
+#: Main.py:552
 msgid "New Window"
 msgstr ""
 
-#: Main.py:734 Main.py:743
+#: Main.py:786 Main.py:795
 msgid "Restart now?"
 msgstr ""
 
-#: Main.py:735
+#: Main.py:787
 msgid "language changed to: "
 msgstr ""
 
-#: Main.py:735
+#: Main.py:787
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: Main.py:792 Main.py:793
+#: Main.py:844 Main.py:845
 msgid "Closing ..."
 msgstr ""
 
-#: Main.py:899
+#: Main.py:951
 msgid "About"
 msgstr ""
 
-#: Main.py:908
+#: Main.py:960
 msgid "New versioin detected, please click learn more to download"
 msgstr ""
 
-#: Main.py:909
+#: Main.py:961
 msgid "Learn More"
 msgstr ""
 
-#: Main.py:910
+#: Main.py:962
 msgid "Skip this version"
 msgstr ""
 
-#: Main.py:911
+#: Main.py:963
 msgid "Remind me next time"
 msgstr ""
 
-#: Main.py:912
+#: Main.py:964
 msgid "Need update"
 msgstr ""
 
-#: helpAbout.py:43
+#: helpAbout.py:44
 msgid "Config path"
 msgstr ""
 
-#: helpAbout.py:45
-msgid "COMTool is a Open source project create by"
-msgstr ""
-
-#: helpAbout.py:47
-msgid "Welcome to improve it together"
+#: helpAbout.py:46
+msgid "Old config backup in"
 msgstr ""
 
 #: helpAbout.py:48
-msgid "See more details on"
-msgstr ""
-
-#: helpAbout.py:49
-msgid "Have problem? see"
+msgid "COMTool is a Open source project create by"
 msgstr ""
 
 #: helpAbout.py:50
-msgid "Buy me half a cup of coffee"
+msgid "Welcome to improve it together"
 msgstr ""
 
 #: helpAbout.py:51
-msgid "Shortcut:"
+msgid "See more details on"
 msgstr ""
 
 #: helpAbout.py:52
-msgid "Full screen"
+msgid "Have problem? see"
 msgstr ""
 
 #: helpAbout.py:53
-msgid "Send data"
+msgid "Buy me half a cup of coffee"
 msgstr ""
 
 #: helpAbout.py:54
-msgid "Clear Send Area"
+msgid "Shortcut:"
 msgstr ""
 
 #: helpAbout.py:55
+msgid "Full screen"
+msgstr ""
+
+#: helpAbout.py:56
+msgid "Send data"
+msgstr ""
+
+#: helpAbout.py:57
+msgid "Clear Send Area"
+msgstr ""
+
+#: helpAbout.py:58
 msgid "Clear Receive Area"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:534 pluginItems.py:87
+#: conn/conn_tcp_udp.py:534 pluginItems.py:95
 msgid "Connection"
 msgstr ""
 
-#: pluginItems.py:187
+#: pluginItems.py:205
 msgid "Open file failed!"
 msgstr ""
 
@@ -718,5 +722,8 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "uninstall app"
+#~ msgstr ""
+
+#~ msgid "Old config can be found in"
 #~ msgstr ""
 

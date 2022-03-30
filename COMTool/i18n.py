@@ -16,6 +16,7 @@ def _(text):
 
 def set_locale(locale_in):
     global locale, tr, root_dir
+    print("-- set locale to", locale_in)
     locale = locale_in
     locales_path = os.path.join(root_dir, 'locales')
     if not os.path.exists(locales_path): # for pyinstaller pack

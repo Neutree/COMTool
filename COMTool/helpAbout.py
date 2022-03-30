@@ -18,7 +18,8 @@ def strAbout():
 <h1 style='color:#009688';margin=10px;>{}</h1><br>
 <b style="color:#009688;margin = 5px;">v{}</b><br><br>
 {} + {}<br>
-{}:{}
+{}: {}<br>
+{}: {}<br>
 <br>
 <div>
     <div>{}</div>
@@ -42,6 +43,8 @@ def strAbout():
     'PyQt{}'.format(PyQt5.QtCore.QT_VERSION_STR),
     _("Config path"),
     parameters.configFilePath,
+    _("Old config backup in"),
+    os.path.dirname(parameters.configFilePath,),
     _('COMTool is a Open source project create by'),
     '{}/{}'.format(parameters.dataPath, parameters.appLogo2),
     _('Welcome to improve it together'),

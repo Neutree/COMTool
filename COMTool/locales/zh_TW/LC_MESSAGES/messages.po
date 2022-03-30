@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-29 23:02+0800\n"
+"POT-Creation-Date: 2022-03-31 00:58+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -18,26 +18,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:91
+#: Main.py:93
 msgid "Load plugin from file"
 msgstr "從檔案載入外掛程式"
 
-#: Main.py:277
+#: Main.py:328
 msgid "Load plugin fail"
 msgstr "載入外掛程式失敗"
 
-#: Main.py:319 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
+#: Main.py:370 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
 #: plugins/protocol.py:419 plugins/protocol.py:429
 msgid "Select file"
 msgstr "選擇文件"
 
-#: Main.py:321
+#: Main.py:372
 msgid "python script (*.py)"
 msgstr "python 程式 (*.py)"
 
-#: Main.py:325 Main.py:342 Main.py:555 Main.py:560 Main.py:1011
+#: Main.py:376 Main.py:393 Main.py:606 Main.py:611 Main.py:1063
 #: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: pluginItems.py:187 pluginItems.py:199 plugins/base.py:155
+#: pluginItems.py:205 pluginItems.py:217 plugins/base.py:155
 #: plugins/base.py:160 plugins/base.py:176 plugins/base.py:213
 #: plugins/base.py:231 plugins/dbg.py:510 plugins/dbg.py:527 plugins/dbg.py:584
 #: plugins/dbg.py:592 plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
@@ -46,99 +46,103 @@ msgstr "python 程式 (*.py)"
 msgid "Error"
 msgstr "錯誤"
 
-#: Main.py:501
+#: Main.py:552
 msgid "New Window"
 msgstr "開新視窗"
 
-#: Main.py:734 Main.py:743
+#: Main.py:786 Main.py:795
 msgid "Restart now?"
 msgstr "現在就重啟？"
 
-#: Main.py:735
+#: Main.py:787
 msgid "language changed to: "
 msgstr "語言更改為："
 
-#: Main.py:735
+#: Main.py:787
 msgid "Restart software to take effect now?"
 msgstr "現在就重啟軟件以生效？"
 
-#: Main.py:792 Main.py:793
+#: Main.py:844 Main.py:845
 msgid "Closing ..."
 msgstr "關閉中..."
 
-#: Main.py:899
+#: Main.py:951
 msgid "About"
 msgstr "關於"
 
-#: Main.py:908
+#: Main.py:960
 msgid "New versioin detected, please click learn more to download"
 msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
 
-#: Main.py:909
+#: Main.py:961
 msgid "Learn More"
 msgstr "瞭解更多"
 
-#: Main.py:910
+#: Main.py:962
 msgid "Skip this version"
 msgstr "跳過此版本"
 
-#: Main.py:911
+#: Main.py:963
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: Main.py:912
+#: Main.py:964
 msgid "Need update"
 msgstr "需要更新"
 
-#: helpAbout.py:43
+#: helpAbout.py:44
 msgid "Config path"
 msgstr "配置路徑"
 
-#: helpAbout.py:45
+#: helpAbout.py:46
+msgid "Old config backup in"
+msgstr ""
+
+#: helpAbout.py:48
 msgid "COMTool is a Open source project create by"
 msgstr "COMTool 是一個開源程序"
 
-#: helpAbout.py:47
+#: helpAbout.py:50
 msgid "Welcome to improve it together"
 msgstr "歡迎一起改進"
 
-#: helpAbout.py:48
+#: helpAbout.py:51
 msgid "See more details on"
 msgstr "更多詳情請看"
 
-#: helpAbout.py:49
+#: helpAbout.py:52
 msgid "Have problem? see"
 msgstr "有問題嗎？看看"
 
-#: helpAbout.py:50
+#: helpAbout.py:53
 msgid "Buy me half a cup of coffee"
 msgstr "感謝大爺的買半杯咖啡"
 
-#: helpAbout.py:51
+#: helpAbout.py:54
 msgid "Shortcut:"
 msgstr "快捷鍵："
 
-#: helpAbout.py:52
+#: helpAbout.py:55
 msgid "Full screen"
 msgstr "全屏"
 
-#: helpAbout.py:53
+#: helpAbout.py:56
 msgid "Send data"
 msgstr "發送數據"
 
-#: helpAbout.py:54
+#: helpAbout.py:57
 msgid "Clear Send Area"
 msgstr "清除發送區"
 
-#: helpAbout.py:55
+#: helpAbout.py:58
 msgid "Clear Receive Area"
 msgstr "清除接收區"
 
-#: conn/conn_tcp_udp.py:534 pluginItems.py:87
+#: conn/conn_tcp_udp.py:534 pluginItems.py:95
 msgid "Connection"
 msgstr "連接"
 
-#: pluginItems.py:187
+#: pluginItems.py:205
 msgid "Open file failed!"
 msgstr "打開失敗"
 
@@ -628,7 +632,7 @@ msgstr "重启以載入設置？"
 
 #: plugins/protocol.py:632
 msgid "Run decode error"
-msgstr 
+msgstr ""
 
 #: plugins/protocol.py:646
 msgid "Run encode error"
@@ -699,4 +703,7 @@ msgstr ""
 
 #~ msgid "uninstall app"
 #~ msgstr "卸載應用"
+
+#~ msgid "Old config can be found in"
+#~ msgstr ""
 

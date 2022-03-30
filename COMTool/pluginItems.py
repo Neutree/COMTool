@@ -21,7 +21,8 @@ class PluginItem:
     # display name
     name = ''
     widget = None
-    def __init__(self, name, pluginClass, connClasses,
+    def __init__(self, name, pluginClass,
+                    connClasses, connsConfigs,
                     globalConfig, itemConfig,
                     hintSignal, reloadWindowSignal):
         '''
@@ -31,7 +32,8 @@ class PluginItem:
         self.hintSignal = hintSignal
         self.name = name
         self.connClasses = connClasses
-        self.currConnWidgets = None
+        self.connsConfigs = connsConfigs
+        self.currConnWidget = None
         self.currConnIdx = 0
         self.sendProcess = None
         self.dataToSend = []
@@ -53,6 +55,7 @@ class PluginItem:
         # frame
         self.widget = self.newFrame()
         self.uiLoadConfigs()
+        self.initEvent()
     
     def newConnWidgets(self):
         connsWidgets = []
@@ -61,7 +64,12 @@ class PluginItem:
             # conn.onInit()
             conn = Conn()
             conns.append(conn)
-            conn.onInit({})
+            if conn.id in self.connsConfigs:
+                connConfig = self.connsConfigs[conn.id]
+            else:
+                connConfig = {}
+                self.connsConfigs[conn.id] = connConfig
+            conn.onInit(connConfig)
             widget = conn.onWidget()
             conn.onUiInitDone()
             connsWidgets.append(widget)
@@ -87,11 +95,10 @@ class PluginItem:
         connSettingsGroupBox = QGroupBox(_("Connection"))
         layout = QVBoxLayout()
         connSettingsGroupBox.setLayout(layout)
-        connSelectCommbox = ComboBox()
+        self.connSelectCommbox = ComboBox()
         for conn in self.conns:
-            connSelectCommbox.addItem(conn.name)
-        connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
-        layout.addWidget(connSelectCommbox)
+            self.connSelectCommbox.addItem(conn.name)
+        layout.addWidget(self.connSelectCommbox)
         layout.setContentsMargins(1, 6, 0, 0)
         self.connsParent = QWidget()
         layout2 = QVBoxLayout()
@@ -120,19 +127,30 @@ class PluginItem:
         return wrapper
 
     def _setConn(self, idx):
-        if self.currConnWidgets:
-            self.currConnWidgets.setParent(None)
-            self.conns[idx].onReceived = lambda x:None
-        self.currConnWidgets = self.connWidgets[idx]
-        self.connsParent.layout().addWidget(self.currConnWidgets)
+        if self.currConnWidget:
+            self.currConnWidget.setParent(None)
+            self.conns[self.currConnIdx].onReceived = lambda x:None
+            self.conns[self.currConnIdx].onConnectionStatus.disconnect(self.onConnStatus)
+        self.currConnWidget = self.connWidgets[idx]
+        self.connsParent.layout().addWidget(self.currConnWidget)
         self.conns[idx].onReceived = self.onReceived
         self.plugin.isConnected = self.conns[idx].isConnected
-        self.currConnIdx = idx
         self.conns[idx].onConnectionStatus.connect(self.onConnStatus)
+        self.connsConfigs["currConn"] = self.conns[idx].id
+        self.currConnIdx = idx
 
 
     def uiLoadConfigs(self):
-        self._setConn(0)
+        loadedIdx = 0
+        if "currConn" in self.connsConfigs:
+            for idx, conn in enumerate(self.conns):
+                if conn.id == self.connsConfigs["currConn"]:
+                    loadedIdx = idx
+        self.connSelectCommbox.setCurrentIndex(loadedIdx)
+        self._setConn(loadedIdx)
+
+    def initEvent(self):
+        self.connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
 
     def onConnChanged(self, idx):
         self.conns[self.currConnIdx].disconnect()

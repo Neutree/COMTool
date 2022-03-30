@@ -53,6 +53,7 @@ log.i("Log path:", logPath)
 
 class Parameters:
     config = {
+        "version": 2,
         "skin": "light",
         "locale": "en",
         "encoding": "UTF-8",
@@ -67,13 +68,16 @@ class Parameters:
             }
         },
         "activeItem": "dbg-1",
+        "currItem": None,
         "items": [
             # {
-            #     "itemId": "dbg-1",
+            #     "name": "dbg-1",
             #     "pluginId": "dbg",
             #     "config": {
             #         "conns": {
-
+            #             "currConn": "serial",
+            #             "serial": {
+            #              }
             #         },
             #         "plugin": {
 
@@ -95,9 +99,10 @@ class Parameters:
             return
         with open(path, encoding="utf-8") as f:
             config = json.load(f)
-            if not "basic" in config:
+            if "version" in config and config["version"] == self.config["version"]:
                 self.config = config
             else: # for old config, just backup
+                log.w("Old config file, backup to", path + ".bak")
                 shutil.copyfile(path, "{}.bak.{:.3f}.json".format(path, time.time()))
         return
 
