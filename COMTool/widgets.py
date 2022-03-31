@@ -112,7 +112,7 @@ class TitleBar(QWidget):
         self.close.clicked.connect(lambda : parent.close())
         self.max.clicked.connect(lambda : self.onSetMaximized(fromMaxBtn=True))
         self.min.clicked.connect(lambda : parent.setWindowState(Qt.WindowNoState) if parent.windowState() == Qt.WindowMinimized else parent.setWindowState(Qt.WindowMinimized))
-        self.top.clicked.connect(self.onSetTop)
+        self.top.clicked.connect(lambda : self.onSetTop())
         self.setProperty("class", "TitleBar")
 
     def mouseDoubleClickEvent(self, event):
@@ -160,7 +160,7 @@ class TitleBar(QWidget):
             self.top.setProperty("class", "top")
         oldOn = flags & Qt.WindowStaysOnTopHint
         if on is None:
-            on = not oldOn
+            on = False if oldOn else True
         if on:
             if not oldOn:
                 _on(flags)

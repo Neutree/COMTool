@@ -860,9 +860,10 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             event.ignore()
 
     def timerEvent(self, e):
-        log.i("Close window")
-        self.killTimer(self.closeTimerId)
-        self.close()
+        if self.closeTimerId:
+            log.i("Close window")
+            self.killTimer(self.closeTimerId)
+            self.close()
 
     def saveConfig(self):
         # print("save config:", self.config)
