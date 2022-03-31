@@ -136,6 +136,13 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                     setCurr = False
                     if self.config["currItem"] == item["name"]:
                         setCurr = True
+                    # check language change, update item name to current lanuage
+                    old_name_tail = item["name"].split(" ")[-1]
+                    try:
+                        int(old_name_tail)
+                        item["name"] = pluginClass.name + " " + old_name_tail
+                    except Exception: # for no number tailed name
+                        item["name"] = pluginClass.name
                     self.addItem(pluginClass, nameSaved=item["name"], setCurrent=setCurr, connsConfigs = item["config"]["conns"], pluginConfig=item["config"]["plugin"])
         else:  # load builtin plugins
             for id, pluginClass in builtinPlugins.items(): 
@@ -632,7 +639,11 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         if self.tabWidget.count() == 1:
             return
         self.tabWidget.removeTab(idx)
-        self.items.pop(idx)
+        item = self.items.pop(idx)
+        for _item in self.config["items"]:
+            if _item["name"] == item.name:
+                self.config["items"].remove(_item)
+                break
         # # if conn widget in this plugin, remove conn widget
         # parent = self.connectionWidget.parentWidget()
         # if parent == self.connParentWidgets[idx]:

@@ -145,19 +145,28 @@ class TitleBar(QWidget):
         else:
             self.show()
 
-    def onSetTop(self):
+    def onSetTop(self, on = None):
         flags = self.parent.windowFlags()
         needShow = self.parent.isVisible()
-        if flags & Qt.WindowStaysOnTopHint:
-            flags &=  (~Qt.WindowStaysOnTopHint)
-            self.parent.setWindowFlags(flags)
-            utils_ui.setButtonIcon(self.top, self.btnIcons[3][0])
-            self.top.setProperty("class", "top")
-        else:
+        def _on(flags):
             flags |= Qt.WindowStaysOnTopHint
             self.parent.setWindowFlags(flags)
             utils_ui.setButtonIcon(self.top, self.btnIcons[3][1])
             self.top.setProperty("class", "topActive")
+        def _off(flags):
+            flags &=  (~Qt.WindowStaysOnTopHint)
+            self.parent.setWindowFlags(flags)
+            utils_ui.setButtonIcon(self.top, self.btnIcons[3][0])
+            self.top.setProperty("class", "top")
+        oldOn = flags & Qt.WindowStaysOnTopHint
+        if on is None:
+            on = not oldOn
+        if on:
+            if not oldOn:
+                _on(flags)
+        else:
+            if oldOn:
+                _off(flags)
         self.style().unpolish(self.top)
         self.style().polish(self.top)
         self.update()

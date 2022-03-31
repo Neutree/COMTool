@@ -1,20 +1,25 @@
 import sys
-import gc
-import copy
-# import importlib
+import os
+try:
+    from main2 import main
+    from parameters import log
+except Exception:
+    from COMTool.main2 import main
+    from COMTool.parameters import log
 
+def restart_program():
+    '''
+        restart program, not return
+    '''
+    python = sys.executable
+    log.i("Restarting program, comand: {} {} {}".format(python, python, *sys.argv))
+    os.execl(python, python, * sys.argv)
 
 if __name__ == '__main__':
-    old_modules = copy.copy(sys.modules)
-    try:
-        from main2 import main
-    except Exception:
-        from COMTool.main2 import main
     while 1:
         ret = main()
         if not ret is None:
             break
-        # TODO: unload all modules, and reload them
-        #       to make translate of class member to take effect
+        restart_program()
     print("-- program exit, code:", ret)
     sys.exit(ret)
