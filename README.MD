@@ -67,6 +67,11 @@ A cross platform serial debug tools written by python
 
 * Download the latest bin file at the [release page](https://github.com/Neutree/COMTool/releases) or [sourceforge](https://sourceforge.net/projects/comtool/files/)
 * Unzip `.zip` file, and click `comtool.exe` to run
+> And you can install by scoop, maintained by [StudentWeis](https://github.com/Neutree/COMTool/issues/50)
+> ```
+> scoop bucket add Nightly https://github.com/StudentWeis/Nightly
+> scoop install comtool
+> ```
 
 ### Linux
 

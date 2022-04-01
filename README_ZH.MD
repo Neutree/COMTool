@@ -64,6 +64,11 @@ COMTool
 
 * 在 [release](https://github.com/Neutree/COMTool/releases) 或 [sourceforge](https://sourceforge.net/projects/comtool/files/) 下载最新的可执行文件
 * 解压`.zip`文件，点击`comtool.exe`运行
+> 另外你也可以使用 scoop 安装, 由 [StudentWeis](https://github.com/Neutree/COMTool/issues/50) 维护
+> ```
+> scoop bucket add Nightly https://github.com/StudentWeis/Nightly
+> scoop install comtool
+> ```
 
 ### Linux
 
