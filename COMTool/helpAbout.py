@@ -29,7 +29,7 @@ def strAbout():
 {} <b><a style="color:#009688;" href="https://github.com/neutree/COMTool">Github</a></b><br>
 {} <b><a style="color:#009688;" href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br>
 {}: 566531359 <br><br>
-{}<br><a style="color:#009688;" href="https://neucrack.com/donate"><img src="{}"/> <img src="{}"/></a><br>
+{}: <a style="color:#009688;" href="https://neucrack.com/donate">neucrack.com/donate<br><img src="{}"/> <img src="{}"/></a><br>
 '''.format(
     parameters.appName,
     version.__version__,
