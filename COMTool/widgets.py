@@ -1,7 +1,8 @@
 from audioop import add
 import ctypes
+from COMTool import parameters
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow, QComboBox, QListView
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
@@ -580,6 +581,35 @@ class statusBar(QWidget):
             color = "#008200"
         msg = '<font color={}>{}</font>'.format(color, msg)
         self.updateUiSignal.emit("msg", msg)
+
+class HelpWidget(QWidget):
+    closed = pyqtSignal()
+    def __init__(self, help:str, pluginsHelp:dict, parent=None, icon=None):
+        super().__init__(parent)
+        if icon:
+            self.setWindowIcon(QIcon(icon))
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+        label = QLabel(help)
+        tabs = QTabWidget()
+        layout.addWidget(label)
+        layout.addWidget(tabs)
+        for name, help in pluginsHelp.items():
+            tab = QWidget()
+            tab.setProperty("class", "helpTab")
+            tabLayout = QVBoxLayout()
+            tab.setLayout(tabLayout)
+            if type(help) == str:
+                tabLabel = QLabel(help)
+            else:
+                tabLabel = help
+            tabLayout.addWidget(tabLabel)
+            tabs.addTab(tab, name)
+        self.show()
+
+    def closeEvent(self, event):
+        self.closed.emit()
+        event.accept()
 
 if __name__ == "__main__":
     import sys

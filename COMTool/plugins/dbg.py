@@ -60,6 +60,18 @@ class Plugin(Plugin_Base):
     defaultColor = None
     defaultBg = None
     clearCountSignal = pyqtSignal()
+    help = '''{}<br>
+<b style="color:#ef5350;"><kbd>F11</kbd></b>: {}<br>
+<b style="color:#ef5350;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
+<b style="color:#ef5350;"><kbd>Ctrl+L</kbd></b>: {}<br>
+<b style="color:#ef5350;"><kbd>Ctrl+K</kbd></b>: {}<br>
+'''.format(
+        _('Shortcut:'),
+        _('Full screen'),
+        _('Send data'),
+        _('Clear Send Area'),
+        _('Clear Receive Area')
+    )
 
     def onInit(self, config):
         super().onInit(config)
@@ -67,6 +79,7 @@ class Plugin(Plugin_Base):
         self.isScheduledSending = False
         self.config = config
         default = {
+            "version": 1,
             "receiveAscii" : True,
             "receiveAutoLinefeed" : False,
             "receiveAutoLindefeedTime" : 200,

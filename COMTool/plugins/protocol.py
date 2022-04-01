@@ -191,6 +191,7 @@ class Plugin(Plugin_Base):
             init params, DO NOT take too long time in this func
         '''
         default = {
+            "version": 1,
             "sendAscii" : True,
             "useCRLF" : False,
             "sendEscape" : True,
@@ -402,55 +403,6 @@ class Plugin(Plugin_Base):
         self.deleteCodeBtn.clicked.connect(self.deleteCode)
         self.codeWidget.onSave = self.saveCode
         return root
-
-    def onWidgetFunctional(self, parent):
-        self.funcWidget = QWidget()
-        layout0 = QVBoxLayout()
-        loadConfigBtn = QPushButton(_("Load config"))
-        shareConfigBtn = QPushButton(_("Share config"))
-        layout0.addWidget(loadConfigBtn)
-        layout0.addWidget(shareConfigBtn)
-        layout0.addStretch()
-        self.funcWidget.setLayout(layout0)
-        # event
-        def selectSharefile():
-            oldPath = os.getcwd()
-            fileName_choose, filetype = QFileDialog.getSaveFileName(self.funcWidget,
-                                _("Select file"),
-                                os.path.join(oldPath, "comtool.protocol.json"),
-                                _("json file (*.json);;config file (*.conf);;All Files (*)"))
-            if fileName_choose != "":
-                with open(fileName_choose, "w", encoding="utf-8") as f:
-                    json.dump(self.config, f, indent=4, ensure_ascii=False)
-
-        def selectLoadfile():
-            oldPath = os.getcwd()
-            fileName_choose, filetype = QFileDialog.getOpenFileName(self.funcWidget,
-                                    _("Select file"),
-                                    oldPath,
-                                    _("json file (*.json);;config file (*.conf);;All Files (*)"))
-            if fileName_choose != "":
-                with open(fileName_choose, "r", encoding="utf-8") as f:
-                    config = json.load( f)
-                    self.oldConfig = self.config.copy()
-                    self.config.clear()
-                    if "plugins" in config and self.id in config["plugins"]: # global config file
-                        config = config["plugins"][self.id]
-                    if (not "plugin_id" in config) or not config["plugin_id"] == self.id:
-                        self.hintSignal.emit("error", _("Error"), _("config file format error"))
-                        return
-                    for k in config:
-                        self.config[k] = config[k]
-                    def onClose(ok):
-                        if not ok:
-                            self.config.clear()
-                            self.config.update(self.oldConfig)
-                    self.reloadWindowSignal.emit("", _("Restart to load config?"), onClose)
-
-
-        loadConfigBtn.clicked.connect(lambda : selectLoadfile())
-        shareConfigBtn.clicked.connect(lambda : selectSharefile())
-        return self.funcWidget
 
     def onWidgetStatusBar(self, parent):
         self.statusBar = statusBar(rxTxCount=True)

@@ -690,6 +690,12 @@ class Plugin(Plugin_Base):
                                when program exit, this config will be auto save to config file
         '''
         self.config = config
+        default = {
+            "version": 1,
+        }
+        for k in default:
+            if not k in self.config:
+                self.config[k] = default[k]
 
     def onActive(self):
         pass

@@ -20,7 +20,6 @@ def strAbout():
 {} + {}<br>
 {}: {}<br>
 {}: {}<br>
-<br>
 <div>
     <div>{}</div>
     <a style="vertical-align: middle;" href="https://neucrack.com">
@@ -28,14 +27,9 @@ def strAbout():
 </div>
 {}<br>
 {} <b><a style="color:#009688;" href="https://github.com/neutree/COMTool">Github</a></b><br>
-{} <b><a style="color:#009688;" href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br><br><br>
-{} <b><a style="color:#009688;" href="https://neucrack.com/donate"> neucrack.com/donate</a></b><br><br>
-{}<br>
- <b style="color:#ef5350;"><kbd>F11</kbd></b>: {}<br>
- <b style="color:#ef5350;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
- <b style="color:#ef5350;"><kbd>Ctrl+L</kbd></b>: {}<br>
- <b style="color:#ef5350;"><kbd>Ctrl+K</kbd></b>: {}<br>
-
+{} <b><a style="color:#009688;" href="https://github.com/Neutree/COMTool/issues"> issues</a></b><br>
+{}: 566531359 <br><br>
+{}<br><a style="color:#009688;" href="https://neucrack.com/donate"><img src="{}"/> <img src="{}"/></a><br>
 '''.format(
     parameters.appName,
     version.__version__,
@@ -47,13 +41,11 @@ def strAbout():
     os.path.dirname(parameters.configFilePath,),
     _('COMTool is a Open source project create by'),
     '{}/{}'.format(parameters.dataPath, parameters.appLogo2),
-    _('Welcome to improve it together'),
+    _('Welcome to improve it together and add plugins'),
     _('See more details on'),
     _("Have problem? see"),
-    _("Buy me half a cup of coffee"),
-    _('Shortcut:'),
-    _('Full screen'),
-    _('Send data'),
-    _('Clear Send Area'),
-    _('Clear Receive Area'),
+    _("QQ group for plugin development discussion"),
+    _("You can buy me half a cup of coffee if this software helpes you"),
+    os.path.join(parameters.assetsDir, "donate_wechat.jpg"),
+    os.path.join(parameters.assetsDir, "donate_alipay.jpg")
 )

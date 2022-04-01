@@ -32,7 +32,7 @@ try:
     from conn import ConnectionStatus, conns
     from plugins import builtinPlugins
     from pluginItems import PluginItem
-    from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox
+    from widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox, HelpWidget
 except ImportError:
     from COMTool import helpAbout,autoUpdate, utils_ui
     from COMTool.Combobox import ComboBox
@@ -41,7 +41,7 @@ except ImportError:
     from COMTool.conn import ConnectionStatus, conns
     from COMTool.plugins import builtinPlugins
     from COMTool.pluginItems import PluginItem
-    from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox
+    from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox, HelpWidget
 
 from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
@@ -101,6 +101,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.closeTimerId = None
         self.items = []
         self.pluginClasses = []
+
 
     def loadPluginsInfoList(self):
         for id, pluginClass in builtinPlugins.items(): 
@@ -621,18 +622,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def onSwitchTab(self, idx):
         self.config["currItem"] = self.items[idx].name
-        # log.i("switch to {}".format(self.items[idx].name))
-        # remove from old container
-        # parent = self.connectionWidget.parentWidget()
-        # if parent:
-        #     parent.layout().removeWidget(self.connectionWidget)
-        # # add to new container
-        # newParent = self.connParentWidgets[idx]
-        # newParent.layout().addWidget(self.connectionWidget)
-        # self.plugins[idx].onActive()
-        # self.updateStyle(parent)
-        # self.updateStyle(newParent)
-        # self.activePlugin(self.plugins[idx])
+        item = self.getCurrentItem()
+        item.plugin.onActive()
 
     def closeTab(self, idx):
         # only one, ignore
@@ -960,7 +951,17 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         utils_ui.setSkin(self.config["skin"])
 
     def showAbout(self):
-        QMessageBox.information(self, _("About"), helpAbout.strAbout())
+        help = helpAbout.strAbout()
+        pluginsHelp = {}
+        for p in self.pluginClasses:
+            pluginsHelp[p.name] = p.help
+        iconPath = self.DataPath+"/"+parameters.appIcon
+        self.helpWindow = HelpWidget(help, pluginsHelp, icon = iconPath)
+        self.helpWindow.closed.connect(self.helpWindowClosed)
+        # QMessageBox.information(self, _("About"), help)
+
+    def helpWindowClosed(self):
+        del self.helpWindow
 
     def showUpdate(self, versionInfo):
         versionInt = versionInfo.int()

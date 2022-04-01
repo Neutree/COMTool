@@ -44,6 +44,8 @@ class Plugin_Base(QObject):
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
 
+    help = ""                # help info, can be str or QWidget
+
     def __init__(self):
         super().__init__()
         if not self.id:
@@ -56,6 +58,12 @@ class Plugin_Base(QObject):
                                when program exit, this config will be auto save to config file
         '''
         self.config = config
+        default = {
+            "version": 1,
+        }
+        for k in default:
+            if not k in self.config:
+                self.config[k] = default[k]
 
     def onDel(self):
         pass

@@ -7,15 +7,16 @@ from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor, QCloseEvent
 import threading
 import time
 import os
+import json
 
 try:
     from i18n import _
     from Combobox import ComboBox
-    from parameters import log
+    from parameters import log, configFilePath
 except ImportError:
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
-    from COMTool.parameters import log
+    from COMTool.parameters import log, configFilePath
 
 class PluginItem:
     # display name
@@ -50,6 +51,8 @@ class PluginItem:
         self.plugin.hintSignal = self.hintSignal
         self.plugin.reloadWindowSignal = self.reloadWindowSignal
         self.plugin.onInit(config=itemConfig)
+        if not "version" in itemConfig:
+            raise Exception("{} {}".format(_("version not found in config of plugin:"), self.plugin.id))
         # conn
         self.conns, self.connWidgets = self.newConnWidgets()
         # frame
@@ -113,18 +116,81 @@ class PluginItem:
         # widgets main
         self.mainWidget = self.plugin.onWidgetMain(widget)
         # widgets functional
-        self.functionalWidget = self.plugin.onWidgetFunctional(widget)
+        self.functionalWidget = QWidget()
+        layout3 = QVBoxLayout()
+        self.functionalWidget.setLayout(layout3)
+        loadConfigBtn = QPushButton(_("Load config"))
+        shareConfigBtn = QPushButton(_("Share config"))
+        layout3.addWidget(loadConfigBtn)
+        layout3.addWidget(shareConfigBtn)
+        loadConfigBtn.clicked.connect(lambda : self.selectLoadfile())
+        shareConfigBtn.clicked.connect(lambda : self.selectSharefile())
+        pluginFuncWidget = self.plugin.onWidgetFunctional(widget)
+        if not pluginFuncWidget is None:
+            layout3.addWidget(pluginFuncWidget)
+        layout3.addStretch()
         # add to frame
         widget.addWidget(self.settingWidget)
         widget.addWidget(self.mainWidget)
-        if not self.functionalWidget is None:
-            widget.addWidget(self.functionalWidget)
+        widget.addWidget(self.functionalWidget)
         widget.setStretchFactor(0, 1)
         widget.setStretchFactor(1, 2)
         widget.setStretchFactor(2, 1)
         # UI init done
         self.plugin.onUiInitDone()
         return wrapper
+
+    # event
+    def selectSharefile(self):
+        oldPath = os.getcwd()
+        fileName_choose, filetype = QFileDialog.getSaveFileName(self.functionalWidget,
+                            _("Select file"),
+                            os.path.join(oldPath, f"comtool.{self.name}.json"),
+                            _("json file (*.json);;config file (*.conf);;All Files (*)"))
+        if fileName_choose != "":
+            with open(fileName_choose, "w", encoding="utf-8") as f:
+                for item in self.plugin.configGlobal["items"]:
+                    if item["name"] == self.name:
+                        json.dump(item, f, indent=4, ensure_ascii=False)
+                        break
+
+    def selectLoadfile(self):
+        oldPath = os.getcwd()
+        fileName_choose, filetype = QFileDialog.getOpenFileName(self.functionalWidget,
+                                _("Select file"),
+                                oldPath,
+                                _("json file (*.json);;config file (*.conf);;All Files (*)"))
+        if fileName_choose != "":
+            with open(fileName_choose, "r", encoding="utf-8") as f:
+                config = json.load( f)
+                if "pluginsInfo" in config: # global config file
+                    self.hintSignal.emit("error", _("Error"), _("Not support load global config file, you can copy config file mannually to " + configFilePath))
+                    return
+                if config["pluginId"] != self.plugin.id:
+                    self.hintSignal.emit("error", _("Error"), _("Config is not for this plugin, config is for plugin:" + " " + config["pluginId"]))
+                    return
+                if config["config"]["plugin"]["version"] != self.plugin.config["version"]:
+                    self.hintSignal.emit("warning", _("Warning"), "{} {}, {}: {}, {}: {}".format(
+                            _("Config version not same, plugin config version:"), config["config"]["plugin"]["version"],
+                            _("now"), self.plugin.config["version"],
+                            _("this maybe lead to some problem, if happened, please remove it manually from config file"),
+                            configFilePath))
+                    return
+                self.oldConnConfigs = self.connsConfigs.copy()
+                self.oldPluginConfigs = self.plugin.config.copy()
+                self.connsConfigs.clear()
+                self.plugin.config.clear()
+                for k, v in config["config"]["conns"].items():
+                    self.connsConfigs[k] = v
+                for k, v in config["config"]["plugin"].items():
+                    self.plugin.config[k] = v
+                def onClose(ok):
+                    if not ok:
+                        self.connsConfigs.clear()
+                        self.connsConfigs.update(self.oldConnConfigs)
+                        self.plugin.config.clear()
+                        self.plugin.config.update(self.oldPluginConfigs)
+                self.reloadWindowSignal.emit("", _("Restart to load config?"), onClose)
 
     def _setConn(self, idx):
         if self.currConnWidget:
