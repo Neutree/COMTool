@@ -282,3 +282,9 @@ class PluginItem:
                 if 'multiple access' in str(e):
                     self.hintSignal.emit("error", _("Error"), "device disconnected or multiple access on port?")
                 continue
+
+    def onDel(self):
+        for conn in self.conns:
+            conn.onDel()
+        self.plugin.onDel()
+

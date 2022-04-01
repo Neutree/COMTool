@@ -85,19 +85,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.loadPluginItems()
         log.i("load plugin items complete")
         self.initEvent()
-        # self.initPlugins(self.config.basic["pluginsInfo"], self.config.basic["activePlugin"], self.config.plugins)
-        # self.initConn(self.config.basic["connId"], self.config.conns)
-        # self.uiInitDone()
 
     def initVar(self):
         self.loadPluginStr = _("Load plugin from file")
-        # self.strings = parameters.Strings(self.config.basic["locale"])
-        # self.dataToSend = []
-        # self.fileToSend = []
-        # self.connSelectComboboxes = []
-        # self.changingConn = False
-        # self.connectionWidget = None
-        # self.connection = None
         self.closeTimerId = None
         self.items = []
         self.pluginClasses = []
@@ -211,38 +201,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1,
                                         f'{pluginClass.name} - {pluginClass.id}')
 
-    # def initConn(self, connId, configs):
-    #     # get all conn info
-    #     self.connections = []
-    #     for conn in conns:
-    #         self.connections.append(conn())
-    #     # add conn select combobox
-    #     self.changingConn = True
-    #     for i, conn in enumerate(self.connections):
-    #         for combobox in self.connSelectComboboxes:
-    #             combobox.addItem(conn.name)
-    #             if conn.id == connId:
-    #                 combobox.setCurrentIndex(i)
-    #     self.changingConn = False
-    #     # init connections
-    #     activeConn = self.connections[0]
-    #     for i, conn in enumerate(self.connections):
-    #         conn.onReceived = self.onReceived
-    #         conn.configGlobal = self.config.basic
-    #         conn.hintSignal.connect(self.showHint)
-    #         conn.onConnectionStatus.connect(self.onShowConnStatus)
-    #         config = {}
-    #         if conn.id in configs:
-    #             config = configs[conn.id]
-    #         else: # add new dict obj for conn to use
-    #             configs[conn.id] = config
-    #         conn.onInit(config)
-    #         conn.onWidget()
-    #         if conn.id == connId:
-    #             activeConn = conn
-    #     # init last used one
-    #     self.changeConn(activeConn)
-
     def _importPlugin(self, path, test = False):
         if not os.path.exists(path):
             return None
@@ -253,70 +211,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         if test:
             sys.path.remove(dir)
         return pluginClass
-
-    # def initPlugins(self, pluginsInfo, activeId, configs):
-    #     enabled = []
-    #     # find enabled builtin plugin
-    #     for id, plugin in builtinPlugins.items():
-    #         if not id in pluginsInfo["builtin"]:
-    #            pluginsInfo["builtin"][id] = {"enabled": True}
-    #         if pluginsInfo["builtin"][id]["enabled"]:
-    #             enabled.append(id)
-
-    #     # load external enabled plugins
-    #     invalidPlugin = []
-    #     for uid, info in pluginsInfo["external"].items():
-    #         if info["enabled"]:
-    #             pluginClass = self._importPlugin(info["path"])
-    #             if pluginClass:
-    #                 enabled.append(pluginClass.id)
-    #                 builtinPlugins[pluginClass.id] = pluginClass
-    #             else:
-    #                 invalidPlugin.append(uid)
-    #     # remove invalid external plugins
-    #     for uid in invalidPlugin:
-    #         pluginsInfo["external"].pop(uid)
-    #     # init plugins
-    #     self.connChilds = []
-    #     self.plugins = []
-    #     for id, pluinClass in builtinPlugins.items():
-    #         if id in enabled:
-    #             plugin = self.loadPlugin(pluinClass)
-
-    # def loadPlugin(self, pluginClass, init = True):
-    #     print("-- load plugin:", pluginClass.id)
-    #     plugin = pluginClass()
-    #     self.plugins.append(plugin)
-    #     plugin.hintSignal = self.hintSignal
-    #     plugin.send = self.sendData
-    #     plugin.ctrlConn = self.ctrlConn
-    #     plugin.isConnected = self.isConnected
-    #     plugin.reloadWindowSignal = self.reloadWindowSignal
-    #     plugin.configGlobal = self.config.basic
-    #     config = {
-    #         "plugin_id": plugin.id
-    #     }
-    #     configs = self.config.plugins
-    #     if plugin.id in configs:
-    #         config = configs[plugin.id]
-    #     else: # add new dict obj for plugin to use
-    #         configs[plugin.id] = config
-    #     plugin.onInit(config)
-    #     self.enablePlugin(plugin)
-    #     if plugin.id == self.config.basic["activePlugin"]:
-    #         self.activePlugin(plugin)
-    #     if not init:
-    #         self.addPluginTab(plugin, active=True)
-    #         plugin.onUiInitDone()
-    #         # load connections
-    #         combobox = self.connSelectComboboxes[-1]
-    #         self.changingConn = True
-    #         for i, conn in enumerate(self.connections):
-    #             combobox.addItem(conn.name)
-    #             if conn.id == self.config.basic["connId"]:
-    #                 combobox.setCurrentIndex(i)
-    #         self.changingConn = False
-    #     return plugin
 
     def loadExternalPlugin(self, path):
         extPlugsInfo = self.config["pluginsInfo"]["external"]
@@ -341,34 +235,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.pluginClasses.append(pluginClass)
         self.addPluginInfo(pluginClass)
         return True, ""
-
-    # def enablePlugin(self, plugin):
-    #     plugin.enabled = True
-    #     if plugin.connParent == "main":
-    #         self.connChilds.append(plugin)
-
-
-    # def activePlugin(self, plugin):
-    #     for p in self.plugins:
-    #         p.active = False
-    #     plugin.active = True
-    #     parent = None
-    #     if (not "main" in plugin.connParent) and plugin.connParent:
-    #         for pluginParent in self.plugins:
-    #             if pluginParent.id == plugin.connParent:
-    #                 pluginParent.active = True
-    #                 pluginParent.send = self.sendData
-    #                 if not plugin in pluginParent.connChilds:
-    #                     pluginParent.connChilds.append(plugin)
-    #                 parent = pluginParent
-    #                 break
-    #         if parent:
-    #             plugin.send = parent.sendData
-    #         else:
-    #             self.hintSignal.emit("error", _("Error"), f"Plugin {plugin.id}'s connParent error")
-    #     if not parent:
-    #         plugin.send = self.sendData
-    #     self.config.basic["activePlugin"] = plugin.id
 
     def onPluginSelectorChanged(self, idx):
         text = self.pluginsSelector.currentText()
@@ -400,18 +266,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                         if not ok:
                             self.hintSignal.emit("error", _("Error"), f'{_("Load plugin error")}: {msg}')
                         break
-
-    # def uiInitDone(self):
-    #     for conn in self.connections:
-    #         conn.onUiInitDone()
-    #     for plugin in self.plugins:
-    #         plugin.onUiInitDone()
-    #     # always hide functional, and show before init complete so we can get its width height
-    #     self.hideFunctional()
-
-        # self.sendProcess = threading.Thread(target=self.sendDataProcess)
-        # self.sendProcess.setDaemon(True)
-        # self.sendProcess.start()
 
     def initWindow(self):
         # set skin for utils_ui
@@ -457,8 +311,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # tab widgets
         self.tabWidget = QTabWidget()
         self.tabWidget.setTabsClosable(True)
-        # self.contentLayout.setSpacing(0)
-        # self.contentLayout.setContentsMargins(0,0,0,0)
         # tab left menu
         tabConerWidget = QWidget()
         tabConerLayout = QHBoxLayout()
@@ -492,63 +344,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.MoveToCenter()
         self.show()
 
-    # def addPluginTab(self, plugin, active = False):
-    #     w, connParent = self.addTabPanel(self.tabWidget, plugin.name, plugin, None)
-    #     self.tabWidgets.append((w, plugin.id))
-    #     self.connParentWidgets.append(connParent)
-    #     if active:
-    #         self.tabWidget.setCurrentWidget(w)
-    #         plugin.onActive()
-
-    # def addTabPanel(self, tabWidget, name, plugin, connectionWidget = None):
-    #     '''
-    #         @return panenl widget, connectionWidget parent
-    #     '''
-    #     contentWidget = QSplitter(Qt.Horizontal)
-    #     contentWidget.setProperty("class", "contentWrapper")
-    #     # contentWidget.setContentsMargins(5,5,5,5)
-    #     tabWidget.addTab(contentWidget, name)
-    #     mainWidget = plugin.onWidgetMain()
-
-    #     # widgets settings
-    #     settingWidget = QWidget()
-    #     settingWidget.setProperty("class","settingWidget")
-    #     settingLayout = QVBoxLayout()
-    #     settingWidget.setLayout(settingLayout)
-    #     #    connection settings
-    #     connSelectCommbox = ComboBox()
-    #     self.connSelectComboboxes.append(connSelectCommbox)
-    #     connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
-    #     connSettingsGroupBox = QGroupBox(_("Connection"))
-    #     layout = QVBoxLayout()
-    #     connSettingsGroupBox.setLayout(layout)
-    #     layout.addWidget(connSelectCommbox)
-    #     layout.setContentsMargins(1, 6, 0, 0)
-    #     connectionWidgetWrapper = QWidget()
-    #     layout2 = QVBoxLayout()
-    #     layout2.setContentsMargins(0, 0, 0, 0)
-    #     connectionWidgetWrapper.setLayout(layout2)
-    #     layout.addWidget(connectionWidgetWrapper)
-    #     if connectionWidget:
-    #         layout2.addWidget(connectionWidget)
-    #     settingLayout.addWidget(connSettingsGroupBox)
-    #     #  other settings
-    #     widget = plugin.onWidgetSettings(settingLayout)
-    #     if not widget is None:
-    #         settingLayout.addWidget(widget)
-    #     settingLayout.setContentsMargins(0,0,0,0)
-
-    #     # right functional layout
-    #     functionalWidget = plugin.onWidgetFunctional(contentWidget)
-    #     contentWidget.addWidget(settingWidget)
-    #     contentWidget.addWidget(mainWidget)
-    #     if not functionalWidget is None:
-    #         contentWidget.addWidget(functionalWidget)
-    #     contentWidget.setStretchFactor(0, 1)
-    #     contentWidget.setStretchFactor(1, 2)
-    #     contentWidget.setStretchFactor(2, 1)
-    #     return contentWidget, connectionWidgetWrapper
-
     def add_new_window(self):
         import copy
         mainWindow = MainWindow(self.app, self.eventFilter, copy.deepcopy(self.config))
@@ -576,9 +371,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # others
         self.updateSignal.connect(self.showUpdate)
         self.hintSignal.connect(self.showHint)
-        # self.statusBarSignal.connect(self.onstatusBarText)
         self.reloadWindowSignal.connect(self.onReloadWindow)
-        # self.countUpdateSignal.connect(self.onUpdateCountUi)
 
     def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False):
         objType = type(uiObj)
@@ -635,145 +428,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             if _item["name"] == item.name:
                 self.config["items"].remove(_item)
                 break
-        # # if conn widget in this plugin, remove conn widget
-        # parent = self.connectionWidget.parentWidget()
-        # if parent == self.connParentWidgets[idx]:
-        #     parent.layout().removeWidget(self.connectionWidget)
-        # # set config, set plugin as disabled
-        # infos = self.config.basic["pluginsInfo"]
-        # uid = self.tabWidgets[idx][1]
-        # for id, info in infos["builtin"].items():
-        #     if id == uid:
-        #         info["enabled"] = False
-        # for id, info in infos["external"].items():
-        #     if id == uid:
-        #         info["enabled"] = False
-        # # remove plugin
-        # self.connParentWidgets.pop(idx)
-        # self.tabWidgets.pop(idx)
-
-    # def changeConn(self, connection:object):
-    #     # remove conn widget from the container
-    #     parent = None
-    #     if self.connectionWidget:
-    #         parent = self.connectionWidget.parentWidget()
-    #         parent.layout().removeWidget(self.connectionWidget)
-    #         self.connectionWidget.setParent(None)
-    #         self.updateStyle(parent)
-    #     # add new conn widget to container
-    #     self.connection = connection
-    #     self.connectionWidget = connection.widget
-    #     if not parent:
-    #         parent = self.connParentWidgets[self.tabWidget.currentIndex()]
-    #     parent.layout().addWidget(self.connectionWidget)
-    #     self.updateStyle(parent)
-
-    # def onConnChanged(self, idx):
-    #     '''
-    #         combobox changed item
-    #     '''
-    #     if self.changingConn:
-    #         return
-    #     self.changingConn = True
-    #     # update all tab's connSelectCombobox widget show
-    #     for w in self.connSelectComboboxes:
-    #         w.setCurrentIndex(idx)
-    #     # change connection
-    #     print("-- change conn to", self.connections[idx].id)
-    #     self.changeConn(self.connections[idx])
-    #     self.config.basic["connId"] = self.connections[idx].id
-    #     self.changingConn = False
-
-    # def sendData(self, data_bytes=None, file_path=None, callback=lambda ok, msg:None):
-    #     if data_bytes:
-    #         self.dataToSend.insert(0, (data_bytes, callback))
-    #     if file_path:
-    #         self.fileToSend.insert(0, (file_path, callback))
-
-    # def ctrlConn(self, k, v):
-    #     if self.connection:
-    #         self.connection.ctrl(k, v)
-
-    # def onSent(self, data):
-    #     self.sendCount += len(data)
-    #     self.countUpdateSignal.emit(self.sendCount, self.receiveCount)
-
-    # def onReceived(self, data):
-    #     self.receiveCount += len(data)
-    #     self.countUpdateSignal.emit(self.sendCount, self.receiveCount)
-    #     # invoke plugin onReceived
-    #     for plugin in self.connChilds:
-    #         if plugin.active:
-    #             plugin.onReceived(data)
-
-    # def isConnected(self):
-    #     return self.connection.isConnected()
-
-    # def sendDataProcess(self):
-    #     self.receiveProgressStop = False
-    #     while(not self.receiveProgressStop):
-    #         try:
-    #             if not self.connection.isConnected():
-    #                 time.sleep(0.001)
-    #                 continue
-    #             while len(self.dataToSend) > 0:
-    #                 data, callback = self.dataToSend.pop()
-    #                 self.connection.send(data)
-    #                 self.onSent(data)
-    #                 callback(True, "")
-    #             while len(self.fileToSend) > 0:
-    #                 file_path, callback = self.fileToSend.pop()
-    #                 ok = False
-    #                 if file_path and os.path.exists(file_path):
-    #                     data = None
-    #                     try:
-    #                         with open(file_path, "rb") as f:
-    #                             data = f.read()
-    #                     except Exception as e:
-    #                         self.hintSignal.emit("error", _("Error"), _("Open file failed!") + "\n%s\n%s" %(file_path, str(e)))
-    #                     if data:
-    #                         self.connection.send(data)
-    #                         self.onSent(data)
-    #                         ok = True
-    #                 callback(ok, "")
-    #             time.sleep(0.001)
-    #         except Exception as e:
-    #             import traceback
-    #             traceback.print_exc()
-    #             if 'multiple access' in str(e):
-    #                 self.hintSignal.emit("error", _("Error"), "device disconnected or multiple access on port?")
-    #             continue
-
-    # def onUpdateCountUi(self, send, receive):
-    #     self.statusBarSendCount.setText('{}({}): {}'.format(_("Sent"), _("bytes"), send))
-    #     self.statusBarReceiveCount.setText('{}({}): {}'.format(_("Received"), _("bytes"), receive))
-
-    # def onShowConnStatus(self, status, msg):
-    #     if status == ConnectionStatus.CONNECTED:
-    #         self.onstatusBarText("info", '{} {}'.format(_("Connected"), msg))
-    #     elif status == ConnectionStatus.CLOSED:
-    #         self.onstatusBarText("info", '{} {}'.format(_("Closed"), msg))
-    #     elif status == ConnectionStatus.CONNECTING:
-    #         self.onstatusBarText("info", '{} {}'.format(_("Connecting"), msg))
-    #     elif status == ConnectionStatus.LOSE:
-    #         self.onstatusBarText("warning", '{} {}'.format(_("Connection lose"), msg))
-    #     else:
-    #         self.onstatusBarText("warning", msg)
-    #     for plugin in self.plugins:
-    #         if plugin.active:
-    #             plugin.onConnChanged(status, msg)
-
-    # def onstatusBarText(self, msg_type, msg):
-    #     if msg_type == "info":
-    #         color = "#008200"
-    #     elif msg_type == "warning":
-    #         color = "#fb8c00"
-    #     elif msg_type == "error":
-    #         color = "#f44336"
-    #     else:
-    #         color = "#008200"
-    #     text = '<font color={}>{}</font>'.format(color, msg)
-    #     self.statusBarStauts.setText(text)
 
     def updateStyle(self, widget):
         self.frameWidget.style().unpolish(widget)
@@ -805,11 +459,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         else:
             callback(False)
 
-    # def onClearCount(self):
-    #     self.receiveCount = 0
-    #     self.sendCount = 0
-    #     self.countUpdateSignal.emit(self.sendCount, self.receiveCount)
-
     def MoveToCenter(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -835,11 +484,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         if 1: # reply == QMessageBox.Yes:
             self.receiveProgressStop = True
             # inform plugins
-            # TODO: deinit all items
-            # for p in self.plugins:
-            #     p.onDel()
-            # for c in self.connections:
-            #     c.onDel()
+            for item in self.items:
+                item.onDel()
             self.saveConfig()
             # actual exit after 500ms
             self.closeTimerId = self.startTimer(500)
@@ -870,17 +516,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.languageCombobox.setCurrentIndex(idx)
         # encoding
         self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(self.config["encoding"]))
-
-    # def loadPluginList(self):
-    #     # load disabled plugins name to plugin list
-    #     infos = self.config.basic["pluginsInfo"]
-    #     for id, info in infos["builtin"].items():
-    #         if self.pluginsSelector.findText(f'{id} - ') < 0:
-    #             self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1, f'{id} - {builtinPlugins[id].name}')
-    #     for id, info in infos["external"].items():
-    #         if self.pluginsSelector.findText(f'{id} - ') < 0:
-    #             c = self._importPlugin(info["path"], test = True)
-    #             self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1, f'{id} - {c.name}')
 
     def keyPressEvent(self, event):
         CustomTitleBarWindowMixin.keyPressEvent(self, event)
@@ -958,7 +593,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         iconPath = self.DataPath+"/"+parameters.appIcon
         self.helpWindow = HelpWidget(help, pluginsHelp, icon = iconPath)
         self.helpWindow.closed.connect(self.helpWindowClosed)
-        # QMessageBox.information(self, _("About"), help)
 
     def helpWindowClosed(self):
         del self.helpWindow
