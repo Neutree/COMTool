@@ -58,8 +58,8 @@ A cross platform serial debug tools written by python
 - [x] Custom shortcut send(in protocol plugin)
 - [x] TCP UDP support
 - [x] Terminal mode support
+- [x] plugin support(Create plugin see [docs/plugins.md](./docs/plugins.md))
 - [ ] real time data graphic display
-- [ ] plugin support
 
 ## Install binary
 

@@ -41,6 +41,10 @@ And there's some points should be pay attention:
   * Or use comtool program install as python package(installed by pip)
 
 
+## Write an external plugin as a python package, can auto load by COMTool
+
+TODO:
+
 
 ## Add connection plugin
 
