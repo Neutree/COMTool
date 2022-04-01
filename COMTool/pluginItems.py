@@ -167,7 +167,7 @@ class PluginItem:
                     self.hintSignal.emit("error", _("Error"), _("Not support load global config file, you can copy config file mannually to " + configFilePath))
                     return
                 if config["pluginId"] != self.plugin.id:
-                    self.hintSignal.emit("error", _("Error"), _("Config is not for this plugin, config is for plugin:" + " " + config["pluginId"]))
+                    self.hintSignal.emit("error", _("Error"), _("Config is not for this plugin, config is for plugin:") + " " + config["pluginId"])
                     return
                 if config["config"]["plugin"]["version"] != self.plugin.config["version"]:
                     self.hintSignal.emit("warning", _("Warning"), "{} {}, {}: {}, {}: {}".format(

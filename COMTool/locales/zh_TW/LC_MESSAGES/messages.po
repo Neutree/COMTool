@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-31 00:58+0800\n"
+"POT-Creation-Date: 2022-04-02 00:28+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -18,143 +18,177 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:93
-msgid "Load plugin from file"
-msgstr "從檔案載入外掛程式"
-
-#: Main.py:328
-msgid "Load plugin fail"
-msgstr "載入外掛程式失敗"
-
-#: Main.py:370 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
-#: plugins/protocol.py:419 plugins/protocol.py:429
-msgid "Select file"
-msgstr "選擇文件"
-
-#: Main.py:372
-msgid "python script (*.py)"
-msgstr "python 程式 (*.py)"
-
-#: Main.py:376 Main.py:393 Main.py:606 Main.py:611 Main.py:1063
-#: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: pluginItems.py:205 pluginItems.py:217 plugins/base.py:155
-#: plugins/base.py:160 plugins/base.py:176 plugins/base.py:213
-#: plugins/base.py:231 plugins/dbg.py:510 plugins/dbg.py:527 plugins/dbg.py:584
-#: plugins/dbg.py:592 plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
-#: plugins/protocol.py:440 plugins/protocol.py:632 plugins/protocol.py:646
-#: plugins/protocol.py:712
-msgid "Error"
-msgstr "錯誤"
-
-#: Main.py:552
-msgid "New Window"
-msgstr "開新視窗"
-
-#: Main.py:786 Main.py:795
-msgid "Restart now?"
-msgstr "現在就重啟？"
-
-#: Main.py:787
-msgid "language changed to: "
-msgstr "語言更改為："
-
-#: Main.py:787
-msgid "Restart software to take effect now?"
-msgstr "現在就重啟軟件以生效？"
-
-#: Main.py:844 Main.py:845
-msgid "Closing ..."
-msgstr "關閉中..."
-
-#: Main.py:951
-msgid "About"
-msgstr "關於"
-
-#: Main.py:960
-msgid "New versioin detected, please click learn more to download"
-msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
-
-#: Main.py:961
-msgid "Learn More"
-msgstr "瞭解更多"
-
-#: Main.py:962
-msgid "Skip this version"
-msgstr "跳過此版本"
-
-#: Main.py:963
-msgid "Remind me next time"
-msgstr "下次提醒我"
-
-#: Main.py:964
-msgid "Need update"
-msgstr "需要更新"
-
-#: helpAbout.py:44
+#: helpAbout.py:39
 msgid "Config path"
 msgstr "配置路徑"
 
-#: helpAbout.py:46
+#: helpAbout.py:41
 msgid "Old config backup in"
 msgstr ""
 
-#: helpAbout.py:48
+#: helpAbout.py:43
 msgid "COMTool is a Open source project create by"
 msgstr "COMTool 是一個開源程序"
 
-#: helpAbout.py:50
-msgid "Welcome to improve it together"
+#: helpAbout.py:45
+#, fuzzy
+msgid "Welcome to improve it together and add plugins"
 msgstr "歡迎一起改進"
 
-#: helpAbout.py:51
+#: helpAbout.py:46
 msgid "See more details on"
 msgstr "更多詳情請看"
 
-#: helpAbout.py:52
+#: helpAbout.py:47
 msgid "Have problem? see"
 msgstr "有問題嗎？看看"
 
-#: helpAbout.py:53
-msgid "Buy me half a cup of coffee"
-msgstr "感謝大爺的買半杯咖啡"
+#: helpAbout.py:48
+msgid "QQ group for plugin development discussion"
+msgstr ""
 
-#: helpAbout.py:54
-msgid "Shortcut:"
-msgstr "快捷鍵："
+#: helpAbout.py:49
+msgid "You can buy me half a cup of coffee if this software helpes you"
+msgstr ""
 
-#: helpAbout.py:55
-msgid "Full screen"
-msgstr "全屏"
+#: helpAbout.py:52
+msgid "Plugin help:"
+msgstr ""
 
-#: helpAbout.py:56
-msgid "Send data"
-msgstr "發送數據"
+#: main2.py:90
+msgid "Load plugin from file"
+msgstr "從檔案載入外掛程式"
 
-#: helpAbout.py:57
-msgid "Clear Send Area"
-msgstr "清除發送區"
+#: main2.py:230
+msgid "Load plugin fail"
+msgstr "載入外掛程式失敗"
 
-#: helpAbout.py:58
-msgid "Clear Receive Area"
-msgstr "清除接收區"
+#: conn/conn_ssh.py:232 main2.py:244 pluginItems.py:147 pluginItems.py:160
+#: plugins/dbg.py:415 plugins/dbg.py:429
+msgid "Select file"
+msgstr "選擇文件"
 
-#: conn/conn_tcp_udp.py:534 pluginItems.py:95
+#: main2.py:246
+msgid "python script (*.py)"
+msgstr "python 程式 (*.py)"
+
+#: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
+#: main2.py:250 main2.py:267 main2.py:407 main2.py:412 main2.py:716
+#: pluginItems.py:167 pluginItems.py:170 pluginItems.py:271 pluginItems.py:283
+#: plugins/base.py:163 plugins/base.py:168 plugins/base.py:184
+#: plugins/base.py:221 plugins/base.py:239 plugins/dbg.py:523
+#: plugins/dbg.py:540 plugins/dbg.py:597 plugins/dbg.py:605
+#: plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
+#: plugins/protocol.py:584 plugins/protocol.py:598 plugins/protocol.py:664
+msgid "Error"
+msgstr "錯誤"
+
+#: main2.py:355
+msgid "New Window"
+msgstr "開新視窗"
+
+#: main2.py:442 main2.py:451
+msgid "Restart now?"
+msgstr "現在就重啟？"
+
+#: main2.py:443
+msgid "language changed to: "
+msgstr "語言更改為："
+
+#: main2.py:443
+msgid "Restart software to take effect now?"
+msgstr "現在就重啟軟件以生效？"
+
+#: main2.py:492 main2.py:493
+msgid "Closing ..."
+msgstr "關閉中..."
+
+#: main2.py:607
+msgid "New versioin detected, please click learn more to download"
+msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
+
+#: main2.py:608
+msgid "Learn More"
+msgstr "瞭解更多"
+
+#: main2.py:609
+msgid "Skip this version"
+msgstr "跳過此版本"
+
+#: main2.py:610
+msgid "Remind me next time"
+msgstr "下次提醒我"
+
+#: main2.py:611
+msgid "Need update"
+msgstr "需要更新"
+
+#: pluginItems.py:55
+msgid "version not found in config of plugin:"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:534 pluginItems.py:98
 msgid "Connection"
 msgstr "連接"
 
-#: pluginItems.py:205
+#: pluginItems.py:122
+msgid "Load config"
+msgstr "載入設置"
+
+#: pluginItems.py:123
+msgid "Share config"
+msgstr "分享設置"
+
+#: pluginItems.py:149 pluginItems.py:162
+msgid "json file (*.json);;config file (*.conf);;All Files (*)"
+msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
+
+#: pluginItems.py:167
+msgid ""
+"Not support load global config file, you can copy config file mannually "
+"to "
+msgstr ""
+
+#: pluginItems.py:170
+msgid "Config is not for this plugin, config is for plugin:"
+msgstr ""
+
+#: pluginItems.py:173 plugins/dbg.py:367 plugins/dbg.py:526
+#: plugins/protocol.py:686 plugins/protocol.py:708
+msgid "Warning"
+msgstr "警告"
+
+#: pluginItems.py:174
+msgid "Config version not same, plugin config version:"
+msgstr ""
+
+#: pluginItems.py:175
+msgid "now"
+msgstr ""
+
+#: pluginItems.py:176
+msgid ""
+"this maybe lead to some problem, if happened, please remove it manually "
+"from config file"
+msgstr ""
+
+#: pluginItems.py:193
+msgid "Restart to load config?"
+msgstr "重启以載入設置？"
+
+#: pluginItems.py:271
 msgid "Open file failed!"
 msgstr "打開失敗"
 
-#: widgets.py:532 widgets.py:553
+#: widgets.py:542 widgets.py:563
 msgid "Received"
 msgstr "已接收"
 
-#: widgets.py:532 widgets.py:533 widgets.py:553 widgets.py:560
+#: widgets.py:542 widgets.py:543 widgets.py:563 widgets.py:570
 msgid "bytes"
 msgstr "字節"
 
-#: widgets.py:533 widgets.py:560
+#: widgets.py:543 widgets.py:570
 msgid "Sent"
 msgstr "已發送"
 
@@ -253,7 +287,7 @@ msgstr "輸入"
 msgid "error"
 msgstr "錯誤"
 
-#: conn/conn_ssh.py:234 plugins/dbg.py:404
+#: conn/conn_ssh.py:234 plugins/dbg.py:417
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
@@ -313,27 +347,27 @@ msgstr "客戶端已連接："
 msgid "closed!"
 msgstr "已關閉！"
 
-#: plugins/base.py:68
+#: plugins/base.py:76
 msgid "Connected"
 msgstr "已連接"
 
-#: plugins/base.py:70
+#: plugins/base.py:78
 msgid "Closed"
 msgstr "已關閉"
 
-#: plugins/base.py:72
+#: plugins/base.py:80
 msgid "Connecting"
 msgstr "正在連接"
 
-#: plugins/base.py:74
+#: plugins/base.py:82
 msgid "Connection lose"
 msgstr "連接丟失"
 
-#: plugins/base.py:176
+#: plugins/base.py:184
 msgid "Format error, should be like 00 01 02 03"
 msgstr "格式錯誤，應該如：00 01 02 03"
 
-#: plugins/base.py:213 plugins/base.py:231
+#: plugins/base.py:221 plugins/base.py:239
 msgid "Escape is on, but escape error:"
 msgstr "轉義符支持已打開，但是轉義時出現了問題"
 
@@ -341,175 +375,190 @@ msgstr "轉義符支持已打開，但是轉義時出現了問題"
 msgid "Send Receive"
 msgstr "收发"
 
-#: plugins/dbg.py:134
+#: plugins/dbg.py:69
+msgid "Shortcut:"
+msgstr "快捷鍵："
+
+#: plugins/dbg.py:70
+msgid "Full screen"
+msgstr "全屏"
+
+#: plugins/dbg.py:71
+msgid "Send data"
+msgstr "發送數據"
+
+#: plugins/dbg.py:72
+msgid "Clear Send Area"
+msgstr "清除發送區"
+
+#: plugins/dbg.py:73
+msgid "Clear Receive Area"
+msgstr "清除接收區"
+
+#: plugins/dbg.py:147
 msgid "Receive Settings"
 msgstr "接收設置"
 
-#: plugins/dbg.py:135 plugins/dbg.py:164 plugins/protocol.py:379
+#: plugins/dbg.py:148 plugins/dbg.py:177 plugins/protocol.py:380
 msgid "ASCII"
 msgstr "ASCII"
 
-#: plugins/dbg.py:136
+#: plugins/dbg.py:149
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "使用可見字符顯示收到的數據，在右上角選擇解碼的方法"
 
-#: plugins/dbg.py:137 plugins/dbg.py:165 plugins/protocol.py:380
+#: plugins/dbg.py:150 plugins/dbg.py:178 plugins/protocol.py:381
 msgid "HEX"
 msgstr "HEX"
 
-#: plugins/dbg.py:138
+#: plugins/dbg.py:151
 msgid "Show recived data as hex format"
 msgstr "使用十六進製表示方法顯示收到的數據"
 
-#: plugins/dbg.py:140
+#: plugins/dbg.py:153
 msgid ""
 "Auto\n"
 "Linefeed\n"
 "ms"
 msgstr "自動換行"
 
-#: plugins/dbg.py:141 plugins/dbg.py:144
+#: plugins/dbg.py:154 plugins/dbg.py:157
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超過這個時間自動換行，單位：ms"
 
-#: plugins/dbg.py:147
+#: plugins/dbg.py:160
 msgid "Timestamp"
 msgstr "時間戳"
 
-#: plugins/dbg.py:148
+#: plugins/dbg.py:161
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr "在接收的數據前添加時間戳， 會自動使能自動換行"
 
-#: plugins/dbg.py:149
+#: plugins/dbg.py:162
 msgid "Color"
 msgstr "顏色"
 
-#: plugins/dbg.py:150
+#: plugins/dbg.py:163
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "使能 unix 終端樣式的顏色支持， 比如： \\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:163
+#: plugins/dbg.py:176
 msgid "Send Settings"
 msgstr "發送設置"
 
-#: plugins/dbg.py:166 plugins/protocol.py:381
+#: plugins/dbg.py:179 plugins/protocol.py:382
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "以可見字符的方式獲取將要發送的數據，在右上角選擇編碼的方法"
 
-#: plugins/dbg.py:167 plugins/protocol.py:382
+#: plugins/dbg.py:180 plugins/protocol.py:383
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "以十六進制的格式獲取將要發送的數據，比如 十六進制的'31 32 33' 和 ascii編碼的 '123' 等效"
 
-#: plugins/dbg.py:169
+#: plugins/dbg.py:182
 msgid ""
 "Timed Send\n"
 "ms"
 msgstr "定時發送"
 
-#: plugins/dbg.py:170 plugins/dbg.py:173
+#: plugins/dbg.py:183 plugins/dbg.py:186
 msgid "Timed send, unit: ms"
 msgstr "定時發送，單位：ms"
 
-#: plugins/dbg.py:176 plugins/protocol.py:384
+#: plugins/dbg.py:189 plugins/protocol.py:385
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:177 plugins/protocol.py:385
+#: plugins/dbg.py:190 plugins/protocol.py:386
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選中發出通知\\r\\n不是\\n"
 
-#: plugins/dbg.py:179 plugins/protocol.py:56 plugins/protocol.py:119
+#: plugins/dbg.py:192 plugins/protocol.py:56 plugins/protocol.py:119
 msgid "Record"
 msgstr "記錄"
 
-#: plugins/dbg.py:180
+#: plugins/dbg.py:193
 msgid "Record send data"
 msgstr "記錄發送的數據"
 
-#: plugins/dbg.py:181 plugins/protocol.py:387
+#: plugins/dbg.py:194 plugins/protocol.py:388
 msgid "Escape"
 msgstr "轉義符"
 
-#: plugins/dbg.py:182 plugins/protocol.py:388
+#: plugins/dbg.py:195 plugins/protocol.py:389
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "使能轉義符支持，比如 \\t \\r \\n \\x01 \\001"
 
-#: plugins/dbg.py:183
+#: plugins/dbg.py:196
 msgid "Newline"
 msgstr "新行"
 
-#: plugins/dbg.py:184
+#: plugins/dbg.py:197
 msgid "Auto add new line when send"
 msgstr "發送時自動添加新行"
 
-#: plugins/dbg.py:212
+#: plugins/dbg.py:225
 msgid "Auto line feed value error, must be integer"
 msgstr "自動換行值錯誤，必須是整數"
 
-#: plugins/dbg.py:213
+#: plugins/dbg.py:226
 msgid "Timed send value error, must be integer"
 msgstr "定時發送值錯誤，必須是整數"
 
-#: plugins/dbg.py:223
+#: plugins/dbg.py:236
 msgid "Open File"
 msgstr "打開文件"
 
-#: plugins/dbg.py:224
+#: plugins/dbg.py:237
 msgid "Send File"
 msgstr "發送文件"
 
-#: plugins/dbg.py:225
+#: plugins/dbg.py:238
 msgid "Clear History"
 msgstr "清除歷史"
 
-#: plugins/dbg.py:228
+#: plugins/dbg.py:241
 msgid "Sendding File"
 msgstr "發送文件中"
 
-#: plugins/dbg.py:234
+#: plugins/dbg.py:247
 msgid "Save log"
 msgstr "保存日誌"
 
-#: plugins/dbg.py:237
+#: plugins/dbg.py:250
 msgid "Cutom send"
 msgstr "自定義發送"
 
-#: plugins/dbg.py:268
+#: plugins/dbg.py:281
 msgid "Log path"
 msgstr "日誌路徑"
 
-#: plugins/dbg.py:354 plugins/dbg.py:513 plugins/protocol.py:734
-#: plugins/protocol.py:756
-msgid "Warning"
-msgstr "警告"
-
-#: plugins/dbg.py:354
+#: plugins/dbg.py:367
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "當時間戳和發送記錄打開是，必須將自動換行也打開"
 
-#: plugins/dbg.py:382 plugins/protocol.py:67 plugins/protocol.py:85
+#: plugins/dbg.py:395 plugins/protocol.py:67 plugins/protocol.py:85
 msgid "OK"
 msgstr "確定"
 
-#: plugins/dbg.py:382
+#: plugins/dbg.py:395
 msgid "History cleared!"
 msgstr "歷史已清除！"
 
-#: plugins/dbg.py:387
+#: plugins/dbg.py:400
 msgid "Send file"
 msgstr "發送文件"
 
-#: plugins/dbg.py:418
+#: plugins/dbg.py:431
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr "日誌文件 (*.log);;文本文件 (*.txt);;所有文件 (*)"
 
-#: plugins/dbg.py:510
+#: plugins/dbg.py:523
 msgid ""
 "File path error\n"
 "path"
@@ -517,23 +566,23 @@ msgstr ""
 "文件路徑錯誤\n"
 "路徑"
 
-#: plugins/dbg.py:513
+#: plugins/dbg.py:526
 msgid "Connect first please"
 msgstr "請先連接"
 
-#: plugins/dbg.py:516
+#: plugins/dbg.py:529
 msgid "Sending file"
 msgstr "發送文件中"
 
-#: plugins/dbg.py:527
+#: plugins/dbg.py:540
 msgid "Time format error"
 msgstr "時間格式錯誤"
 
-#: plugins/dbg.py:584
+#: plugins/dbg.py:597
 msgid "Send Error"
 msgstr "發送出錯"
 
-#: plugins/dbg.py:592
+#: plugins/dbg.py:605
 msgid "get data error"
 msgstr "獲取數據出錯"
 
@@ -573,84 +622,64 @@ msgstr "取消"
 msgid "protocol"
 msgstr "協議"
 
-#: plugins/protocol.py:271
+#: plugins/protocol.py:272
 msgid "Key mode"
 msgstr "鍵盤模式"
 
-#: plugins/protocol.py:357
+#: plugins/protocol.py:358
 msgid "En-decoding settings"
 msgstr "編解碼設置"
 
-#: plugins/protocol.py:361
+#: plugins/protocol.py:362
 msgid "Custom, input name"
 msgstr "自定義，輸入名稱"
 
-#: plugins/protocol.py:362
+#: plugins/protocol.py:363
 msgid "Load defaults"
 msgstr "載入默認"
 
-#: plugins/protocol.py:365 plugins/protocol.py:700 plugins/protocol.py:724
-#: plugins/protocol.py:727 plugins/protocol.py:747
+#: plugins/protocol.py:366 plugins/protocol.py:652 plugins/protocol.py:676
+#: plugins/protocol.py:679 plugins/protocol.py:699
 msgid "Save"
 msgstr "保存"
 
-#: plugins/protocol.py:367
+#: plugins/protocol.py:368
 msgid "Delete"
 msgstr "刪除"
 
-#: plugins/protocol.py:371
+#: plugins/protocol.py:372
 msgid "Defaults"
 msgstr "默認"
 
-#: plugins/protocol.py:373
+#: plugins/protocol.py:374
 msgid "Code"
 msgstr "代碼"
 
-#: plugins/protocol.py:377
+#: plugins/protocol.py:378
 msgid "Send settings"
 msgstr "發送設置"
 
-#: plugins/protocol.py:409
-msgid "Load config"
-msgstr "載入設置"
-
-#: plugins/protocol.py:410
-msgid "Share config"
-msgstr "分享設置"
-
-#: plugins/protocol.py:421 plugins/protocol.py:431
-msgid "json file (*.json);;config file (*.conf);;All Files (*)"
-msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
-
-#: plugins/protocol.py:440
-msgid "config file format error"
-msgstr "配置文件格式錯誤"
-
-#: plugins/protocol.py:448
-msgid "Restart to load config?"
-msgstr "重启以載入設置？"
-
-#: plugins/protocol.py:632
+#: plugins/protocol.py:584
 msgid "Run decode error"
 msgstr ""
 
-#: plugins/protocol.py:646
+#: plugins/protocol.py:598
 msgid "Run encode error"
 msgstr "執行編碼出錯"
 
-#: plugins/protocol.py:708
+#: plugins/protocol.py:660
 msgid "decode and encode method should be in code"
 msgstr "代碼中必須有編碼和解碼方法"
 
-#: plugins/protocol.py:711
+#: plugins/protocol.py:663
 msgid "Method error"
 msgstr "發送出錯"
 
-#: plugins/protocol.py:734
+#: plugins/protocol.py:686
 msgid "Please input code profile name first"
 msgstr "請先輸入代碼配置名稱"
 
-#: plugins/protocol.py:756
+#: plugins/protocol.py:708
 msgid "Please select a code profile name first to delete"
 msgstr "請先選擇一個代碼配置名稱以刪除"
 
@@ -705,5 +734,17 @@ msgstr ""
 #~ msgstr "卸載應用"
 
 #~ msgid "Old config can be found in"
+#~ msgstr ""
+
+#~ msgid "About"
+#~ msgstr "關於"
+
+#~ msgid "Buy me half a cup of coffee"
+#~ msgstr "感謝大爺的買半杯咖啡"
+
+#~ msgid "config file format error"
+#~ msgstr "配置文件格式錯誤"
+
+#~ msgid "Config is not for this plugin, config is for plugin: pluginId"
 #~ msgstr ""
 

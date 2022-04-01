@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-03-31 00:58+0800\n"
+"POT-Creation-Date: 2022-04-02 00:28+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,143 +18,177 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: Main.py:93
-msgid "Load plugin from file"
-msgstr "ファイルからプラグインを読み込む"
-
-#: Main.py:328
-msgid "Load plugin fail"
-msgstr "プラグインの読み込みに失敗しました"
-
-#: Main.py:370 conn/conn_ssh.py:232 plugins/dbg.py:402 plugins/dbg.py:416
-#: plugins/protocol.py:419 plugins/protocol.py:429
-msgid "Select file"
-msgstr "ファイルを選択"
-
-#: Main.py:372
-msgid "python script (*.py)"
-msgstr "Python スクリプト (*.py)"
-
-#: Main.py:376 Main.py:393 Main.py:606 Main.py:611 Main.py:1063
-#: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: pluginItems.py:205 pluginItems.py:217 plugins/base.py:155
-#: plugins/base.py:160 plugins/base.py:176 plugins/base.py:213
-#: plugins/base.py:231 plugins/dbg.py:510 plugins/dbg.py:527 plugins/dbg.py:584
-#: plugins/dbg.py:592 plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
-#: plugins/protocol.py:440 plugins/protocol.py:632 plugins/protocol.py:646
-#: plugins/protocol.py:712
-msgid "Error"
-msgstr "間違い"
-
-#: Main.py:552
-msgid "New Window"
-msgstr "新しいウィンドウ"
-
-#: Main.py:786 Main.py:795
-msgid "Restart now?"
-msgstr "今すぐ再起動しますか？"
-
-#: Main.py:787
-msgid "language changed to: "
-msgstr "言語が次のように変更されました："
-
-#: Main.py:787
-msgid "Restart software to take effect now?"
-msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
-
-#: Main.py:844 Main.py:845
-msgid "Closing ..."
-msgstr "閉じています..."
-
-#: Main.py:951
-msgid "About"
-msgstr "だいたい"
-
-#: Main.py:960
-msgid "New versioin detected, please click learn more to download"
-msgstr "新しいバージョンが検出されました。詳しくは「もっと詳しく」をクリックしてダウンロードしてください"
-
-#: Main.py:961
-msgid "Learn More"
-msgstr "もっと詳しく知る"
-
-#: Main.py:962
-msgid "Skip this version"
-msgstr "このバージョンをスキップ"
-
-#: Main.py:963
-msgid "Remind me next time"
-msgstr "次回リマインダー"
-
-#: Main.py:964
-msgid "Need update"
-msgstr "更新が必要"
-
-#: helpAbout.py:44
+#: helpAbout.py:39
 msgid "Config path"
 msgstr "設定ファイルのパス"
 
-#: helpAbout.py:46
+#: helpAbout.py:41
 msgid "Old config backup in"
 msgstr ""
 
-#: helpAbout.py:48
+#: helpAbout.py:43
 msgid "COMTool is a Open source project create by"
 msgstr "COMToolは、によって作成されたオープンソースプロジェクトです。"
 
-#: helpAbout.py:50
-msgid "Welcome to improve it together"
+#: helpAbout.py:45
+#, fuzzy
+msgid "Welcome to improve it together and add plugins"
 msgstr "一緒に改善することを歓迎します"
 
-#: helpAbout.py:51
+#: helpAbout.py:46
 msgid "See more details on"
 msgstr "詳細はこちら"
 
-#: helpAbout.py:52
+#: helpAbout.py:47
 msgid "Have problem? see"
 msgstr "問題がありますか？こちら"
 
-#: helpAbout.py:53
-msgid "Buy me half a cup of coffee"
-msgstr "コーヒーを買ってください"
+#: helpAbout.py:48
+msgid "QQ group for plugin development discussion"
+msgstr ""
 
-#: helpAbout.py:54
-msgid "Shortcut:"
-msgstr "ホットキー："
+#: helpAbout.py:49
+msgid "You can buy me half a cup of coffee if this software helpes you"
+msgstr ""
 
-#: helpAbout.py:55
-msgid "Full screen"
-msgstr "フルスクリーン"
+#: helpAbout.py:52
+msgid "Plugin help:"
+msgstr ""
 
-#: helpAbout.py:56
-msgid "Send data"
-msgstr "データを送る"
+#: main2.py:90
+msgid "Load plugin from file"
+msgstr "ファイルからプラグインを読み込む"
 
-#: helpAbout.py:57
-msgid "Clear Send Area"
-msgstr "送信エリアをクリアする"
+#: main2.py:230
+msgid "Load plugin fail"
+msgstr "プラグインの読み込みに失敗しました"
 
-#: helpAbout.py:58
-msgid "Clear Receive Area"
-msgstr "清除接収区"
+#: conn/conn_ssh.py:232 main2.py:244 pluginItems.py:147 pluginItems.py:160
+#: plugins/dbg.py:415 plugins/dbg.py:429
+msgid "Select file"
+msgstr "ファイルを選択"
 
-#: conn/conn_tcp_udp.py:534 pluginItems.py:95
+#: main2.py:246
+msgid "python script (*.py)"
+msgstr "Python スクリプト (*.py)"
+
+#: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
+#: main2.py:250 main2.py:267 main2.py:407 main2.py:412 main2.py:716
+#: pluginItems.py:167 pluginItems.py:170 pluginItems.py:271 pluginItems.py:283
+#: plugins/base.py:163 plugins/base.py:168 plugins/base.py:184
+#: plugins/base.py:221 plugins/base.py:239 plugins/dbg.py:523
+#: plugins/dbg.py:540 plugins/dbg.py:597 plugins/dbg.py:605
+#: plugins/myplugin.py:61 plugins/myplugin2/myplugin2.py:61
+#: plugins/protocol.py:584 plugins/protocol.py:598 plugins/protocol.py:664
+msgid "Error"
+msgstr "間違い"
+
+#: main2.py:355
+msgid "New Window"
+msgstr "新しいウィンドウ"
+
+#: main2.py:442 main2.py:451
+msgid "Restart now?"
+msgstr "今すぐ再起動しますか？"
+
+#: main2.py:443
+msgid "language changed to: "
+msgstr "言語が次のように変更されました："
+
+#: main2.py:443
+msgid "Restart software to take effect now?"
+msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
+
+#: main2.py:492 main2.py:493
+msgid "Closing ..."
+msgstr "閉じています..."
+
+#: main2.py:607
+msgid "New versioin detected, please click learn more to download"
+msgstr "新しいバージョンが検出されました。詳しくは「もっと詳しく」をクリックしてダウンロードしてください"
+
+#: main2.py:608
+msgid "Learn More"
+msgstr "もっと詳しく知る"
+
+#: main2.py:609
+msgid "Skip this version"
+msgstr "このバージョンをスキップ"
+
+#: main2.py:610
+msgid "Remind me next time"
+msgstr "次回リマインダー"
+
+#: main2.py:611
+msgid "Need update"
+msgstr "更新が必要"
+
+#: pluginItems.py:55
+msgid "version not found in config of plugin:"
+msgstr ""
+
+#: conn/conn_tcp_udp.py:534 pluginItems.py:98
 msgid "Connection"
 msgstr "接続"
 
-#: pluginItems.py:205
+#: pluginItems.py:122
+msgid "Load config"
+msgstr ""
+
+#: pluginItems.py:123
+msgid "Share config"
+msgstr ""
+
+#: pluginItems.py:149 pluginItems.py:162
+msgid "json file (*.json);;config file (*.conf);;All Files (*)"
+msgstr ""
+
+#: pluginItems.py:167
+msgid ""
+"Not support load global config file, you can copy config file mannually "
+"to "
+msgstr ""
+
+#: pluginItems.py:170
+msgid "Config is not for this plugin, config is for plugin:"
+msgstr ""
+
+#: pluginItems.py:173 plugins/dbg.py:367 plugins/dbg.py:526
+#: plugins/protocol.py:686 plugins/protocol.py:708
+msgid "Warning"
+msgstr ""
+
+#: pluginItems.py:174
+msgid "Config version not same, plugin config version:"
+msgstr ""
+
+#: pluginItems.py:175
+msgid "now"
+msgstr ""
+
+#: pluginItems.py:176
+msgid ""
+"this maybe lead to some problem, if happened, please remove it manually "
+"from config file"
+msgstr ""
+
+#: pluginItems.py:193
+msgid "Restart to load config?"
+msgstr ""
+
+#: pluginItems.py:271
 msgid "Open file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: widgets.py:532 widgets.py:553
+#: widgets.py:542 widgets.py:563
 msgid "Received"
 msgstr "受信"
 
-#: widgets.py:532 widgets.py:533 widgets.py:553 widgets.py:560
+#: widgets.py:542 widgets.py:543 widgets.py:563 widgets.py:570
 msgid "bytes"
 msgstr "バイト"
 
-#: widgets.py:533 widgets.py:560
+#: widgets.py:543 widgets.py:570
 msgid "Sent"
 msgstr ""
 
@@ -253,7 +287,7 @@ msgstr "入力"
 msgid "error"
 msgstr "エラー"
 
-#: conn/conn_ssh.py:234 plugins/dbg.py:404
+#: conn/conn_ssh.py:234 plugins/dbg.py:417
 msgid "All Files (*)"
 msgstr "すべてのファイル (*)"
 
@@ -319,30 +353,30 @@ msgstr ""
 msgid "closed!"
 msgstr "クローズ"
 
-#: plugins/base.py:68
+#: plugins/base.py:76
 #, fuzzy
 msgid "Connected"
 msgstr "接続が失われます！"
 
-#: plugins/base.py:70
+#: plugins/base.py:78
 msgid "Closed"
 msgstr "クローズ"
 
-#: plugins/base.py:72
+#: plugins/base.py:80
 #, fuzzy
 msgid "Connecting"
 msgstr "接続が失われます！"
 
-#: plugins/base.py:74
+#: plugins/base.py:82
 #, fuzzy
 msgid "Connection lose"
 msgstr "接続が失われます！"
 
-#: plugins/base.py:176
+#: plugins/base.py:184
 msgid "Format error, should be like 00 01 02 03"
 msgstr "フォーマットエラー、00 01 02 03 のようになります"
 
-#: plugins/base.py:213 plugins/base.py:231
+#: plugins/base.py:221 plugins/base.py:239
 msgid "Escape is on, but escape error:"
 msgstr "エスケープはオンですが、エスケープエラー："
 
@@ -351,29 +385,49 @@ msgstr "エスケープはオンですが、エスケープエラー："
 msgid "Send Receive"
 msgstr "清除接収区"
 
-#: plugins/dbg.py:134
+#: plugins/dbg.py:69
+msgid "Shortcut:"
+msgstr "ホットキー："
+
+#: plugins/dbg.py:70
+msgid "Full screen"
+msgstr "フルスクリーン"
+
+#: plugins/dbg.py:71
+msgid "Send data"
+msgstr "データを送る"
+
+#: plugins/dbg.py:72
+msgid "Clear Send Area"
+msgstr "送信エリアをクリアする"
+
+#: plugins/dbg.py:73
+msgid "Clear Receive Area"
+msgstr "清除接収区"
+
+#: plugins/dbg.py:147
 msgid "Receive Settings"
 msgstr "受信設定"
 
-#: plugins/dbg.py:135 plugins/dbg.py:164 plugins/protocol.py:379
+#: plugins/dbg.py:148 plugins/dbg.py:177 plugins/protocol.py:380
 msgid "ASCII"
 msgstr "ASCII"
 
-#: plugins/dbg.py:136
+#: plugins/dbg.py:149
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "表示されている文字を使用して受信データを表示し、右上隅でデコード方法を選択します"
 
-#: plugins/dbg.py:137 plugins/dbg.py:165 plugins/protocol.py:380
+#: plugins/dbg.py:150 plugins/dbg.py:178 plugins/protocol.py:381
 msgid "HEX"
 msgstr "HEX"
 
-#: plugins/dbg.py:138
+#: plugins/dbg.py:151
 msgid "Show recived data as hex format"
 msgstr "16進表記を使用して受信データを表示します"
 
-#: plugins/dbg.py:140
+#: plugins/dbg.py:153
 msgid ""
 "Auto\n"
 "Linefeed\n"
@@ -383,43 +437,43 @@ msgstr ""
 "ラインフィード\n"
 "ms"
 
-#: plugins/dbg.py:141 plugins/dbg.py:144
+#: plugins/dbg.py:154 plugins/dbg.py:157
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超オーバー・トタイム時自PP换行、単位：ms"
 
-#: plugins/dbg.py:147
+#: plugins/dbg.py:160
 msgid "Timestamp"
 msgstr "タイムスタンプ"
 
-#: plugins/dbg.py:148
+#: plugins/dbg.py:161
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr "受信データの前にタイムスタンプを追加すると、自動改行が自動的に有効になります"
 
-#: plugins/dbg.py:149
+#: plugins/dbg.py:162
 msgid "Color"
 msgstr "顔色"
 
-#: plugins/dbg.py:150
+#: plugins/dbg.py:163
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "UNIX端末の色のサポートを有効にする, 例えば \\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:163
+#: plugins/dbg.py:176
 msgid "Send Settings"
 msgstr "送信設定"
 
-#: plugins/dbg.py:166 plugins/protocol.py:381
+#: plugins/dbg.py:179 plugins/protocol.py:382
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "表示文字形式で送信するデータを取得し、右上隅でエンコード方法を選択します"
 
-#: plugins/dbg.py:167 plugins/protocol.py:382
+#: plugins/dbg.py:180 plugins/protocol.py:383
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "16進数の「313233」などの16進数形式で送信するデータを取得し、ASCIIコードの「123」は同等です。"
 
-#: plugins/dbg.py:169
+#: plugins/dbg.py:182
 msgid ""
 "Timed Send\n"
 "ms"
@@ -427,105 +481,100 @@ msgstr ""
 "時限送信\n"
 "ms"
 
-#: plugins/dbg.py:170 plugins/dbg.py:173
+#: plugins/dbg.py:183 plugins/dbg.py:186
 msgid "Timed send, unit: ms"
 msgstr "定時間P送、単位：ms"
 
-#: plugins/dbg.py:176 plugins/protocol.py:384
+#: plugins/dbg.py:189 plugins/protocol.py:385
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:177 plugins/protocol.py:385
+#: plugins/dbg.py:190 plugins/protocol.py:386
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選択中ρ送信\\ r \\ n圧電不是\\ n"
 
-#: plugins/dbg.py:179 plugins/protocol.py:56 plugins/protocol.py:119
+#: plugins/dbg.py:192 plugins/protocol.py:56 plugins/protocol.py:119
 msgid "Record"
 msgstr "記録"
 
-#: plugins/dbg.py:180
+#: plugins/dbg.py:193
 msgid "Record send data"
 msgstr "送信データを記録する"
 
-#: plugins/dbg.py:181 plugins/protocol.py:387
+#: plugins/dbg.py:194 plugins/protocol.py:388
 msgid "Escape"
 msgstr "エスケープ"
 
-#: plugins/dbg.py:182 plugins/protocol.py:388
+#: plugins/dbg.py:195 plugins/protocol.py:389
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "\\t \\r \\n \\x01 \\001 のようなエスケープ文字のサポートを有効にする"
 
-#: plugins/dbg.py:183
+#: plugins/dbg.py:196
 msgid "Newline"
 msgstr ""
 
-#: plugins/dbg.py:184
+#: plugins/dbg.py:197
 msgid "Auto add new line when send"
 msgstr ""
 
-#: plugins/dbg.py:212
+#: plugins/dbg.py:225
 msgid "Auto line feed value error, must be integer"
 msgstr "自動改行値エラー、整数である必要があります"
 
-#: plugins/dbg.py:213
+#: plugins/dbg.py:226
 msgid "Timed send value error, must be integer"
 msgstr "時限送信値エラー。整数である必要があります"
 
-#: plugins/dbg.py:223
+#: plugins/dbg.py:236
 msgid "Open File"
 msgstr "打開き文件"
 
-#: plugins/dbg.py:224
+#: plugins/dbg.py:237
 msgid "Send File"
 msgstr "ファイルを送信"
 
-#: plugins/dbg.py:225
+#: plugins/dbg.py:238
 msgid "Clear History"
 msgstr "履歴のクリア"
 
-#: plugins/dbg.py:228
+#: plugins/dbg.py:241
 msgid "Sendding File"
 msgstr "ファイルの送信"
 
-#: plugins/dbg.py:234
+#: plugins/dbg.py:247
 msgid "Save log"
 msgstr "ログを保存"
 
-#: plugins/dbg.py:237
+#: plugins/dbg.py:250
 msgid "Cutom send"
 msgstr "カスタム送信"
 
-#: plugins/dbg.py:268
+#: plugins/dbg.py:281
 msgid "Log path"
 msgstr "ログパス"
 
-#: plugins/dbg.py:354 plugins/dbg.py:513 plugins/protocol.py:734
-#: plugins/protocol.py:756
-msgid "Warning"
-msgstr ""
-
-#: plugins/dbg.py:354
+#: plugins/dbg.py:367
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "タイムスタンプまたはレコード送信がオンの場合、改行は常にオンになります"
 
-#: plugins/dbg.py:382 plugins/protocol.py:67 plugins/protocol.py:85
+#: plugins/dbg.py:395 plugins/protocol.py:67 plugins/protocol.py:85
 msgid "OK"
 msgstr ""
 
-#: plugins/dbg.py:382
+#: plugins/dbg.py:395
 msgid "History cleared!"
 msgstr "履歴がクリアされました！"
 
-#: plugins/dbg.py:387
+#: plugins/dbg.py:400
 #, fuzzy
 msgid "Send file"
 msgstr "ファイルを送信"
 
-#: plugins/dbg.py:418
+#: plugins/dbg.py:431
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: plugins/dbg.py:510
+#: plugins/dbg.py:523
 msgid ""
 "File path error\n"
 "path"
@@ -533,24 +582,24 @@ msgstr ""
 "ファイルパスエラー\n"
 "ファイルパス"
 
-#: plugins/dbg.py:513
+#: plugins/dbg.py:526
 msgid "Connect first please"
 msgstr "最初に接続してください"
 
-#: plugins/dbg.py:516
+#: plugins/dbg.py:529
 #, fuzzy
 msgid "Sending file"
 msgstr "ファイルの送信"
 
-#: plugins/dbg.py:527
+#: plugins/dbg.py:540
 msgid "Time format error"
 msgstr "タイムフォーマットエラー"
 
-#: plugins/dbg.py:584
+#: plugins/dbg.py:597
 msgid "Send Error"
 msgstr "エラーの送信"
 
-#: plugins/dbg.py:592
+#: plugins/dbg.py:605
 #, fuzzy
 msgid "get data error"
 msgstr "タイムフォーマットエラー"
@@ -595,91 +644,70 @@ msgstr ""
 msgid "protocol"
 msgstr ""
 
-#: plugins/protocol.py:271
+#: plugins/protocol.py:272
 msgid "Key mode"
 msgstr ""
 
-#: plugins/protocol.py:357
+#: plugins/protocol.py:358
 #, fuzzy
 msgid "En-decoding settings"
 msgstr "送信設定"
 
-#: plugins/protocol.py:361
+#: plugins/protocol.py:362
 msgid "Custom, input name"
 msgstr ""
 
-#: plugins/protocol.py:362
+#: plugins/protocol.py:363
 msgid "Load defaults"
 msgstr ""
 
-#: plugins/protocol.py:365 plugins/protocol.py:700 plugins/protocol.py:724
-#: plugins/protocol.py:727 plugins/protocol.py:747
+#: plugins/protocol.py:366 plugins/protocol.py:652 plugins/protocol.py:676
+#: plugins/protocol.py:679 plugins/protocol.py:699
 #, fuzzy
 msgid "Save"
 msgstr "エスケープ"
 
-#: plugins/protocol.py:367
+#: plugins/protocol.py:368
 msgid "Delete"
 msgstr ""
 
-#: plugins/protocol.py:371
+#: plugins/protocol.py:372
 msgid "Defaults"
 msgstr ""
 
-#: plugins/protocol.py:373
+#: plugins/protocol.py:374
 #, fuzzy
 msgid "Code"
 msgstr "記録"
 
-#: plugins/protocol.py:377
+#: plugins/protocol.py:378
 #, fuzzy
 msgid "Send settings"
 msgstr "送信設定"
 
-#: plugins/protocol.py:409
-msgid "Load config"
-msgstr ""
-
-#: plugins/protocol.py:410
-msgid "Share config"
-msgstr ""
-
-#: plugins/protocol.py:421 plugins/protocol.py:431
-msgid "json file (*.json);;config file (*.conf);;All Files (*)"
-msgstr ""
-
-#: plugins/protocol.py:440
-#, fuzzy
-msgid "config file format error"
-msgstr "タイムフォーマットエラー"
-
-#: plugins/protocol.py:448
-msgid "Restart to load config?"
-msgstr ""
-
-#: plugins/protocol.py:632
+#: plugins/protocol.py:584
 msgid "Run decode error"
 msgstr ""
 
-#: plugins/protocol.py:646
+#: plugins/protocol.py:598
 #, fuzzy
 msgid "Run encode error"
 msgstr "エラーの送信"
 
-#: plugins/protocol.py:708
+#: plugins/protocol.py:660
 msgid "decode and encode method should be in code"
 msgstr ""
 
-#: plugins/protocol.py:711
+#: plugins/protocol.py:663
 #, fuzzy
 msgid "Method error"
 msgstr "エラーの送信"
 
-#: plugins/protocol.py:734
+#: plugins/protocol.py:686
 msgid "Please input code profile name first"
 msgstr ""
 
-#: plugins/protocol.py:756
+#: plugins/protocol.py:708
 msgid "Please select a code profile name first to delete"
 msgstr ""
 
@@ -734,5 +762,17 @@ msgstr ""
 #~ msgstr "アプリのアンインストール"
 
 #~ msgid "Old config can be found in"
+#~ msgstr ""
+
+#~ msgid "About"
+#~ msgstr "だいたい"
+
+#~ msgid "Buy me half a cup of coffee"
+#~ msgstr "コーヒーを買ってください"
+
+#~ msgid "config file format error"
+#~ msgstr "タイムフォーマットエラー"
+
+#~ msgid "Config is not for this plugin, config is for plugin: pluginId"
 #~ msgstr ""
 

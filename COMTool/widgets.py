@@ -588,7 +588,8 @@ class HelpWidget(QWidget):
         super().__init__(parent)
         if icon:
             self.setWindowIcon(QIcon(icon))
-        layout = QVBoxLayout()
+        self.resize(1000, 600)
+        layout = QHBoxLayout()
         self.setLayout(layout)
         label = QLabel(help)
         tabs = QTabWidget()
