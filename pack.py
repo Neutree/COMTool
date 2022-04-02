@@ -13,7 +13,7 @@ if sys.version_info < (3, 8):
 
 linux_out = "comtool_ubuntu_v{}.tar.xz".format(version.__version__)
 macos_out = "comtool_macos_v{}.dmg".format(version.__version__)
-windows_out = "comtool_windows_v{}.zip".format(version.__version__)
+windows_out = "comtool_windows_v{}.7z".format(version.__version__)
 
 def zip(out, path):
     out = os.path.abspath(out)
@@ -23,6 +23,15 @@ def zip(out, path):
         for i in os.walk(os.path.basename(path)):
             for n in i[2]:
                 target.write(os.path.join(i[0],n))
+    os.chdir(cwd)
+
+def zip_7z(out, path):
+    out = os.path.abspath(out)
+    cwd = os.getcwd()
+    os.chdir(os.path.dirname(path))
+    ret = os.system(f"7z a -t7z -mx=9 {out} {os.path.basename(path)}")
+    if ret != 0:
+        raise Exception("7z compress failed")
     os.chdir(cwd)
 
 def upadte_spec_bundle(spec_path, items = {}, plist_items={}):
@@ -106,7 +115,6 @@ def pack():
     if sys.platform.startswith("darwin"):
         if os.path.exists("./dist/comtool 0.0.0.dmg"):
             os.remove("./dist/comtool 0.0.0.dmg")
-            
         ret = os.system('npm install --global create-dmg')
         if ret != 0:
             raise Exception("pack failed")
@@ -116,7 +124,8 @@ def pack():
         print("files in dist dir:", os.listdir("dist"))
         shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
-        zip(windows_out, "dist/comtool")
+        # zip(windows_out, "dist/comtool")
+        zip_7z(windows_out, "dist/comtool")
     else:
         cmd = "cd dist && tar -Jcf {} comtool/ && mv {} ../ && cd ..".format(linux_out, linux_out)
         ret = os.system(cmd)
