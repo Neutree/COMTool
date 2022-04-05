@@ -1,6 +1,5 @@
 from audioop import add
 import ctypes
-from COMTool import parameters
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit,
                             QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget, QStackedWidget, QListWidget)
@@ -12,10 +11,12 @@ try:
     import utils_ui
     from Combobox import ComboBox
     from i18n import _
+    import parameters
 except Exception:
     from COMTool import utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
+    from COMTool import parameters
 
 
 class TitleBar(QWidget):
