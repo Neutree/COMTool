@@ -54,7 +54,7 @@ COMTool
 - [x] 自定义快捷键发送（在协议功能里面）
 - [x] TCP UDP 支持
 - [x] 终端模式支持
-- [x] 插件支持（插件开发请看[docs/plugins.md](./docs/plugins.md)）
+- [x] 插件支持（插件开发请看[docs/plugins_zh.md](./docs/plugins_zh.md)）
 - [ ] 实时图像数据显示
 
 

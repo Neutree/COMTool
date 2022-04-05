@@ -91,7 +91,18 @@ def compile(translate_dir, locale, domain="messages"):
 
 
 
-def main(cmd):
+def main(cmd, path=None):
+    global root_dir
+    babel_cfg_path = os.path.join(root_dir, "babel.cfg")
+    if path:
+        if os.path.exists(path):
+            root_dir = os.path.abspath(path)
+            if os.path.exists(os.path.join(root_dir, "babel.cfg")):
+                babel_cfg_path = os.path.join(root_dir, "babel.cfg")
+        else:
+            print("path {} not exists".format(path))
+            return
+
     cwd = os.getcwd()
     os.chdir(root_dir)
     if cmd == "prepare":
@@ -100,7 +111,7 @@ def main(cmd):
         if not os.path.exists("locales"):
             os.makedirs("locales")
         # os.system("pybabel extract -F babel.cfg -o locales/messages.pot ./")
-        extract("./", "babel.cfg", "locales/messages.pot")
+        extract("./", babel_cfg_path, "locales/messages.pot")
         for locale in locales:
             print("-- generate {} po files from pot files".format(locale))
             if os.path.exists('locales/{}/LC_MESSAGES/messages.po'.format(locale)):
@@ -120,10 +131,13 @@ def main(cmd):
     os.chdir(cwd)
 
 
-
-if __name__ == "__main__":
+def cli_main():
     import argparse
     parser = argparse.ArgumentParser("tranlate tool")
+    parser.add_argument("-p", "--path", default="", help="path to the root of plugin")
     parser.add_argument("cmd", type=str, choices=["prepare", "finish"])
     args = parser.parse_args()
-    main(args.cmd)
+    main(args.cmd, args.path)
+
+if __name__ == "__main__":
+    cli_main()

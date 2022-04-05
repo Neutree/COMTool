@@ -11,11 +11,19 @@ from PyQt5.QtGui import QFont, QTextCursor
 try:
     from plugins.base import Plugin_Base
     from conn import ConnectionStatus
-    from i18n import _
 except ImportError:
     from COMTool.plugins.base import Plugin_Base
-    from COMTool.i18n import _
     from COMTool.conn import  ConnectionStatus
+
+# i18n for this plugin
+# to use translation, use `comtool-i18n -p COMTool/plugins/myplugin2/comtool_plugin_myplugin2 prepare` first
+#                     and translate file in locales dir
+#                     use `comtool-i18n -p COMTool/plugins/myplugin2/comtool_plugin_myplugin2 finish` to generate translate binary files(*.mo)
+# `comtool-i18n` command from comtool, or you can run source `python COMTool/i18n.py -p COMTool/plugins/myplugin2/comtool_plugin_myplugin2 prepare`
+try:
+    from .plugin_i18n import _
+except Exception:
+    from plugin_i18n import _
 
 class Plugin(Plugin_Base):
     id = "myplugin2"

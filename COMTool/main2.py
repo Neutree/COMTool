@@ -108,6 +108,18 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                 rm.append(uid)
         for uid in rm:
             self.config["pluginsInfo"]["external"].pop(uid)
+        # find in python packages
+        ignore_paths = ["DLLs"]
+        for path in sys.path:
+            if os.path.isdir(path) and not path in ignore_paths:
+                for name in os.listdir(path):
+                    if name.lower().startswith("comtool_plugin_") and not name.endswith("dist-info"):
+                        log.i(f"find plugin package <{name}>")
+                        pluginClass = __import__(name).Plugin
+                        print(pluginClass, self.pluginClasses)
+                        if not pluginClass in self.pluginClasses:
+                            self.addPluginInfo(pluginClass)
+                            self.pluginClasses.append(pluginClass)
 
     def getPluginClassById(self, id):
         '''
@@ -232,9 +244,18 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         extPlugsInfo[pluginClass.id] = {
             "path": path
         }
-        self.addItem(pluginClass, setCurrent=True)
-        self.pluginClasses.append(pluginClass)
-        self.addPluginInfo(pluginClass)
+        if not pluginClass in self.pluginClasses:
+            self.pluginClasses.append(pluginClass)
+            self.addPluginInfo(pluginClass)
+        # find old item config for this plugin and recover
+        oldFound = False
+        for item in self.config["items"]:
+            if item["pluginId"] == pluginClass.id:
+                self.addItem(pluginClass, nameSaved=item["name"], setCurrent=True, connsConfigs=item["config"]["conns"], pluginConfig=item["config"]["plugin"])
+                oldFound = True
+                break
+        if not oldFound:
+            self.addItem(pluginClass, setCurrent=True)
         return True, ""
 
     def onPluginSelectorChanged(self, idx):
@@ -251,22 +272,10 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                     self.hintSignal.emit("error", _("Error"), f'{_("Load plugin error")}: {msg}')
         else:
             loadID = text.split("-")[-1].strip()
-            found = False
-            # find in builtin plugins
-            for id, c in builtinPlugins.items():
-                if id == loadID:
-                    item = self.addItem(c, setCurrent = True)
-                    found = True
+            for pluginClass in self.pluginClasses:
+                if loadID == pluginClass.id:
+                    self.addItem(pluginClass, setCurrent = True)
                     break
-            # find in external plugins
-            if not found:
-                infos = self.config["pluginsInfo"]
-                for id, info in infos["external"].items():
-                    if id == loadID:
-                        ok, msg = self.loadExternalPlugin(info["path"])
-                        if not ok:
-                            self.hintSignal.emit("error", _("Error"), f'{_("Load plugin error")}: {msg}')
-                        break
 
     def initWindow(self):
         # set skin for utils_ui
