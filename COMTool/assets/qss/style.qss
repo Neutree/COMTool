@@ -475,3 +475,25 @@ QTabBar::tab:only-one {
     margin: 0; /* if there is only one tab, we don't want overlapping margins */
 }
 
+.helpList {
+    border: none;
+    outline: none;
+}
+
+.helpList::item {
+    height: 40px;
+    width: 100px
+}
+.helpList::item:selected {
+    border: none;
+    color: #009688;
+    border-right: 5px solid #009688;
+    background-color: #eafdfa;
+}
+.helpList::item:hover {
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    color: #009688;
+    background-color: #eafdfa;
+}

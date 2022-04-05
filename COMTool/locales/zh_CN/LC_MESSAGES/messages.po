@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/Neutree/COMTool/issues\n"
-"POT-Creation-Date: 2022-04-02 00:28+0800\n"
+"POT-Creation-Date: 2022-04-05 18:03+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,62 +18,70 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: helpAbout.py:39
+#: helpAbout.py:40
 msgid "Config path"
 msgstr "配置路径"
 
-#: helpAbout.py:41
+#: helpAbout.py:42
 msgid "Old config backup in"
 msgstr "旧版配置备份在"
 
-#: helpAbout.py:43
+#: helpAbout.py:44
 msgid "COMTool is a Open source project create by"
 msgstr "COMTool 是一个开源程序， 创建者："
 
-#: helpAbout.py:45
+#: helpAbout.py:46
+msgid "License"
+msgstr "开源协议"
+
+#: helpAbout.py:47
 msgid "Welcome to improve it together and add plugins"
 msgstr "欢迎一起改进以及编写插件"
 
-#: helpAbout.py:46
+#: helpAbout.py:48
 msgid "See more details on"
 msgstr "更详细看这里"
 
-#: helpAbout.py:47
+#: helpAbout.py:49
+msgid "and get latest version at"
+msgstr "在此获取最新版本："
+
+#: helpAbout.py:50
+msgid "page"
+msgstr "页面"
+
+#: helpAbout.py:51
 msgid "Have problem? see"
 msgstr "有疑问？看"
 
-#: helpAbout.py:48
+#: helpAbout.py:52
 msgid "QQ group for plugin development discussion"
 msgstr "QQ群，插件开发讨论"
 
-#: helpAbout.py:49
+#: helpAbout.py:53
 msgid "You can buy me half a cup of coffee if this software helpes you"
 msgstr "如果有帮助到你，可以赏半杯咖啡"
-
-#: helpAbout.py:52
-msgid "Plugin help:"
-msgstr "插件帮助："
 
 #: main2.py:90
 msgid "Load plugin from file"
 msgstr "从文件加载插件"
 
-#: main2.py:230
+#: main2.py:231
 msgid "Load plugin fail"
 msgstr "加载插件失败"
 
-#: conn/conn_ssh.py:232 main2.py:244 pluginItems.py:147 pluginItems.py:160
+#: conn/conn_ssh.py:232 main2.py:245 pluginItems.py:148 pluginItems.py:161
 #: plugins/dbg.py:415 plugins/dbg.py:429
 msgid "Select file"
 msgstr "选择文件"
 
-#: main2.py:246
+#: main2.py:247
 msgid "python script (*.py)"
 msgstr "python 脚本 (*.py)"
 
 #: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: main2.py:250 main2.py:267 main2.py:407 main2.py:412 main2.py:716
-#: pluginItems.py:167 pluginItems.py:170 pluginItems.py:271 pluginItems.py:283
+#: main2.py:251 main2.py:268 main2.py:408 main2.py:413 main2.py:725
+#: pluginItems.py:168 pluginItems.py:171 pluginItems.py:272 pluginItems.py:284
 #: plugins/base.py:163 plugins/base.py:168 plugins/base.py:184
 #: plugins/base.py:221 plugins/base.py:239 plugins/dbg.py:523
 #: plugins/dbg.py:540 plugins/dbg.py:597 plugins/dbg.py:605
@@ -82,43 +90,47 @@ msgstr "python 脚本 (*.py)"
 msgid "Error"
 msgstr "错误"
 
-#: main2.py:355
+#: main2.py:356
 msgid "New Window"
 msgstr "新窗口"
 
-#: main2.py:442 main2.py:451
+#: main2.py:443 main2.py:452
 msgid "Restart now?"
 msgstr "现在就重启？"
 
-#: main2.py:443
+#: main2.py:444
 msgid "language changed to: "
 msgstr "语言更改为: "
 
-#: main2.py:443
+#: main2.py:444
 msgid "Restart software to take effect now?"
 msgstr "现在就重启软件以生效？"
 
-#: main2.py:492 main2.py:493
+#: main2.py:493 main2.py:494
 msgid "Closing ..."
 msgstr "关闭中 ..."
 
-#: main2.py:607
+#: main2.py:594
+msgid "About"
+msgstr "关于"
+
+#: main2.py:616
 msgid "New versioin detected, please click learn more to download"
 msgstr "检测到了新版本， 请点击 了解更多 以下载"
 
-#: main2.py:608
+#: main2.py:617
 msgid "Learn More"
 msgstr "了解更多"
 
-#: main2.py:609
+#: main2.py:618
 msgid "Skip this version"
 msgstr "跳过此版本"
 
-#: main2.py:610
+#: main2.py:619
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: main2.py:611
+#: main2.py:620
 msgid "Need update"
 msgstr "需要更新"
 
@@ -130,66 +142,70 @@ msgstr "插件配置无版本号:"
 msgid "Connection"
 msgstr "连接"
 
-#: pluginItems.py:122
+#: pluginItems.py:123
 msgid "Load config"
 msgstr "加载配置"
 
-#: pluginItems.py:123
+#: pluginItems.py:124
 msgid "Share config"
 msgstr "分享配置"
 
-#: pluginItems.py:149 pluginItems.py:162
+#: pluginItems.py:150 pluginItems.py:163
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
 
-#: pluginItems.py:167
+#: pluginItems.py:168
 msgid ""
 "Not support load global config file, you can copy config file mannually "
 "to "
 msgstr "不支持加载全局配置，你可以手动拷贝文件到 "
 
-#: pluginItems.py:170
+#: pluginItems.py:171
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr "配置不是这个插件的，配置是这个插件的: "
 
-#: pluginItems.py:173 plugins/dbg.py:367 plugins/dbg.py:526
+#: pluginItems.py:174 plugins/dbg.py:367 plugins/dbg.py:526
 #: plugins/protocol.py:686 plugins/protocol.py:708
 msgid "Warning"
 msgstr "警告"
 
-#: pluginItems.py:174
+#: pluginItems.py:175
 msgid "Config version not same, plugin config version:"
 msgstr "配置版本不同，插件配置版本:"
 
-#: pluginItems.py:175
+#: pluginItems.py:176
 msgid "now"
 msgstr "当前"
 
-#: pluginItems.py:176
+#: pluginItems.py:177
 msgid ""
 "this maybe lead to some problem, if happened, please remove it manually "
 "from config file"
 msgstr "这可能导致一些问题，如果发生了，请手动从配置文件中删除"
 
-#: pluginItems.py:193
+#: pluginItems.py:194
 msgid "Restart to load config?"
 msgstr "重启以加载配置"
 
-#: pluginItems.py:271
+#: pluginItems.py:272
 msgid "Open file failed!"
 msgstr "打开失败"
 
-#: widgets.py:542 widgets.py:563
+#: widgets.py:546 widgets.py:567
 msgid "Received"
 msgstr "已接收"
 
-#: widgets.py:542 widgets.py:543 widgets.py:563 widgets.py:570
+#: widgets.py:546 widgets.py:547 widgets.py:567 widgets.py:574
 msgid "bytes"
 msgstr "字节"
 
-#: widgets.py:543 widgets.py:570
+#: widgets.py:547 widgets.py:574
 msgid "Sent"
 msgstr "已发送"
+
+#: widgets.py:593
+msgid "Help"
+msgstr "帮助"
 
 #: conn/conn_serial.py:41
 msgid "Serial"
@@ -728,4 +744,10 @@ msgstr ""
 
 #~ msgid "config file format error"
 #~ msgstr "配置文件格式错误"
+
+#~ msgid "Plugin help:"
+#~ msgstr "插件帮助："
+
+#~ msgid "This plugin no help info"
+#~ msgstr "此插件无帮助信息"
 

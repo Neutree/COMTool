@@ -2,7 +2,8 @@ from audioop import add
 import ctypes
 from COMTool import parameters
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit, QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit,
+                            QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget, QStackedWidget, QListWidget)
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
@@ -193,6 +194,9 @@ class EventFilter(QObject):
     def listenWindow(self, window):
         self.windows.append(window)
 
+    def unlistenWindow(self, window):
+        self.windows.remove(window)
+
     def _get_edges(self, pos, width, height, offset=0):
         edge = 0
         x, y = pos.x(), pos.y()
@@ -262,7 +266,7 @@ class EventFilter(QObject):
 
 
 class CustomTitleBarWindowMixin:
-    def __init__(self, titleBar = None, init = False):
+    def __init__(self, titleBar = None, init = False, title = "", icon = os.path.join(parameters.assetsDir, "logo.png")):
         if not init:
             return
         isQMainWindow = False
@@ -281,7 +285,7 @@ class CustomTitleBarWindowMixin:
         if titleBar:
             self.titleBar = titleBar
         else:
-            self.titleBar = TitleBar(self, icon = "assets/logo.png", title="标题", height=35)
+            self.titleBar = TitleBar(self, icon = icon, title=title, height=35)
         self.contentWidget = QWidget()
         self.rootLayout.addWidget(self.titleBar)
         self.rootLayout.addWidget(self.contentWidget)
@@ -582,19 +586,23 @@ class statusBar(QWidget):
         msg = '<font color={}>{}</font>'.format(color, msg)
         self.updateUiSignal.emit("msg", msg)
 
-class HelpWidget(QWidget):
+class HelpWidget(QWidget, CustomTitleBarWindowMixin):
     closed = pyqtSignal()
-    def __init__(self, help:str, pluginsHelp:dict, parent=None, icon=None):
-        super().__init__(parent)
-        if icon:
-            self.setWindowIcon(QIcon(icon))
-        self.resize(1000, 600)
+    def __init__(self, pluginsHelp:dict, parent=None, icon=None):
+        QWidget.__init__(self, parent)
+        CustomTitleBarWindowMixin.__init__(self, init=True, title=_("Help"))
+        self.resize(800, 600)
         layout = QHBoxLayout()
-        self.setLayout(layout)
-        label = QLabel(help)
-        tabs = QTabWidget()
-        layout.addWidget(label)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.contentWidget.setLayout(layout)
+        # self.setLayout(layout)
+        itemList = QListWidget()
+        itemList.setProperty("class", "helpList")
+        tabs = QStackedWidget()
+        layout.addWidget(itemList)
         layout.addWidget(tabs)
+        layout.setStretch(0, 1)
+        layout.setStretch(1, 4)
         for name, help in pluginsHelp.items():
             tab = QWidget()
             tab.setProperty("class", "helpTab")
@@ -602,10 +610,14 @@ class HelpWidget(QWidget):
             tab.setLayout(tabLayout)
             if type(help) == str:
                 tabLabel = QLabel(help)
+                tabLabel.setOpenExternalLinks(True)
             else:
                 tabLabel = help
             tabLayout.addWidget(tabLabel)
-            tabs.addTab(tab, name)
+            tabs.addWidget(tab)
+            itemList.addItem(name)
+        itemList.setCurrentRow(0)
+        itemList.currentRowChanged.connect(lambda idx: tabs.setCurrentIndex(idx))
         self.show()
 
     def closeEvent(self, event):
@@ -697,4 +709,5 @@ if __name__ == "__main__":
     # eventFilter.listenWindow(w2)
     app.installEventFilter(eventFilter)
     app.exec_()
+    app.removeEventFilter(eventFilter)
 

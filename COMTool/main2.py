@@ -91,6 +91,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.closeTimerId = None
         self.items = []
         self.pluginClasses = []
+        self.helpWindow = None
 
 
     def loadPluginsInfoList(self):
@@ -492,6 +493,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             self.setWindowTitle(_("Closing ..."))
             self.titleBar.setTitle(_("Closing ..."))
             self.setEnabled(False)
+            if self.helpWindow:
+                self.helpWindow.close()
             event.ignore()
         else:
             event.ignore()
@@ -586,16 +589,22 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         utils_ui.setSkin(self.config["skin"])
 
     def showAbout(self):
-        help = helpAbout.strAbout()
-        pluginsHelp = {}
+        help = helpAbout.HelpInfo()
+        pluginsHelp = {
+            _("About"): help
+        }
         for p in self.pluginClasses:
-            pluginsHelp[p.name] = p.help
+            if not p.help is None:
+                pluginsHelp[p.name] = p.help
         iconPath = self.DataPath+"/"+parameters.appIcon
-        self.helpWindow = HelpWidget(help, pluginsHelp, icon = iconPath)
+        self.helpWindow = HelpWidget(pluginsHelp, icon = iconPath)
         self.helpWindow.closed.connect(self.helpWindowClosed)
+        self.eventFilter.listenWindow(self.helpWindow)
 
     def helpWindowClosed(self):
-        del self.helpWindow
+        self.eventFilter.unlistenWindow(self.helpWindow)
+        self.helpWindow = None
+        # self.helpWindow
 
     def showUpdate(self, versionInfo):
         versionInt = versionInfo.int()

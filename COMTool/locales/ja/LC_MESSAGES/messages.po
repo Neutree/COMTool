@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-04-02 00:28+0800\n"
+"POT-Creation-Date: 2022-04-05 18:03+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,63 +18,70 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: helpAbout.py:39
+#: helpAbout.py:40
 msgid "Config path"
 msgstr "設定ファイルのパス"
 
-#: helpAbout.py:41
+#: helpAbout.py:42
 msgid "Old config backup in"
-msgstr ""
+msgstr "古い設定ファイルのバックアップ"
 
-#: helpAbout.py:43
+#: helpAbout.py:44
 msgid "COMTool is a Open source project create by"
 msgstr "COMToolは、によって作成されたオープンソースプロジェクトです。"
 
-#: helpAbout.py:45
-#, fuzzy
+#: helpAbout.py:46
+msgid "License"
+msgstr ""
+
+#: helpAbout.py:47
 msgid "Welcome to improve it together and add plugins"
 msgstr "一緒に改善することを歓迎します"
 
-#: helpAbout.py:46
+#: helpAbout.py:48
 msgid "See more details on"
 msgstr "詳細はこちら"
 
-#: helpAbout.py:47
+#: helpAbout.py:49
+msgid "and get latest version at"
+msgstr "最新版はこちら"
+
+#: helpAbout.py:50
+msgid "page"
+msgstr "ページ"
+
+#: helpAbout.py:51
 msgid "Have problem? see"
 msgstr "問題がありますか？こちら"
 
-#: helpAbout.py:48
-msgid "QQ group for plugin development discussion"
-msgstr ""
-
-#: helpAbout.py:49
-msgid "You can buy me half a cup of coffee if this software helpes you"
-msgstr ""
-
 #: helpAbout.py:52
-msgid "Plugin help:"
-msgstr ""
+msgid "QQ group for plugin development discussion"
+msgstr "プラグイン開発の議論についてのQQグループ"
+
+#: helpAbout.py:53
+msgid "You can buy me half a cup of coffee if this software helpes you"
+msgstr "このソフトウェアを使っていただくと、私に半つのコーヒーを買います"
 
 #: main2.py:90
 msgid "Load plugin from file"
 msgstr "ファイルからプラグインを読み込む"
 
-#: main2.py:230
+#: main2.py:231
 msgid "Load plugin fail"
 msgstr "プラグインの読み込みに失敗しました"
 
-#: conn/conn_ssh.py:232 main2.py:244 pluginItems.py:147 pluginItems.py:160
+#: conn/conn_ssh.py:232 main2.py:245 pluginItems.py:148 pluginItems.py:161
 #: plugins/dbg.py:415 plugins/dbg.py:429
 msgid "Select file"
 msgstr "ファイルを選択"
 
-#: main2.py:246
+#: main2.py:247
 msgid "python script (*.py)"
 msgstr "Python スクリプト (*.py)"
 
 #: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: main2.py:250 main2.py:267 main2.py:407 main2.py:412 main2.py:716
-#: pluginItems.py:167 pluginItems.py:170 pluginItems.py:271 pluginItems.py:283
+#: main2.py:251 main2.py:268 main2.py:408 main2.py:413 main2.py:725
+#: pluginItems.py:168 pluginItems.py:171 pluginItems.py:272 pluginItems.py:284
 #: plugins/base.py:163 plugins/base.py:168 plugins/base.py:184
 #: plugins/base.py:221 plugins/base.py:239 plugins/dbg.py:523
 #: plugins/dbg.py:540 plugins/dbg.py:597 plugins/dbg.py:605
@@ -83,113 +90,121 @@ msgstr "Python スクリプト (*.py)"
 msgid "Error"
 msgstr "間違い"
 
-#: main2.py:355
+#: main2.py:356
 msgid "New Window"
 msgstr "新しいウィンドウ"
 
-#: main2.py:442 main2.py:451
+#: main2.py:443 main2.py:452
 msgid "Restart now?"
 msgstr "今すぐ再起動しますか？"
 
-#: main2.py:443
+#: main2.py:444
 msgid "language changed to: "
 msgstr "言語が次のように変更されました："
 
-#: main2.py:443
+#: main2.py:444
 msgid "Restart software to take effect now?"
 msgstr "ソフトウェアを再起動して今すぐ有効にしますか？"
 
-#: main2.py:492 main2.py:493
+#: main2.py:493 main2.py:494
 msgid "Closing ..."
 msgstr "閉じています..."
 
-#: main2.py:607
+#: main2.py:594
+msgid "About"
+msgstr "このソフトウェアについて"
+
+#: main2.py:616
 msgid "New versioin detected, please click learn more to download"
 msgstr "新しいバージョンが検出されました。詳しくは「もっと詳しく」をクリックしてダウンロードしてください"
 
-#: main2.py:608
+#: main2.py:617
 msgid "Learn More"
 msgstr "もっと詳しく知る"
 
-#: main2.py:609
+#: main2.py:618
 msgid "Skip this version"
 msgstr "このバージョンをスキップ"
 
-#: main2.py:610
+#: main2.py:619
 msgid "Remind me next time"
 msgstr "次回リマインダー"
 
-#: main2.py:611
+#: main2.py:620
 msgid "Need update"
 msgstr "更新が必要"
 
 #: pluginItems.py:55
 msgid "version not found in config of plugin:"
-msgstr ""
+msgstr "プラグインの設定ファイルにバージョンがありません："
 
 #: conn/conn_tcp_udp.py:534 pluginItems.py:98
 msgid "Connection"
 msgstr "接続"
 
-#: pluginItems.py:122
-msgid "Load config"
-msgstr ""
-
 #: pluginItems.py:123
+msgid "Load config"
+msgstr "設定を読み込む"
+
+#: pluginItems.py:124
 msgid "Share config"
-msgstr ""
+msgstr "設定を共有"
 
-#: pluginItems.py:149 pluginItems.py:162
+#: pluginItems.py:150 pluginItems.py:163
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
-msgstr ""
+msgstr "jsonファイル (*.json);;設定ファイル (*.conf);;すべてのファイル (*)"
 
-#: pluginItems.py:167
+#: pluginItems.py:168
 msgid ""
 "Not support load global config file, you can copy config file mannually "
 "to "
 msgstr ""
 
-#: pluginItems.py:170
+#: pluginItems.py:171
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr ""
 
-#: pluginItems.py:173 plugins/dbg.py:367 plugins/dbg.py:526
+#: pluginItems.py:174 plugins/dbg.py:367 plugins/dbg.py:526
 #: plugins/protocol.py:686 plugins/protocol.py:708
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
-#: pluginItems.py:174
+#: pluginItems.py:175
 msgid "Config version not same, plugin config version:"
 msgstr ""
 
-#: pluginItems.py:175
+#: pluginItems.py:176
 msgid "now"
 msgstr ""
 
-#: pluginItems.py:176
+#: pluginItems.py:177
 msgid ""
 "this maybe lead to some problem, if happened, please remove it manually "
 "from config file"
 msgstr ""
 
-#: pluginItems.py:193
+#: pluginItems.py:194
 msgid "Restart to load config?"
 msgstr ""
 
-#: pluginItems.py:271
+#: pluginItems.py:272
 msgid "Open file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: widgets.py:542 widgets.py:563
+#: widgets.py:546 widgets.py:567
 msgid "Received"
 msgstr "受信"
 
-#: widgets.py:542 widgets.py:543 widgets.py:563 widgets.py:570
+#: widgets.py:546 widgets.py:547 widgets.py:567 widgets.py:574
 msgid "bytes"
 msgstr "バイト"
 
-#: widgets.py:543 widgets.py:570
+#: widgets.py:547 widgets.py:574
 msgid "Sent"
+msgstr ""
+
+#: widgets.py:593
+msgid "Help"
 msgstr ""
 
 #: conn/conn_serial.py:41
@@ -774,5 +789,11 @@ msgstr ""
 #~ msgstr "タイムフォーマットエラー"
 
 #~ msgid "Config is not for this plugin, config is for plugin: pluginId"
+#~ msgstr ""
+
+#~ msgid "Plugin help:"
+#~ msgstr ""
+
+#~ msgid "This plugin no help info"
 #~ msgstr ""
 

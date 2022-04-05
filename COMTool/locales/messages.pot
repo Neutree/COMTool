@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-04-02 00:28+0800\n"
+"POT-Creation-Date: 2022-04-05 18:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,62 +17,70 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: helpAbout.py:39
+#: helpAbout.py:40
 msgid "Config path"
 msgstr ""
 
-#: helpAbout.py:41
+#: helpAbout.py:42
 msgid "Old config backup in"
 msgstr ""
 
-#: helpAbout.py:43
+#: helpAbout.py:44
 msgid "COMTool is a Open source project create by"
 msgstr ""
 
-#: helpAbout.py:45
-msgid "Welcome to improve it together and add plugins"
-msgstr ""
-
 #: helpAbout.py:46
-msgid "See more details on"
+msgid "License"
 msgstr ""
 
 #: helpAbout.py:47
-msgid "Have problem? see"
+msgid "Welcome to improve it together and add plugins"
 msgstr ""
 
 #: helpAbout.py:48
-msgid "QQ group for plugin development discussion"
+msgid "See more details on"
 msgstr ""
 
 #: helpAbout.py:49
-msgid "You can buy me half a cup of coffee if this software helpes you"
+msgid "and get latest version at"
+msgstr ""
+
+#: helpAbout.py:50
+msgid "page"
+msgstr ""
+
+#: helpAbout.py:51
+msgid "Have problem? see"
 msgstr ""
 
 #: helpAbout.py:52
-msgid "Plugin help:"
+msgid "QQ group for plugin development discussion"
+msgstr ""
+
+#: helpAbout.py:53
+msgid "You can buy me half a cup of coffee if this software helpes you"
 msgstr ""
 
 #: main2.py:90
 msgid "Load plugin from file"
 msgstr ""
 
-#: main2.py:230
+#: main2.py:231
 msgid "Load plugin fail"
 msgstr ""
 
-#: conn/conn_ssh.py:232 main2.py:244 pluginItems.py:147 pluginItems.py:160
+#: conn/conn_ssh.py:232 main2.py:245 pluginItems.py:148 pluginItems.py:161
 #: plugins/dbg.py:415 plugins/dbg.py:429
 msgid "Select file"
 msgstr ""
 
-#: main2.py:246
+#: main2.py:247
 msgid "python script (*.py)"
 msgstr ""
 
 #: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:404
-#: main2.py:250 main2.py:267 main2.py:407 main2.py:412 main2.py:716
-#: pluginItems.py:167 pluginItems.py:170 pluginItems.py:271 pluginItems.py:283
+#: main2.py:251 main2.py:268 main2.py:408 main2.py:413 main2.py:725
+#: pluginItems.py:168 pluginItems.py:171 pluginItems.py:272 pluginItems.py:284
 #: plugins/base.py:163 plugins/base.py:168 plugins/base.py:184
 #: plugins/base.py:221 plugins/base.py:239 plugins/dbg.py:523
 #: plugins/dbg.py:540 plugins/dbg.py:597 plugins/dbg.py:605
@@ -81,43 +89,47 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: main2.py:355
+#: main2.py:356
 msgid "New Window"
 msgstr ""
 
-#: main2.py:442 main2.py:451
+#: main2.py:443 main2.py:452
 msgid "Restart now?"
 msgstr ""
 
-#: main2.py:443
+#: main2.py:444
 msgid "language changed to: "
 msgstr ""
 
-#: main2.py:443
+#: main2.py:444
 msgid "Restart software to take effect now?"
 msgstr ""
 
-#: main2.py:492 main2.py:493
+#: main2.py:493 main2.py:494
 msgid "Closing ..."
 msgstr ""
 
-#: main2.py:607
+#: main2.py:594
+msgid "About"
+msgstr ""
+
+#: main2.py:616
 msgid "New versioin detected, please click learn more to download"
 msgstr ""
 
-#: main2.py:608
+#: main2.py:617
 msgid "Learn More"
 msgstr ""
 
-#: main2.py:609
+#: main2.py:618
 msgid "Skip this version"
 msgstr ""
 
-#: main2.py:610
+#: main2.py:619
 msgid "Remind me next time"
 msgstr ""
 
-#: main2.py:611
+#: main2.py:620
 msgid "Need update"
 msgstr ""
 
@@ -129,65 +141,69 @@ msgstr ""
 msgid "Connection"
 msgstr ""
 
-#: pluginItems.py:122
+#: pluginItems.py:123
 msgid "Load config"
 msgstr ""
 
-#: pluginItems.py:123
+#: pluginItems.py:124
 msgid "Share config"
 msgstr ""
 
-#: pluginItems.py:149 pluginItems.py:162
+#: pluginItems.py:150 pluginItems.py:163
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr ""
 
-#: pluginItems.py:167
+#: pluginItems.py:168
 msgid ""
 "Not support load global config file, you can copy config file mannually "
 "to "
 msgstr ""
 
-#: pluginItems.py:170
+#: pluginItems.py:171
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr ""
 
-#: pluginItems.py:173 plugins/dbg.py:367 plugins/dbg.py:526
+#: pluginItems.py:174 plugins/dbg.py:367 plugins/dbg.py:526
 #: plugins/protocol.py:686 plugins/protocol.py:708
 msgid "Warning"
 msgstr ""
 
-#: pluginItems.py:174
+#: pluginItems.py:175
 msgid "Config version not same, plugin config version:"
 msgstr ""
 
-#: pluginItems.py:175
+#: pluginItems.py:176
 msgid "now"
 msgstr ""
 
-#: pluginItems.py:176
+#: pluginItems.py:177
 msgid ""
 "this maybe lead to some problem, if happened, please remove it manually "
 "from config file"
 msgstr ""
 
-#: pluginItems.py:193
+#: pluginItems.py:194
 msgid "Restart to load config?"
 msgstr ""
 
-#: pluginItems.py:271
+#: pluginItems.py:272
 msgid "Open file failed!"
 msgstr ""
 
-#: widgets.py:542 widgets.py:563
+#: widgets.py:546 widgets.py:567
 msgid "Received"
 msgstr ""
 
-#: widgets.py:542 widgets.py:543 widgets.py:563 widgets.py:570
+#: widgets.py:546 widgets.py:547 widgets.py:567 widgets.py:574
 msgid "bytes"
 msgstr ""
 
-#: widgets.py:543 widgets.py:570
+#: widgets.py:547 widgets.py:574
 msgid "Sent"
+msgstr ""
+
+#: widgets.py:593
+msgid "Help"
 msgstr ""
 
 #: conn/conn_serial.py:41

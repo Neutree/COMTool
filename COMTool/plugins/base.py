@@ -44,7 +44,7 @@ class Plugin_Base(QObject):
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
 
-    help = ""                # help info, can be str or QWidget
+    help = None                # help info, can be str or QWidget
 
     def __init__(self):
         super().__init__()
