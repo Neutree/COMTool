@@ -45,16 +45,6 @@ python COMTool/Main.py
   * 或者使用 COMTool 程序安装为 python 包（通过 pip 安装）
 
 
-
-## Write an external plugin as a python package, can auto load by COMTool
-
-Create a python package, example: [COMTool/plugins/myplugin2](../COMTool/plugins/myplugin2) 
-
-* Package name must be `comtool_plugin_xxx`
-* Build package with `python setup.py sdist bdist_wheel`
-* You can upload your package to `pypi.org`, by `twine upload ./dist/*`
-* Then user can install your package by `pip install comtool-plugin-xxx`, then comtool will automatically load plugin
-
 ## 编写一个 python 包作为插件，可以被 COMTool 自动加载
 
 创建一个 python 包， 比如: [COMTOOL/plugins/myplugin2](../COMTool/plugins/myplugin2)
@@ -74,17 +64,6 @@ Create a python package, example: [COMTool/plugins/myplugin2](../COMTool/plugins
 * 执行 `comtool-i18n -p <package name> finish` 命令生成 `mo` 文件
 * `setup.py` 应该包含翻译二进制文件（`*.mo`）到`package data`，这样用户才可以使用这些翻译
 
-## Add connection plugin
-
-Connection plugin just the same as the plugins, have an base class `COMM` in [COMTool/conn/__init__.py](../COMTool/conn/__init__.py), just:
-* Create a new file in `COMTool/conn` directory like `conn_serial.py`, `conn_ssh.py`, `conn_tcp_udp.py`, and implement the methods of `COMM` class'.
-* Add your connection class to [COMTool/conn/__init__.py](../COMTool/conn/__init__.py)
-
-* That's all, run COMTool
-
-```
-python COMTool/Main.py
-```
 
 ## 添加连接插件
 
