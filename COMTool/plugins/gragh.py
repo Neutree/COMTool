@@ -79,8 +79,17 @@ class Plugin(Plugin_Base):
             main widget, just return a QWidget object
         '''
         widget = QWidget()
+        widget.setProperty("class", "scrollbar2")
+        layout = QVBoxLayout(widget)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        layout.addWidget(scroll)
+        widget2 = QWidget()
+        scroll.setWidget(widget2)
         self.widgetsLayout = QVBoxLayout()
-        widget.setLayout(self.widgetsLayout)
+        widget2.setLayout(self.widgetsLayout)
         widget.resize(600, 400)
         return widget
 
@@ -91,14 +100,20 @@ class Plugin(Plugin_Base):
         itemList = QListWidget()
         for k,v in graghWidgets.items():
             itemList.addItem(k)
-        itemList.currentRowChanged.connect(self.addWidgetToMain)
+        itemList.itemDoubleClicked.connect(self.addWidgetToMain)
         return itemList
 
-    def addWidgetToMain(self, idx):
-        _class = list(graghWidgets.values())[idx]
-        w = _class(hintSignal = self.hintSignal)
-        self.widgets.append(w)
-        self.widgetsLayout.addWidget(w)
+    def addWidgetToMain(self, item):
+        for k, c in graghWidgets.items():
+            if k == item.text():
+                w = c(hintSignal = self.hintSignal, rmCallback = self.rmWidgetFromMain)
+                self.widgets.append(w)
+                self.widgetsLayout.addWidget(w)
+
+    def rmWidgetFromMain(self, widget):
+        self.widgetsLayout.removeWidget(widget)
+        widget.deleteLater()
+        self.widgets.remove(widget)
 
     def onWidgetFunctional(self, parent):
         '''

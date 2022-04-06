@@ -12,9 +12,10 @@ import pyqtgraph as pg
 from struct import unpack, pack
 
 class Gragh_Widget_Base(QWidget):
-    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None):
+    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None, rmCallback=lambda widget:None):
         QWidget.__init__(self, parent)
         self.hintSignal = hintSignal
+        self.rmCallback = rmCallback
 
     def onData(self, data:bytes):
         pass
@@ -22,8 +23,8 @@ class Gragh_Widget_Base(QWidget):
 
 class Gragh_Plot(Gragh_Widget_Base):
     updateSignal = pyqtSignal(dict)
-    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None):
-        super().__init__(parent, hintSignal=hintSignal)
+    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None, rmCallback=lambda widget:None):
+        super().__init__(parent, hintSignal=hintSignal, rmCallback=rmCallback)
         self.config = {
             "xRange": 10,
             "xRangeEnable": True,
@@ -32,7 +33,9 @@ class Gragh_Plot(Gragh_Widget_Base):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
         self.plotWin = pg.GraphicsLayoutWidget()
+        self.plotWin.setMinimumHeight(200)
         pg.setConfigOptions(antialias=True)
+        rmBtn = QPushButton(_("Remove"))
         rangeLabel = QLabel(_("Range:"))
         rangeConf = QLineEdit(str(self.config["xRange"]))
         rangeEnable = QCheckBox(_("Enable"))
@@ -47,12 +50,13 @@ class Gragh_Plot(Gragh_Widget_Base):
         validator = QDoubleValidator()
         rangeConf.setValidator(validator)
         self.layout.addWidget(self.plotWin, 0, 0, 1, 3)
-        self.layout.addWidget(rangeLabel, 1, 0, 1, 1)
-        self.layout.addWidget(rangeConf, 1, 1, 1, 1)
-        self.layout.addWidget(rangeEnable, 1, 2, 1, 1)
-        self.layout.addWidget(headerLabel, 2, 0, 1, 1)
-        self.layout.addWidget(headerConf, 2, 1, 1, 1)
-        self.layout.addWidget(headerBtn, 2, 2, 1, 1)
+        self.layout.addWidget(rmBtn, 1, 0, 1, 1)
+        self.layout.addWidget(rangeLabel, 2, 0, 1, 1)
+        self.layout.addWidget(rangeConf, 2, 1, 1, 1)
+        self.layout.addWidget(rangeEnable, 2, 2, 1, 1)
+        self.layout.addWidget(headerLabel, 3, 0, 1, 1)
+        self.layout.addWidget(headerConf, 3, 1, 1, 1)
+        self.layout.addWidget(headerBtn, 3, 2, 1, 1)
         self.resize(600, 400)
         self.p = self.plotWin.addPlot(colspan=2)
         # self.p.setLabel('bottom', 'x', '')
@@ -91,6 +95,10 @@ class Gragh_Plot(Gragh_Widget_Base):
         rangeConf.textChanged.connect(self.setRange)
         rangeEnable.clicked.connect(lambda: self.setEnableRange(rangeEnable.isChecked()))
         headerBtn.clicked.connect(lambda: self.setHeader(headerConf.text()))
+        rmBtn.clicked.connect( self.remove)
+
+    def remove(self):
+        self.rmCallback(self)
 
     def setRange(self, text):
         if text:
