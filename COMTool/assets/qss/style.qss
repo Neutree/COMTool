@@ -475,25 +475,31 @@ QTabBar::tab:only-one {
     margin: 0; /* if there is only one tab, we don't want overlapping margins */
 }
 
-.helpList {
+.helpList, QListWidget {
     border: none;
     outline: none;
 }
 
-.helpList::item {
+.helpList::item, QListWidget::item {
+    border: none;
     height: 40px;
     width: 100px
 }
+QListWidget::item:selected {
+    color: #0f88eb;
+    border-right: 5px solid #0f88eb;
+    background-color: #b3ddff;
+}
+QListWidget::item:hover {
+    color: #0f88eb;
+    background-color: #b3ddff;
+}
 .helpList::item:selected {
-    border: none;
     color: #009688;
     border-right: 5px solid #009688;
     background-color: #eafdfa;
 }
 .helpList::item:hover {
-    border-left: none;
-    border-top: none;
-    border-bottom: none;
     color: #009688;
     background-color: #eafdfa;
 }

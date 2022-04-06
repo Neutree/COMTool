@@ -96,7 +96,7 @@ class Plugin(Plugin_Base):
 
     def addWidgetToMain(self, idx):
         _class = list(graghWidgets.values())[idx]
-        w = _class()
+        w = _class(hintSignal = self.hintSignal)
         self.widgets.append(w)
         self.widgetsLayout.addWidget(w)
 

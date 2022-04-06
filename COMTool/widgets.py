@@ -3,7 +3,7 @@ import ctypes
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit,
                             QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget, QStackedWidget, QListWidget)
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent, QHideEvent
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
@@ -334,7 +334,7 @@ class CustomTitleBarWindowMixin:
     #             for y in range(self.height() - self._padding + 1, self.height())]
     #     self._corner_rect = [QPoint(x, y) for x in range(self.width() - self._padding, self.width() + 1)
     #                 for y in range(self.height() - self._padding, self.height() + 1)]
-    
+
     # def mousePressEvent(self, event):
     #     if event.button() == Qt.LeftButton and not self.mPos:
     #         self.mPos = event.pos()
@@ -354,7 +354,7 @@ class CustomTitleBarWindowMixin:
     #     #     self._move_drag = True
     #     #     self.move_DragPosition = event.globalPos() - self.pos()
     #     #     event.accept()
-    
+
     # def mouseMoveEvent(self, event): # QMouseEvent
     #     if event.buttons() == Qt.LeftButton and self.mPos:
     #         pos = self.mapToGlobal(event.pos() - self.mPos)
@@ -384,7 +384,7 @@ class CustomTitleBarWindowMixin:
     #     # elif Qt.LeftButton and self._move_drag:
     #     #     self.move(QMouseEvent.globalPos() - self.move_DragPosition)
     #     #     QMouseEvent.accept()
-    
+
     # def mouseReleaseEvent(self, event):
     #     if self.mPos:
     #         self.mPos = None
@@ -436,17 +436,24 @@ class PlainTextEdit(QPlainTextEdit):
 class _ListView(QListView):
     focusout = pyqtSignal()
 
-    def focusOutEvent(self, event):
-        self.focusout.emit()
+    def event(self, e):
+        if type(e) == QHideEvent:
+            # focusOutEvent event not triggered in Linux, maybe a bug?
+            # so use hide event instead
+            self.focusout.emit()
+        return super().event(e)
+
+    # def focusOutEvent(self, event):
+    #     self.focusout.emit()
 
 class _Combobox(QComboBox):
     clicked = pyqtSignal()
-    listvieFocusout = pyqtSignal()
+    listviewFocusout = pyqtSignal()
     def __init__(self):
         super().__init__()
         listView = _ListView()
         listView.executeDelayedItemsLayout()
-        listView.focusout.connect(lambda: self.listvieFocusout.emit())
+        listView.focusout.connect(lambda: self.listviewFocusout.emit())
         self.setView(listView)
 
     def mouseReleaseEvent(self, QMouseEvent):
@@ -465,7 +472,7 @@ class _Combobox(QComboBox):
                 max_w = w
         self.view().setMinimumWidth(max_w + 50)
         super().showPopup()
-    
+
     def showItems(self):
         self._showPopup()
 
@@ -495,8 +502,8 @@ class ButtonCombbox(QWidget):
             self._ctrl("hide")
         self.list.activated.connect(lambda idx: onAvtivated(idx))
         self.list.currentIndexChanged.connect(lambda:self.currentIndexChanged.emit())
-        self.list.listvieFocusout.connect(self._listFocusout)
-    
+        self.list.listviewFocusout.connect(self._listFocusout)
+
     def _ctrl(self, cmd):
         if cmd == "show":
             if self.list.count() == 0:
