@@ -1,21 +1,34 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QLineEdit, QGridLayout, QPushButton, QCheckBox)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QLineEdit, QGridLayout, QPushButton, QCheckBox, QHBoxLayout, QInputDialog)
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QDoubleValidator
 
 try:
     from i18n import _
+    import utils_ui
+    import utils
 except Exception:
     from COMTool.i18n import _
+    from COMTool import utils_ui
+    from COMTool import utils
 
 import pyqtgraph as pg
 
 from struct import unpack, pack
 
 class Gragh_Widget_Base(QWidget):
-    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None, rmCallback=lambda widget:None):
+    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None, rmCallback=lambda widget:None, send=lambda x:None, config=None, defaultConfig=None):
         QWidget.__init__(self, parent)
         self.hintSignal = hintSignal
         self.rmCallback = rmCallback
+        self.send = send
+        if config is None:
+            config = {}
+        if not defaultConfig:
+            defaultConfig = {}
+        self.config = config
+        for k in defaultConfig:
+            if not k in self.config:
+                self.config[k] = defaultConfig[k]
 
     def onData(self, data:bytes):
         pass
@@ -23,13 +36,15 @@ class Gragh_Widget_Base(QWidget):
 
 class Gragh_Plot(Gragh_Widget_Base):
     updateSignal = pyqtSignal(dict)
-    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None, rmCallback=lambda widget:None):
-        super().__init__(parent, hintSignal=hintSignal, rmCallback=rmCallback)
-        self.config = {
+    id = "plot"
+    def __init__(self, parent=None, hintSignal = lambda type, title, msg:None, rmCallback=lambda widget:None, send=lambda x:None, config=None):
+        default = {
             "xRange": 10,
             "xRangeEnable": True,
-            "header": ("\\xAA\\xCC\\xEE\\xBB", b"\xAA\xCC\xEE\xBB")
+            "header": "\\xAA\\xCC\\xEE\\xBB"
         }
+        super().__init__(parent, hintSignal=hintSignal, rmCallback=rmCallback, send = send, config = config, defaultConfig=default)
+        self.headerBytes = utils.str_to_bytes(self.config["header"], escape=True, encoding="utf-8")
         self.layout = QGridLayout()
         self.setLayout(self.layout)
         self.plotWin = pg.GraphicsLayoutWidget()
@@ -41,7 +56,7 @@ class Gragh_Plot(Gragh_Widget_Base):
         rangeEnable = QCheckBox(_("Enable"))
         rangeEnable.setChecked(self.config["xRangeEnable"])
         headerLabel = QLabel(_("Header:"))
-        headerConf = QLineEdit(self.config["header"][0])
+        headerConf = QLineEdit(self.config["header"])
         headerBtn = QPushButton(_("Set"))
         hint = _("Protocol: header + 1Byte name length + name + 8Bytes x(double) + 8Bytes y(double) + 1Byte sum")
         headerConf.setToolTip(hint)
@@ -110,13 +125,11 @@ class Gragh_Plot(Gragh_Widget_Base):
     def setHeader(self, text):
         if text:
             try:
-                textBytes = self.bytesStr2Bytes(text)
-                self.config["header"] = (text, textBytes)
+                textBytes = utils.str_to_bytes(text, escape=True, encoding="utf-8")
+                self.config["header"] = text
+                self.headerBytes = textBytes
             except Exception:
                 self.hintSignal.emit("error", _("Error"), _("Format error"))
-
-    def bytesStr2Bytes(self, string):
-        return eval(f'b"{string}"')
 
     def decodeData(self, data: bytes):
         '''
@@ -133,7 +146,7 @@ class Gragh_Plot(Gragh_Widget_Base):
         # append data
         self.rawData += data
         # find header
-        header = self.config["header"][1]
+        header = self.headerBytes
         idx = self.rawData.find(header)
         if idx < 0:
             return self.data
@@ -191,7 +204,100 @@ class Gragh_Plot(Gragh_Widget_Base):
         self.updateSignal.emit(data)
 
 
+class Gragh_Button(Gragh_Widget_Base):
+    class Button(QWidget):
+        def __init__(self, rmCallback, addCallback, clickCallback, changeCallback, name="hello") -> None:
+            super().__init__()
+            self.rmCallback = rmCallback
+            self.changeCallback = changeCallback
+            layout = QHBoxLayout()
+            layoutSetting = QVBoxLayout()
+            self.setLayout(layout)
+            self.button = QPushButton(name)
+            self.button.setProperty("class", "bigBtn")
+            layout.addLayout(layoutSetting)
+            layout.addWidget(self.button)
+            self.addBtn = QPushButton()
+            self.rmBtn = QPushButton()
+            self.editBtn = QPushButton()
+            self.addBtn.setProperty("class", "smallBtn3")
+            self.rmBtn.setProperty("class", "smallBtn3")
+            self.editBtn.setProperty("class", "smallBtn3")
+            utils_ui.setButtonIcon(self.addBtn, "fa.plus")
+            utils_ui.setButtonIcon(self.rmBtn, "fa.minus")
+            utils_ui.setButtonIcon(self.editBtn, "fa.edit")
+            layoutSetting.addWidget(self.rmBtn)
+            layoutSetting.addWidget(self.addBtn)
+            layoutSetting.addWidget(self.editBtn)
+            layoutSetting.addStretch()
+            self.rmBtn.clicked.connect(self.onRm)
+            self.addBtn.clicked.connect(lambda:addCallback(self))
+            self.editBtn.clicked.connect(self.editButton)
+            self.button.clicked.connect(lambda:clickCallback(self, utils.str_to_bytes(self.getText(), escape=True, encoding="utf-8")))
+
+        def getText(self):
+            return self.button.text()
+
+        def onRm(self):
+            utils_ui.clearButtonIcon(self.addBtn)
+            utils_ui.clearButtonIcon(self.rmBtn)
+            utils_ui.clearButtonIcon(self.editBtn)
+            self.rmCallback(self)
+
+        def editButton(self):
+            v, ok = QInputDialog.getText(self, _("Set button name"), _("Name:"), QLineEdit.Normal, self.button.text())
+            if v:
+                self.button.setText(v)
+                self.changeCallback(self)
+
+
+    id = "button"
+    def __init__(self, parent=None, hintSignal=lambda type, title, msg: None, rmCallback=lambda widget: None, send=lambda x: None, config=None):
+        default = {
+            "items": []
+        }
+        super().__init__(parent, hintSignal, rmCallback, send, config, default)
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+        if not self.config["items"]:
+            button = Gragh_Button.Button(self.onRm, self.onAdd, self.onClick, self.onChange)
+            self.layout.addWidget(button)
+            self.buttons = [button]
+            self.config["items"] = [button.getText()]
+        else:
+            self.buttons = []
+            for item in self.config["items"]:
+                button = Gragh_Button.Button(self.onRm, self.onAdd, self.onClick, self.onChange, name=item)
+                self.layout.addWidget(button)
+                self.buttons.append(button)
+
+    def onRm(self, widget):
+        '''
+            @widget Gragh_Button.Button
+        '''
+        self.buttons.remove(widget)
+        widget.setParent(None)
+        if not self.buttons:
+            self.rmCallback(self)
+
+    def onAdd(self, widget):
+        '''
+            @widget Gragh_Button.Button
+        '''
+        button = Gragh_Button.Button(self.onRm, self.onAdd, self.onClick, self.onChange)
+        self.layout.addWidget(button)
+        self.buttons.append(button)
+        self.config["items"].append(button.getText())
+
+    def onClick(self, widget, data:bytes):
+        self.send(data)
+
+    def onChange(self, widget):
+        self.config["items"][self.buttons.index(widget)] = widget.getText()
+
+
 graghWidgets = {
-    "plot": Gragh_Plot,
+    Gragh_Plot.id: Gragh_Plot,
+    Gragh_Button.id: Gragh_Button
 }
 

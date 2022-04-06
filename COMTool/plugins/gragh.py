@@ -1,4 +1,5 @@
 
+import enum
 from PyQt5.QtCore import QObject, Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
@@ -49,7 +50,7 @@ class Plugin(Plugin_Base):
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
 
-    help = None                # help info, can be str or QWidget
+    help = _("Double click gragh item to add a gragh widget")                # help info, can be str or QWidget
 
     def __init__(self):
         super().__init__()
@@ -65,6 +66,12 @@ class Plugin(Plugin_Base):
         self.config = config
         default = {
             "version": 1,
+            "graghWidgets": [
+                # {
+                #     "id": "plot",
+                #     "config": {}
+                # }
+            ]
         }
         for k in default:
             if not k in self.config:
@@ -84,13 +91,21 @@ class Plugin(Plugin_Base):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         layout.addWidget(scroll)
         widget2 = QWidget()
         scroll.setWidget(widget2)
         self.widgetsLayout = QVBoxLayout()
         widget2.setLayout(self.widgetsLayout)
         widget.resize(600, 400)
+        # load gragh widgets
+        for item in self.config["graghWidgets"]:
+            if not item["id"] in graghWidgets:
+                continue
+            c = graghWidgets[item["id"]]
+            w = c(hintSignal = self.hintSignal, rmCallback = self.rmWidgetFromMain, send=self.sendData, config=item["config"])
+            self.widgets.append(w)
+            self.widgetsLayout.addWidget(w)
         return widget
 
     def onWidgetSettings(self, parent):
@@ -100,18 +115,29 @@ class Plugin(Plugin_Base):
         itemList = QListWidget()
         for k,v in graghWidgets.items():
             itemList.addItem(k)
+        itemList.setToolTip(_("Double click to add a gragh widget"))
+        itemList.setCurrentRow(0)
         itemList.itemDoubleClicked.connect(self.addWidgetToMain)
         return itemList
 
     def addWidgetToMain(self, item):
         for k, c in graghWidgets.items():
             if k == item.text():
-                w = c(hintSignal = self.hintSignal, rmCallback = self.rmWidgetFromMain)
+                config = {
+                    "id": c.id,
+                    "config": {}
+                }
+                w = c(hintSignal = self.hintSignal, rmCallback = self.rmWidgetFromMain, send=self.sendData, config=config["config"])
                 self.widgets.append(w)
                 self.widgetsLayout.addWidget(w)
+                self.config["graghWidgets"].append(config)
 
     def rmWidgetFromMain(self, widget):
         self.widgetsLayout.removeWidget(widget)
+        for item in self.config["graghWidgets"]:
+            if id(item["config"]) == id(widget.config):
+                self.config["graghWidgets"].remove(item)
+                break
         widget.deleteLater()
         self.widgets.remove(widget)
 

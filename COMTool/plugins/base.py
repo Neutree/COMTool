@@ -187,63 +187,11 @@ class Plugin_Base(QObject):
             if not escape:
                 data = data.encode(encoding,"ignore")
             else: # '11234abcd\n123你好\r\n\thello\x00\x01\x02'
-                final = b""
-                p = 0
-                escapes = {
-                    "a": (b'\a', 2),
-                    "b": (b'\b', 2),
-                    "f": (b'\f', 2),
-                    "n": (b'\n', 2),
-                    "r": (b'\r', 2),
-                    "t": (b'\t', 2),
-                    "v": (b'\v', 2),
-                    "\\": (b'\\', 2),
-                    "\'": (b"'", 2),
-                    '\"': (b'"', 2),
-                }
-                octstr = ["0", "1", "2", "3", "4", "5", "6", "7"]
-                while 1:
-                    idx = data[p:].find("\\")
-                    if idx < 0:
-                        final += data[p:].encode(encoding, "ignore")
-                        break
-                    final += data[p : p + idx].encode(encoding, "ignore")
-                    p += idx
-                    e = data[p+1]
-                    if e in escapes:
-                        r = escapes[e][0]
-                        p += escapes[e][1]
-                    elif e == "x": # \x01
-                        try:
-                            r = bytes([int(data[p+2 : p+4], base=16)])
-                            p += 4
-                        except Exception:
-                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
-                            return b''
-                    elif e in octstr and len(data) > (p+2) and data[p+2] in octstr: # \dd or \ddd e.g. \001
-                        try:
-                            twoOct = False
-                            if len(data) > (p+3) and data[p+3] in octstr: # \ddd
-                                try:
-                                    r = bytes([int(data[p+1 : p+4], base=8)])
-                                    p += 4
-                                except Exception:
-                                    twoOct = True
-                            else:
-                                twoOct = True
-                            if twoOct:
-                                r = bytes([int(data[p+1 : p+3], base=8)])
-                                p += 3
-                        except Exception as e:
-                            print(e)
-                            self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + data[p : p+4])
-                            return b''
-                    else:
-                        r = data[p: p+2].encode(encoding, "ignore")
-                        p += 2
-                    final += r
-
-                data = final
+                try:
+                    data = utils.str_to_bytes(data, escape=True, encoding=encoding)
+                except Exception as e:
+                    self.hintSignal.emit("error", _("Error"), _("Escape is on, but escape error:") + str(e))
+                    return b''
         return data
 
     def decodeReceivedData(self, data:bytes, encoding, isHexStr = False, escape=False):
