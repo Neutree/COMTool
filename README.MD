@@ -18,9 +18,9 @@ A cross platform serial debug tools written by python
  | |
 
 
-| White theme | Dark theme | protocol plugin | TCP/UDP | Terminal |
-| ----------- | ---------- | --------------- | ------- | -------- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) | ![terminal](./COMTool/assets/screenshot_terminal.png) |
+| White theme | Dark theme | protocol plugin | TCP/UDP | Terminal | Gragh |
+| ----------- | ---------- | --------------- | ------- | -------- | ----- |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) | ![terminal](./COMTool/assets/screenshot_terminal.png) | ![plugin gragh](./COMTool/assets/screenshot_gragh.png) |
 
 
 
@@ -59,7 +59,7 @@ A cross platform serial debug tools written by python
 - [x] TCP UDP support
 - [x] Terminal mode support
 - [x] plugin support(Create plugin see [docs/plugins.md](./docs/plugins.md))
-- [ ] real time data graphic display
+- [x] real time data graphic display
 
 ## Install binary
 
