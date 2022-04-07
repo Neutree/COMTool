@@ -619,7 +619,7 @@ msgstr "输入标记"
 
 #: plugins/protocol.py:60 plugins/protocol.py:85
 msgid "Select icon"
-msgstr "选择文件"
+msgstr "选择图标"
 
 #: plugins/protocol.py:62
 msgid "Shortcut"

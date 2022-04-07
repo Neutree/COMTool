@@ -137,6 +137,7 @@ class PluginItem:
         widget.setStretchFactor(0, 1)
         widget.setStretchFactor(1, 2)
         widget.setStretchFactor(2, 1)
+        self.functionalWidget.hide()
         # UI init done
         self.plugin.onUiInitDone()
         return wrapper

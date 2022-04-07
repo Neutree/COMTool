@@ -59,7 +59,6 @@ class Plugin(Plugin_Base):
     lastBg = None
     defaultColor = None
     defaultBg = None
-    clearCountSignal = pyqtSignal()
     help = '''{}<br>
 <b style="color:#ef5350;"><kbd>F11</kbd></b>: {}<br>
 <b style="color:#ef5350;"><kbd>Ctrl+Enter</kbd></b>: {}<br>
@@ -395,11 +394,20 @@ class Plugin(Plugin_Base):
         self.hintSignal.emit("info", _("OK"), _("History cleared!"))
 
 
+    def onSent(self, ok, msg, length, path):
+        if ok:
+            self.statusBar.addTx(length)
+        else:
+            self.hintSignal.emit("error", _("Error"), _("Send data failed!") + " " + msg)
+
     def onSentFile(self, ok, msg, length, path):
         print("file sent {}, path: {}".format('ok' if ok else 'fail', path))
-        self.sendFileButton.setText(_("Send file"))
-        self.sendFileButton.setDisabled(False)
-        self.statusBar.addTx(length)
+        if ok:
+            self.sendFileButton.setText(_("Send file"))
+            self.sendFileButton.setDisabled(False)
+            self.statusBar.addTx(length)
+        else:
+            self.hintSignal.emit("error", _("Error"), _("Send file failed!") + " " + msg)
 
     def setSaveLog(self):
         if self.saveLogCheckbox.isChecked():
@@ -569,7 +577,7 @@ class Plugin(Plugin_Base):
                         head = '{}: '.format(head.rstrip())
                     self.receiveUpdateSignal.emit(head, [sendStrsColored], self.configGlobal["encoding"])
                     self.sendRecord.insert(0, head + sendStr)
-                self.send(data_bytes=data)
+                self.send(data_bytes=data, callback = self.onSent)
                 if data_bytes:
                     data = str(data_bytes)
                 else:
@@ -734,7 +742,7 @@ class Plugin(Plugin_Base):
 
     def clearReceiveBuffer(self):
         self.receiveArea.clear()
-        self.clearCountSignal.emit()
+        self.statusBar.clear()
 
     def onReceived(self, data : bytes):
         self.receivedData.append(data)

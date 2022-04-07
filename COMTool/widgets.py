@@ -2,8 +2,9 @@ from audioop import add
 import ctypes
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit,
-                            QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget, QStackedWidget, QListWidget)
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent, QHideEvent
+                            QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget, QStackedWidget, QListWidget,
+                            QGridLayout, QLineEdit, QDialog)
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent, QHideEvent, QKeySequence
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
 
@@ -12,11 +13,13 @@ try:
     from Combobox import ComboBox
     from i18n import _
     import parameters
+    from qta_icon_browser import selectIcon
 except Exception:
     from COMTool import utils_ui
     from COMTool.Combobox import ComboBox
     from COMTool.i18n import _
     from COMTool import parameters
+    from COMTool.qta_icon_browser import selectIcon
 
 
 class TitleBar(QWidget):
@@ -582,6 +585,12 @@ class statusBar(QWidget):
         msg = '{}({}): {}'.format(_("Sent"), _("bytes"), self.rxCount)
         self.updateUiSignal.emit("tx", msg)
 
+    def clear(self):
+        self.rxCount = 0
+        self.txCount = 0
+        self.addTx(0)
+        self.addRx(0)
+
     def setMsg(self, level, msg):
         if level == "info":
             color = "#008200"
@@ -631,6 +640,138 @@ class HelpWidget(QWidget, CustomTitleBarWindowMixin):
     def closeEvent(self, event):
         self.closed.emit()
         event.accept()
+
+
+
+class EditRemarDialog(QDialog):
+    def __init__(self, remark = "", icon=None, shortcut = [], value=None) -> None:
+        super().__init__()
+        self.remark = remark
+        self.icon = icon
+        self.ok = False
+        self.settingShortcut = False
+        self.shortcut = shortcut
+        self.value = value
+
+        layout = QGridLayout()
+        self.setLayout(layout)
+        layout.addWidget(QLabel(_("Input remark")), 0, 0, 1, 1)
+        self.remarkInput = QLineEdit(self.remark)
+        if self.value is not None:
+            self.valueInput = QLineEdit(self.value)
+        self.iconBtn = QPushButton(self.remark)
+        if self.icon:
+            self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
+        if self.shortcut:
+            name = "+".join([str(name) for v,name in self.shortcut])
+        else:
+            name = _("Record")
+        self.shortcutBtn = QPushButton(name)
+        self.shortcutBtn.setFocusPolicy(Qt.NoFocus)
+        layout.addWidget(self.remarkInput, 0, 1, 1, 1)
+        if self.value is not None:
+            layout.addWidget(QLabel(_("Input value")), 1, 0, 1, 1)
+            layout.addWidget(self.valueInput, 1, 1, 1, 1)
+        layout.addWidget(QLabel(_("Select icon")), 2, 0, 1, 1)
+        layout.addWidget(self.iconBtn, 2, 1, 1, 1)
+        layout.addWidget(QLabel(_("Shortcut")), 3, 0, 1, 1)
+        layout.addWidget(self.shortcutBtn, 3, 1, 1, 1)
+        self.shortcutHint = QLabel(_("Press key to record, or click Cancel"))
+        self.shortcutHint.hide()
+        layout.addWidget(self.shortcutHint, 4, 0, 1, 2)
+        self.okBtn = QPushButton(_("OK"))
+        self.cancelBtn = QPushButton(_("Cancel"))
+        layout.addWidget(self.okBtn, 5, 0, 1, 1)
+        layout.addWidget(self.cancelBtn, 5, 1, 1, 1)
+
+        def ok():
+            self.ok = True
+            self.close()
+        self.okBtn.clicked.connect(lambda : ok())
+        self.cancelBtn.clicked.connect(lambda : self.close())
+        def updateRemark(text):
+            self.remark = text
+            self.iconBtn.setText(self.remark)
+        self.remarkInput.textChanged.connect(updateRemark)
+        self.iconBtn.clicked.connect(lambda: self.selectIcon())
+        self.shortcutBtn.clicked.connect(self.setShortcut)
+
+    def selectIcon(self):
+        self.icon = selectIcon(parent = self, title = _("Select icon"), btnName = _("OK"), color = utils_ui.getStyleVar("iconSelectorColor"))
+        if self.icon:
+            self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
+        else:
+            self.iconBtn.setIcon(QIcon())
+
+    def exec(self):
+        super().exec()
+        if self.value is not None:
+            self.value = self.valueInput.text()
+            return self.ok, self.remark, self.value, self.icon, self.shortcut
+        return self.ok, self.remark, self.icon, self.shortcut
+
+    def setShortcut(self):
+        if not self.settingShortcut:
+            self.onRecordShortcut()
+        else:
+            self.onRecordShortcutEnd()
+
+    def onRecordShortcut(self):
+        self.shortcut = []
+        self.remarkInput.setEnabled(False)
+        self.valueInput.setEnabled(False)
+        self.iconBtn.setEnabled(False)
+        self.okBtn.setEnabled(False)
+        self.cancelBtn.setEnabled(False)
+        self.shortcutBtn.setText(_("Cancel"))
+        self.shortcutHint.show()
+        self.settingShortcut = True
+        self.shortcutBtn.setProperty("class", "deleteBtn")
+        self.updateStyle(self.shortcutBtn)
+
+    def onRecordShortcutEnd(self, setOk=False):
+        self.remarkInput.setEnabled(True)
+        self.valueInput.setEnabled(True)
+        self.iconBtn.setEnabled(True)
+        self.okBtn.setEnabled(True)
+        self.cancelBtn.setEnabled(True)
+        if not setOk:
+            self.shortcutBtn.setText(_("Record"))
+            self.shortcut = []
+        self.shortcutHint.hide()
+        self.settingShortcut = False
+        self.shortcutBtn.setProperty("class", "")
+        self.updateStyle(self.shortcutBtn)
+
+    def keyPressEvent(self, event):
+        if not self.settingShortcut:
+            return
+        key = event.key()
+        name = QKeySequence(key).toString()
+        if key == Qt.Key_Control:
+            name = "Ctrl"
+        elif key == Qt.Key_Shift:
+            name = "Shift"
+        elif key == Qt.Key_Alt:
+            name = "Alt"
+        elif key == Qt.Key_Super_L:
+            name = "Super_L"
+        elif key == Qt.Key_Super_R:
+            name = "Super_R"
+        self.shortcut.append((key, name))
+        keys = "+".join([str(name) for v,name in self.shortcut])
+        self.shortcutBtn.setText(keys)
+
+    def keyReleaseEvent(self,event):
+        if not self.settingShortcut:
+            return
+        self.onRecordShortcutEnd(setOk = True)
+
+    def updateStyle(self, widget):
+        self.style().unpolish(widget)
+        self.style().polish(widget)
+        self.update()
+
 
 if __name__ == "__main__":
     import sys

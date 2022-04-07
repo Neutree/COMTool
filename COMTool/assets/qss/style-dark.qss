@@ -298,7 +298,7 @@ QPushButton:default {
     height: 24px;
 }
 .bigBtn {
-    min-height: 50px;
+    min-height: 100px;
 }
 
 .remark {
@@ -524,4 +524,8 @@ QListWidget::item:hover {
 .helpList::item:hover {
     color: #009688;
     background-color: #253836;
+}
+
+.graghBtn {
+    max-height: 120px;
 }

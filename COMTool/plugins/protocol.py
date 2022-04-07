@@ -12,15 +12,15 @@ try:
     from i18n import _
     from widgets import TextEdit, PlainTextEdit
     import utils_ui
-    from qta_icon_browser import selectIcon
     from widgets import statusBar
+    from widgets import EditRemarDialog
 except ImportError:
     from COMTool import parameters, utils_ui
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
     from COMTool.widgets import TextEdit, PlainTextEdit
-    from COMTool.qta_icon_browser import selectIcon
     from COMTool.widgets import statusBar
+    from COMTool.widgets import EditRemarDialog
 
 try:
     from base import Plugin_Base
@@ -33,124 +33,6 @@ except Exception:
 
 import os, json, time
 from struct import unpack, pack
-
-class EditRemarDialog(QDialog):
-    def __init__(self, remark = "", icon=None, shortcut = []) -> None:
-        super().__init__()
-        self.remark = remark
-        self.icon = icon
-        self.ok = False
-        self.settingShortcut = False
-        self.shortcut = shortcut
-
-        layout = QGridLayout()
-        self.setLayout(layout)
-        layout.addWidget(QLabel(_("Input remark")), 0, 0, 1, 1)
-        self.remarkInput = QLineEdit(self.remark)
-        self.iconBtn = QPushButton(self.remark)
-        if self.icon:
-            self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
-        if self.shortcut:
-            name = "+".join([str(name) for v,name in self.shortcut])
-        else:
-            name = _("Record")
-        self.shortcutBtn = QPushButton(name)
-        self.shortcutBtn.setFocusPolicy(Qt.NoFocus)
-        layout.addWidget(self.remarkInput, 0, 1, 1, 1)
-        layout.addWidget(QLabel(_("Select icon")), 1, 0, 1, 1)
-        layout.addWidget(self.iconBtn, 1, 1, 1, 1)
-        layout.addWidget(QLabel(_("Shortcut")), 2, 0, 1, 1)
-        layout.addWidget(self.shortcutBtn, 2, 1, 1, 1)
-        self.shortcutHint = QLabel(_("Press key to record, or click Cancel"))
-        self.shortcutHint.hide()
-        layout.addWidget(self.shortcutHint, 3, 0, 1, 2)
-        self.okBtn = QPushButton(_("OK"))
-        self.cancelBtn = QPushButton(_("Cancel"))
-        layout.addWidget(self.okBtn, 4, 0, 1, 1)
-        layout.addWidget(self.cancelBtn, 4, 1, 1, 1)
-
-        def ok():
-            self.ok = True
-            self.close()
-        self.okBtn.clicked.connect(lambda : ok())
-        self.cancelBtn.clicked.connect(lambda : self.close())
-        def updateRemark(text):
-            self.remark = text
-            self.iconBtn.setText(self.remark)
-        self.remarkInput.textChanged.connect(updateRemark)
-        self.iconBtn.clicked.connect(lambda: self.selectIcon())
-        self.shortcutBtn.clicked.connect(self.setShortcut)
-
-    def selectIcon(self):
-        self.icon = selectIcon(parent = self, title = _("Select icon"), btnName = _("OK"), color = utils_ui.getStyleVar("iconSelectorColor"))
-        if self.icon:
-            self.iconBtn.setIcon(qta.icon(self.icon, color="white"))
-        else:
-            self.iconBtn.setIcon(QIcon())
-
-    def exec(self):
-        super().exec()
-        return self.ok, self.remark, self.icon, self.shortcut
-
-    def setShortcut(self):
-        if not self.settingShortcut:
-            self.onRecordShortcut()
-        else:
-            self.onRecordShortcutEnd()
-
-    def onRecordShortcut(self):
-        self.shortcut = []
-        self.remarkInput.setEnabled(False)
-        self.iconBtn.setEnabled(False)
-        self.okBtn.setEnabled(False)
-        self.cancelBtn.setEnabled(False)
-        self.shortcutBtn.setText(_("Cancel"))
-        self.shortcutHint.show()
-        self.settingShortcut = True
-        self.shortcutBtn.setProperty("class", "deleteBtn")
-        self.updateStyle(self.shortcutBtn)
-
-    def onRecordShortcutEnd(self, setOk=False):
-        self.remarkInput.setEnabled(True)
-        self.iconBtn.setEnabled(True)
-        self.okBtn.setEnabled(True)
-        self.cancelBtn.setEnabled(True)
-        if not setOk:
-            self.shortcutBtn.setText(_("Record"))
-            self.shortcut = []
-        self.shortcutHint.hide()
-        self.settingShortcut = False
-        self.shortcutBtn.setProperty("class", "")
-        self.updateStyle(self.shortcutBtn)
-
-    def keyPressEvent(self, event):
-        if not self.settingShortcut:
-            return
-        key = event.key()
-        name = QKeySequence(key).toString()
-        if key == Qt.Key_Control:
-            name = "Ctrl"
-        elif key == Qt.Key_Shift:
-            name = "Shift"
-        elif key == Qt.Key_Alt:
-            name = "Alt"
-        elif key == Qt.Key_Super_L:
-            name = "Super_L"
-        elif key == Qt.Key_Super_R:
-            name = "Super_R"
-        self.shortcut.append((key, name))
-        keys = "+".join([str(name) for v,name in self.shortcut])
-        self.shortcutBtn.setText(keys)
-
-    def keyReleaseEvent(self,event):
-        if not self.settingShortcut:
-            return
-        self.onRecordShortcutEnd(setOk = True)
-
-    def updateStyle(self, widget):
-        self.style().unpolish(widget)
-        self.style().polish(widget)
-        self.update()
 
 
 class Plugin(Plugin_Base):
@@ -179,7 +61,6 @@ class Plugin(Plugin_Base):
     active  = False          # using this plugin
 
     showReceiveDataSignal = pyqtSignal(str)
-    clearCountSignal = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -314,7 +195,7 @@ class Plugin(Plugin_Base):
         # event
         self.addButton.clicked.connect(lambda : self.insertSendItem())
         def clearReceived():
-            self.receiveWidget.clear();self.clearCountSignal.emit()
+            self.receiveWidget.clear();self.statusBar.clear()
         self.clearBtn.clicked.connect(clearReceived)
         def keyModeOn(event):
             self.keyModeBtn.setProperty("class", "deleteBtn")
@@ -578,6 +459,7 @@ class Plugin(Plugin_Base):
                 self.receiveWidget.moveCursor(QTextCursor.End)
 
     def onReceived(self, data : bytes):
+        self.statusBar.addRx(len(data))
         try:
             data = self.decodeMethod(data)
         except Exception as e:
@@ -598,7 +480,13 @@ class Plugin(Plugin_Base):
             self.hintSignal.emit("error", _("Error"), _("Run encode error") + " " + str(e))
             return
         if data_bytes:
-            self.send(data_bytes)
+            self.send(data_bytes, callback=self.onSent)
+
+    def onSent(self, ok, msg, length, path):
+        if ok:
+            self.statusBar.addTx(length)
+        else:
+            self.hintSignal.emit("error", _("Error"), _("Send data failed!") + " " + msg)
 
     def sendCustomItem(self, item):
         text = item["text"]

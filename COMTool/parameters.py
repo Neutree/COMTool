@@ -53,7 +53,7 @@ log.i("Log path:", logPath)
 
 class Parameters:
     config = {
-        "version": 2,
+        "version": 3,
         "skin": "light",
         "locale": "en",
         "encoding": "UTF-8",
