@@ -449,11 +449,10 @@ QTabBar::tab {
     border-bottom: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    min-width: 10ex;
+    min-width: 80px;
     min-height: 34px;
     padding-left: 2ex;
     padding-right: 2ex;
-    font-weight: 500;
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {

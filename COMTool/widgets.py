@@ -780,6 +780,7 @@ class ScrollLabel(QScrollArea):
         self.setWidgetResizable(True)
         # making qwidget object
         content = QWidget(self)
+        self.setProperty("class", "scrollbar2")
         self.setWidget(content)
         # vertical box layout
         lay = QVBoxLayout(content)
