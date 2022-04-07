@@ -3,7 +3,7 @@ import ctypes
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QEvent, QObject
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QStyleOption, QStyle, QPushButton, QTextEdit,
                             QPlainTextEdit, QMainWindow, QComboBox, QListView, QTabWidget, QStackedWidget, QListWidget,
-                            QGridLayout, QLineEdit, QDialog)
+                            QGridLayout, QLineEdit, QDialog, QScrollArea)
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QMouseEvent, QColor, QKeyEvent, QHideEvent, QKeySequence
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, sys
@@ -608,7 +608,7 @@ class HelpWidget(QWidget, CustomTitleBarWindowMixin):
     def __init__(self, pluginsHelp:dict, parent=None, icon=None):
         QWidget.__init__(self, parent)
         CustomTitleBarWindowMixin.__init__(self, init=True, title=_("Help"))
-        self.resize(800, 600)
+        self.resize(800, 700)
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         self.contentWidget.setLayout(layout)
@@ -626,8 +626,7 @@ class HelpWidget(QWidget, CustomTitleBarWindowMixin):
             tabLayout = QVBoxLayout()
             tab.setLayout(tabLayout)
             if type(help) == str:
-                tabLabel = QLabel(help)
-                tabLabel.setOpenExternalLinks(True)
+                tabLabel = ScrollLabel(help)
             else:
                 tabLabel = help
             tabLayout.addWidget(tabLabel)
@@ -771,6 +770,32 @@ class EditRemarDialog(QDialog):
         self.style().unpolish(widget)
         self.style().polish(widget)
         self.update()
+
+class ScrollLabel(QScrollArea):
+
+    # constructor
+    def __init__(self, text, *args, **kwargs):
+        QScrollArea.__init__(self, *args, **kwargs)
+
+        self.setWidgetResizable(True)
+        # making qwidget object
+        content = QWidget(self)
+        self.setWidget(content)
+        # vertical box layout
+        lay = QVBoxLayout(content)
+        # creating label
+        self.label = QLabel(text, parent = content)
+        self.label.setOpenExternalLinks(True)
+        self.label.setTextInteractionFlags(Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse)
+        # setting alignment to the text
+        self.label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        # making label multi-line
+        self.label.setWordWrap(True)
+        # adding label to the layout
+        lay.addWidget(self.label)
+
+    def setText(self, text):
+        self.label.setText(text)
 
 
 if __name__ == "__main__":

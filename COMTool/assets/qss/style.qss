@@ -416,11 +416,11 @@ QTabWidget::tab-bar {
 QTabBar::close-button {
     subcontrol-position: right;
     border-radius: 7px;
-    background: #ca4b4b;
+    background: #79b0e0;
     image: url("$DataPath/assets/close.png")
 }
 QTabBar::close-button:hover {
-    background: #8b1c1c;
+    background: #cc2626;
     image: url("$DataPath/assets/close.png")
 }
 QTabBar QToolButton {
@@ -443,16 +443,17 @@ QTabBar QToolButton::left-arrow {
 /* Style the tab using the tab sub-control. Note that
     it reads QTabBar _not_ QTabWidget */
 QTabBar::tab {
-    color: #757575;
+    color: #0f88eb;
     background: #e6e6e6;
     border: 2px solid #e6e6e6;
     border-bottom: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    min-width: 22ex;
+    min-width: 10ex;
     min-height: 34px;
     padding-left: 2ex;
     padding-right: 2ex;
+    font-weight: 500;
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
@@ -495,6 +496,9 @@ QTabBar::tab:only-one {
     border: none;
     height: 40px;
     width: 100px
+}
+.helpList {
+    min-width: 100px;
 }
 QListWidget::item:selected {
     color: #0f88eb;

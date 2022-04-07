@@ -68,9 +68,7 @@ class Gragh_Plot(Gragh_Widget_Base):
         headerConf = QLineEdit(self.config["header"])
         self.headerBtn = QPushButton(_("Set"))
         hint = _("Protocol: header + 1Byte name length + name + 8Bytes x(double) + 8Bytes y(double) + 1Byte sum\n"
-                "If you use python, can pack frame by:\n"
-                "from COMTool.plugin import gragh_protocol\n"
-                "frame = gragh_protocol.plot_pack(name, x, y)")
+                "Protocol example code see help")
         headerConf.setToolTip(hint)
         headerLabel.setToolTip(hint)
         self.headerBtn.setToolTip(hint)

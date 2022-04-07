@@ -50,7 +50,30 @@ class Plugin(Plugin_Base):
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
 
-    help = _("Double click gragh item to add a gragh widget")                # help info, can be str or QWidget
+    help = '{}<br><br>{}<br>Python:<br><pre>{}</pre><br>C/C++:<br><pre>{}</pre>'.format(_("Double click gragh item to add a gragh widget"), _("line chart plot protocol:"),
+'''
+from COMTool.plugin import gragh_protocol
+frame = gragh_protocol.plot_pack(name, x, y)
+''',
+'''
+void plot_pack(uint8_t *buff, int buff_len,
+               uint8_t header[4], char *name,
+               double x, double y)
+{
+    memcpy(buff, header, 4);
+    uint8_t len = (uint8_t)strlen(name);
+    buff[4] = len;
+    memcpy(buff + 5, name, len);
+    memcpy(buff + 5 + len, &x, 8);
+    memcpy(buff + 5 + len + 8, &y, 8);
+    int sum = 0;
+    for (int i = 0; i &lt; 4+1+len+8+8; i++)
+    {
+        sum += buff[i];
+    }
+    buff[4+1+len+8+8] = (uint8_t)(sum & 0xff);
+}
+''')
 
     def __init__(self):
         super().__init__()
