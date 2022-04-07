@@ -7,3 +7,4 @@ paramiko
 pyte
 pyperclip
 coloredlogs
+pyqtgraph

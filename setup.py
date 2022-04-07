@@ -21,7 +21,7 @@ if "Linux" in systemPlatform and "arm" in systemPlatform :
     ret = os.system("sudo apt install python3 python3-pip python3-pyqt5")
     if ret != 0:
         raise Exception("install python3 pyqt5 failed")
-    ret = os.system("sudo pip3 install --upgrade pyserial requests Babel qtawesome paramiko pyte pyperclip coloredlogs")
+    ret = os.system("sudo pip3 install --upgrade pyserial requests Babel qtawesome paramiko pyte pyperclip coloredlogs pyqtgraph")
     if ret != 0:
         raise Exception("install packages failed")
     installRequires = []
@@ -34,7 +34,8 @@ else:
                       'paramiko',
                       'pyte',
                       'pyperclip',
-                      'coloredlogs'
+                      'coloredlogs',
+                      'pyqtgraph'
                       ]
 
 setup(

@@ -34,32 +34,48 @@ A cross platform serial debug tools written by python
 - [x] cross platform (Windows, Linux, macOS, Raspberry Pi)(code with python, only if your platform support python)
 - [x] reliable stability, no UI freeze
 - [x] multiple language support
-- [x] serial auto detect, and remember last selected support
-- [x] serial offline auto reconnect support
-- [x] port baudrate(any value) bytesize parity stopbits flow control etc. settings
-- [x] basic send/receive data (ascii and hex)
-- [x] send and receive data count
-- [x] clear received data area
-- [x] auto linefeed
-- [x] scheduled auto send
-- [x] send history and select send again
-- [x] custom most usage data items and one click to send
-- [x] CR LF(\r\n) or LF(\n)  support
-- [x] auto save settings
-- [x] key shortcuts like <kbd>Ctrl+Enter</kbd> to send
-- [x] escape character support, like `\r \n \t \x` etc.
+- [x] configs save and auto load(auto save settings when exit)
 - [x] multiple character encode support(`ASII,GBK(Chinese),UTF-8,UTF-16` etc.)
-- [x] receive and send record support add timestamp and save log to file
-- [x] send file
-- [x] unix terminal style color support(e.g.`\x1b[33;42mhello\x1b[0mhello2`)
-- [x] night theme and White theme
-- [x] rts & dtr control by hand
-- [x] protocol with customable encoding and decoding method support, 
-- [x] Custom shortcut send(in protocol plugin)
-- [x] TCP UDP support
-- [x] Terminal mode support
-- [x] plugin support(Create plugin see [docs/plugins.md](./docs/plugins.md))
-- [x] real time data graphic display
+- [x] night theme and White theme(can create more theme if you want)
+- [x] multiple connection type support, and support add connection plugin
+  - [x] serial port
+    - [x] serial auto detect, and remember last selected support
+    - [x] serial offline auto reconnect support
+    - [x] port baudrate(any value) bytesize parity stopbits flow control etc. settings
+    - [x] rts & dtr control by hand
+  - [x] TCP/UDP support, include client and server mode
+  - [x] SSH client support
+- [x] plugin support(Create plugin see [docs/plugins.md](./docs/plugins.md)), built-in plugin:
+  - [x] dbg plugin, support basic send receive debug operation
+    - [x] basic send/receive data (ascii and hex)
+    - [x] send and receive data count
+    - [x] clear received data area
+    - [x] auto linefeed
+    - [x] scheduled auto send
+    - [x] send history and select send again
+    - [x] custom most usage data items and one click to send
+    - [x] CR LF(\r\n) or LF(\n)  support
+    - [x] key shortcuts like <kbd>Ctrl+Enter</kbd> to send etc. More see help
+    - [x] receive and send record support add timestamp and save log to file
+    - [x] send file
+    - [x] unix terminal style color support(e.g.`\x1b[33;42mhello\x1b[0mhello2`)
+    - [x] escape character support, like `\r \n \t \x` etc.
+  - [x] protocol plugin, customize your own protocol
+    - [x] customize encoding and decoding method
+    - [x] customize shortcut key
+    - [x] escape character support, like `\r \n \t \x` etc.
+  - [x] terminal plugin, basic terminal interaction
+  - [x] gragh plugin
+    - [x] support dynamicly add gragh widgets, add gragh widgets you need
+    - [x] display line chart in realtime, support customize protocol header(support escape characters)
+    - [x] customable button to send data, support shortcut key
+
+## Installation
+
+There are two ways to install COMTool:
+
+* [Download binary files and run](#Install-binary) : For Windows or macOS, and simple usage users
+* [Install as python package(source code)](#Install-python-package) : For Linux, or need to use plugins' user, or users who know about python
 
 ## Install binary
 
