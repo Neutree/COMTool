@@ -319,7 +319,6 @@ class TCP_UDP(COMM):
             except Exception:
                 text = "".join(re.findall('[\d\.]*', text))
                 self.autoReconnectIntervalEdit.setText(text)
-                
 
     def openCloseSerial(self):
         if self.busy:
@@ -500,6 +499,7 @@ class TCP_UDP(COMM):
                 continue
             try:
                 # length = max(1, self.conn.in_waiting)
+                flush = True
                 try:
                     if protocolIsTcp:
                         data = conn.recv(4096)
@@ -515,12 +515,14 @@ class TCP_UDP(COMM):
                 except socket.timeout:
                     data = None
                 if data:
+                    if len(data) > 4096:
+                        flush = False
                     t = time.time()
                     # if length == 1 and not buffer: # just start receive
                     #     buffer += data
                     #     continue
                     buffer += data
-                if buffer and (time.time() - t > 0.001): # no new data in 1ms
+                if flush or (buffer and (time.time() - t > 0.001)): # no new data in 0.1ms
                     try:
                         self.onReceived(buffer)
                     except Exception as e:
