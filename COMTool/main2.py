@@ -350,7 +350,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         elif sys.platform == 'darwin':
             self.macOsAddDockMenu()
 
-        self.resize(800, 500)
+        self.resize(850, 500)
         self.MoveToCenter()
         self.show()
 
