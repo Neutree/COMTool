@@ -220,7 +220,14 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         dir = os.path.dirname(path)
         name = os.path.splitext(os.path.basename(path))[0]
         sys.path.insert(0, dir)
-        pluginClass = __import__(name).Plugin
+        try:
+            print("import")
+            pluginClass = __import__(name).Plugin
+        except Exception as e:
+            import traceback
+            msg = traceback.format_exc()
+            self.hintSignal.emit("error", _("Error"), '{}: {}'.format(_("Load plugin failed"), msg))
+            return None
         if test:
             sys.path.remove(dir)
         return pluginClass

@@ -53,7 +53,7 @@ class Plugin(Plugin_Base):
     help = '{}<br><br>{}<br>Python:<br><pre>{}</pre><br>C/C++:<br><pre>{}</pre>'.format(_("Double click gragh item to add a gragh widget"), _("line chart plot protocol:"),
 '''
 from COMTool.plugin import gragh_protocol
-frame = gragh_protocol.plot_pack(name, x, y)
+frame = gragh_protocol.plot_pack(name, x, y, header= b'\xAA\xCC\xEE\xBB')
 ''',
 '''
 void plot_pack(uint8_t *buff, int buff_len,
