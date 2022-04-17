@@ -643,16 +643,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         if needUpdate:
             self.updateSignal.emit(versionInfo)
 
-def gen_tranlate_files(curr_dir):
-    try:
-        import i18n
-    except Exception:
-        from COMTool import i18n
-    cwd = os.getcwd()
-    os.chdir(curr_dir)
-    i18n.main("finish")
-    os.chdir(cwd)
-
 def load_fonts(paths):
     from PyQt5 import QtGui
     for path in paths:
@@ -696,12 +686,6 @@ def main():
     '''
     ret = 1
     try:
-        # check translate
-        curr_dir = os.path.abspath(os.path.dirname(__file__))
-        log.i("curr_dir   ", curr_dir)
-        mo_path = os.path.join(curr_dir, "locales", "en", "LC_MESSAGES", "messages.mo")
-        if not os.path.exists(mo_path):
-            gen_tranlate_files(curr_dir)
         app = QApplication(sys.argv)
         splash = Splash(app)
         eventFilter = EventFilter()

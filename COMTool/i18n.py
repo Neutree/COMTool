@@ -21,6 +21,10 @@ def set_locale(locale_in):
     locales_path = os.path.join(root_dir, 'locales')
     if not os.path.exists(locales_path): # for pyinstaller pack
         locales_path = os.path.join(os.path.dirname(root_dir), 'locales')
+    # check translate binary file
+    mo_path = os.path.join(locales_path, "en", "LC_MESSAGES", "messages.mo")
+    if not os.path.exists(mo_path):
+        main("finish")
     lang = gettext.translation('messages', localedir=locales_path, languages=[locale])
     tr = lang.gettext
 

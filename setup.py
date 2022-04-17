@@ -2,13 +2,10 @@ from setuptools import setup,find_packages
 from codecs import open
 from os import path
 import os
-from COMTool import helpAbout, parameters, i18n, version
+from COMTool import version
 import platform
 
 here = path.abspath(path.dirname(__file__))
-
-# update translate
-i18n.main("finish")
 
 # Get the long description from the README file
 with open(path.join(here, 'README.MD'), encoding='utf-8') as f:
