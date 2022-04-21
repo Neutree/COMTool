@@ -290,6 +290,10 @@ class CustomTitleBarWindowMixin:
             self.titleBar = titleBar
         else:
             self.titleBar = TitleBar(self, icon = icon, title=title, height=35)
+        # setWindowIcon
+        self.setWindowIcon(QIcon(icon))
+        if sys.platform == "win32":
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool") # for add taskbar icon
         self.contentWidget = QWidget()
         self.rootLayout.addWidget(self.titleBar)
         self.rootLayout.addWidget(self.contentWidget)

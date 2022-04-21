@@ -352,9 +352,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.contentLayout.setContentsMargins(10, 0, 10, 10)
         self.contentLayout.addWidget(self.tabWidget)
 
-        if sys.platform == "win32":
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("comtool")
-        elif sys.platform == 'darwin':
+        if sys.platform == 'darwin':
             self.macOsAddDockMenu()
 
         self.resize(850, 500)
