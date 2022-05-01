@@ -389,9 +389,11 @@ class Terminal_Frontend(QWidget):
         text = str(event.text())
         key = event.key()
         modifiers = event.modifiers()
-        ctrl = modifiers == Qt.ControlModifier
-        # if ctrl and :
-        if text and not key in self.keymap:
+        ctrl = (modifiers == Qt.ControlModifier | Qt.ShiftModifier) or (modifiers == Qt.ControlModifier)
+        if ctrl and key == Qt.Key_V:
+            content = pyperclip.paste()
+            self.send(content.encode("utf-8"))
+        elif text and not key in self.keymap:
             self.send(text.encode("utf-8"))
         else:
             s = self.keymap.get(key)
@@ -503,11 +505,7 @@ class Terminal_Frontend(QWidget):
         if self.lastSelection:
             if self.lastSelection[0] == self.lastSelection[1] and e.button() == Qt.RightButton: # no selection
                 content = pyperclip.paste()
-                def sendData(data):
-                    self.onReceived(data.encode("utf-8"))
-                t = threading.Thread(target=sendData, args=(content,))
-                t.setDaemon(True)
-                t.start()
+                self.send(content.encode("utf-8"))
             else:
                 # mouse right button copy content to clipboard
                 if e.button() == Qt.RightButton:
