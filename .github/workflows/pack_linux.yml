@@ -20,7 +20,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10"] # must use str, not int, or 3.10 will be recognized as 3.1
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -37,6 +37,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: test pack
         run: |
+          apt update
+          apt install libxcb1
           pip3 install -r requirements.txt
           pip3 install pyinstaller wheel
           python setup.py sdist bdist_wheel
