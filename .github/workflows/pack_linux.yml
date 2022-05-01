@@ -37,7 +37,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: test pack
         run: |
-          apt update
           apt install libxcb1
           pip3 install -r requirements.txt
           pip3 install pyinstaller wheel
