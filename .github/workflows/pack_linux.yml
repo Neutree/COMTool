@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: pack
+name: pack-linux
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -37,7 +37,9 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: test pack
         run: |
-          apt install libxcb1
+          export QT_DEBUG_PLUGINS=1
+          sudo apt-get update
+          sudo apt-get install libxcb-icccm4
           pip3 install -r requirements.txt
           pip3 install pyinstaller wheel
           python setup.py sdist bdist_wheel
