@@ -6,8 +6,8 @@ import shutil
 import re
 
 
-if sys.version_info < (3, 8):
-    print("only support python >= 3.8, but now is {}".format(sys.version_info))
+if sys.version_info < (3, 7):
+    print("only support python >= 3.7, but now is {}".format(sys.version_info))
     sys.exit(1)
 
 

@@ -37,10 +37,11 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: test pack
         run: |
+          python --version
           export QT_DEBUG_PLUGINS=1
           sudo apt-get update
-          sudo apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0
+          sudo apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0 libegl1
           pip3 install -r requirements.txt
-          pip3 install pyinstaller wheel
+          pip3 install -U pyinstaller wheel
           python setup.py sdist bdist_wheel
           python pack.py
