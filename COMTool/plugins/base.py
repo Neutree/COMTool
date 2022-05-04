@@ -138,7 +138,7 @@ class Plugin_Base(QObject):
         '''
         pass
 
-    def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False):
+    def bindVar(self, uiObj, varObj, varName: str, vtype=None, vErrorMsg="", checkVar=lambda v:v, invert = False, emptyDefault = None):
         objType = type(uiObj)
         if objType == QCheckBox:
             v = uiObj.isChecked()
@@ -146,6 +146,8 @@ class Plugin_Base(QObject):
             return
         elif objType == QLineEdit:
             v = uiObj.text()
+            if v == "" and emptyDefault is not None:
+                v = emptyDefault
         elif objType == ComboBox:
             varObj[varName] = uiObj.currentText()
             return
