@@ -40,7 +40,7 @@ jobs:
           python --version
           export QT_DEBUG_PLUGINS=1
           sudo apt-get update
-          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0 libegl1
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11-0 libegl1 libxcb-xinerama0
           pip3 install -r requirements.txt
           pip3 install -U pyinstaller wheel
           python setup.py sdist bdist_wheel
