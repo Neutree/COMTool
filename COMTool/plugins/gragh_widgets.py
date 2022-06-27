@@ -619,11 +619,14 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
         self.setLayout(self.layout)
         self.imv = pg.ImageView()
         self.queue = Queue()
+        self.onceShot=False
+        self.shotCount=0
         # self.plotWin = pg.GraphicsLayoutWidget()
         # self.plotWin.setMinimumHeight(200)
         # self.plotWin
         pg.setConfigOptions(antialias=True)
         rmBtn = QPushButton(_("Remove"))
+        capBtn = QPushButton(_("Capture"))
         rangeLabel = QLabel(_("Range:"))
         rangeConf = QLineEdit(str(self.config["xRange"]))
         rangeEnable = QCheckBox(_("Enable"))
@@ -646,6 +649,7 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
         self.layout.addWidget(self.imv, 0, 0, 1, 3)
         # self.layout.addWidget(self.plotWin, 0, 0, 1, 3)
         self.layout.addWidget(rmBtn, 1, 0, 1, 1)
+        self.layout.addWidget(capBtn, 1, 1, 1, 1)
         self.layout.addWidget(rangeLabel, 2, 0, 1, 1)
         # self.layout.addWidget(rangeConf, 2, 1, 1, 1)
         # self.layout.addWidget(rangeEnable, 2, 2, 1, 1)
@@ -689,6 +693,7 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
         rangeEnable.clicked.connect(lambda: self.setEnableRange(rangeEnable.isChecked()))
         self.headerBtn.clicked.connect(lambda: self.setHeader(headerConf.text()))
         rmBtn.clicked.connect( self.remove)
+        capBtn.clicked.connect(self.capture)
         headerConf.textChanged.connect(self.headerChanged)
 
     def remove(self):
@@ -748,7 +753,6 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
         # check data length 2Byte
         dataLen = unpack("H", self.rawData[2 : 4])[0]
         # print("len: "+str(dataLen))
-        dataLen = 10016
         frameLen = len(header) + 2 + dataLen + 2
         frameDataLen = dataLen - 16
 
@@ -774,7 +778,7 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
         resR = unpack("B", frame[14:15])[0]
         resC = unpack("B", frame[15:16])[0]
         res = (resR, resC)
-        print(res)
+        # print(res)
         # frameData=[ unpack("H", frame[20+i:22+i])[0] for i in range(0, frameDataLen, 2) ]
         frameData=[ unpack("B", frame[20+i:21+i])[0] for i in range(0, frameDataLen, 1) ]
 
@@ -811,7 +815,7 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
         if not self.queue.empty():
             v = self.queue.get()
             k = v['frameID']
-            print("draw frame:", k)
+            # print("draw frame:", k)
             res = v['res']
             frameData = v['frameData']
             arr = np.array(frameData, np.uint8)
@@ -827,6 +831,10 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
             rgba_img = cmap(z)
             rgba_img = np.squeeze(rgba_img)
             # print(rgba_img.shape)
+            if self.onceShot:
+                print(rgba_img.shape)
+                plt.imsave(str(self.shotCount) + ".png", rgba_img)
+                self.onceShot = False
 
             # print(v)
             self.imv.setImage(rgba_img)
@@ -835,6 +843,11 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
             # self.curves[k] = self.p.plot(pen=pg.mkPen(color=color, width=2),
             #                             name=k,)
             # self.curves[k].setData(x=v["x"], y=v["y"])
+    
+    def capture(self):
+        self.onceShot=True
+        self.shotCount+=1
+        pass
 
     def onData(self, data: bytes):
         while True:
