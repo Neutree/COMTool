@@ -1122,7 +1122,7 @@ class Gragh_MaixSenseLite(Gragh_Widget_Base):
                                       int(self.focus[1][0].text()), int(self.focus[1][1].text()))
 
             self.imv.clear()
-            self.imv.setImage(np_arrs, autoRange=False)
+            self.imv.setImage(np_arrs)#, autoRange=False)
             self.imv.setCurrentIndex(len(self.frames)-1)
             # color = self.pickColor(k)
             # self.colors[k] = color
