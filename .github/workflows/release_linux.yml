@@ -1,14 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: pack-linux
+name: release
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [published]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -16,12 +14,12 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    name: test pack task
+    name: release and upload assets task
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10"] # must use str, not int, or 3.10 will be recognized as 3.1
+        python-version: ["3.9"] # must use str, not int, or 3.10 will be recognized as 3.1
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -35,13 +33,27 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       # Runs a set of commands using the runners shell
-      - name: test pack
+      - name: pack
+        id: pack
         run: |
           python --version
           export QT_DEBUG_PLUGINS=1
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y x11-utils libxkbcommon-x11-0
           pip3 install -r requirements.txt
-          pip3 install -U pyinstaller wheel
+          pip3 install pyinstaller wheel
           python setup.py sdist bdist_wheel
           python pack.py
+          release_path=`python pack.py ${{ matrix.os }}`
+          echo $release_path
+          release_name=`echo $release_path | awk -F"/" '{print $NF}'`
+          echo ::set-output name=release_path::$release_path
+          echo ::set-output name=release_name::$release_name
+      - name: Upload to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: ${{ steps.pack.outputs.release_path }}
+          asset_name: ${{ steps.pack.outputs.release_name }}
+          tag: ${{ github.ref }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        
