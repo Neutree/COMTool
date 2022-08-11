@@ -8,3 +8,5 @@ pyte
 pyperclip
 coloredlogs
 pyqtgraph
+Pillow
+numpy
