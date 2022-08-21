@@ -262,6 +262,8 @@ class Serial(COMM):
             elif conf_type == "stopbits":
                 value = float(value)
             self.com.__setattr__(conf_type, value)
+            if conf_type == "baudrate":
+                self.oneByteTime = 1 / (self.com.baudrate / (self.com.bytesize + 2 + self.com.stopbits)) # 1 byte use time
         elif conf_type == "flowcontrol":
             values = getCommboboxItems(obj)
             idx = 0
@@ -439,7 +441,7 @@ class Serial(COMM):
                         buffer += data
                         continue
                     buffer += data
-                if buffer and (time.time() - t > 0.001): # no new data in 1ms
+                if buffer and (time.time() - t > self.oneByteTime * 2): # no new data in next frame
                     try:
                         self.onReceived(buffer)
                     except Exception as e:

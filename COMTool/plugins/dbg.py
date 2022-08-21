@@ -693,6 +693,7 @@ class Plugin(Plugin_Base):
         return color, bg
 
     def _texSplitByColor(self, text:bytes):
+        remain = b''
         ignoreCodes = [rb'\x1b\[\?.*?h', rb'\x1b\[\?.*?l']
         text = text.replace(b"\x1b[K", b"")
         for code in ignoreCodes:
@@ -700,6 +701,27 @@ class Plugin(Plugin_Base):
             for fmt in colorFmt:
                 text = text.replace(fmt, b"")
         colorFmt = re.findall(rb'\x1b\[.*?m', text)
+        if text.endswith(b"\x1b"): # ***\x1b
+            text = text[:-1]
+            remain = b'\x1b'
+        elif text.endswith(b"\x1b["): # ***\x1b[
+            text = text[:-2]
+            remain = b'\x1b['
+        else: # ****\x1b[****, ****\x1b[****;****m
+            idx = -2
+            idx_remain = -1
+            while 1:
+                idx = text.find(b"\x1b[", len(text) - 10 + idx + 2) # \x1b[00;00m]
+                if idx < 0:
+                    break
+                remain = text[idx:]
+                idx_remain = idx
+            if len(remain) > 0:
+                match = re.findall(rb'\x1b\[.*?m', remain)  # ****\x1b[****;****m***
+                if len(match) > 0: # have full color format
+                    remain = b''
+                else:
+                    text = text[:idx_remain]
         plaintext = text
         for fmt in colorFmt:
             plaintext = plaintext.replace(fmt, b"")
@@ -716,17 +738,17 @@ class Plugin(Plugin_Base):
             colorStrs.append([self.lastColor, self.lastBg, text[p:]])
         else:
             colorStrs = [[self.lastColor, self.lastBg, text]]
-        return plaintext, colorStrs
+        return plaintext, colorStrs, remain
 
     def getColoredText(self, data_bytes, decoding=None):
-        plainText, coloredText = self._texSplitByColor(data_bytes)
+        plainText, coloredText, remain = self._texSplitByColor(data_bytes)
         if decoding:
             plainText = plainText.decode(encoding=decoding, errors="ignore")
             decodedColoredText = []
             for color, bg, text in coloredText:
                 decodedColoredText.append([color, bg, text.decode(encoding=decoding, errors="ignore")])
             coloredText = decodedColoredText
-        return plainText, coloredText
+        return plainText, coloredText, remain
 
     def bytes2String(self, data : bytes, showAsHex : bool, encoding="utf-8"):
         isHexString = False
@@ -734,7 +756,9 @@ class Plugin(Plugin_Base):
         if showAsHex:
             return True, utils.hexlify(data, ' ').decode(encoding=encoding), dataColored
         try:
-            dataPlain, dataColored = self.getColoredText(data, self.configGlobal["encoding"])
+            dataPlain, dataColore, remain = self.getColoredText(data, self.configGlobal["encoding"])
+            if remain:
+                dataPlain += remain.decode(encoding=self.configGlobal["encoding"], errors="ignore")
         except Exception:
             dataPlain = utils.hexlify(data, ' ').decode(encoding=encoding)
             isHexString = True
@@ -755,12 +779,13 @@ class Plugin(Plugin_Base):
         new_line = True
         logData = None
         buffer = b''
+        remain = b''
         while(not self.receiveProgressStop):
             logData = None
-            bytes = b''
             head = ""
             self.lock.acquire()
-            buffer += b"".join(self.receivedData)
+            new = b"".join(self.receivedData)
+            buffer += new
             self.receivedData = []
             # timeout, add new line
             if time.time() - timeLastReceive> self.config["receiveAutoLindefeedTime"]:
@@ -770,8 +795,6 @@ class Plugin(Plugin_Base):
                     else:
                         head += "\n"
                     new_line = True
-            if bytes:
-                timeLastReceive = time.time()
             data = ""
             # have data in buffer
             if len(buffer) > 0:
@@ -790,8 +813,8 @@ class Plugin(Plugin_Base):
                 # show as string, and need to render color, wait for \n or until timeout to ensure color flag in buffer
                 else:
                     if time.time() - timeLastReceive >  self.config["receiveAutoLindefeedTime"] or b'\n' in buffer:
-                        data, colorData = self.getColoredText(buffer, self.configGlobal["encoding"])
-                        buffer = b''
+                        data, colorData, remain = self.getColoredText(buffer, self.configGlobal["encoding"])
+                        buffer = remain
                 # add time receive head
                 # get data from buffer, now render
                 if data:
@@ -813,6 +836,8 @@ class Plugin(Plugin_Base):
                         new_line = False
                     self.receiveUpdateSignal.emit(head, [colorData], self.configGlobal["encoding"])
                     logData = head + data
+            if len(new) > 0:
+                timeLastReceive = time.time()
 
             while len(self.sendRecord) > 0:
                 self.onLog(self.sendRecord.pop())
