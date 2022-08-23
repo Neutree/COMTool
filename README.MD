@@ -290,6 +290,11 @@ python COMTool/Main.py
 
 5. pull request
 
+## Write your own plugins in minutes
+
+see [docs/plugins.md](./docs/plugins.md)
+
+
 ## Add translate
 
 * Install environment first(python pip packages in the requirments.txt)

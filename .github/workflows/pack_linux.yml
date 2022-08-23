@@ -42,6 +42,6 @@ jobs:
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y x11-utils libxkbcommon-x11-0
           pip3 install -r requirements.txt
-          pip3 install -U pyinstaller wheel
+          pip3 install -U pyinstaller==5.1 wheel
           python setup.py sdist bdist_wheel
           python pack.py

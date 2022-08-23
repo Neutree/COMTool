@@ -287,6 +287,10 @@ python COMTool/Main.py
 
 5. 创建合并请求
 
+## 快速编写你自己的插件
+
+参考 [docs/plugins.md](./docs/plugins_zh.md)
+
 ## 添加翻译
 
 * 先安装环境（`requirments.txt`中的`python pip`包）
