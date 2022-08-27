@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-04-07 15:39+0800\n"
+"POT-Creation-Date: 2022-08-27 22:05+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -66,73 +66,79 @@ msgstr "如果這個軟件幫助您，我可以給您一杯咖啡"
 msgid "Load plugin from file"
 msgstr "從檔案載入外掛程式"
 
-#: main2.py:243
-msgid "Load plugin fail"
-msgstr "載入外掛程式失敗"
-
-#: conn/conn_ssh.py:232 main2.py:266 pluginItems.py:149 pluginItems.py:162
-#: plugins/dbg.py:423 plugins/dbg.py:437
-msgid "Select file"
-msgstr "選擇文件"
-
-#: main2.py:268
-msgid "python script (*.py)"
-msgstr "python 程式 (*.py)"
-
-#: conn/conn_serial.py:329 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:403
-#: main2.py:272 main2.py:417 main2.py:422 main2.py:734 pluginItems.py:169
-#: pluginItems.py:172 pluginItems.py:273 pluginItems.py:285 plugins/base.py:163
-#: plugins/base.py:168 plugins/base.py:184 plugins/base.py:193
-#: plugins/dbg.py:401 plugins/dbg.py:410 plugins/dbg.py:531 plugins/dbg.py:548
-#: plugins/dbg.py:605 plugins/dbg.py:613 plugins/gragh.py:201
-#: plugins/gragh_widgets.py:150 plugins/myplugin.py:61
+#: conn/conn_serial.py:331 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:403
+#: main2.py:229 main2.py:279 main2.py:422 main2.py:427 main2.py:723
+#: pluginItems.py:169 pluginItems.py:172 pluginItems.py:273 pluginItems.py:285
+#: plugins/base.py:165 plugins/base.py:170 plugins/base.py:186
+#: plugins/base.py:195 plugins/dbg.py:401 plugins/dbg.py:410 plugins/dbg.py:531
+#: plugins/dbg.py:548 plugins/dbg.py:605 plugins/dbg.py:613
+#: plugins/graph.py:205 plugins/graph_widget_metasenselite.py:591
+#: plugins/graph_widgets.py:141 plugins/myplugin.py:61
+#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/protocol.py:466 plugins/protocol.py:480 plugins/protocol.py:489
 #: plugins/protocol.py:552
 msgid "Error"
 msgstr "錯誤"
 
-#: main2.py:365
+#: main2.py:229
+msgid "Load plugin failed"
+msgstr "載入外掛程式失敗"
+
+#: main2.py:250
+msgid "Load plugin fail"
+msgstr "載入外掛程式失敗"
+
+#: conn/conn_ssh.py:232 main2.py:273 pluginItems.py:149 pluginItems.py:162
+#: plugins/dbg.py:423 plugins/dbg.py:437
+msgid "Select file"
+msgstr "選擇文件"
+
+#: main2.py:275
+msgid "python script (*.py)"
+msgstr "python 程式 (*.py)"
+
+#: main2.py:370
 msgid "New Window"
 msgstr "開新視窗"
 
-#: main2.py:452 main2.py:461
+#: main2.py:457 main2.py:466
 msgid "Restart now?"
 msgstr "現在就重啟？"
 
-#: main2.py:453
+#: main2.py:458
 msgid "language changed to: "
 msgstr "語言更改為："
 
-#: main2.py:453
+#: main2.py:458
 msgid "Restart software to take effect now?"
 msgstr "現在就重啟軟件以生效？"
 
-#: main2.py:502 main2.py:503
+#: main2.py:507 main2.py:508
 msgid "Closing ..."
 msgstr "關閉中..."
 
-#: main2.py:603
+#: main2.py:608
 msgid "About"
 msgstr "關於"
 
-#: main2.py:625
+#: main2.py:630
 msgid "New versioin detected, please click learn more to download"
 msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
 
-#: main2.py:626
+#: main2.py:631
 msgid "Learn More"
 msgstr "瞭解更多"
 
-#: main2.py:627
+#: main2.py:632
 msgid "Skip this version"
 msgstr "跳過此版本"
 
-#: main2.py:628
+#: main2.py:633
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: main2.py:629
+#: main2.py:634
 msgid "Need update"
 msgstr "需要更新"
 
@@ -193,51 +199,51 @@ msgstr "重启以載入設置？"
 msgid "Open file failed!"
 msgstr "打開失敗"
 
-#: widgets.py:557 widgets.py:578
+#: widgets.py:561 widgets.py:582
 msgid "Received"
 msgstr "已接收"
 
-#: widgets.py:557 widgets.py:558 widgets.py:578 widgets.py:585
+#: widgets.py:561 widgets.py:562 widgets.py:582 widgets.py:589
 msgid "bytes"
 msgstr "字節"
 
-#: widgets.py:558 widgets.py:585
+#: widgets.py:562 widgets.py:589
 msgid "Sent"
 msgstr "已發送"
 
-#: widgets.py:610
+#: widgets.py:614
 msgid "Help"
 msgstr "幫助"
 
-#: widgets.py:657
+#: widgets.py:661
 msgid "Input remark"
 msgstr "輸入備註"
 
-#: plugins/dbg.py:191 widgets.py:667 widgets.py:738
+#: plugins/dbg.py:191 widgets.py:671 widgets.py:742
 msgid "Record"
 msgstr "記錄"
 
-#: widgets.py:672
+#: widgets.py:676
 msgid "Input value"
 msgstr ""
 
-#: widgets.py:674 widgets.py:699
+#: widgets.py:678 widgets.py:703
 msgid "Select icon"
 msgstr "選擇圖標"
 
-#: plugins/gragh_widgets.py:298 widgets.py:676
+#: plugins/graph_widgets.py:293 widgets.py:680
 msgid "Shortcut"
 msgstr "快捷鍵"
 
-#: widgets.py:678
+#: widgets.py:682
 msgid "Press key to record, or click Cancel"
 msgstr "按下快捷鍵記錄，或者按取消"
 
-#: plugins/dbg.py:394 widgets.py:681 widgets.py:699
+#: plugins/dbg.py:394 widgets.py:685 widgets.py:703
 msgid "OK"
 msgstr "確定"
 
-#: widgets.py:682 widgets.py:725
+#: widgets.py:686 widgets.py:729
 msgid "Cancel"
 msgstr "取消"
 
@@ -277,26 +283,26 @@ msgstr "流控"
 msgid "Check to enable(usually output low level)"
 msgstr "選中以使能（通常會輸出低電平）"
 
-#: conn/conn_serial.py:148 conn/conn_serial.py:293 conn/conn_serial.py:385
+#: conn/conn_serial.py:148 conn/conn_serial.py:295 conn/conn_serial.py:387
 #: conn/conn_ssh.py:158 conn/conn_ssh.py:244 conn/conn_ssh.py:332
 #: conn/conn_tcp_udp.py:137 conn/conn_tcp_udp.py:327 conn/conn_tcp_udp.py:435
 msgid "OPEN"
 msgstr "打開"
 
-#: conn/conn_serial.py:201 conn/conn_serial.py:328
+#: conn/conn_serial.py:201 conn/conn_serial.py:330
 msgid "Open Failed"
 msgstr "打開失敗"
 
-#: conn/conn_serial.py:388 conn/conn_serial.py:391 conn/conn_ssh.py:335
+#: conn/conn_serial.py:390 conn/conn_serial.py:393 conn/conn_ssh.py:335
 #: conn/conn_ssh.py:338 conn/conn_tcp_udp.py:438 conn/conn_tcp_udp.py:441
 msgid "CLOSE"
 msgstr "關閉"
 
-#: conn/conn_serial.py:426 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:493
+#: conn/conn_serial.py:428 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:493
 msgid "Reconnected"
 msgstr "已重連"
 
-#: conn/conn_serial.py:456 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:555
+#: conn/conn_serial.py:458 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:555
 msgid "Connection lose!"
 msgstr "連接丟失！"
 
@@ -412,11 +418,11 @@ msgstr "正在連接"
 msgid "Connection lose"
 msgstr "連接丟失"
 
-#: plugins/base.py:184
+#: plugins/base.py:186
 msgid "Format error, should be like 00 01 02 03"
 msgstr "格式錯誤，應該如：00 01 02 03"
 
-#: plugins/base.py:193
+#: plugins/base.py:195
 msgid "Escape is on, but escape error:"
 msgstr "轉義符支持已打開，但是轉義時出現了問題"
 
@@ -591,19 +597,17 @@ msgstr "當時間戳和發送記錄打開是，必須將自動換行也打開"
 msgid "History cleared!"
 msgstr "歷史已清除！"
 
-#: plugins/dbg.py:401 plugins/gragh.py:201 plugins/protocol.py:489
-#, fuzzy
+#: plugins/dbg.py:401 plugins/graph.py:205 plugins/protocol.py:489
 msgid "Send data failed!"
-msgstr "打開失敗"
+msgstr "发送数据失敗"
 
 #: plugins/dbg.py:406
 msgid "Send file"
 msgstr "發送文件"
 
 #: plugins/dbg.py:410
-#, fuzzy
 msgid "Send file failed!"
-msgstr "打開失敗"
+msgstr "发送文件失敗"
 
 #: plugins/dbg.py:439
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
@@ -637,70 +641,151 @@ msgstr "發送出錯"
 msgid "get data error"
 msgstr "獲取數據出錯"
 
-#: plugins/gragh.py:48
-msgid "Gragh"
+#: plugins/graph.py:48
+msgid "Graph"
 msgstr ""
 
-#: plugins/gragh.py:53
-msgid "Double click gragh item to add a gragh widget"
+#: plugins/graph.py:53
+msgid "Double click graph item to add a graph widget"
 msgstr ""
 
-#: plugins/gragh.py:53
+#: plugins/graph.py:53
 msgid "line chart plot protocol:"
 msgstr ""
 
-#: plugins/gragh.py:141
-msgid "Double click to add a gragh widget"
+#: plugins/graph.py:145
+msgid "Double click to add a graph widget"
 msgstr ""
 
-#: plugins/gragh.py:171
+#: plugins/graph.py:175
 msgid "Clear count"
 msgstr ""
 
-#: plugins/gragh_widgets.py:62
+#: plugins/graph_widget_metasenselite.py:297 plugins/graph_widgets.py:50
 msgid "Remove"
 msgstr ""
 
-#: plugins/gragh_widgets.py:63
-#, fuzzy
-msgid "Range:"
-msgstr "目標"
+#: plugins/graph_widget_metasenselite.py:299
+msgid "Capture"
+msgstr "捕获"
 
-#: plugins/gragh_widgets.py:65
-msgid "Enable"
-msgstr ""
-
-#: plugins/gragh_widgets.py:67
+#: plugins/graph_widget_metasenselite.py:304 plugins/graph_widgets.py:55
 msgid "Header:"
 msgstr ""
 
-#: plugins/gragh_widgets.py:69 plugins/gragh_widgets.py:138
-#: plugins/gragh_widgets.py:140 plugins/gragh_widgets.py:148
+#: plugins/graph_widget_metasenselite.py:306
+#: plugins/graph_widget_metasenselite.py:578
+#: plugins/graph_widget_metasenselite.py:580
+#: plugins/graph_widget_metasenselite.py:589 plugins/graph_widgets.py:57
+#: plugins/graph_widgets.py:128 plugins/graph_widgets.py:130
+#: plugins/graph_widgets.py:139
 msgid "Set"
 msgstr ""
 
-#: plugins/gragh_widgets.py:70
+#: plugins/graph_widget_metasenselite.py:308
+msgid "RawCMD:"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:309
+msgid "AT+ISP=0\\r"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:310 plugins/myplugin.py:43
+#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:51
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:51
+msgid "Send"
+msgstr "發送"
+
+#: plugins/graph_widget_metasenselite.py:315
+msgid "ISP"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:316
+msgid "LCD"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:317
+msgid "USB"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:318
+msgid "UART"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:319
+msgid "ANTIMMI"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:341
+msgid "Unit:auto "
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:348
+msgid " Fps:15   "
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:354
+msgid "  Ev:AE   "
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:357
+msgid ""
+"Protocol: 2Byte header + 2Byte length + 1Byte command + 1Byte output_mode"
+" + 1Byte Sensor Temp + 1Byte Driver Temp\n"
+" 4Bytes exposure time + 1Byte error code + 1Byte reserved1 + 1Byte res "
+"rows + 1Byte res cols\n"
+" 2Byte Frame ID + 1 Byte ISP version + 1 Byte reserved3\n"
+" frame data\n"
+" 1Byte checksum + 1Byte tail\n"
+" length count from Byte4 to the Byte before Checksum\n"
+"Protocol example code see help"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:394
+msgid "Binn:"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:396
+msgid "Baud:"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:399
+msgid "D:"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:401
+msgid "X:"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:403
+msgid "Y:"
+msgstr ""
+
+#: plugins/graph_widget_metasenselite.py:591 plugins/graph_widgets.py:141
+msgid "Format error"
+msgstr "格式錯誤"
+
+#: plugins/graph_widgets.py:51
+msgid "Range:"
+msgstr "范围："
+
+#: plugins/graph_widgets.py:53
+msgid "Enable"
+msgstr ""
+
+#: plugins/graph_widgets.py:58
 msgid ""
 "Protocol: header + 1Byte name length + name + 8Bytes x(double) + 8Bytes "
 "y(double) + 1Byte sum\n"
 "Protocol example code see help"
 msgstr ""
 
-#: plugins/gragh_widgets.py:150
-#, fuzzy
-msgid "Format error"
-msgstr "時間格式錯誤"
-
 #: plugins/myplugin.py:22
 msgid "my plugin"
 msgstr ""
 
-#: plugins/myplugin.py:43
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:51
-msgid "Send"
-msgstr "發送"
-
 #: plugins/myplugin.py:61
+#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
 msgid "Input data first please"
 msgstr "請先輸入數據"
@@ -770,10 +855,11 @@ msgstr "請先輸入代碼配置名稱"
 msgid "Please select a code profile name first to delete"
 msgstr "請先選擇一個代碼配置名稱以刪除"
 
-#: plugins/terminal.py:676
+#: plugins/terminal.py:674
 msgid "terminal"
 msgstr "終端"
 
+#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:30
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:30
 msgid "my plugin2"
 msgstr ""
@@ -855,5 +941,14 @@ msgstr ""
 #~ "+ name + 8Bytes x(double) + 8Bytes"
 #~ " y(double) + 1Byte sum\n"
 #~ "If you use python, can pack frame by:\n"
+#~ msgstr ""
+
+#~ msgid "Gragh"
+#~ msgstr ""
+
+#~ msgid "Double click gragh item to add a gragh widget"
+#~ msgstr ""
+
+#~ msgid "Double click to add a gragh widget"
 #~ msgstr ""
 

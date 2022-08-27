@@ -11,14 +11,14 @@ try:
     import utils, parameters
     from conn.base import ConnectionStatus
     from widgets import statusBar
-    from plugins.gragh_widgets import graghWidgets
+    from plugins.graph_widgets import graphWidgets
 except ImportError:
     from COMTool import utils, parameters
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
     from COMTool.conn.base import  ConnectionStatus
     from COMTool.widgets import statusBar
-    from COMTool.plugins.gragh_widgets import graghWidgets
+    from COMTool.plugins.graph_widgets import graphWidgets
     from COMTool.plugins.base import Plugin_Base
 
 
@@ -44,34 +44,38 @@ class Plugin(Plugin_Base):
     # other vars
     connParent = "main"      # parent id
     connChilds = []          # children ids
-    id = "gragh"
-    name = _("Gragh")
+    id = "graph"
+    name = _("Graph")
 
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
 
-    help = '{}<br><br>{}<br>Python:<br><pre>{}</pre><br>C/C++:<br><pre>{}</pre>'.format(_("Double click gragh item to add a gragh widget"), _("line chart plot protocol:"),
+    help = '{}<br><br>{}<br>Python:<br><pre>{}</pre><br>C/C++:<br><pre>{}</pre>'.format(_("Double click graph item to add a graph widget"), _("line chart plot protocol:"),
 '''
-from COMTool.plugin import gragh_protocol
-frame = gragh_protocol.plot_pack(name, x, y, header= b'\xAA\xCC\xEE\xBB')
+from COMTool.plugin import graph_protocol
+frame = graph_protocol.plot_pack(name, x, y, header= b'\xAA\xCC\xEE\xBB')
 ''',
 '''
 void plot_pack(uint8_t *buff, int buff_len,
-               uint8_t header[4], char *name,
+               uint8_t *header, int header_len,
+               char *name,
                double x, double y)
 {
-    memcpy(buff, header, 4);
     uint8_t len = (uint8_t)strlen(name);
-    buff[4] = len;
+    int actual_len = header_len + 1 + len + 8 + 8 + 1;
+    assert(actual_len &lt;= buff_len);
+
+    memcpy(buff, header, header_len);
+    buff[header_len] = len;
     memcpy(buff + 5, name, len);
     memcpy(buff + 5 + len, &x, 8);
     memcpy(buff + 5 + len + 8, &y, 8);
     int sum = 0;
-    for (int i = 0; i &lt; 4+1+len+8+8; i++)
+    for (int i = 0; i &lt; header_len+1+len+8+8; i++)
     {
         sum += buff[i];
     }
-    buff[4+1+len+8+8] = (uint8_t)(sum & 0xff);
+    buff[header_len+1+len+8+8] = (uint8_t)(sum & 0xff);
 }
 ''')
 
@@ -89,7 +93,7 @@ void plot_pack(uint8_t *buff, int buff_len,
         self.config = config
         default = {
             "version": 1,
-            "graghWidgets": [
+            "graphWidgets": [
                 # {
                 #     "id": "plot",
                 #     "config": {}
@@ -121,11 +125,11 @@ void plot_pack(uint8_t *buff, int buff_len,
         self.widgetsLayout = QVBoxLayout()
         widget2.setLayout(self.widgetsLayout)
         widget.resize(600, 400)
-        # load gragh widgets
-        for item in self.config["graghWidgets"]:
-            if not item["id"] in graghWidgets:
+        # load graph widgets
+        for item in self.config["graphWidgets"]:
+            if not item["id"] in graphWidgets:
                 continue
-            c = graghWidgets[item["id"]]
+            c = graphWidgets[item["id"]]
             w = c(hintSignal = self.hintSignal, rmCallback = self.rmWidgetFromMain, send=self.sendData, config=item["config"])
             self.widgets.append(w)
             self.widgetsLayout.addWidget(w)
@@ -136,15 +140,15 @@ void plot_pack(uint8_t *buff, int buff_len,
             setting widget, just return a QWidget object or None
         '''
         itemList = QListWidget()
-        for k,v in graghWidgets.items():
+        for k,v in graphWidgets.items():
             itemList.addItem(k)
-        itemList.setToolTip(_("Double click to add a gragh widget"))
+        itemList.setToolTip(_("Double click to add a graph widget"))
         itemList.setCurrentRow(0)
         itemList.itemDoubleClicked.connect(self.addWidgetToMain)
         return itemList
 
     def addWidgetToMain(self, item):
-        for k, c in graghWidgets.items():
+        for k, c in graphWidgets.items():
             if k == item.text():
                 config = {
                     "id": c.id,
@@ -153,13 +157,13 @@ void plot_pack(uint8_t *buff, int buff_len,
                 w = c(hintSignal = self.hintSignal, rmCallback = self.rmWidgetFromMain, send=self.sendData, config=config["config"])
                 self.widgets.append(w)
                 self.widgetsLayout.addWidget(w)
-                self.config["graghWidgets"].append(config)
+                self.config["graphWidgets"].append(config)
 
     def rmWidgetFromMain(self, widget):
         self.widgetsLayout.removeWidget(widget)
-        for item in self.config["graghWidgets"]:
+        for item in self.config["graphWidgets"]:
             if id(item["config"]) == id(widget.config):
-                self.config["graghWidgets"].remove(item)
+                self.config["graphWidgets"].remove(item)
                 break
         widget.deleteLater()
         self.widgets.remove(widget)

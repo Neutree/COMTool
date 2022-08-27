@@ -18,9 +18,9 @@ A cross platform serial debug tools written by python
  | |
 
 
-| White theme | Dark theme | protocol plugin | TCP/UDP | Terminal | Gragh |
+| White theme | Dark theme | protocol plugin | TCP/UDP | Terminal | Graph |
 | ----------- | ---------- | --------------- | ------- | -------- | ----- |
-| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) | ![terminal](./COMTool/assets/screenshot_terminal.png) | ![plugin gragh](./COMTool/assets/screenshot_gragh.png) |
+| ![comtool white theme](./COMTool/assets/screenshot_v2_white.png) | ![comtool dark theme](./COMTool/assets/screenshot_v2.png) | ![comtool protocol plugin](./COMTool/assets/screenshot_protocol_v2.3.png) | ![tcp udp plugin](./COMTool/assets/tcp_udp.png) | ![terminal](./COMTool/assets/screenshot_terminal.png) | ![plugin graph](./COMTool/assets/screenshot_graph.png) |
 
 
 
@@ -65,8 +65,8 @@ A cross platform serial debug tools written by python
     - [x] customize shortcut key
     - [x] escape character support, like `\r \n \t \x` etc.
   - [x] terminal plugin, basic terminal interaction
-  - [x] gragh plugin
-    - [x] support dynamicly add gragh widgets, add gragh widgets you need
+  - [x] graph plugin
+    - [x] support dynamicly add graph widgets, add graph widgets you need
     - [x] display line chart in realtime, support customize protocol header(support escape characters)
     - [x] customable button to send data, support shortcut key
 

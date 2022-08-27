@@ -529,6 +529,6 @@ QListWidget::item:hover {
     background-color: #253836;
 }
 
-.graghBtn {
+.graphBtn {
     max-height: 120px;
 }
