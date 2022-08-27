@@ -12,9 +12,9 @@ if sys.version_info < (3, 7):
 
 # when execute packed executable program(./dist/comtool) warning missing package, add here to resolve
 hidden_imports = [
-    "pyqtgraph.graphicsItems.PlotItem.plotConfigTemplate_pyqt5",
-    "pyqtgraph.graphicsItems.ViewBox.axisCtrlTemplate_pyqt5",
-    "pyqtgraph.imageview.ImageViewTemplate_pyqt5",
+    # "pyqtgraph.graphicsItems.PlotItem.plotConfigTemplate_pyqt5", # fixed in latest pyinstaller-hooks-contrib
+    # "pyqtgraph.graphicsItems.ViewBox.axisCtrlTemplate_pyqt5",
+    # "pyqtgraph.imageview.ImageViewTemplate_pyqt5",
     "babel.numbers"
 ]
 
