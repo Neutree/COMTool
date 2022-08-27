@@ -38,7 +38,7 @@ jobs:
         run: |
           python --version
           pip3 install -r requirements.txt
-          pip3 install pyinstaller==5.1 wheel
+          pip3 install pyinstaller wheel
           python setup.py sdist bdist_wheel
           python pack.py
           release_path=`python pack.py ${{ matrix.os }}`
