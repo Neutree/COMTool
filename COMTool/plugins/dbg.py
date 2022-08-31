@@ -99,6 +99,8 @@ class Plugin(Plugin_Base):
         for k in default:
             if not k in self.config:
                 self.config[k] = default[k]
+        self.lastShowTail = ''
+        self.justSent = False # sent data before received data flag
 
     def onWidgetMain(self, parent):
         self.mainWidget = QSplitter(Qt.Vertical)
@@ -567,7 +569,6 @@ class Plugin(Plugin_Base):
                     isHexStr, sendStr, sendStrsColored = self.bytes2String(data, not self.config["receiveAscii"], encoding=self.configGlobal["encoding"])
                     if isHexStr:
                         sendStr = sendStr.upper()
-                        sendStrsColored= sendStr
                         head += "[HEX] "
                     if self.config["useCRLF"]:
                         head = "\r\n" + head
@@ -575,9 +576,10 @@ class Plugin(Plugin_Base):
                         head = "\n" + head
                     if head.strip() != '=>':
                         head = '{}: '.format(head.rstrip())
-                    self.receiveUpdateSignal.emit(head, [sendStrsColored], self.configGlobal["encoding"])
+                    self.receiveUpdateSignal.emit(head, [sendStr], self.configGlobal["encoding"])
                     self.sendRecord.insert(0, head + sendStr)
                 self.send(data_bytes=data, callback = self.onSent)
+                self.justSent = True # flag for receive thread
                 if data_bytes:
                     data = str(data_bytes)
                 else:
@@ -788,13 +790,15 @@ class Plugin(Plugin_Base):
             buffer += new
             self.receivedData = []
             # timeout, add new line
-            if time.time() - timeLastReceive> self.config["receiveAutoLindefeedTime"]:
+            # self.justSent means just sent data, need show head
+            if time.time() - timeLastReceive > self.config["receiveAutoLindefeedTime"] / 1000 or self.justSent:
                 if self.config["showTimestamp"] or self.config["receiveAutoLinefeed"]:
                     if self.config["useCRLF"]:
                         head += "\r\n"
                     else:
                         head += "\n"
                     new_line = True
+                    self.justSent = False
             data = ""
             # have data in buffer
             if len(buffer) > 0:
@@ -808,11 +812,19 @@ class Plugin(Plugin_Base):
                 # show as string, and don't need to render color
                 elif not self.config["color"]:
                     data = buffer.decode(encoding=self.configGlobal["encoding"], errors="ignore")
+                    # self.lastShowTail for separated \r\n, prevent show two linefeed
+                    # if last msg endswith "\r", and this msg startswith "\n", don't show "\n", if you have different thought, add issue to github
+                    if self.lastShowTail == "\r" and data[0] == "\n":
+                        data = data[1:]
                     colorData = data
                     buffer = b''
+                    if data and data[-1] == "\r":
+                        self.lastShowTail = data[-1]
+                    else:
+                        self.lastShowTail = ""
                 # show as string, and need to render color, wait for \n or until timeout to ensure color flag in buffer
                 else:
-                    if time.time() - timeLastReceive >  self.config["receiveAutoLindefeedTime"] or b'\n' in buffer:
+                    if time.time() - timeLastReceive >  self.config["receiveAutoLindefeedTime"] / 1000 or b'\n' in buffer:
                         data, colorData, remain = self.getColoredText(buffer, self.configGlobal["encoding"])
                         buffer = remain
                 # add time receive head
