@@ -447,7 +447,7 @@ class Plugin(Plugin_Base):
         self.config["saveLogPath"] = fileName_choose
 
     def onLog(self, text):
-        if self.config["saveLogPath"]:
+        if self.config["saveLog"] and self.config["saveLogPath"]:
             with open(self.config["saveLogPath"], "a+", encoding=self.configGlobal["encoding"], newline="\n") as f:
                 f.write(text)
 

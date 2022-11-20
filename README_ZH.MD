@@ -14,8 +14,7 @@ COMTool
 
 | Windows | Linux | Raspberry Pi | macOS |
 | ------- | ----- | ------------ | ----- |
-| ![comtool Windows screenshot](./COMTool/assets/screenshot_v2_white.png) | ![comtool linux screenshot](./COMTool/assets/screenshot_V1.4_night.png) | ![comtool Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png)
- | |
+| ![comtool Windows screenshot](./COMTool/assets/screenshot_v2_white.png) | ![comtool linux screenshot](./COMTool/assets/screenshot_V1.4_night.png) | ![comtool Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png) | ![](./COMTool/assets/screenshot_macos.jpg) |
 
 
 | 白色主题 | 黑色主题 | 协议插件 | TCP/UDP | 终端 |    图表绘制  |

@@ -14,8 +14,7 @@ A cross platform serial debug tools written by python
 
 | Windows | Linux | Raspberry Pi | macOS |
 | ------- | ----- | ------------ | ----- |
-| ![comtool Windows screenshot](./COMTool/assets/screenshot_v2_white.png) | ![comtool linux screenshot](./COMTool/assets/screenshot_V1.4_night.png) | ![comtool Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png)
- | |
+| ![comtool Windows screenshot](./COMTool/assets/screenshot_v2_white.png) | ![comtool linux screenshot](./COMTool/assets/screenshot_V1.4_night.png) | ![comtool Raspberry Pi screenshot](./COMTool/assets/RaspberryPiScreenshot.png) | ![](./COMTool/assets/screenshot_macos.jpg) |
 
 
 | White theme | Dark theme | protocol plugin | TCP/UDP | Terminal | Graph |
