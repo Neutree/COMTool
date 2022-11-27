@@ -90,7 +90,9 @@ class Plugin(Plugin_Base):
             "showTimestamp" : False,
             "recordSend" : False,
             "saveLogPath" : "",
+            "saveLogPath2" : "",
             "saveLog" : False,
+            "saveLogAutoNew": False,
             "color" : False,
             "sendEscape" : False,
             "customSendItems" : [],
@@ -276,14 +278,19 @@ class Plugin(Plugin_Base):
         self.customSendScroll.setWidget(cutomSendItemsWraper)
         self.customSendScroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         #
+        logFileWrapper = QVBoxLayout()
         logFileLayout = QHBoxLayout()
         self.saveLogCheckbox = QCheckBox()
         self.logFilePath = QLineEdit()
         self.logFileBtn = QPushButton(_("Log path"))
+        self.saveLogAutoNew = QCheckBox(_("Auto new file"))
+        self.saveLogAutoNew.setToolTip(_("When start a new connection, will automatically create a new log file"))
         logFileLayout.addWidget(self.saveLogCheckbox)
         logFileLayout.addWidget(self.logFilePath)
         logFileLayout.addWidget(self.logFileBtn)
-        self.logFileGroupBox.setLayout(logFileLayout)
+        logFileWrapper.addLayout(logFileLayout)
+        logFileWrapper.addWidget(self.saveLogAutoNew)
+        self.logFileGroupBox.setLayout(logFileWrapper)
         sendFunctionalLayout.addWidget(self.logFileGroupBox)
         sendFunctionalLayout.addWidget(self.fileSendGroupBox)
         sendFunctionalLayout.addWidget(self.clearHistoryButton)
@@ -295,6 +302,7 @@ class Plugin(Plugin_Base):
         self.sendFileButton.clicked.connect(self.sendFile)
         self.saveLogCheckbox.clicked.connect(self.setSaveLog)
         self.logFileBtn.clicked.connect(self.selectLogFile)
+        self.saveLogAutoNew.clicked.connect(lambda: self.bindVar(self.saveLogAutoNew, self.config, "saveLogAutoNew"))
         self.openFileButton.clicked.connect(self.selectFile)
         self.addButton.clicked.connect(self.customSendAdd)
         self.clearHistoryButton.clicked.connect(self.clearHistory)
@@ -334,6 +342,7 @@ class Plugin(Plugin_Base):
         self.logFilePath.setText(paramObj["saveLogPath"])
         self.logFilePath.setToolTip(paramObj["saveLogPath"])
         self.saveLogCheckbox.setChecked(paramObj["saveLog"])
+        self.saveLogAutoNew.setChecked(paramObj["saveLogAutoNew"])
         self.receiveSettingsColor.setChecked(paramObj["color"])
         # send items
         for text in paramObj["customSendItems"]:
@@ -445,11 +454,29 @@ class Plugin(Plugin_Base):
         self.logFilePath.setText(fileName_choose)
         self.logFilePath.setToolTip(fileName_choose)
         self.config["saveLogPath"] = fileName_choose
+        self.config["saveLogPath2"] = fileName_choose
+
+    def updateLogPath(self):
+        '''
+            update log path add datetiem and com port name
+        '''
+        if not self.config["saveLogPath"]:
+            return
+        date = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+        path = os.path.splitext(self.config['saveLogPath'])
+        self.config["saveLogPath2"] = f"{path[0]}_{date}.{path[1]}"
+
 
     def onLog(self, text):
-        if self.config["saveLog"] and self.config["saveLogPath"]:
-            with open(self.config["saveLogPath"], "a+", encoding=self.configGlobal["encoding"], newline="\n") as f:
+        path = self.config["saveLogPath2"] if self.config["saveLogPath2"] else self.config["saveLogPath"]
+        if self.config["saveLog"] and path:
+            with open(path, "a+", encoding=self.configGlobal["encoding"], newline="\n") as f:
                 f.write(text)
+
+    def onConnChanged(self, status:ConnectionStatus, msg:str):
+        super().onConnChanged(status, msg)
+        if status == ConnectionStatus.CONNECTED and self.config["saveLogAutoNew"]:
+            self.updateLogPath()
 
     def onKeyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
