@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-11-27 17:59+0800\n"
+"POT-Creation-Date: 2022-11-29 15:00+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.11.0\n"
 
 #: helpAbout.py:40
 msgid "Config path"
@@ -70,11 +70,10 @@ msgstr "ファイルからプラグインを読み込む"
 #: main2.py:229 main2.py:279 main2.py:422 main2.py:427 main2.py:723
 #: pluginItems.py:169 pluginItems.py:172 pluginItems.py:273 pluginItems.py:285
 #: plugins/base.py:165 plugins/base.py:170 plugins/base.py:186
-#: plugins/base.py:195 plugins/dbg.py:412 plugins/dbg.py:421 plugins/dbg.py:560
-#: plugins/dbg.py:577 plugins/dbg.py:634 plugins/dbg.py:642
+#: plugins/base.py:195 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:574
+#: plugins/dbg.py:591 plugins/dbg.py:648 plugins/dbg.py:656
 #: plugins/graph.py:205 plugins/graph_widget_metasenselite.py:591
 #: plugins/graph_widgets.py:141 plugins/myplugin.py:61
-#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/protocol.py:466 plugins/protocol.py:480 plugins/protocol.py:489
 #: plugins/protocol.py:552
@@ -91,7 +90,7 @@ msgid "Load plugin fail"
 msgstr "プラグインの読み込みに失敗しました"
 
 #: conn/conn_ssh.py:232 main2.py:273 pluginItems.py:149 pluginItems.py:162
-#: plugins/dbg.py:434 plugins/dbg.py:448
+#: plugins/dbg.py:448 plugins/dbg.py:462
 msgid "Select file"
 msgstr "ファイルを選択"
 
@@ -173,7 +172,7 @@ msgstr ""
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr ""
 
-#: pluginItems.py:175 plugins/dbg.py:377 plugins/dbg.py:563
+#: pluginItems.py:175 plugins/dbg.py:384 plugins/dbg.py:577
 #: plugins/protocol.py:574 plugins/protocol.py:596
 msgid "Warning"
 msgstr "警告"
@@ -220,7 +219,7 @@ msgstr ""
 msgid "Input remark"
 msgstr ""
 
-#: plugins/dbg.py:195 widgets.py:671 widgets.py:742
+#: plugins/dbg.py:197 widgets.py:671 widgets.py:742
 msgid "Record"
 msgstr "記録"
 
@@ -242,7 +241,7 @@ msgstr "ホットキー："
 msgid "Press key to record, or click Cancel"
 msgstr ""
 
-#: plugins/dbg.py:405 widgets.py:685 widgets.py:703
+#: plugins/dbg.py:419 widgets.py:685 widgets.py:703
 msgid "OK"
 msgstr ""
 
@@ -345,7 +344,7 @@ msgstr "入力"
 msgid "error"
 msgstr "エラー"
 
-#: conn/conn_ssh.py:234 plugins/dbg.py:436
+#: conn/conn_ssh.py:234 plugins/dbg.py:450
 msgid "All Files (*)"
 msgstr "すべてのファイル (*)"
 
@@ -463,29 +462,29 @@ msgstr "送信エリアをクリアする"
 msgid "Clear Receive Area"
 msgstr "清除接収区"
 
-#: plugins/dbg.py:150
+#: plugins/dbg.py:149
 msgid "Receive Settings"
 msgstr "受信設定"
 
-#: plugins/dbg.py:151 plugins/dbg.py:180 plugins/protocol.py:261
+#: plugins/dbg.py:150 plugins/dbg.py:182 plugins/protocol.py:261
 msgid "ASCII"
 msgstr "ASCII"
 
-#: plugins/dbg.py:152
+#: plugins/dbg.py:151
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr "表示されている文字を使用して受信データを表示し、右上隅でデコード方法を選択します"
 
-#: plugins/dbg.py:153 plugins/dbg.py:181 plugins/protocol.py:262
+#: plugins/dbg.py:152 plugins/dbg.py:183 plugins/protocol.py:262
 msgid "HEX"
 msgstr "HEX"
 
-#: plugins/dbg.py:154
+#: plugins/dbg.py:153
 msgid "Show recived data as hex format"
 msgstr "16進表記を使用して受信データを表示します"
 
-#: plugins/dbg.py:156
+#: plugins/dbg.py:155
 msgid ""
 "Auto\n"
 "Linefeed\n"
@@ -495,43 +494,53 @@ msgstr ""
 "ラインフィード\n"
 "ms"
 
-#: plugins/dbg.py:157 plugins/dbg.py:160
+#: plugins/dbg.py:156 plugins/dbg.py:159
 msgid "Auto linefeed after interval, unit: ms"
 msgstr "超オーバー・トタイム時自PP换行、単位：ms"
 
-#: plugins/dbg.py:163
+#: plugins/dbg.py:162
 msgid "Timestamp"
 msgstr "タイムスタンプ"
 
-#: plugins/dbg.py:164
+#: plugins/dbg.py:163
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr "受信データの前にタイムスタンプを追加すると、自動改行が自動的に有効になります"
 
-#: plugins/dbg.py:165
+#: plugins/dbg.py:164
 msgid "Color"
 msgstr "顔色"
 
-#: plugins/dbg.py:166
+#: plugins/dbg.py:165
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr "UNIX端末の色のサポートを有効にする, 例えば \\33[31;43mhello\\33[0m"
 
-#: plugins/dbg.py:179
+#: plugins/dbg.py:166
+msgid "Display wrap"
+msgstr ""
+
+#: plugins/dbg.py:167
+msgid ""
+"When content in a line is too long, always auto wrap to show, and no "
+"scroll bar"
+msgstr ""
+
+#: plugins/dbg.py:181
 msgid "Send Settings"
 msgstr "送信設定"
 
-#: plugins/dbg.py:182 plugins/protocol.py:263
+#: plugins/dbg.py:184 plugins/protocol.py:263
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr "表示文字形式で送信するデータを取得し、右上隅でエンコード方法を選択します"
 
-#: plugins/dbg.py:183 plugins/protocol.py:264
+#: plugins/dbg.py:185 plugins/protocol.py:264
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr "16進数の「313233」などの16進数形式で送信するデータを取得し、ASCIIコードの「123」は同等です。"
 
-#: plugins/dbg.py:185
+#: plugins/dbg.py:187
 msgid ""
 "Timed Send\n"
 "ms"
@@ -539,110 +548,110 @@ msgstr ""
 "時限送信\n"
 "ms"
 
-#: plugins/dbg.py:186 plugins/dbg.py:189
+#: plugins/dbg.py:188 plugins/dbg.py:191
 msgid "Timed send, unit: ms"
 msgstr "定時間P送、単位：ms"
 
-#: plugins/dbg.py:192 plugins/protocol.py:266
+#: plugins/dbg.py:194 plugins/protocol.py:266
 msgid "<CRLF>"
 msgstr "<CRLF>"
 
-#: plugins/dbg.py:193 plugins/protocol.py:267
+#: plugins/dbg.py:195 plugins/protocol.py:267
 msgid "Select to send \\r\\n instead of \\n"
 msgstr "選択中ρ送信\\ r \\ n圧電不是\\ n"
 
-#: plugins/dbg.py:196
+#: plugins/dbg.py:198
 msgid "Record send data"
 msgstr "送信データを記録する"
 
-#: plugins/dbg.py:197 plugins/protocol.py:269
+#: plugins/dbg.py:199 plugins/protocol.py:269
 msgid "Escape"
 msgstr "エスケープ"
 
-#: plugins/dbg.py:198 plugins/protocol.py:270
+#: plugins/dbg.py:200 plugins/protocol.py:270
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr "\\t \\r \\n \\x01 \\001 のようなエスケープ文字のサポートを有効にする"
 
-#: plugins/dbg.py:199
+#: plugins/dbg.py:201
 msgid "Newline"
 msgstr ""
 
-#: plugins/dbg.py:200
+#: plugins/dbg.py:202
 msgid "Auto add new line when send"
 msgstr ""
 
-#: plugins/dbg.py:228
+#: plugins/dbg.py:230
 msgid "Auto line feed value error, must be integer"
 msgstr "自動改行値エラー、整数である必要があります"
 
-#: plugins/dbg.py:229
+#: plugins/dbg.py:231
 msgid "Timed send value error, must be integer"
 msgstr "時限送信値エラー。整数である必要があります"
 
-#: plugins/dbg.py:239
+#: plugins/dbg.py:242
 msgid "Open File"
 msgstr "打開き文件"
 
-#: plugins/dbg.py:240
+#: plugins/dbg.py:243
 msgid "Send File"
 msgstr "ファイルを送信"
 
-#: plugins/dbg.py:241
+#: plugins/dbg.py:244
 msgid "Clear History"
 msgstr "履歴のクリア"
 
-#: plugins/dbg.py:244
+#: plugins/dbg.py:247
 msgid "Sendding File"
 msgstr "ファイルの送信"
 
-#: plugins/dbg.py:250
+#: plugins/dbg.py:253
 msgid "Save log"
 msgstr "ログを保存"
 
-#: plugins/dbg.py:253
+#: plugins/dbg.py:256
 msgid "Cutom send"
 msgstr "カスタム送信"
 
-#: plugins/dbg.py:285
+#: plugins/dbg.py:288
 msgid "Log path"
 msgstr "ログパス"
 
-#: plugins/dbg.py:286
+#: plugins/dbg.py:289
 msgid "Auto new file"
 msgstr "自動新規ファイル"
 
-#: plugins/dbg.py:287
+#: plugins/dbg.py:290
 msgid "When start a new connection, will automatically create a new log file"
 msgstr "新しい接続を開始すると、自動的に新しいログファイルが作成されます"
 
-#: plugins/dbg.py:377
+#: plugins/dbg.py:384
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "タイムスタンプまたはレコード送信がオンの場合、改行は常にオンになります"
 
-#: plugins/dbg.py:405
+#: plugins/dbg.py:419
 msgid "History cleared!"
 msgstr "履歴がクリアされました！"
 
-#: plugins/dbg.py:412 plugins/graph.py:205 plugins/protocol.py:489
+#: plugins/dbg.py:426 plugins/graph.py:205 plugins/protocol.py:489
 #, fuzzy
 msgid "Send data failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: plugins/dbg.py:417
+#: plugins/dbg.py:431
 #, fuzzy
 msgid "Send file"
 msgstr "ファイルを送信"
 
-#: plugins/dbg.py:421
+#: plugins/dbg.py:435
 #, fuzzy
 msgid "Send file failed!"
 msgstr "ファイルを開くことができませんでした！"
 
-#: plugins/dbg.py:450
+#: plugins/dbg.py:464
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: plugins/dbg.py:560
+#: plugins/dbg.py:574
 msgid ""
 "File path error\n"
 "path"
@@ -650,24 +659,24 @@ msgstr ""
 "ファイルパスエラー\n"
 "ファイルパス"
 
-#: plugins/dbg.py:563
+#: plugins/dbg.py:577
 msgid "Connect first please"
 msgstr "最初に接続してください"
 
-#: plugins/dbg.py:566
+#: plugins/dbg.py:580
 #, fuzzy
 msgid "Sending file"
 msgstr "ファイルの送信"
 
-#: plugins/dbg.py:577
+#: plugins/dbg.py:591
 msgid "Time format error"
 msgstr "タイムフォーマットエラー"
 
-#: plugins/dbg.py:634
+#: plugins/dbg.py:648
 msgid "Send Error"
 msgstr "エラーの送信"
 
-#: plugins/dbg.py:642
+#: plugins/dbg.py:656
 #, fuzzy
 msgid "get data error"
 msgstr "タイムフォーマットエラー"
@@ -723,7 +732,6 @@ msgid "AT+ISP=0\\r"
 msgstr ""
 
 #: plugins/graph_widget_metasenselite.py:310 plugins/myplugin.py:43
-#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:51
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:51
 #, fuzzy
 msgid "Send"
@@ -821,7 +829,6 @@ msgid "my plugin"
 msgstr ""
 
 #: plugins/myplugin.py:61
-#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
 #, fuzzy
 msgid "Input data first please"
@@ -902,7 +909,6 @@ msgstr ""
 msgid "terminal"
 msgstr ""
 
-#: plugins/myplugin2/build/lib/comtool_plugin_myplugin2/myplugin2.py:30
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:30
 msgid "my plugin2"
 msgstr ""

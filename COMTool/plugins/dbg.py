@@ -92,6 +92,7 @@ class Plugin(Plugin_Base):
             "saveLogPath" : "",
             "saveLogPath2" : "",
             "saveLog" : False,
+            "wrap": False,
             "saveLogAutoNew": False,
             "color" : False,
             "sendEscape" : False,
@@ -110,9 +111,7 @@ class Plugin(Plugin_Base):
         self.receiveArea = QTextEdit()
         font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
         self.receiveArea.setFont(font)
-        self.receiveArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea = QTextEdit()
-        self.sendArea.setLineWrapMode(QTextEdit.NoWrap)
         self.sendArea.setAcceptRichText(False)
         self.clearReceiveButtion = QPushButton("")
         utils_ui.setButtonIcon(self.clearReceiveButtion, "mdi6.broom")
@@ -164,12 +163,15 @@ class Plugin(Plugin_Base):
         self.receiveSettingsTimestamp.setToolTip(_("Add timestamp before received data, will automatically enable auto line feed"))
         self.receiveSettingsColor = QCheckBox(_("Color"))
         self.receiveSettingsColor.setToolTip(_("Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"))
+        self.receiveSettingsWrap = QCheckBox(_("Display wrap"))
+        self.receiveSettingsWrap.setToolTip(_("When content in a line is too long, always auto wrap to show, and no scroll bar"))
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeed, 2, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAutoLinefeedTime, 2, 1, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsTimestamp, 3, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsColor, 3, 1, 1, 1)
+        serialReceiveSettingsLayout.addWidget(self.receiveSettingsWrap, 4, 0, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
         serialReceiveSettingsGroupBox.setAlignment(Qt.AlignHCenter)
         layout.addWidget(serialReceiveSettingsGroupBox)
@@ -228,6 +230,7 @@ class Plugin(Plugin_Base):
         self.receiveSettingsAutoLinefeedTime.textChanged.connect(lambda: self.bindVar(self.receiveSettingsAutoLinefeedTime, self.config, "receiveAutoLindefeedTime", vtype=int, vErrorMsg=_("Auto line feed value error, must be integer"), emptyDefault = "200"))
         self.sendSettingsScheduled.textChanged.connect(lambda: self.bindVar(self.sendSettingsScheduled, self.config, "sendScheduledTime", vtype=int, vErrorMsg=_("Timed send value error, must be integer"), emptyDefault = "300"))
         self.sendSettingsScheduledCheckBox.clicked.connect(lambda: self.bindVar(self.sendSettingsScheduledCheckBox, self.config, "sendScheduled"))
+        self.receiveSettingsWrap.clicked.connect(self.onSettingWrap)
         return widget
 
 
@@ -324,6 +327,7 @@ class Plugin(Plugin_Base):
             interval = parameters.Parameters.receiveAutoLindefeedTime
         self.receiveSettingsAutoLinefeedTime.setText(str(interval) if interval > 0 else str(parameters.Parameters.receiveAutoLindefeedTime))
         self.receiveSettingsTimestamp.setChecked(paramObj["showTimestamp"])
+        self.receiveSettingsWrap.setChecked(paramObj["wrap"])
         self.sendSettingsHex.setChecked(not paramObj["sendAscii"])
         self.sendSettingsScheduledCheckBox.setChecked(paramObj["sendScheduled"])
         try:
@@ -344,6 +348,9 @@ class Plugin(Plugin_Base):
         self.saveLogCheckbox.setChecked(paramObj["saveLog"])
         self.saveLogAutoNew.setChecked(paramObj["saveLogAutoNew"])
         self.receiveSettingsColor.setChecked(paramObj["color"])
+        # wrap
+        self.receiveArea.setLineWrapMode(QTextEdit.WidgetWidth if paramObj["wrap"] else QTextEdit.NoWrap)
+        self.sendArea.setLineWrapMode(QTextEdit.WidgetWidth if paramObj["wrap"] else QTextEdit.NoWrap)
         # send items
         for text in paramObj["customSendItems"]:
             self.insertSendItem(text, load=True)
@@ -388,6 +395,13 @@ class Plugin(Plugin_Base):
         if self.config["recordSend"]:
             self.config["receiveAutoLinefeed"] = True
             self.receiveSettingsAutoLinefeed.setChecked(True)
+
+    def onSettingWrap(self):
+        wrap = self.receiveSettingsWrap.isChecked()
+        self.config["wrap"] = wrap
+        flag = QTextEdit.WidgetWidth if wrap else QTextEdit.NoWrap
+        self.receiveArea.setLineWrapMode(flag)
+        self.sendArea.setLineWrapMode(flag)
 
     def onEscapeSendClicked(self):
         self.config["sendEscape"] = self.sendSettingsEscape.isChecked()
@@ -464,7 +478,7 @@ class Plugin(Plugin_Base):
             return
         date = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
         path = os.path.splitext(self.config['saveLogPath'])
-        self.config["saveLogPath2"] = f"{path[0]}_{date}.{path[1]}"
+        self.config["saveLogPath2"] = f"{path[0]}_{date}{path[1]}"
 
 
     def onLog(self, text):
