@@ -585,8 +585,8 @@ class statusBar(QWidget):
     def addTx(self, count):
         if not self.rxTxCount:
             return
-        self.rxCount += count
-        msg = '{}({}): {}'.format(_("Sent"), _("bytes"), self.rxCount)
+        self.txCount += count
+        msg = '{}({}): {}'.format(_("Sent"), _("bytes"), self.txCount)
         self.updateUiSignal.emit("tx", msg)
 
     def clear(self):
