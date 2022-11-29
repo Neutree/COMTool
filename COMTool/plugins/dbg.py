@@ -511,10 +511,19 @@ class Plugin(Plugin_Base):
 
     def insertSendItem(self, text="", load = False):
         itemsNum = self.customSendItemsLayout.count() + 1
+        # TODO: here auto set scroll area height is ugly, maybe have better way
         height = parameters.customSendItemHeight * (itemsNum + 1) + 20
         topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 100
-        if height + topHeight > self.funcParent.height():
-            height = self.funcParent.height() - topHeight
+        # print("1:", parameters.customSendItemHeight, itemsNum + 1, height, topHeight)
+        # print("2:", height + topHeight, self.funcParent.height())
+        # if height + topHeight > self.funcParent.height():
+        #     height = self.funcParent.height() - topHeight
+        # if height < 0:
+        #     height = self.funcParent.height() // 3
+        screenH = QApplication.desktop().screenGeometry().height()
+        screenH -= screenH // 3
+        if height + topHeight >= screenH:
+            height = screenH - topHeight
         if height < 0:
             height = self.funcParent.height() // 3
         self.customSendScroll.setMinimumHeight(height)
@@ -544,11 +553,16 @@ class Plugin(Plugin_Base):
     def deleteSendItem(self, idx, item):
         item.setParent(None)
         self.config["customSendItems"].pop(idx)
+        # TODO: here auto set scroll area height is ugly, maybe have better way
         itemsNum = self.customSendItemsLayout.count()
         height = parameters.customSendItemHeight * (itemsNum + 1) + 20
         topHeight = self.fileSendGroupBox.height() + self.logFileGroupBox.height() + 100
-        if height + topHeight > self.funcParent.height():
-            height = self.funcParent.height() - topHeight
+        # if height + topHeight > self.funcParent.height():
+        #     height = self.funcParent.height() - topHeight
+        screenH = QApplication.desktop().screenGeometry().height()
+        screenH -= screenH // 3
+        if height + topHeight >= screenH:
+            height = screenH - topHeight
         self.customSendScroll.setMinimumHeight(height)
 
     def onCustomItemChange(self, idx, edit, send):
