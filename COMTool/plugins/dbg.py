@@ -890,7 +890,7 @@ class Plugin(Plugin_Base):
                     # '=> [2021-12-20 11:02:34.02.291]: 123' '<= [2021-12-20 11:02:40.02.783]: 123'
                     # '<= [2021-12-20 11:03:25.03.320] [HEX]: 31 32 33 ' '=> [2021-12-20 11:03:27.03.319] [HEX]: 31 32 33'
                     if new_line:
-                        timeNow = '[{}] '.format(utils.datetime_format_ms(datetime.now()))
+                        timeNow = '[{:>24}] '.format(utils.datetime_format_ms(datetime.now()))
                         if self.config["recordSend"]:
                             head += "<= "
                         if self.config["showTimestamp"]:
