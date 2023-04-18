@@ -1,7 +1,6 @@
 # from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QSlider, QLineEdit, QGridLayout, QPushButton, QCheckBox, QHBoxLayout, QInputDialog)
 # from PyQt5.QtCore import pyqtSignal
 # from PyQt5.QtGui import QDoubleValidator
-import numpy as np
 import os
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QSlider, QLineEdit,
                              QGridLayout, QPushButton, QCheckBox, QHBoxLayout, QInputDialog, QComboBox, QFileDialog)
@@ -19,7 +18,7 @@ except Exception:
     from COMTool import utils
     from COMTool.widgets import EditRemarDialog
 
-from .graph_widget_metasenselite import Graph_MetaSenseLite
+# from .graph_widget_metasenselite import Graph_MetaSenseLite
 from .graph_widgets_base import Graph_Widget_Base
 import pyqtgraph as pg
 from struct import unpack, pack
@@ -373,5 +372,5 @@ graphWidgets = {
     Graph_Plot.id: Graph_Plot,
     Graph_Button.id: Graph_Button,
     # Graph_DragTof.id: Graph_DragTof,
-    Graph_MetaSenseLite.id: Graph_MetaSenseLite,
+    # Graph_MetaSenseLite.id: Graph_MetaSenseLite,
 }
