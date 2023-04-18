@@ -338,20 +338,23 @@ class TCP_UDP(COMM):
             try:
                 # set status first to prevent auto reconnect
                 self.status = ConnectionStatus.CLOSED
+                for addr, conn in self.serverModeClientsConns.items():
+                    try:
+                        print(f"-- close client {addr} conn")
+                        conn.close()
+                    except Exception as e:
+                        print(f"close client {addr} conn error: ", e)
+                        pass
                 if not self.conn is None:
                     time.sleep(0.1) # wait receive thread exit
                     try:
                         self.conn.close()
-                    except Exception:
+                    except Exception as e:
+                        print("close conn error: ", e)
                         pass
                     self.conn = None
-                for k, conn in self.serverModeClientsConns.items():
-                    try:
-                        conn.close()
-                    except Exception:
-                        pass
             except Exception as e:
-                print(e)
+                print("openCloseSerialProcess", e)
                 pass
             self.onConnectionStatus.emit(self.status, "")
             self.showSwitchSignal.emit(self.status)
@@ -375,7 +378,7 @@ class TCP_UDP(COMM):
                     else:
                         print("-- server mode, wait client connect")
                         self.conn = socket.socket()
-                        self.conn.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+                        self.conn.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                         self.conn.bind(("0.0.0.0", self.config["port"]))
                         self.conn.listen(100)
                         self.status = ConnectionStatus.CONNECTED
@@ -448,10 +451,14 @@ class TCP_UDP(COMM):
         self.widget.update()
 
     def waitClientsProcess(self):
+        print("-- wait for client connect")
         while self.status != ConnectionStatus.CLOSED:
-            print("-- wait for client connect")
+            # accept connection with non-blocking to check close status
+            self.conn.settimeout(0.06)
             try:
                 conn, addr = self.conn.accept()
+            except socket.timeout:
+                continue
             except Exception as e:
                 if self.status != ConnectionStatus.CLOSED:
                     print("-- accept connection fail:", str(e))
@@ -464,6 +471,7 @@ class TCP_UDP(COMM):
             t = threading.Thread(target=self.receiveDataProcess, args=(conn, addr))
             t.setDaemon(True)
             t.start()
+            print("-- wait for client connect")
         print("-- wait connection thread exit")
 
 
@@ -556,8 +564,8 @@ class TCP_UDP(COMM):
                     self.showSwitchSignal.emit(ConnectionStatus.LOSE)
                     time.sleep(self.config["auto_reconnect_interval"])
         # server mode remove client
-        if self.config["mode"] == "server":
-            remote_str = f'{remote_addr[0]}:{remote_addr[1]}'
+        remote_str = f'{remote_addr[0]}:{remote_addr[1]}'
+        if remote_str in self.serverModeClientsConns:
             print(f"-- client {remote_str} disconnect")
             self.updateClientsSignal.emit(False, remote_addr)
             if remote_str == self.serverModeSelectedClient:
