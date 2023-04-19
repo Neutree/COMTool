@@ -275,9 +275,11 @@ class TCP_UDP(COMM):
         while 1:
             try:
                 port = int(text)
+                self.config['port'] = port
                 break
             except Exception:
                 text = text[:-1]
+                break
         self.porttEdit.setText(text)
 
     def onSerialConfigChanged(self, conf_type, obj, value_type, caller=""):
