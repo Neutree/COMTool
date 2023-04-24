@@ -146,11 +146,23 @@ def pack():
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         os_name = sys.argv[1]
-        if os_name == "ubuntu-latest":
+        if os_name.startswith("ubuntu"):
+            if os_name != "ubuntu-latest":
+                linux_out_new = linux_out.replace("ubuntu", os_name.replace("-", "_"))
+                os.rename(linux_out, linux_out_new)
+                linux_out = linux_out_new
             print(linux_out)
-        elif os_name == "windows-latest":
+        elif os_name.startswith("windows"):
+            if os_name != "windows-latest":
+                windows_out_new = windows_out.replace("windows", os_name.replace("-", "_"))
+                os.rename(windows_out, windows_out_new)
+                windows_out = windows_out_new
             print(windows_out)
-        elif os_name == "macos-latest":
+        elif os_name.startswith("macos"):
+            if os_name != "macos-latest":
+                macos_out_new = macos_out.replace("macos", os_name.replace("-", "_"))
+                os.rename(macos_out, macos_out_new)
+                macos_out = macos_out_new
             print(macos_out)
         else:
             sys.exit(1)

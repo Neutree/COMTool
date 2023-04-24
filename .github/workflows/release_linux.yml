@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"] # must use str, not int, or 3.10 will be recognized as 3.1
-        os: [ubuntu-latest]
+        os: ["ubuntu-latest", "ubuntu-20.04"]
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -69,4 +69,4 @@ jobs:
           asset_name: ${{ steps.pack.outputs.release_name }}
           tag: ${{ github.ref }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-        
+
