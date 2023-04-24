@@ -50,7 +50,10 @@ class AutoUpdate:
         import requests, json
         latest = version.Version()
         try:
-            page = requests.post(self.releaseApiUrl2)
+            headers = {
+                "User-Agent": f"comtool_v{version.major}.{version.minor}.{version.dev}"
+            }
+            page = requests.post(self.releaseApiUrl2, headers=headers)
             if page.status_code != 200:
                 log.i("request {} fail, check update fail!".format(self.releaseApiUrl))
                 return False, None

@@ -622,7 +622,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def showUpdate(self, versionInfo):
         versionInt = versionInfo.int()
-        if self.config.basic["skipVersion"] and self.config.basic["skipVersion"] >= versionInt:
+        if self.config["skipVersion"] and self.config["skipVersion"] >= versionInt:
             return
         msgBox = QMessageBox()
         desc = versionInfo.desc if len(versionInfo.desc) < 300 else versionInfo.desc[:300] + " ... "
@@ -638,7 +638,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             auto = autoUpdate.AutoUpdate()
             auto.OpenBrowser()
         elif result == 1:
-            self.config.basic["skipVersion"] = versionInt
+            self.config["skipVersion"] = versionInt
 
 
 

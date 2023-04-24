@@ -117,7 +117,7 @@ class Parameters:
 
     def __str__(self) -> str:
         return json.dumps(self.config)
-        
+
 
 strStyleShowHideButtonLeft = '''
 QPushButton {

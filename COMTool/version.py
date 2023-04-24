@@ -1,7 +1,7 @@
 
 major = 3
 minor = 2
-dev   = 0
+dev   = 1
 
 __version__ = "{}.{}.{}".format(major, minor, dev)
 
@@ -26,7 +26,7 @@ class Version:
     def load_dict(self, obj):
         self.major = obj['major']
         self.minor = obj['minor']
-        self.mdev= obj['dev']
+        self.dev= obj['dev']
         self.name = obj['name']
         self.desc = obj['desc']
 
