@@ -150,7 +150,7 @@ class TCP_UDP(COMM):
         self.serialSettingsLayout.addWidget(self.autoReconnectIntervalEdit, 5, 2, 1, 1)
         self.serialSettingsLayout.addWidget(self.serialOpenCloseButton, 6, 0, 1, 3)
         serialSetting.setLayout(self.serialSettingsLayout)
-        self.widgetConfMap["protocol"]       = self.protoclTcpRadioBtn
+        self.widgetConfMap["protocol"]       = [self.protoclTcpRadioBtn, self.protoclUdpRadioBtn]
         self.widgetConfMap["mode"]    = self.modeClientRadioBtn
         self.widgetConfMap["target"]    = self.targetCombobox
         self.widgetConfMap["port"]    = self.porttEdit
@@ -288,9 +288,11 @@ class TCP_UDP(COMM):
     def setSerialConfig(self, conf_type, obj, value):
         if conf_type == "protocol":
             if value == "tcp":
-                obj.setChecked(True)
+                obj[0].setChecked(True)
+                obj[1].setChecked(False)
             else:
-                obj.setChecked(False)
+                obj[0].setChecked(False)
+                obj[1].setChecked(True)
         elif conf_type == "mode":
             if value == "client":
                 obj.setChecked(True)
