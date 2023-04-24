@@ -50,11 +50,15 @@ class Plugin(Plugin_Base):
     enabled = False          # user enabled this plugin
     active  = False          # using this plugin
 
-    help = '{}<br><br>{}<br>Python:<br><pre>{}</pre><br>C/C++:<br><pre>{}</pre>'.format(_("Double click graph item to add a graph widget"), _("line chart plot protocol:"),
+    help = '{}<br><br>{}<br><h2>Python</h2><br><pre>{}</pre><p><p>{}<br>{}</p><p>{}</p></p><br><h2>C/C++</h2><br><pre>{}</pre>'.format(
+        _("Double click graph item to add a graph widget"), _("line chart plot protocol:"),
 '''
-from COMTool.plugin import graph_protocol
+from COMTool.plugins import graph_protocol
 frame = graph_protocol.plot_pack(name, x, y, header= b'\\xAA\\xCC\\xEE\\xBB')
 ''',
+        _("Full demo see:"),
+        '<a href="https://github.com/Neutree/COMTool/tree/master/tool/send_curve_demo.py">https://github.com/Neutree/COMTool/tree/master/tool/send_curve_demo.py</a>',
+        _("Install comtool by <code>pip install comtool</code> first"),
 '''
 void plot_pack(uint8_t *buff, int buff_len,
                uint8_t *header, int header_len,
