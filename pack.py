@@ -137,6 +137,7 @@ def pack():
     elif sys.platform.startswith("win32"):
         # zip(windows_out, "dist/comtool")
         zip_7z(windows_out, "dist/comtool")
+        # TODO: "Running makensis..."
     else:
         cmd = "cd dist && tar -Jcf {} comtool/ && mv {} ../ && cd ..".format(linux_out, linux_out)
         ret = os.system(cmd)

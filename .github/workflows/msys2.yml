@@ -1,0 +1,32 @@
+
+name: msys2
+on: push
+jobs:
+  Deploy-on-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            base-devel
+            git
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: |
+          cd windows
+          chmod +x bootstrap.sh && ./bootstrap.sh
+          ./build.sh portable
+          cp ../../*.exe* ./
+      - name: List files
+        run: ls -R
+      - name: Upload output files
+        uses: actions/upload-artifact@v3
+        with:
+          name: EXE
+          path: windows/comtool*.exe
+          retention-days: 5      
