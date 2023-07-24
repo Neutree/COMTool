@@ -624,6 +624,10 @@ msgstr "自動新規ファイル"
 msgid "When start a new connection, will automatically create a new log file"
 msgstr "新しい接続を開始すると、自動的に新しいログファイルが作成されます"
 
+#: plugins/dbg.py:291
+msgid "Save time stamp"
+msgstr "タイムスタンプを保存します"
+
 #: plugins/dbg.py:384
 msgid "linefeed always on if timestamp or record send is on"
 msgstr "タイムスタンプまたはレコード送信がオンの場合、改行は常にオンになります"

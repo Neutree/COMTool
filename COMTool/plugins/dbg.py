@@ -94,6 +94,7 @@ class Plugin(Plugin_Base):
             "saveLog" : False,
             "wrap": False,
             "saveLogAutoNew": False,
+            "saveTimestamp": True,
             "color" : False,
             "sendEscape" : False,
             "customSendItems" : [],
@@ -287,12 +288,14 @@ class Plugin(Plugin_Base):
         self.logFilePath = QLineEdit()
         self.logFileBtn = QPushButton(_("Log path"))
         self.saveLogAutoNew = QCheckBox(_("Auto new file"))
+        self.saveTimestamp = QCheckBox(_("Save time stamp"))
         self.saveLogAutoNew.setToolTip(_("When start a new connection, will automatically create a new log file"))
         logFileLayout.addWidget(self.saveLogCheckbox)
         logFileLayout.addWidget(self.logFilePath)
         logFileLayout.addWidget(self.logFileBtn)
         logFileWrapper.addLayout(logFileLayout)
         logFileWrapper.addWidget(self.saveLogAutoNew)
+        logFileWrapper.addWidget(self.saveTimestamp)
         self.logFileGroupBox.setLayout(logFileWrapper)
         sendFunctionalLayout.addWidget(self.logFileGroupBox)
         sendFunctionalLayout.addWidget(self.fileSendGroupBox)
@@ -306,6 +309,7 @@ class Plugin(Plugin_Base):
         self.saveLogCheckbox.clicked.connect(self.setSaveLog)
         self.logFileBtn.clicked.connect(self.selectLogFile)
         self.saveLogAutoNew.clicked.connect(lambda: self.bindVar(self.saveLogAutoNew, self.config, "saveLogAutoNew"))
+        self.saveTimestamp.clicked.connect(lambda: self.bindVar(self.saveTimestamp, self.config, "saveTimestamp"))
         self.openFileButton.clicked.connect(self.selectFile)
         self.addButton.clicked.connect(self.customSendAdd)
         self.clearHistoryButton.clicked.connect(self.clearHistory)
@@ -347,6 +351,7 @@ class Plugin(Plugin_Base):
         self.logFilePath.setToolTip(paramObj["saveLogPath"])
         self.saveLogCheckbox.setChecked(paramObj["saveLog"])
         self.saveLogAutoNew.setChecked(paramObj["saveLogAutoNew"])
+        self.saveTimestamp.setChecked(paramObj["saveTimestamp"])
         self.receiveSettingsColor.setChecked(paramObj["color"])
         # wrap
         self.receiveArea.setLineWrapMode(QTextEdit.WidgetWidth if paramObj["wrap"] else QTextEdit.NoWrap)
@@ -485,6 +490,11 @@ class Plugin(Plugin_Base):
         path = self.config["saveLogPath2"] if self.config["saveLogAutoNew"] else self.config["saveLogPath"]
         if self.config["saveLog"] and path:
             with open(path, "a+", encoding=self.configGlobal["encoding"], newline="\n") as f:
+                if  self.config["saveTimestamp"] : 
+                    ts = time.time()    
+                    strTime=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
+                    strTime=strTime + f".%03.0f   " % ((ts - int(ts)) * 1000)
+                    text = text.replace("\n", "\n"+strTime)
                 f.write(text)
 
     def onConnChanged(self, status:ConnectionStatus, msg:str):

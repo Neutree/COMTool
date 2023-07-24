@@ -610,6 +610,10 @@ msgstr ""
 msgid "When start a new connection, will automatically create a new log file"
 msgstr ""
 
+#: plugins/dbg.py:291
+msgid "Save time stamp"
+msgstr ""
+
 #: plugins/dbg.py:384
 msgid "linefeed always on if timestamp or record send is on"
 msgstr ""
