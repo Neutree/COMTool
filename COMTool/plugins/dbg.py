@@ -143,6 +143,9 @@ class Plugin(Plugin_Base):
 
         return self.mainWidget
 
+    def keyPressEvent(self, event):
+        self.onKeyPressEvent(event)
+
     def onWidgetSettings(self, parent):
         # serial receive settings
         layout = QVBoxLayout()
@@ -514,7 +517,10 @@ class Plugin(Plugin_Base):
         elif event.key() == Qt.Key_K:
             if self.keyControlPressed:
                 self.receiveArea.clear()
-
+        elif event.key() == Qt.Key_Down:
+            if self.keyControlPressed:
+                self.receiveArea.moveCursor(QTextCursor.End)
+        
     def onKeyReleaseEvent(self, event):
         if event.key() == Qt.Key_Control:
             self.keyControlPressed = False
