@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-11-29 15:00+0800\n"
+"POT-Creation-Date: 2023-07-25 09:52+0800\n"
 "PO-Revision-Date: 2021-12-04 15:21+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.11.0\n"
+"Generated-By: Babel 2.12.1\n"
 
 #: helpAbout.py:40
 msgid "Config path"
@@ -66,14 +66,14 @@ msgstr ""
 msgid "Load plugin from file"
 msgstr ""
 
-#: conn/conn_serial.py:331 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:403
+#: conn/conn_serial.py:331 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:410
 #: main2.py:229 main2.py:279 main2.py:422 main2.py:427 main2.py:723
 #: pluginItems.py:169 pluginItems.py:172 pluginItems.py:273 pluginItems.py:285
 #: plugins/base.py:165 plugins/base.py:170 plugins/base.py:186
-#: plugins/base.py:195 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:574
-#: plugins/dbg.py:591 plugins/dbg.py:648 plugins/dbg.py:656
-#: plugins/graph.py:205 plugins/graph_widget_metasenselite.py:591
-#: plugins/graph_widgets.py:141 plugins/myplugin.py:61
+#: plugins/base.py:195 plugins/dbg.py:437 plugins/dbg.py:446 plugins/dbg.py:607
+#: plugins/dbg.py:624 plugins/dbg.py:681 plugins/dbg.py:689
+#: plugins/graph.py:209 plugins/graph_widget_metasenselite.py:591
+#: plugins/graph_widgets.py:150 plugins/myplugin.py:61
 #: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
 #: plugins/protocol.py:466 plugins/protocol.py:480 plugins/protocol.py:489
 #: plugins/protocol.py:552
@@ -89,7 +89,7 @@ msgid "Load plugin fail"
 msgstr ""
 
 #: conn/conn_ssh.py:232 main2.py:273 pluginItems.py:149 pluginItems.py:162
-#: plugins/dbg.py:448 plugins/dbg.py:462
+#: plugins/dbg.py:459 plugins/dbg.py:473
 msgid "Select file"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "version not found in config of plugin:"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:536 pluginItems.py:98
+#: conn/conn_tcp_udp.py:548 pluginItems.py:98
 msgid "Connection"
 msgstr ""
 
@@ -171,7 +171,7 @@ msgstr ""
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr ""
 
-#: pluginItems.py:175 plugins/dbg.py:384 plugins/dbg.py:577
+#: pluginItems.py:175 plugins/dbg.py:395 plugins/dbg.py:610
 #: plugins/protocol.py:574 plugins/protocol.py:596
 msgid "Warning"
 msgstr ""
@@ -198,51 +198,51 @@ msgstr ""
 msgid "Open file failed!"
 msgstr ""
 
-#: widgets.py:561 widgets.py:582
+#: widgets.py:563 widgets.py:584
 msgid "Received"
 msgstr ""
 
-#: widgets.py:561 widgets.py:562 widgets.py:582 widgets.py:589
+#: widgets.py:563 widgets.py:564 widgets.py:584 widgets.py:591
 msgid "bytes"
 msgstr ""
 
-#: widgets.py:562 widgets.py:589
+#: widgets.py:564 widgets.py:591
 msgid "Sent"
 msgstr ""
 
-#: widgets.py:614
+#: widgets.py:616
 msgid "Help"
 msgstr ""
 
-#: widgets.py:661
+#: widgets.py:663
 msgid "Input remark"
 msgstr ""
 
-#: plugins/dbg.py:197 widgets.py:671 widgets.py:742
+#: plugins/dbg.py:204 widgets.py:673 widgets.py:744
 msgid "Record"
 msgstr ""
 
-#: widgets.py:676
+#: widgets.py:678
 msgid "Input value"
 msgstr ""
 
-#: widgets.py:678 widgets.py:703
+#: widgets.py:680 widgets.py:705
 msgid "Select icon"
 msgstr ""
 
-#: plugins/graph_widgets.py:293 widgets.py:680
+#: plugins/graph_widgets.py:302 widgets.py:682
 msgid "Shortcut"
 msgstr ""
 
-#: widgets.py:682
+#: widgets.py:684
 msgid "Press key to record, or click Cancel"
 msgstr ""
 
-#: plugins/dbg.py:419 widgets.py:685 widgets.py:703
+#: plugins/dbg.py:430 widgets.py:687 widgets.py:705
 msgid "OK"
 msgstr ""
 
-#: widgets.py:686 widgets.py:729
+#: widgets.py:688 widgets.py:731
 msgid "Cancel"
 msgstr ""
 
@@ -284,7 +284,7 @@ msgstr ""
 
 #: conn/conn_serial.py:148 conn/conn_serial.py:295 conn/conn_serial.py:387
 #: conn/conn_ssh.py:158 conn/conn_ssh.py:244 conn/conn_ssh.py:332
-#: conn/conn_tcp_udp.py:137 conn/conn_tcp_udp.py:327 conn/conn_tcp_udp.py:435
+#: conn/conn_tcp_udp.py:137 conn/conn_tcp_udp.py:331 conn/conn_tcp_udp.py:442
 msgid "OPEN"
 msgstr ""
 
@@ -293,15 +293,15 @@ msgid "Open Failed"
 msgstr ""
 
 #: conn/conn_serial.py:390 conn/conn_serial.py:393 conn/conn_ssh.py:335
-#: conn/conn_ssh.py:338 conn/conn_tcp_udp.py:438 conn/conn_tcp_udp.py:441
+#: conn/conn_ssh.py:338 conn/conn_tcp_udp.py:445 conn/conn_tcp_udp.py:448
 msgid "CLOSE"
 msgstr ""
 
-#: conn/conn_serial.py:428 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:493
+#: conn/conn_serial.py:428 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:505
 msgid "Reconnected"
 msgstr ""
 
-#: conn/conn_serial.py:458 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:555
+#: conn/conn_serial.py:458 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:567
 msgid "Connection lose!"
 msgstr ""
 
@@ -341,11 +341,11 @@ msgstr ""
 msgid "error"
 msgstr ""
 
-#: conn/conn_ssh.py:234 plugins/dbg.py:450
+#: conn/conn_ssh.py:234 plugins/dbg.py:461
 msgid "All Files (*)"
 msgstr ""
 
-#: conn/conn_ssh.py:288 conn/conn_tcp_udp.py:402
+#: conn/conn_ssh.py:288 conn/conn_tcp_udp.py:409
 msgid "Connect Failed"
 msgstr ""
 
@@ -357,11 +357,11 @@ msgstr ""
 msgid "SSH pub key file path error"
 msgstr ""
 
-#: conn/conn_ssh.py:388 conn/conn_tcp_udp.py:514
+#: conn/conn_ssh.py:388 conn/conn_tcp_udp.py:526
 msgid "Closed by peer"
 msgstr ""
 
-#: conn/conn_ssh.py:393 conn/conn_tcp_udp.py:540
+#: conn/conn_ssh.py:393 conn/conn_tcp_udp.py:552
 msgid "Connection closed!"
 msgstr ""
 
@@ -389,15 +389,15 @@ msgstr ""
 msgid "Auto reconnect"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:365 conn/conn_tcp_udp.py:485 conn/conn_tcp_udp.py:582
+#: conn/conn_tcp_udp.py:372 conn/conn_tcp_udp.py:497 conn/conn_tcp_udp.py:594
 msgid "Target error"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:462
+#: conn/conn_tcp_udp.py:473
 msgid "Client connected:"
 msgstr ""
 
-#: conn/conn_tcp_udp.py:536
+#: conn/conn_tcp_udp.py:548
 msgid "closed!"
 msgstr ""
 
@@ -425,53 +425,53 @@ msgstr ""
 msgid "Escape is on, but escape error:"
 msgstr ""
 
-#: plugins/dbg.py:51
+#: plugins/dbg.py:52
 msgid "Send Receive"
 msgstr ""
 
-#: plugins/dbg.py:68
+#: plugins/dbg.py:69
 msgid "Shortcut:"
 msgstr ""
 
-#: plugins/dbg.py:69
+#: plugins/dbg.py:70
 msgid "Full screen"
 msgstr ""
 
-#: plugins/dbg.py:70
+#: plugins/dbg.py:71
 msgid "Send data"
 msgstr ""
 
-#: plugins/dbg.py:71
+#: plugins/dbg.py:72
 msgid "Clear Send Area"
 msgstr ""
 
-#: plugins/dbg.py:72
+#: plugins/dbg.py:73
 msgid "Clear Receive Area"
 msgstr ""
 
-#: plugins/dbg.py:149
+#: plugins/dbg.py:156
 msgid "Receive Settings"
 msgstr ""
 
-#: plugins/dbg.py:150 plugins/dbg.py:182 plugins/protocol.py:261
+#: plugins/dbg.py:157 plugins/dbg.py:189 plugins/protocol.py:261
 msgid "ASCII"
 msgstr ""
 
-#: plugins/dbg.py:151
+#: plugins/dbg.py:158
 msgid ""
 "Show recived data as visible format, select decode method at top right "
 "corner"
 msgstr ""
 
-#: plugins/dbg.py:152 plugins/dbg.py:183 plugins/protocol.py:262
+#: plugins/dbg.py:159 plugins/dbg.py:190 plugins/protocol.py:262
 msgid "HEX"
 msgstr ""
 
-#: plugins/dbg.py:153
+#: plugins/dbg.py:160
 msgid "Show recived data as hex format"
 msgstr ""
 
-#: plugins/dbg.py:155
+#: plugins/dbg.py:162
 #, fuzzy
 msgid ""
 "Auto\n"
@@ -482,185 +482,185 @@ msgstr ""
 "Linefeed\n"
 "ms"
 
-#: plugins/dbg.py:156 plugins/dbg.py:159
+#: plugins/dbg.py:163 plugins/dbg.py:166
 msgid "Auto linefeed after interval, unit: ms"
 msgstr ""
 
-#: plugins/dbg.py:162
+#: plugins/dbg.py:169
 msgid "Timestamp"
 msgstr ""
 
-#: plugins/dbg.py:163
+#: plugins/dbg.py:170
 msgid ""
 "Add timestamp before received data, will automatically enable auto line "
 "feed"
 msgstr ""
 
-#: plugins/dbg.py:164
+#: plugins/dbg.py:171
 msgid "Color"
 msgstr ""
 
-#: plugins/dbg.py:165
+#: plugins/dbg.py:172
 msgid "Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"
 msgstr ""
 
-#: plugins/dbg.py:166
+#: plugins/dbg.py:173
 msgid "Display wrap"
 msgstr ""
 
-#: plugins/dbg.py:167
+#: plugins/dbg.py:174
 msgid ""
 "When content in a line is too long, always auto wrap to show, and no "
 "scroll bar"
 msgstr ""
 
-#: plugins/dbg.py:181
+#: plugins/dbg.py:188
 msgid "Send Settings"
 msgstr ""
 
-#: plugins/dbg.py:184 plugins/protocol.py:263
+#: plugins/dbg.py:191 plugins/protocol.py:263
 msgid ""
 "Get send data as visible format, select encoding method at top right "
 "corner"
 msgstr ""
 
-#: plugins/dbg.py:185 plugins/protocol.py:264
+#: plugins/dbg.py:192 plugins/protocol.py:264
 msgid "Get send data as hex format, e.g. hex '31 32 33' equal to ascii '123'"
 msgstr ""
 
-#: plugins/dbg.py:187
+#: plugins/dbg.py:194
 msgid ""
 "Timed Send\n"
 "ms"
 msgstr ""
 
-#: plugins/dbg.py:188 plugins/dbg.py:191
+#: plugins/dbg.py:195 plugins/dbg.py:198
 msgid "Timed send, unit: ms"
 msgstr ""
 
-#: plugins/dbg.py:194 plugins/protocol.py:266
+#: plugins/dbg.py:201 plugins/protocol.py:266
 msgid "<CRLF>"
 msgstr ""
 
-#: plugins/dbg.py:195 plugins/protocol.py:267
+#: plugins/dbg.py:202 plugins/protocol.py:267
 msgid "Select to send \\r\\n instead of \\n"
 msgstr ""
 
-#: plugins/dbg.py:198
+#: plugins/dbg.py:205
 msgid "Record send data"
 msgstr ""
 
-#: plugins/dbg.py:199 plugins/protocol.py:269
+#: plugins/dbg.py:206 plugins/protocol.py:269
 msgid "Escape"
 msgstr ""
 
-#: plugins/dbg.py:200 plugins/protocol.py:270
+#: plugins/dbg.py:207 plugins/protocol.py:270
 msgid "Enable escape characters support like \\t \\r \\n \\x01 \\001"
 msgstr ""
 
-#: plugins/dbg.py:201
+#: plugins/dbg.py:208
 msgid "Newline"
 msgstr ""
 
-#: plugins/dbg.py:202
+#: plugins/dbg.py:209
 msgid "Auto add new line when send"
 msgstr ""
 
-#: plugins/dbg.py:230
+#: plugins/dbg.py:237
 msgid "Auto line feed value error, must be integer"
 msgstr ""
 
-#: plugins/dbg.py:231
+#: plugins/dbg.py:238
 msgid "Timed send value error, must be integer"
 msgstr ""
 
-#: plugins/dbg.py:242
+#: plugins/dbg.py:249
 msgid "Open File"
 msgstr ""
 
-#: plugins/dbg.py:243
+#: plugins/dbg.py:250
 msgid "Send File"
 msgstr ""
 
-#: plugins/dbg.py:244
+#: plugins/dbg.py:251
 msgid "Clear History"
 msgstr ""
 
-#: plugins/dbg.py:247
+#: plugins/dbg.py:254
 msgid "Sendding File"
 msgstr ""
 
-#: plugins/dbg.py:253
+#: plugins/dbg.py:260
 msgid "Save log"
 msgstr ""
 
-#: plugins/dbg.py:256
+#: plugins/dbg.py:263
 msgid "Cutom send"
 msgstr ""
 
-#: plugins/dbg.py:288
+#: plugins/dbg.py:295
 msgid "Log path"
 msgstr ""
 
-#: plugins/dbg.py:289
+#: plugins/dbg.py:296
 msgid "Auto new file"
 msgstr ""
 
-#: plugins/dbg.py:290
-msgid "When start a new connection, will automatically create a new log file"
-msgstr ""
-
-#: plugins/dbg.py:291
+#: plugins/dbg.py:297
 msgid "Save time stamp"
 msgstr ""
 
-#: plugins/dbg.py:384
+#: plugins/dbg.py:298
+msgid "When start a new connection, will automatically create a new log file"
+msgstr ""
+
+#: plugins/dbg.py:395
 msgid "linefeed always on if timestamp or record send is on"
 msgstr ""
 
-#: plugins/dbg.py:419
+#: plugins/dbg.py:430
 msgid "History cleared!"
 msgstr ""
 
-#: plugins/dbg.py:426 plugins/graph.py:205 plugins/protocol.py:489
+#: plugins/dbg.py:437 plugins/graph.py:209 plugins/protocol.py:489
 msgid "Send data failed!"
 msgstr ""
 
-#: plugins/dbg.py:431
+#: plugins/dbg.py:442
 msgid "Send file"
 msgstr ""
 
-#: plugins/dbg.py:435
+#: plugins/dbg.py:446
 msgid "Send file failed!"
 msgstr ""
 
-#: plugins/dbg.py:464
+#: plugins/dbg.py:475
 msgid "Log file (*.log);;txt file (*.txt);;All Files (*)"
 msgstr ""
 
-#: plugins/dbg.py:574
+#: plugins/dbg.py:607
 msgid ""
 "File path error\n"
 "path"
 msgstr ""
 
-#: plugins/dbg.py:577
+#: plugins/dbg.py:610
 msgid "Connect first please"
 msgstr ""
 
-#: plugins/dbg.py:580
+#: plugins/dbg.py:613
 msgid "Sending file"
 msgstr ""
 
-#: plugins/dbg.py:591
+#: plugins/dbg.py:624
 msgid "Time format error"
 msgstr ""
 
-#: plugins/dbg.py:648
+#: plugins/dbg.py:681
 msgid "Send Error"
 msgstr ""
 
-#: plugins/dbg.py:656
+#: plugins/dbg.py:689
 msgid "get data error"
 msgstr ""
 
@@ -668,23 +668,31 @@ msgstr ""
 msgid "Graph"
 msgstr ""
 
-#: plugins/graph.py:53
+#: plugins/graph.py:54
 msgid "Double click graph item to add a graph widget"
 msgstr ""
 
-#: plugins/graph.py:53
+#: plugins/graph.py:54
 msgid "line chart plot protocol:"
 msgstr ""
 
-#: plugins/graph.py:145
+#: plugins/graph.py:59
+msgid "Full demo see:"
+msgstr ""
+
+#: plugins/graph.py:61
+msgid "Install comtool by <code>pip install comtool</code> first"
+msgstr ""
+
+#: plugins/graph.py:149
 msgid "Double click to add a graph widget"
 msgstr ""
 
-#: plugins/graph.py:175
+#: plugins/graph.py:179
 msgid "Clear count"
 msgstr ""
 
-#: plugins/graph_widget_metasenselite.py:297 plugins/graph_widgets.py:50
+#: plugins/graph_widget_metasenselite.py:297 plugins/graph_widgets.py:49
 msgid "Remove"
 msgstr ""
 
@@ -700,8 +708,8 @@ msgstr ""
 #: plugins/graph_widget_metasenselite.py:578
 #: plugins/graph_widget_metasenselite.py:580
 #: plugins/graph_widget_metasenselite.py:589 plugins/graph_widgets.py:57
-#: plugins/graph_widgets.py:128 plugins/graph_widgets.py:130
-#: plugins/graph_widgets.py:139
+#: plugins/graph_widgets.py:137 plugins/graph_widgets.py:139
+#: plugins/graph_widgets.py:148
 msgid "Set"
 msgstr ""
 
@@ -783,8 +791,12 @@ msgstr ""
 msgid "Y:"
 msgstr ""
 
-#: plugins/graph_widget_metasenselite.py:591 plugins/graph_widgets.py:141
+#: plugins/graph_widget_metasenselite.py:591 plugins/graph_widgets.py:150
 msgid "Format error"
+msgstr ""
+
+#: plugins/graph_widgets.py:50
+msgid "Clear"
 msgstr ""
 
 #: plugins/graph_widgets.py:51
