@@ -1,4 +1,10 @@
 
+if __name__ == "__main__":
+    import sys, os
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+    sys.path.insert(0, path)
+    sys.path.insert(0, os.path.join(path, ".."))
+
 from PyQt5.QtCore import pyqtSignal,Qt, QRect, QMargins, QObject, pyqtSlot
 from PyQt5.QtWidgets import (QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
@@ -466,9 +472,6 @@ class Serial(COMM):
         return self.status == ConnectionStatus.CONNECTED
 
 if __name__ == "__main__":
-    import sys, os
-    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
-    sys.path.insert(0, "")
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
 

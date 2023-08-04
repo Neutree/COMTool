@@ -828,7 +828,8 @@ class Plugin(Plugin_Base):
     def onReceived(self, data : bytes):
         self.receivedData.append(data)
         self.statusBar.addRx(len(data))
-        self.lock.release()
+        if self.lock.locked():
+            self.lock.release()
 
     def receiveDataProcess(self):
         self.receiveProgressStop = False
