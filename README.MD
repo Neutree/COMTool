@@ -239,6 +239,7 @@ cd dist
 ls
 ```
 
+> It's better to create a virtual environment before pack to decrease the size of binary
 
 
 ## Development
