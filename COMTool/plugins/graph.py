@@ -69,7 +69,7 @@ frame = graph_protocol.plot_pack(name, x, y, header= b'\\xAA\\xCC\\xEE\\xBB')
 /*******'''+ _('For ASCII protocol("binary protocol" not checked)') + ''' *******/
 /**
  * $[line name],[x],[y]&lt;,checksum&gt;\\n
- *   ''' + _('"$" means start of frame, "," means separator') + ''',
+ *   ''' + _('"$" means start of frame, end with "\\n" "," means separator') + ''',
  *   ''' + _('checksum is optional, checksum is sum of all bytes in frame except ",checksum".') + '''
  *   ''' + _('e.g.') + '''
  *     "$roll,1.0,2.0\\n"
@@ -85,7 +85,7 @@ int plot_pack_ascii(uint8_t *buff, int buff_len, const char *name, float x, floa
     {
         sum += buff[i];
     }
-    snprintf(buff + strlen(buff), buff_len - strlen(buff), ",%d\n", sum & 0xFF);
+    snprintf(buff + strlen(buff), buff_len - strlen(buff), ",%d\\n", sum & 0xFF);
     return strlen(buff);
 }
 

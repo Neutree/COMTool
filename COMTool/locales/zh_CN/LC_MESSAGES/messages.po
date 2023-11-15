@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/Neutree/COMTool/issues\n"
-"POT-Creation-Date: 2023-11-15 21:31+0800\n"
+"POT-Creation-Date: 2023-11-15 22:11+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -683,8 +683,8 @@ msgid "For ASCII protocol(\"binary protocol\" not checked)"
 msgstr "对于 字符（ASCII）协议（\"二进制协议\"选项未选中）"
 
 #: plugins/graph.py:72
-msgid "\"$\" means start of frame, \",\" means separator"
-msgstr "\"$\" 代表帧开始，\",\" 代表分隔符"
+msgid "\"$\" means start of frame, end with \"\\n\" \",\" means separator"
+msgstr "\"$\" 代表帧开始，已\"\\n\"结尾，\",\" 代表分隔符"
 
 #: plugins/graph.py:73
 msgid ""
