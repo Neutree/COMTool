@@ -54,13 +54,50 @@ class Plugin(Plugin_Base):
         _("Double click graph item to add a graph widget"), _("line chart plot protocol:"),
 '''
 from COMTool.plugins import graph_protocol
+
+# For ASCII protocol("binary protocol" not checked)
+frame = graph_protocol.plot_pack(name, x, y, binary = False)
+
+# For binary protocol("binary protocol" checked)
 frame = graph_protocol.plot_pack(name, x, y, header= b'\\xAA\\xCC\\xEE\\xBB')
 ''',
         _("Full demo see:"),
         '<a href="https://github.com/Neutree/COMTool/tree/master/tool/send_curve_demo.py">https://github.com/Neutree/COMTool/tree/master/tool/send_curve_demo.py</a>',
         _("Install comtool by <code>pip install comtool</code> first"),
 '''
-void plot_pack(uint8_t *buff, int buff_len,
+
+/*******'''+ _('For ASCII protocol("binary protocol" not checked)') + ''' *******/
+/**
+ * $[line name],[x],[y]&lt;,checksum&gt;\\n
+ *   ''' + _('"$" means start of frame, "," means separator') + ''',
+ *   ''' + _('checksum is optional, checksum is sum of all bytes in frame except ",checksum".') + '''
+ *   ''' + _('e.g.') + '''
+ *     "$roll,1.0,2.0\\n"
+ *     "$pitch,1.0,2.0\\r\\n"
+ *     "$pitch,1.0,2.0,179\\n" (179 = sum(b"$pitch,1.0,2.0") % 256)
+ */
+int plot_pack_ascii(uint8_t *buff, int buff_len, const char *name, float x, float y)
+{
+    snprintf(buff, buff_len, "$%s,%f,%f", name, x, y);
+    // add checksum
+    int sum = 0;
+    for (int i = 0; i &lt; strlen(buff); i++)
+    {
+        sum += buff[i];
+    }
+    snprintf(buff + strlen(buff), buff_len - strlen(buff), ",%d\n", sum & 0xFF);
+    return strlen(buff);
+}
+
+uint8_t buff[64];
+double x = 1.0, y = 2.0;
+int len = plot_pack_ascii(buff, sizeof(buff), header, sizeof(header), "data1", x, y);
+send_bytes(buff, len);
+/*****************************************************************/
+
+
+/******* ''' + _('For binary protocol("binary protocol" checked)') + ''' *******/
+int plot_pack_binary(uint8_t *buff, int buff_len,
                uint8_t *header, int header_len,
                char *name,
                double x, double y)
@@ -80,7 +117,17 @@ void plot_pack(uint8_t *buff, int buff_len,
         sum += buff[i];
     }
     buff[header_len+1+len+8+8] = (uint8_t)(sum & 0xff);
+    return header_len+1+len+8+8+1;
 }
+
+uint8_t buff[64];
+uint8_t header[] = {0xAA, 0xCC, 0xEE, 0xBB};
+double x = 1.0, y = 2.0;
+int len = plot_pack_binary(buff, sizeof(buff), header, sizeof(header), "data1", x, y);
+send_bytes(buff, len);
+/*****************************************************************/
+
+
 ''')
 
     def __init__(self):

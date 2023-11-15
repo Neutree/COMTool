@@ -35,7 +35,8 @@ class Graph_Plot(Graph_Widget_Base):
         default = {
             "xRange": 10,
             "xRangeEnable": True,
-            "header": "\\xAA\\xCC\\xEE\\xBB"
+            "header": "\\xAA\\xCC\\xEE\\xBB",
+            "binary_protocol": False,
         }
         super().__init__(parent, hintSignal=hintSignal, rmCallback=rmCallback,
                          send=send, config=config, defaultConfig=default)
@@ -52,12 +53,16 @@ class Graph_Plot(Graph_Widget_Base):
         rangeConf = QLineEdit(str(self.config["xRange"]))
         rangeEnable = QCheckBox(_("Enable"))
         rangeEnable.setChecked(self.config["xRangeEnable"])
+        self.binary_protocol = QCheckBox(_("Binary Protocol"))
         headerLabel = QLabel(_("Header:"))
         headerConf = QLineEdit(self.config["header"])
         self.headerBtn = QPushButton(_("Set"))
         hint = _("Protocol: header + 1Byte name length + name + 8Bytes x(double) + 8Bytes y(double) + 1Byte sum\n"
                  "Protocol example code see help")
         headerConf.setToolTip(hint)
+        self.binary_widgets = [headerLabel, headerConf, self.headerBtn]
+        self.binary_protocol.setToolTip(_('Check this if you want to use binary protocol, or use ASCII protocol(e.g. "$data1,10.0,200.0\\n"), more see help button on the top of window'))
+        self.show_binary_protocol_widgets(self.config["binary_protocol"])
         headerLabel.setToolTip(hint)
         self.headerBtn.setToolTip(hint)
         validator = QDoubleValidator()
@@ -68,9 +73,10 @@ class Graph_Plot(Graph_Widget_Base):
         self.layout.addWidget(rangeLabel, 2, 0, 1, 1)
         self.layout.addWidget(rangeConf, 2, 1, 1, 1)
         self.layout.addWidget(rangeEnable, 2, 2, 1, 1)
-        self.layout.addWidget(headerLabel, 3, 0, 1, 1)
-        self.layout.addWidget(headerConf, 3, 1, 1, 1)
-        self.layout.addWidget(self.headerBtn, 3, 2, 1, 1)
+        self.layout.addWidget(self.binary_protocol, 3, 0, 1, 1)
+        self.layout.addWidget(headerLabel, 4, 0, 1, 1)
+        self.layout.addWidget(headerConf, 4, 1, 1, 1)
+        self.layout.addWidget(self.headerBtn, 4, 2, 1, 1)
         self.resize(600, 400)
         self.p = self.plotWin.addPlot(colspan=2)
         # self.p.setLabel('bottom', 'x', '')
@@ -114,9 +120,19 @@ class Graph_Plot(Graph_Widget_Base):
         rmBtn.clicked.connect(self.remove)
         headerConf.textChanged.connect(self.headerChanged)
         clearBtn.clicked.connect(self.clear)
+        self.binary_protocol.clicked.connect(self.en_binary_protocol)
 
     def remove(self):
         self.rmCallback(self)
+
+    def en_binary_protocol(self):
+        self.rawData = b''
+        self.config["binary_protocol"] = self.binary_protocol.isChecked()
+        self.show_binary_protocol_widgets(self.config["binary_protocol"])
+
+    def show_binary_protocol_widgets(self, show=True):
+        for w in self.binary_widgets:
+            w.setVisible(show)
 
     def clear(self):
         self.data = {}
@@ -195,6 +211,72 @@ class Graph_Plot(Graph_Widget_Base):
             self.data[name]["y"].append(y)
         return True, self.data
 
+    def decodeDataAscii(self, data: bytes):
+        '''
+            @data bytes, protocol:
+                         $[line name],[x],[y]<,checksum>\n
+                         "$" means start of frame, "," means separator,
+                            checksum is optional, checksum is sum of all bytes in frame except ",checksum".
+                         e.g.
+                            "$roll,1.0,2.0\n"
+                            "$pitch,1.0,2.0\r\n"
+                            "$pitch,1.0,2.0,179\n" , the 179 = sum(ord(c) for c in "$pitch,1.0,2.0") % 256
+            @return haveFrame, dict {
+                "name": {
+                    "x": [],
+                    "y": []
+                }
+            }
+        '''
+        # append data
+        self.rawData += data
+        # find header
+        header = b"$"
+        end = b"\n"
+        idx = self.rawData.find(header)
+        if idx < 0:
+            return False, self.data
+        self.rawData = self.rawData[idx:]
+        # find \n
+        idx = self.rawData.find(end)
+        if idx < 0:
+            return False, self.data
+        # get data
+        frame = self.rawData[1:idx] # pitch,1.0,2.0  pitch,1.0,2.0,179
+        self.rawData = self.rawData[idx + 1:]
+        items = frame.split(b",")
+        if len(items) != 3 and len(items) != 4:
+            print("-- format error, frame item len(%s, should 3 or 4) error: %s" % (len(items), frame))
+            return False, self.data
+        try:
+            x = float(items[1])
+            y = float(items[2])
+        except Exception:
+            print("-- x or y format error, frame: %s" % frame)
+            return False, self.data
+        # checksum
+        if len(items) == 4:
+            try:
+                _sum = int(items[3])
+            except Exception:
+                print("-- checksum format error({} not int), frame: {}".format(items[3], frame))
+                return False, self.data
+            # get last , index
+            idx = frame.rfind(b",")
+            if sum(header + frame[:idx]) % 256 != _sum:
+                print("-- checksum error")
+                return False, self.data
+        name = items[0].decode("utf-8")
+        if not name in self.data:
+            self.data[name] = {
+                "x": [x],
+                "y": [y]
+            }
+        else:
+            self.data[name]["x"].append(x)
+            self.data[name]["y"].append(y)
+        return True, self.data
+
     def pickColor(self, name: str):
         if name in self.colors:
             return self.colors[name]
@@ -221,7 +303,7 @@ class Graph_Plot(Graph_Widget_Base):
 
     def onData(self, data: bytes):
         while 1:
-            haveFrame, allData = self.decodeData(data)
+            haveFrame, allData = self.decodeData(data) if self.config["binary_protocol"] else self.decodeDataAscii(data)
             if not haveFrame:
                 break
             data = b''
