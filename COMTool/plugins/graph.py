@@ -91,7 +91,7 @@ int plot_pack_ascii(uint8_t *buff, int buff_len, const char *name, float x, floa
 
 uint8_t buff[64];
 double x = 1.0, y = 2.0;
-int len = plot_pack_ascii(buff, sizeof(buff), header, sizeof(header), "data1", x, y);
+int len = plot_pack_ascii(buff, sizeof(buff), "data1", x, y);
 send_bytes(buff, len);
 /*****************************************************************/
 
