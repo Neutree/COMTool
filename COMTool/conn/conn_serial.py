@@ -39,7 +39,7 @@ class Serial(COMM):
             onInit
             onWidget
             onUiInitDone
-                isConnected
+                isConnected or getConnStatus
                 send
             getConfig
     '''
@@ -461,6 +461,7 @@ class Serial(COMM):
                     except Exception:
                         pass
                     waitingReconnect = True
+                    self.status = ConnectionStatus.LOSE
                     self.onConnectionStatus.emit(ConnectionStatus.LOSE, _("Connection lose!"))
                     self.showSwitchSignal.emit(ConnectionStatus.LOSE)
 
@@ -469,7 +470,10 @@ class Serial(COMM):
         self.com.write(data)
 
     def isConnected(self):
-        return self.status == ConnectionStatus.CONNECTED
+        return (self.status == ConnectionStatus.CONNECTED) or (self.status == ConnectionStatus.LOSE)
+
+    def getConnStatus(self):
+        return self.status
 
 if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication

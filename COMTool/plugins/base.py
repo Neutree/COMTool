@@ -24,12 +24,15 @@ class Plugin_Base(QObject):
             onWidget
             onUiInitDone
             onActive
-                send
-                onReceived
+                onConnChanged -> connCallbak   # in UI thread
+                send          # can call in UI thread directly
+                onReceived    # in receive thread
             onDel
     '''
     # vars set by caller
     isConnected = lambda o: False
+    getConnStatus = lambda o: ConnectionStatus.CLOSED
+    connCallbak = lambda status,msg:None
     send = lambda o,x,y:None          # send(data_bytes=None, file_path=None, callback=lambda ok,msg:None), can call in UI thread directly
     ctrlConn = lambda o,k,v:None      # call ctrl func of connection
     hintSignal = None               # hintSignal.emit(type(error, warning, info), title, msg)
@@ -82,6 +85,7 @@ class Plugin_Base(QObject):
             self.statusBar.setMsg("warning", '{} {}'.format(_("Connection lose"), msg))
         else:
             self.statusBar.setMsg("warning", msg)
+        self.connCallbak(self, status, msg)
 
     def onWidgetMain(self, parent):
         '''

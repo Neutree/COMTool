@@ -12,9 +12,11 @@ import json
 try:
     from i18n import _
     from Combobox import ComboBox
+    from conn import ConnectionStatus, conns
     from parameters import log, configFilePath
 except ImportError:
     from COMTool.Combobox import ComboBox
+    from COMTool.conn import ConnectionStatus, conns
     from COMTool.i18n import _
     from COMTool.parameters import log, configFilePath
 
@@ -25,7 +27,8 @@ class PluginItem:
     def __init__(self, name, pluginClass,
                     connClasses, connsConfigs,
                     globalConfig, itemConfig,
-                    hintSignal, reloadWindowSignal):
+                    hintSignal, reloadWindowSignal,
+                    connCallback):
         '''
             item show name, e.g. dbg-1
         '''
@@ -50,6 +53,7 @@ class PluginItem:
         self.plugin.ctrlConn = self.ctrlConn
         self.plugin.hintSignal = self.hintSignal
         self.plugin.reloadWindowSignal = self.reloadWindowSignal
+        self.plugin.connCallbak = connCallback
         self.plugin.onInit(config=itemConfig)
         if not "version" in itemConfig:
             raise Exception("{} {}".format(_("version not found in config of plugin:"), self.plugin.id))
@@ -203,6 +207,7 @@ class PluginItem:
         self.connsParent.layout().addWidget(self.currConnWidget)
         self.conns[idx].onReceived = self.onReceived
         self.plugin.isConnected = self.conns[idx].isConnected
+        self.plugin.getConnStatus = self.conns[idx].getConnStatus
         self.conns[idx].onConnectionStatus.connect(self.onConnStatus)
         self.connsConfigs["currConn"] = self.conns[idx].id
         self.currConnIdx = idx
@@ -223,11 +228,12 @@ class PluginItem:
     def onConnChanged(self, idx):
         self.conns[self.currConnIdx].disconnect()
         self._setConn(idx)
+        self.onConnStatus(ConnectionStatus.CLOSED, _("Change connection, auto close old connection"))
 
     def ctrlConn(self, k, v):
         self.conns[self.currConnIdx].ctrl(k, v)
 
-    def onConnStatus(self, status, msg):
+    def onConnStatus(self, status:ConnectionStatus, msg):
         self.plugin.onConnChanged(status, msg)
         if self.sendProcess is None:
             self.sendProcess = threading.Thread(target=self.sendDataProcess)

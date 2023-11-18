@@ -191,7 +191,8 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         item = PluginItem(name, pluginClass,
                         conns, connsConfigs,
                         self.config, pluginConfig,
-                        self.hintSignal, self.reloadWindowSignal)
+                        self.hintSignal, self.reloadWindowSignal,
+                        self.onConnChnaged)
         self.tabAddItem(item)
         self.items.append(item)
         if setCurrent:
@@ -210,6 +211,23 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
     def tabAddItem(self, item):
         self.tabWidget.addTab(item.widget, item.name)
         self.tabWidget.setTabToolTip(self.tabWidget.count() - 1, item.name + _(", Double click to detach as a window"))
+
+    def onConnChnaged(self, plugin, status:ConnectionStatus, msg):
+        for item in self.items:
+            if item.plugin == plugin:
+                for i in range(self.tabWidget.count()):
+                    if self.tabWidget.widget(i) == item.widget:
+                        self.setTabIcon(status, i)
+                        break
+                item.widget.setWindowTitle(item.name + " - {}".format(_("Connected" if status == ConnectionStatus.CONNECTED else _("Connection lose") if status == ConnectionStatus.LOSE else _("Disconnected"))))
+
+    def setTabIcon(self, status:ConnectionStatus, i:int):
+        if status == ConnectionStatus.CONNECTED:
+            self.tabWidget.setTabIcon(i, qta.icon("fa.circle", color="#4caf50"))
+        elif status == ConnectionStatus.LOSE:
+            self.tabWidget.setTabIcon(i, qta.icon("fa.circle", color="orange"))
+        else:
+            self.tabWidget.setTabIcon(i, QIcon())
 
     def addPluginInfo(self, pluginClass):
         self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1,
@@ -459,11 +477,19 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def recoverTab(self, item, parent):
         # prevent close and add this widget to tab
-        for i, _item in enumerate(self.items):
-            if _item == item:
+        idx = self.items.index(item)
+        for i in range(self.tabWidget.count()):
+            widget = self.tabWidget.widget(i)
+            for _item in self.items:
+                if _item.widget == widget:
+                    idx2 = self.items.index(_item)
+                    break
+            if idx2 > idx:
                 self.tabWidget.insertTab(i, item.widget, item.name)
                 self.tabWidget.setCurrentIndex(i)
                 item.widget.setWindowFlag(Qt.Window, False)
+                status = item.plugin.getConnStatus()
+                self.setTabIcon(status, i)
                 break
 
 
@@ -567,10 +593,12 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         item = self.getCurrentItem()
         item.onKeyReleaseEvent(event)
 
-    def getCurrentItem(self):
+    def getCurrentItem(self, idx = False):
         widget = self.tabWidget.currentWidget()
         for item in self.items:
             if item.widget == widget:
+                if idx:
+                    return self.tabWidget.indexOf(widget), item
                 return item
 
     def toggleSettings(self):

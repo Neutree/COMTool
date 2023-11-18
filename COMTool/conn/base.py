@@ -17,7 +17,7 @@ class COMM(QObject):
             onInit
             onWidget
             onUiInitDone
-                isConnected
+                isConnected or getConnStatus
                 send
             getConfig
             onDel
@@ -56,6 +56,9 @@ class COMM(QObject):
         raise NotImplementedError()
 
     def isConnected(self):
+        raise NotImplementedError()
+
+    def getConnStatus(self):
         raise NotImplementedError()
 
     def disconnect(self):

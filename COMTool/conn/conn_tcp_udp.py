@@ -33,7 +33,7 @@ class TCP_UDP(COMM):
             onInit
             onWidget
             onUiInitDone
-                isConnected
+                isConnected or getConnStatus
                 send
             getConfig
     '''
@@ -596,4 +596,7 @@ class TCP_UDP(COMM):
 
     def isConnected(self):
         return self.status == ConnectionStatus.CONNECTED
+
+    def getConnStatus(self):
+        return self.status
 

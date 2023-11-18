@@ -65,6 +65,13 @@ class SSH_CONN:
             return False
         return not self.channel.closed
 
+    def getConnStatus(self):
+        if not self.channel:
+            return ConnectionStatus.DISCONNECTED
+        if self.channel.closed:
+            return ConnectionStatus.DISCONNECTED
+        return ConnectionStatus.CONNECTED
+
     def resize(self, w, h):
         if self.channel:
             self.channel.resize_pty(width=w, height=h)
@@ -76,7 +83,7 @@ class SSH(COMM):
             onInit
             onWidget
             onUiInitDone
-                isConnected
+                isConnected or getConnStatus
                 send
             getConfig
     '''
@@ -414,6 +421,9 @@ class SSH(COMM):
 
     def isConnected(self):
         return self.status == ConnectionStatus.CONNECTED
+
+    def getConnStatus(self):
+        return self.status
 
     def ctrl(self, k, v):
         if not self.conn:

@@ -23,6 +23,7 @@ class Plugin(Plugin_Base):
     updateSignal = pyqtSignal(str, str)
 
     def onConnChanged(self, status:ConnectionStatus, msg:str):
+        super().onConnChanged(status, msg)
         print("-- connection changed: {}, msg: {}".format(status, msg))
 
     def onWidgetMain(self, parent):
