@@ -209,6 +209,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def tabAddItem(self, item):
         self.tabWidget.addTab(item.widget, item.name)
+        self.tabWidget.setTabToolTip(self.tabWidget.count() - 1, item.name + _(", Double click to detach as a window"))
 
     def addPluginInfo(self, pluginClass):
         self.pluginsSelector.insertItem(self.pluginsSelector.count() - 1,
@@ -383,6 +384,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # main
         self.tabWidget.currentChanged.connect(self.onSwitchTab)
         self.tabWidget.tabCloseRequested.connect(self.closeTab)
+        self.tabWidget.tabBarDoubleClicked.connect(self.onTabDoubleClicked)
         # others
         self.updateSignal.connect(self.showUpdate)
         self.hintSignal.connect(self.showHint)
@@ -429,20 +431,41 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         varObj.__setattr__(varName, v)
 
     def onSwitchTab(self, idx):
-        self.config["currItem"] = self.items[idx].name
         item = self.getCurrentItem()
-        item.plugin.onActive()
+        if item:
+            self.config["currItem"] = item.name
+            item.plugin.onActive()
 
     def closeTab(self, idx):
         # only one, ignore
         if self.tabWidget.count() == 1:
             return
+        item = self.getCurrentItem()
         self.tabWidget.removeTab(idx)
-        item = self.items.pop(idx)
         for _item in self.config["items"]:
             if _item["name"] == item.name:
                 self.config["items"].remove(_item)
                 break
+        self.items.remove(item)
+
+    def onTabDoubleClicked(self, idx):
+        item = self.getCurrentItem()
+        self.tabWidget.removeTab(idx)
+        parent = item.widget.parent()
+        item.widget.setWindowFlag(Qt.Window)
+        item.widget.setWindowTitle(item.name)
+        item.widget.closeEvent = lambda event: self.recoverTab(item, parent)
+        item.widget.show()
+
+    def recoverTab(self, item, parent):
+        # prevent close and add this widget to tab
+        for i, _item in enumerate(self.items):
+            if _item == item:
+                self.tabWidget.insertTab(i, item.widget, item.name)
+                self.tabWidget.setCurrentIndex(i)
+                item.widget.setWindowFlag(Qt.Window, False)
+                break
+
 
     def updateStyle(self, widget):
         self.frameWidget.style().unpolish(widget)

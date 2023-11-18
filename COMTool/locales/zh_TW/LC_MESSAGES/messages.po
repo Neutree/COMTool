@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-11-15 22:11+0800\n"
+"POT-Creation-Date: 2023-11-18 15:36+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -66,8 +66,12 @@ msgstr "如果這個軟件幫助您，我可以給您一杯咖啡"
 msgid "Load plugin from file"
 msgstr "從檔案載入外掛程式"
 
+#: main2.py:212
+msgid ", Double click to detach as a window"
+msgstr ""
+
 #: conn/conn_serial.py:337 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:410
-#: main2.py:229 main2.py:279 main2.py:422 main2.py:427 main2.py:723
+#: main2.py:230 main2.py:280 main2.py:424 main2.py:429 main2.py:746
 #: pluginItems.py:169 pluginItems.py:172 pluginItems.py:273 pluginItems.py:285
 #: plugins/base.py:165 plugins/base.py:170 plugins/base.py:186
 #: plugins/base.py:195 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:588
@@ -80,64 +84,64 @@ msgstr "從檔案載入外掛程式"
 msgid "Error"
 msgstr "錯誤"
 
-#: main2.py:229
+#: main2.py:230
 msgid "Load plugin failed"
 msgstr "載入外掛程式失敗"
 
-#: main2.py:250
+#: main2.py:251
 msgid "Load plugin fail"
 msgstr "載入外掛程式失敗"
 
-#: conn/conn_ssh.py:232 main2.py:273 pluginItems.py:149 pluginItems.py:162
+#: conn/conn_ssh.py:232 main2.py:274 pluginItems.py:149 pluginItems.py:162
 #: plugins/dbg.py:448 plugins/dbg.py:462
 msgid "Select file"
 msgstr "選擇文件"
 
-#: main2.py:275
+#: main2.py:276
 msgid "python script (*.py)"
 msgstr "python 程式 (*.py)"
 
-#: main2.py:370
+#: main2.py:371
 msgid "New Window"
 msgstr "開新視窗"
 
-#: main2.py:457 main2.py:466
+#: main2.py:480 main2.py:489
 msgid "Restart now?"
 msgstr "現在就重啟？"
 
-#: main2.py:458
+#: main2.py:481
 msgid "language changed to: "
 msgstr "語言更改為："
 
-#: main2.py:458
+#: main2.py:481
 msgid "Restart software to take effect now?"
 msgstr "現在就重啟軟件以生效？"
 
-#: main2.py:507 main2.py:508
+#: main2.py:530 main2.py:531
 msgid "Closing ..."
 msgstr "關閉中..."
 
-#: main2.py:608
+#: main2.py:631
 msgid "About"
 msgstr "關於"
 
-#: main2.py:630
+#: main2.py:653
 msgid "New versioin detected, please click learn more to download"
 msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
 
-#: main2.py:631
+#: main2.py:654
 msgid "Learn More"
 msgstr "瞭解更多"
 
-#: main2.py:632
+#: main2.py:655
 msgid "Skip this version"
 msgstr "跳過此版本"
 
-#: main2.py:633
+#: main2.py:656
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: main2.py:634
+#: main2.py:657
 msgid "Need update"
 msgstr "需要更新"
 
