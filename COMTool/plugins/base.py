@@ -87,6 +87,13 @@ class Plugin_Base(QObject):
             self.statusBar.setMsg("warning", msg)
         self.connCallbak(self, status, msg)
 
+    def onIsAddConnWidget(self):
+        '''
+            Auto add connection widget to the left or not, default is True.
+            Override this method to return False if you don't want to add connection widget.
+        '''
+        return False
+
     def onWidgetMain(self, parent):
         '''
             main widget, just return a QWidget object

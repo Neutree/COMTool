@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/Neutree/COMTool/issues\n"
-"POT-Creation-Date: 2023-11-18 15:36+0800\n"
+"POT-Creation-Date: 2023-11-20 21:57+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -66,139 +66,155 @@ msgstr "如果有帮助到你，可以赏半杯咖啡"
 msgid "Load plugin from file"
 msgstr "从文件加载插件"
 
-#: main2.py:212
+#: main2.py:213
 msgid ", Double click to detach as a window"
 msgstr ", 双击以分离为窗口"
 
-#: conn/conn_serial.py:337 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:410
-#: main2.py:230 main2.py:280 main2.py:424 main2.py:429 main2.py:746
-#: pluginItems.py:169 pluginItems.py:172 pluginItems.py:273 pluginItems.py:285
-#: plugins/base.py:165 plugins/base.py:170 plugins/base.py:186
-#: plugins/base.py:195 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:588
+#: main2.py:222 plugins/base.py:79
+msgid "Connected"
+msgstr "已连接"
+
+#: main2.py:222 plugins/base.py:85
+msgid "Connection lose"
+msgstr "连接丢失"
+
+#: main2.py:222
+msgid "Disconnected"
+msgstr "已断开"
+
+#: conn/conn_serial.py:337 conn/conn_ssh.py:296 conn/conn_tcp_udp.py:410
+#: main2.py:248 main2.py:298 main2.py:442 main2.py:447 main2.py:774
+#: pluginItems.py:176 pluginItems.py:179 pluginItems.py:287 pluginItems.py:299
+#: plugins/base.py:176 plugins/base.py:181 plugins/base.py:197
+#: plugins/base.py:206 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:588
 #: plugins/dbg.py:605 plugins/dbg.py:662 plugins/dbg.py:670
 #: plugins/graph.py:256 plugins/graph_widget_metasenselite.py:591
-#: plugins/graph_widgets.py:166 plugins/myplugin.py:61
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
+#: plugins/graph_widgets.py:166 plugins/myplugin.py:62
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:70
 #: plugins/protocol.py:466 plugins/protocol.py:480 plugins/protocol.py:489
 #: plugins/protocol.py:552
 msgid "Error"
 msgstr "错误"
 
-#: main2.py:230
+#: main2.py:248
 msgid "Load plugin failed"
 msgstr "加载插件失败"
 
-#: main2.py:251
+#: main2.py:269
 msgid "Load plugin fail"
 msgstr "加载插件失败"
 
-#: conn/conn_ssh.py:232 main2.py:274 pluginItems.py:149 pluginItems.py:162
+#: conn/conn_ssh.py:239 main2.py:292 pluginItems.py:156 pluginItems.py:169
 #: plugins/dbg.py:448 plugins/dbg.py:462
 msgid "Select file"
 msgstr "选择文件"
 
-#: main2.py:276
+#: main2.py:294
 msgid "python script (*.py)"
 msgstr "python 脚本 (*.py)"
 
-#: main2.py:371
+#: main2.py:389
 msgid "New Window"
 msgstr "新窗口"
 
-#: main2.py:480 main2.py:489
+#: main2.py:506 main2.py:515
 msgid "Restart now?"
 msgstr "现在就重启？"
 
-#: main2.py:481
+#: main2.py:507
 msgid "language changed to: "
 msgstr "语言更改为: "
 
-#: main2.py:481
+#: main2.py:507
 msgid "Restart software to take effect now?"
 msgstr "现在就重启软件以生效？"
 
-#: main2.py:530 main2.py:531
+#: main2.py:556 main2.py:557
 msgid "Closing ..."
 msgstr "关闭中 ..."
 
-#: main2.py:631
+#: main2.py:659
 msgid "About"
 msgstr "关于"
 
-#: main2.py:653
+#: main2.py:681
 msgid "New versioin detected, please click learn more to download"
 msgstr "检测到了新版本， 请点击 了解更多 以下载"
 
-#: main2.py:654
+#: main2.py:682
 msgid "Learn More"
 msgstr "了解更多"
 
-#: main2.py:655
+#: main2.py:683
 msgid "Skip this version"
 msgstr "跳过此版本"
 
-#: main2.py:656
+#: main2.py:684
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: main2.py:657
+#: main2.py:685
 msgid "Need update"
 msgstr "需要更新"
 
-#: pluginItems.py:55
+#: pluginItems.py:59
 msgid "version not found in config of plugin:"
 msgstr "插件配置无版本号:"
 
-#: conn/conn_tcp_udp.py:548 pluginItems.py:98
+#: conn/conn_tcp_udp.py:548 pluginItems.py:105
 msgid "Connection"
 msgstr "连接"
 
-#: pluginItems.py:123
+#: pluginItems.py:130
 msgid "Load config"
 msgstr "加载配置"
 
-#: pluginItems.py:124
+#: pluginItems.py:131
 msgid "Share config"
 msgstr "分享配置"
 
-#: pluginItems.py:151 pluginItems.py:164
+#: pluginItems.py:158 pluginItems.py:171
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
 
-#: pluginItems.py:169
+#: pluginItems.py:176
 msgid ""
 "Not support load global config file, you can copy config file mannually "
 "to "
 msgstr "不支持加载全局配置，你可以手动拷贝文件到 "
 
-#: pluginItems.py:172
+#: pluginItems.py:179
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr "配置不是这个插件的，配置是这个插件的: "
 
-#: pluginItems.py:175 plugins/dbg.py:384 plugins/dbg.py:591
+#: pluginItems.py:182 plugins/dbg.py:384 plugins/dbg.py:591
 #: plugins/protocol.py:574 plugins/protocol.py:596
 msgid "Warning"
 msgstr "警告"
 
-#: pluginItems.py:176
+#: pluginItems.py:183
 msgid "Config version not same, plugin config version:"
 msgstr "配置版本不同，插件配置版本:"
 
-#: pluginItems.py:177
+#: pluginItems.py:184
 msgid "now"
 msgstr "当前"
 
-#: pluginItems.py:178
+#: pluginItems.py:185
 msgid ""
 "this maybe lead to some problem, if happened, please remove it manually "
 "from config file"
 msgstr "这可能导致一些问题，如果发生了，请手动从配置文件中删除"
 
-#: pluginItems.py:195
+#: pluginItems.py:202
 msgid "Restart to load config?"
 msgstr "重启以加载配置"
 
-#: pluginItems.py:273
+#: pluginItems.py:238
+msgid "Change connection, auto close old connection"
+msgstr "更改连接，自动关闭旧连接"
+
+#: pluginItems.py:287
 msgid "Open file failed!"
 msgstr "打开失败"
 
@@ -258,7 +274,7 @@ msgstr "串口"
 msgid "Custom, input baudrate"
 msgstr "自定义，输入波特率"
 
-#: conn/conn_serial.py:113 conn/conn_ssh.py:144 conn/conn_tcp_udp.py:112
+#: conn/conn_serial.py:113 conn/conn_ssh.py:151 conn/conn_tcp_udp.py:112
 msgid "Port"
 msgstr "端口"
 
@@ -287,7 +303,7 @@ msgid "Check to enable(usually output low level)"
 msgstr "选中以使能（通常会输出低电平）"
 
 #: conn/conn_serial.py:154 conn/conn_serial.py:301 conn/conn_serial.py:393
-#: conn/conn_ssh.py:158 conn/conn_ssh.py:244 conn/conn_ssh.py:332
+#: conn/conn_ssh.py:165 conn/conn_ssh.py:251 conn/conn_ssh.py:339
 #: conn/conn_tcp_udp.py:137 conn/conn_tcp_udp.py:331 conn/conn_tcp_udp.py:442
 msgid "OPEN"
 msgstr "打开"
@@ -296,76 +312,76 @@ msgstr "打开"
 msgid "Open Failed"
 msgstr "打开失败"
 
-#: conn/conn_serial.py:396 conn/conn_serial.py:399 conn/conn_ssh.py:335
-#: conn/conn_ssh.py:338 conn/conn_tcp_udp.py:445 conn/conn_tcp_udp.py:448
+#: conn/conn_serial.py:396 conn/conn_serial.py:399 conn/conn_ssh.py:342
+#: conn/conn_ssh.py:345 conn/conn_tcp_udp.py:445 conn/conn_tcp_udp.py:448
 msgid "CLOSE"
 msgstr "关闭"
 
-#: conn/conn_serial.py:434 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:505
+#: conn/conn_serial.py:434 conn/conn_ssh.py:368 conn/conn_tcp_udp.py:505
 msgid "Reconnected"
 msgstr "已重连"
 
-#: conn/conn_serial.py:464 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:567
+#: conn/conn_serial.py:465 conn/conn_ssh.py:413 conn/conn_tcp_udp.py:567
 msgid "Connection lose!"
 msgstr "连接丢失！"
 
-#: conn/conn_ssh.py:143
+#: conn/conn_ssh.py:150
 msgid "Host"
 msgstr "主机"
 
-#: conn/conn_ssh.py:145
+#: conn/conn_ssh.py:152
 msgid "User"
 msgstr "用户"
 
-#: conn/conn_ssh.py:146
+#: conn/conn_ssh.py:153
 msgid "Password"
 msgstr "密码"
 
-#: conn/conn_ssh.py:147
+#: conn/conn_ssh.py:154
 msgid "SSH key"
 msgstr "SSH 公钥"
 
-#: conn/conn_ssh.py:148
+#: conn/conn_ssh.py:155
 msgid "Saved"
 msgstr "已保存"
 
-#: conn/conn_ssh.py:156
+#: conn/conn_ssh.py:163
 msgid "File"
 msgstr "文件"
 
-#: conn/conn_ssh.py:215
+#: conn/conn_ssh.py:222
 msgid "Input error"
 msgstr "输入错误"
 
-#: conn/conn_ssh.py:215
+#: conn/conn_ssh.py:222
 msgid "Input"
 msgstr "输入"
 
-#: conn/conn_ssh.py:215
+#: conn/conn_ssh.py:222
 msgid "error"
 msgstr "错误"
 
-#: conn/conn_ssh.py:234 plugins/dbg.py:450
+#: conn/conn_ssh.py:241 plugins/dbg.py:450
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: conn/conn_ssh.py:288 conn/conn_tcp_udp.py:409
+#: conn/conn_ssh.py:295 conn/conn_tcp_udp.py:409
 msgid "Connect Failed"
 msgstr "连接失败"
 
-#: conn/conn_ssh.py:299
+#: conn/conn_ssh.py:306
 msgid "Config error"
 msgstr "配置错误"
 
-#: conn/conn_ssh.py:326
+#: conn/conn_ssh.py:333
 msgid "SSH pub key file path error"
 msgstr "SSH 公钥文件路径错误"
 
-#: conn/conn_ssh.py:388 conn/conn_tcp_udp.py:526
+#: conn/conn_ssh.py:395 conn/conn_tcp_udp.py:526
 msgid "Closed by peer"
 msgstr "对方主动关闭连接"
 
-#: conn/conn_ssh.py:393 conn/conn_tcp_udp.py:552
+#: conn/conn_ssh.py:400 conn/conn_tcp_udp.py:552
 msgid "Connection closed!"
 msgstr "连接已关闭！"
 
@@ -405,27 +421,19 @@ msgstr "客户端已连接"
 msgid "closed!"
 msgstr "已关闭!"
 
-#: plugins/base.py:76
-msgid "Connected"
-msgstr "已连接"
-
-#: plugins/base.py:78
+#: plugins/base.py:81
 msgid "Closed"
 msgstr "已关闭"
 
-#: plugins/base.py:80
+#: plugins/base.py:83
 msgid "Connecting"
 msgstr "连接中"
 
-#: plugins/base.py:82
-msgid "Connection lose"
-msgstr "连接丢失"
-
-#: plugins/base.py:186
+#: plugins/base.py:197
 msgid "Format error, should be like 00 01 02 03"
 msgstr "格式错误，格式应该应该如 00 01 02 03"
 
-#: plugins/base.py:195
+#: plugins/base.py:206
 msgid "Escape is on, but escape error:"
 msgstr "转移符支持已打开，但是转义时错误"
 
@@ -741,8 +749,8 @@ msgstr "裸命令:"
 msgid "AT+ISP=0\\r"
 msgstr ""
 
-#: plugins/graph_widget_metasenselite.py:310 plugins/myplugin.py:43
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:51
+#: plugins/graph_widget_metasenselite.py:310 plugins/myplugin.py:44
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:52
 msgid "Send"
 msgstr "发送"
 
@@ -851,8 +859,8 @@ msgstr "使能二进制协议，否则使用 ASCII 协议(例如 \"$data1,10.0,2
 msgid "my plugin"
 msgstr "我的插件"
 
-#: plugins/myplugin.py:61
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
+#: plugins/myplugin.py:62
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:70
 msgid "Input data first please"
 msgstr "请先输入数据"
 

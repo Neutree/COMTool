@@ -58,9 +58,11 @@ class PluginItem:
         if not "version" in itemConfig:
             raise Exception("{} {}".format(_("version not found in config of plugin:"), self.plugin.id))
         # conn
-        self.conns, self.connWidgets = self.newConnWidgets()
+        self.isAddConn = self.plugin.onIsAddConnWidget()
+        if self.isAddConn:
+            self.conns, self.connWidgets = self.newConnWidgets()
         # frame
-        self.widget = self.newFrame()
+        self.widget = self.newFrame(self.isAddConn)
         self.uiLoadConfigs()
         self.initEvent()
     
@@ -82,7 +84,7 @@ class PluginItem:
             connsWidgets.append(widget)
         return conns, connsWidgets
 
-    def newFrame(self):
+    def newFrame(self, isAddConn):
         wrapper = QWidget()
         wrapperLayout = QVBoxLayout()
         wrapperLayout.setContentsMargins(0, 0, 0, 0)
@@ -99,20 +101,21 @@ class PluginItem:
         settingLayout = QVBoxLayout()
         self.settingWidget.setLayout(settingLayout)
         #    get connection settings widgets
-        connSettingsGroupBox = QGroupBox(_("Connection"))
-        layout = QVBoxLayout()
-        connSettingsGroupBox.setLayout(layout)
-        self.connSelectCommbox = ComboBox()
-        for conn in self.conns:
-            self.connSelectCommbox.addItem(conn.name)
-        layout.addWidget(self.connSelectCommbox)
-        layout.setContentsMargins(1, 6, 0, 0)
-        self.connsParent = QWidget()
-        layout2 = QVBoxLayout()
-        layout2.setContentsMargins(0, 0, 0, 0)
-        self.connsParent.setLayout(layout2)
-        layout.addWidget(self.connsParent)
-        settingLayout.addWidget(connSettingsGroupBox)
+        if isAddConn:
+            connSettingsGroupBox = QGroupBox(_("Connection"))
+            layout = QVBoxLayout()
+            connSettingsGroupBox.setLayout(layout)
+            self.connSelectCommbox = ComboBox()
+            for conn in self.conns:
+                self.connSelectCommbox.addItem(conn.name)
+            layout.addWidget(self.connSelectCommbox)
+            layout.setContentsMargins(1, 6, 0, 0)
+            self.connsParent = QWidget()
+            layout2 = QVBoxLayout()
+            layout2.setContentsMargins(0, 0, 0, 0)
+            self.connsParent.setLayout(layout2)
+            layout.addWidget(self.connsParent)
+            settingLayout.addWidget(connSettingsGroupBox)
         #    get settings widgets
         subSettingWidget = self.plugin.onWidgetSettings(widget)
         if not subSettingWidget is None:
@@ -199,6 +202,8 @@ class PluginItem:
                 self.reloadWindowSignal.emit("", _("Restart to load config?"), onClose)
 
     def _setConn(self, idx):
+        if not self.isAddConn:
+            return
         if self.currConnWidget:
             self.currConnWidget.setParent(None)
             self.conns[self.currConnIdx].onReceived = lambda x:None
@@ -214,16 +219,18 @@ class PluginItem:
 
 
     def uiLoadConfigs(self):
-        loadedIdx = 0
-        if "currConn" in self.connsConfigs:
-            for idx, conn in enumerate(self.conns):
-                if conn.id == self.connsConfigs["currConn"]:
-                    loadedIdx = idx
-        self.connSelectCommbox.setCurrentIndex(loadedIdx)
-        self._setConn(loadedIdx)
+        if self.isAddConn:
+            loadedIdx = 0
+            if "currConn" in self.connsConfigs:
+                for idx, conn in enumerate(self.conns):
+                    if conn.id == self.connsConfigs["currConn"]:
+                        loadedIdx = idx
+            self.connSelectCommbox.setCurrentIndex(loadedIdx)
+            self._setConn(loadedIdx)
 
     def initEvent(self):
-        self.connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
+        if self.isAddConn:
+            self.connSelectCommbox.currentIndexChanged.connect(self.onConnChanged)
 
     def onConnChanged(self, idx):
         self.conns[self.currConnIdx].disconnect()
@@ -231,7 +238,8 @@ class PluginItem:
         self.onConnStatus(ConnectionStatus.CLOSED, _("Change connection, auto close old connection"))
 
     def ctrlConn(self, k, v):
-        self.conns[self.currConnIdx].ctrl(k, v)
+        if self.isAddConn:
+            self.conns[self.currConnIdx].ctrl(k, v)
 
     def onConnStatus(self, status:ConnectionStatus, msg):
         self.plugin.onConnChanged(status, msg)
@@ -292,7 +300,8 @@ class PluginItem:
                 continue
 
     def onDel(self):
-        for conn in self.conns:
-            conn.onDel()
+        if self.isAddConn:
+            for conn in self.conns:
+                conn.onDel()
         self.plugin.onDel()
 

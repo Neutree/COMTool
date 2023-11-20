@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-11-18 15:36+0800\n"
+"POT-Creation-Date: 2023-11-20 21:57+0800\n"
 "PO-Revision-Date: 2021-12-04 15:20+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_TW\n"
@@ -66,139 +66,156 @@ msgstr "如果這個軟件幫助您，我可以給您一杯咖啡"
 msgid "Load plugin from file"
 msgstr "從檔案載入外掛程式"
 
-#: main2.py:212
+#: main2.py:213
 msgid ", Double click to detach as a window"
 msgstr ""
 
-#: conn/conn_serial.py:337 conn/conn_ssh.py:289 conn/conn_tcp_udp.py:410
-#: main2.py:230 main2.py:280 main2.py:424 main2.py:429 main2.py:746
-#: pluginItems.py:169 pluginItems.py:172 pluginItems.py:273 pluginItems.py:285
-#: plugins/base.py:165 plugins/base.py:170 plugins/base.py:186
-#: plugins/base.py:195 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:588
+#: main2.py:222 plugins/base.py:79
+msgid "Connected"
+msgstr "已連接"
+
+#: main2.py:222 plugins/base.py:85
+msgid "Connection lose"
+msgstr "連接丟失"
+
+#: main2.py:222
+#, fuzzy
+msgid "Disconnected"
+msgstr "斷開"
+
+#: conn/conn_serial.py:337 conn/conn_ssh.py:296 conn/conn_tcp_udp.py:410
+#: main2.py:248 main2.py:298 main2.py:442 main2.py:447 main2.py:774
+#: pluginItems.py:176 pluginItems.py:179 pluginItems.py:287 pluginItems.py:299
+#: plugins/base.py:176 plugins/base.py:181 plugins/base.py:197
+#: plugins/base.py:206 plugins/dbg.py:426 plugins/dbg.py:435 plugins/dbg.py:588
 #: plugins/dbg.py:605 plugins/dbg.py:662 plugins/dbg.py:670
 #: plugins/graph.py:256 plugins/graph_widget_metasenselite.py:591
-#: plugins/graph_widgets.py:166 plugins/myplugin.py:61
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
+#: plugins/graph_widgets.py:166 plugins/myplugin.py:62
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:70
 #: plugins/protocol.py:466 plugins/protocol.py:480 plugins/protocol.py:489
 #: plugins/protocol.py:552
 msgid "Error"
 msgstr "錯誤"
 
-#: main2.py:230
+#: main2.py:248
 msgid "Load plugin failed"
 msgstr "載入外掛程式失敗"
 
-#: main2.py:251
+#: main2.py:269
 msgid "Load plugin fail"
 msgstr "載入外掛程式失敗"
 
-#: conn/conn_ssh.py:232 main2.py:274 pluginItems.py:149 pluginItems.py:162
+#: conn/conn_ssh.py:239 main2.py:292 pluginItems.py:156 pluginItems.py:169
 #: plugins/dbg.py:448 plugins/dbg.py:462
 msgid "Select file"
 msgstr "選擇文件"
 
-#: main2.py:276
+#: main2.py:294
 msgid "python script (*.py)"
 msgstr "python 程式 (*.py)"
 
-#: main2.py:371
+#: main2.py:389
 msgid "New Window"
 msgstr "開新視窗"
 
-#: main2.py:480 main2.py:489
+#: main2.py:506 main2.py:515
 msgid "Restart now?"
 msgstr "現在就重啟？"
 
-#: main2.py:481
+#: main2.py:507
 msgid "language changed to: "
 msgstr "語言更改為："
 
-#: main2.py:481
+#: main2.py:507
 msgid "Restart software to take effect now?"
 msgstr "現在就重啟軟件以生效？"
 
-#: main2.py:530 main2.py:531
+#: main2.py:556 main2.py:557
 msgid "Closing ..."
 msgstr "關閉中..."
 
-#: main2.py:631
+#: main2.py:659
 msgid "About"
 msgstr "關於"
 
-#: main2.py:653
+#: main2.py:681
 msgid "New versioin detected, please click learn more to download"
 msgstr "檢測到了新版本，請點擊 瞭解更多 按鈕以下載"
 
-#: main2.py:654
+#: main2.py:682
 msgid "Learn More"
 msgstr "瞭解更多"
 
-#: main2.py:655
+#: main2.py:683
 msgid "Skip this version"
 msgstr "跳過此版本"
 
-#: main2.py:656
+#: main2.py:684
 msgid "Remind me next time"
 msgstr "下次提醒我"
 
-#: main2.py:657
+#: main2.py:685
 msgid "Need update"
 msgstr "需要更新"
 
-#: pluginItems.py:55
+#: pluginItems.py:59
 msgid "version not found in config of plugin:"
 msgstr "外掛程式配置中找不到版本："
 
-#: conn/conn_tcp_udp.py:548 pluginItems.py:98
+#: conn/conn_tcp_udp.py:548 pluginItems.py:105
 msgid "Connection"
 msgstr "連接"
 
-#: pluginItems.py:123
+#: pluginItems.py:130
 msgid "Load config"
 msgstr "載入設置"
 
-#: pluginItems.py:124
+#: pluginItems.py:131
 msgid "Share config"
 msgstr "分享設置"
 
-#: pluginItems.py:151 pluginItems.py:164
+#: pluginItems.py:158 pluginItems.py:171
 msgid "json file (*.json);;config file (*.conf);;All Files (*)"
 msgstr "json 文件 (*.json);;配置文件 (*.conf);;所有文件 (*)"
 
-#: pluginItems.py:169
+#: pluginItems.py:176
 msgid ""
 "Not support load global config file, you can copy config file mannually "
 "to "
 msgstr "不支持載入全局配置文件，您可以手動將配置文件複製到"
 
-#: pluginItems.py:172
+#: pluginItems.py:179
 msgid "Config is not for this plugin, config is for plugin:"
 msgstr "配置文件不是此外掛程式的，配置文件是外掛程式："
 
-#: pluginItems.py:175 plugins/dbg.py:384 plugins/dbg.py:591
+#: pluginItems.py:182 plugins/dbg.py:384 plugins/dbg.py:591
 #: plugins/protocol.py:574 plugins/protocol.py:596
 msgid "Warning"
 msgstr "警告"
 
-#: pluginItems.py:176
+#: pluginItems.py:183
 msgid "Config version not same, plugin config version:"
 msgstr "配置文件版本不同，外掛程式配置文件版本："
 
-#: pluginItems.py:177
+#: pluginItems.py:184
 msgid "now"
 msgstr "現在"
 
-#: pluginItems.py:178
+#: pluginItems.py:185
 msgid ""
 "this maybe lead to some problem, if happened, please remove it manually "
 "from config file"
 msgstr "可能導致一些問題，如果發生，請手動從配置文件中移除"
 
-#: pluginItems.py:195
+#: pluginItems.py:202
 msgid "Restart to load config?"
 msgstr "重启以載入設置？"
 
-#: pluginItems.py:273
+#: pluginItems.py:238
+msgid "Change connection, auto close old connection"
+msgstr ""
+
+#: pluginItems.py:287
 msgid "Open file failed!"
 msgstr "打開失敗"
 
@@ -258,7 +275,7 @@ msgstr "串口"
 msgid "Custom, input baudrate"
 msgstr "自定義，輸入波特率"
 
-#: conn/conn_serial.py:113 conn/conn_ssh.py:144 conn/conn_tcp_udp.py:112
+#: conn/conn_serial.py:113 conn/conn_ssh.py:151 conn/conn_tcp_udp.py:112
 msgid "Port"
 msgstr "端口"
 
@@ -287,7 +304,7 @@ msgid "Check to enable(usually output low level)"
 msgstr "選中以使能（通常會輸出低電平）"
 
 #: conn/conn_serial.py:154 conn/conn_serial.py:301 conn/conn_serial.py:393
-#: conn/conn_ssh.py:158 conn/conn_ssh.py:244 conn/conn_ssh.py:332
+#: conn/conn_ssh.py:165 conn/conn_ssh.py:251 conn/conn_ssh.py:339
 #: conn/conn_tcp_udp.py:137 conn/conn_tcp_udp.py:331 conn/conn_tcp_udp.py:442
 msgid "OPEN"
 msgstr "打開"
@@ -296,76 +313,76 @@ msgstr "打開"
 msgid "Open Failed"
 msgstr "打開失敗"
 
-#: conn/conn_serial.py:396 conn/conn_serial.py:399 conn/conn_ssh.py:335
-#: conn/conn_ssh.py:338 conn/conn_tcp_udp.py:445 conn/conn_tcp_udp.py:448
+#: conn/conn_serial.py:396 conn/conn_serial.py:399 conn/conn_ssh.py:342
+#: conn/conn_ssh.py:345 conn/conn_tcp_udp.py:445 conn/conn_tcp_udp.py:448
 msgid "CLOSE"
 msgstr "關閉"
 
-#: conn/conn_serial.py:434 conn/conn_ssh.py:361 conn/conn_tcp_udp.py:505
+#: conn/conn_serial.py:434 conn/conn_ssh.py:368 conn/conn_tcp_udp.py:505
 msgid "Reconnected"
 msgstr "已重連"
 
-#: conn/conn_serial.py:464 conn/conn_ssh.py:406 conn/conn_tcp_udp.py:567
+#: conn/conn_serial.py:465 conn/conn_ssh.py:413 conn/conn_tcp_udp.py:567
 msgid "Connection lose!"
 msgstr "連接丟失！"
 
-#: conn/conn_ssh.py:143
+#: conn/conn_ssh.py:150
 msgid "Host"
 msgstr "主機"
 
-#: conn/conn_ssh.py:145
+#: conn/conn_ssh.py:152
 msgid "User"
 msgstr "用戶"
 
-#: conn/conn_ssh.py:146
+#: conn/conn_ssh.py:153
 msgid "Password"
 msgstr "密碼"
 
-#: conn/conn_ssh.py:147
+#: conn/conn_ssh.py:154
 msgid "SSH key"
 msgstr "SSH key"
 
-#: conn/conn_ssh.py:148
+#: conn/conn_ssh.py:155
 msgid "Saved"
 msgstr "已保存"
 
-#: conn/conn_ssh.py:156
+#: conn/conn_ssh.py:163
 msgid "File"
 msgstr "文件"
 
-#: conn/conn_ssh.py:215
+#: conn/conn_ssh.py:222
 msgid "Input error"
 msgstr "輸入錯誤"
 
-#: conn/conn_ssh.py:215
+#: conn/conn_ssh.py:222
 msgid "Input"
 msgstr "輸入"
 
-#: conn/conn_ssh.py:215
+#: conn/conn_ssh.py:222
 msgid "error"
 msgstr "錯誤"
 
-#: conn/conn_ssh.py:234 plugins/dbg.py:450
+#: conn/conn_ssh.py:241 plugins/dbg.py:450
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: conn/conn_ssh.py:288 conn/conn_tcp_udp.py:409
+#: conn/conn_ssh.py:295 conn/conn_tcp_udp.py:409
 msgid "Connect Failed"
 msgstr "連接失敗"
 
-#: conn/conn_ssh.py:299
+#: conn/conn_ssh.py:306
 msgid "Config error"
 msgstr "配置錯誤"
 
-#: conn/conn_ssh.py:326
+#: conn/conn_ssh.py:333
 msgid "SSH pub key file path error"
 msgstr "SSH公鑰文件路徑錯誤"
 
-#: conn/conn_ssh.py:388 conn/conn_tcp_udp.py:526
+#: conn/conn_ssh.py:395 conn/conn_tcp_udp.py:526
 msgid "Closed by peer"
 msgstr "由对方關閉"
 
-#: conn/conn_ssh.py:393 conn/conn_tcp_udp.py:552
+#: conn/conn_ssh.py:400 conn/conn_tcp_udp.py:552
 msgid "Connection closed!"
 msgstr "連接已關閉！"
 
@@ -405,27 +422,19 @@ msgstr "客戶端已連接："
 msgid "closed!"
 msgstr "已關閉！"
 
-#: plugins/base.py:76
-msgid "Connected"
-msgstr "已連接"
-
-#: plugins/base.py:78
+#: plugins/base.py:81
 msgid "Closed"
 msgstr "已關閉"
 
-#: plugins/base.py:80
+#: plugins/base.py:83
 msgid "Connecting"
 msgstr "正在連接"
 
-#: plugins/base.py:82
-msgid "Connection lose"
-msgstr "連接丟失"
-
-#: plugins/base.py:186
+#: plugins/base.py:197
 msgid "Format error, should be like 00 01 02 03"
 msgstr "格式錯誤，應該如：00 01 02 03"
 
-#: plugins/base.py:195
+#: plugins/base.py:206
 msgid "Escape is on, but escape error:"
 msgstr "轉義符支持已打開，但是轉義時出現了問題"
 
@@ -741,8 +750,8 @@ msgstr ""
 msgid "AT+ISP=0\\r"
 msgstr ""
 
-#: plugins/graph_widget_metasenselite.py:310 plugins/myplugin.py:43
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:51
+#: plugins/graph_widget_metasenselite.py:310 plugins/myplugin.py:44
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:52
 msgid "Send"
 msgstr "發送"
 
@@ -849,8 +858,8 @@ msgstr ""
 msgid "my plugin"
 msgstr ""
 
-#: plugins/myplugin.py:61
-#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:69
+#: plugins/myplugin.py:62
+#: plugins/myplugin2/comtool_plugin_myplugin2/myplugin2.py:70
 msgid "Input data first please"
 msgstr "請先輸入數據"
 
