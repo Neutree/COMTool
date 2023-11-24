@@ -92,7 +92,7 @@ class Plugin_Base(QObject):
             Auto add connection widget to the left or not, default is True.
             Override this method to return False if you don't want to add connection widget.
         '''
-        return False
+        return True
 
     def onWidgetMain(self, parent):
         '''
