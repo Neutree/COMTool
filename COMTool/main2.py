@@ -458,7 +458,11 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         # only one, ignore
         if self.tabWidget.count() == 1:
             return
-        item = self.getCurrentItem()
+        item = None
+        for _item in self.items:
+            if _item.widget == self.tabWidget.widget(idx):
+                item = _item
+                break
         self.tabWidget.removeTab(idx)
         for _item in self.config["items"]:
             if _item["name"] == item.name:
