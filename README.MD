@@ -35,7 +35,7 @@ A cross platform serial debug tools written by python
 - [x] multiple language support
 - [x] configs save and auto load(auto save settings when exit)
 - [x] multiple character encode support(`ASII,GBK(Chinese),UTF-8,UTF-16` etc.)
-- [x] night theme and White theme(can create more theme if you want)
+- [x] multiple language support
 - [x] multiple connection type support, and support add connection plugin
   - [x] serial port
     - [x] serial auto detect, and remember last selected support
@@ -345,7 +345,12 @@ Run application, you will see the new translation
 
 Create a PR to merge your changes to [this repo](https://github.com/Neutree/COMTool)
 
+## Customize theme
 
+In the `assets/qss` directory under the source code or binary program directory, copy a file from `style-dark.qss` or `style-light.qss`, the file name is `style-xxx.qss`, here `xxx ` is the name of the theme, so that the software can detect the theme.
+Then modify the `qss` file according to your preferences. The syntax of `qss` is similar to `css`, but the support is not complete. Whether the `css` syntax can be used depends on the actual effect, haha.
+Add theme code is welcome!(PR)
+> In addition, the software has not been deliberately optimized for the theme, and the class and id may have been written casually, so there is no guarantee that future codes will be fully compatible with current qss.
 
 
 ## Issue and improvement

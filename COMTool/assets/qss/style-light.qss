@@ -81,21 +81,23 @@ QMessageBox {
 .TitleBar .close:hover {
     background-color: #df2f25;
 }
-#menuItem {
+.menuItem {
     min-height:27px;
     height:27px;
     min-width:27px;
     width:27px;
     border-radius: 5px;
+    background-color: transparent;
 }
-#menuItem:hover {
+.menuItem:hover {
     min-height:27px;
     height:27px;
     min-width:27px;
     width:27px;
     border-radius: 5px;
+    background-color: transparent;
 }
-.menuItem1 {
+#menuItem1 {
     min-height:27px;
     height:27px;
     min-width:27px;
@@ -105,10 +107,10 @@ QMessageBox {
     background-color: #f5f5f5;
     border-image: url("$DataPath/assets/arrow-left.png")
 }
-.menuItem1:hover {
+#menuItem1:hover {
     border-image: url("$DataPath/assets/arrow-left-white.png")
 }
-.menuItem2 {
+#menuItem2 {
     min-height:27px;
     height:27px;
     min-width:27px;
@@ -118,11 +120,20 @@ QMessageBox {
     background-color: #0b1722;
     border-image: url("$DataPath/assets/skin.png")
 }
-.menuItem2:hover {
+#menuItem2:hover {
     background-color: #0b1722;
     border-image: url("$DataPath/assets/skin-white.png")
 }
-.menuItem3 {
+#menuItemLang {
+    margin-right:10px;
+    min-height:27px;
+    min-width:27px;
+    border-image: url("$DataPath/assets/language.png")
+}
+#menuItemLang:hover {
+    border-image: url("$DataPath/assets/language-white.png")
+}
+#menuItem3 {
     min-height:27px;
     height:27px;
     min-width:27px;
@@ -132,11 +143,11 @@ QMessageBox {
     background-color: #0b1722;
     border-image: url("$DataPath/assets/help.png")
 }
-.menuItem3:hover {
+#menuItem3:hover {
     background-color: #0b1722;
     border-image: url("$DataPath/assets/help-white.png")
 }
-.menuItem4 {
+#menuItem4 {
     min-height:27px;
     height:27px;
     min-width:27px;
@@ -146,10 +157,11 @@ QMessageBox {
     background-color: #f5f5f5;
     border-image: url("$DataPath/assets/arrow-right.png")
 }
-.menuItem4:hover {
+#menuItem4:hover {
     margin-right:0px;
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
+
 .settingWidget QComboBox{
     width:60px;
     min-width:60px;

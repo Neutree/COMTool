@@ -29,7 +29,7 @@ COMTool
 - [x] 跨平台 (Windows, Linux, macOS, Raspberry Pi)(使用 python 编写，只要你的平台支持 python)
 - [x] 可靠，界面不会卡死
 - [x] 多语言支持
-- [x] 白色主题和黑色主题切换
+- [x] 多主题支持，支持自定义主题
 - [x] 多种字符编码格式支持，比如 `ASII,GBK(Chinese),UTF-8,UTF-16` 等
 - [x] 自动保存设置（退出保存）
 - [x] 多种连接方式支持，同时支持编写连接插件
@@ -340,6 +340,13 @@ python i18n.py finish
 * 合并请求
 
 创建 PR 以将你的更改合并到 [comtool 仓库](https://github.com/Neutree/COMTool)
+
+## 自定义主题
+
+在源码或者二进制程序目录下的`assets/qss`目录中，从`style-dark.qss`或者`style-light.qss`复制一个文件，文件名为`style-xxx.qss`，这里`xxx`就是主题的名字，这样软件里就能检测到这个主题了。
+然后根据你的喜好修改`qss`文件即可， `qss`和`css`语法类似，不过支持得不是很完全，`css`语法能不能用以实际效果为准哈哈。
+欢迎提交主题代码（PR）
+> 另外软件没有为主题刻意优化过，class 和 id 可能都是随手写的，所以不保证未来的代码能完全兼容现在的 qss。
 
 
 ## 问题和意见

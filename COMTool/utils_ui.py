@@ -2,17 +2,29 @@ try:
     from Combobox import ComboBox
     from i18n import _
     import utils, parameters
+    from parameters import dataPath
 except ImportError:
     from COMTool import utils, parameters
     from COMTool.i18n import _
     from COMTool.Combobox import ComboBox
+    from COMTool.parameters import dataPath
 
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
+import os
 
 _buttonIcons = {}
 _skin = "light"
+
+def get_skins():
+    qss_path = os.path.join(dataPath, "assets", "qss")
+    names = os.listdir(qss_path)
+    styles = []
+    for name in names:
+        if name.startswith("style-"):
+            styles.append(name[6:-4])
+    return styles
 
 def setSkin(skin):
     global _skin, _buttonIcons

@@ -308,25 +308,25 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         utils_ui.setSkin(self.config["skin"])
         # menu layout
         self.settingsButton = QPushButton()
-        self.skinButton = QPushButton("")
-        self.languageCombobox = ButtonCombbox(icon="fa.language", btnClass="smallBtn2")
+        self.skinButton = ButtonCombbox(icon=None, btnClass="menuItem", btnId="menuItem2")
+        self.languageCombobox = ButtonCombbox(icon=None, btnClass="menuItem", btnId="menuItemLang")
         self.languages = i18n.get_languages()
         for locale in self.languages:
             self.languageCombobox.addItem(self.languages[locale])
+        for skin_name in utils_ui.get_skins():
+            self.skinButton.addItem(_(skin_name))
         self.aboutButton = QPushButton()
         self.functionalButton = QPushButton()
         self.encodingCombobox = ComboBox()
         self.supportedEncoding = parameters.encodings
         for encoding in self.supportedEncoding:
             self.encodingCombobox.addItem(encoding)
-        self.settingsButton.setProperty("class", "menuItem1")
-        self.skinButton.setProperty("class", "menuItem2")
-        self.aboutButton.setProperty("class", "menuItem3")
-        self.functionalButton.setProperty("class", "menuItem4")
-        self.settingsButton.setObjectName("menuItem")
-        self.skinButton.setObjectName("menuItem")
-        self.aboutButton.setObjectName("menuItem")
-        self.functionalButton.setObjectName("menuItem")
+        self.settingsButton.setProperty("class", "menuItem")
+        self.aboutButton.setProperty("class", "menuItem")
+        self.functionalButton.setProperty("class", "menuItem")
+        self.settingsButton.setObjectName("menuItem1")
+        self.aboutButton.setObjectName("menuItem3")
+        self.functionalButton.setObjectName("menuItem4")
         # plugins slector
         self.pluginsSelector = ButtonCombbox(icon="fa.plus", btnClass="smallBtn2")
         self.pluginsSelector.addItem(self.loadPluginStr)
@@ -336,7 +336,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         title = parameters.appName+" v"+version.__version__
         iconPath = self.DataPath+"/"+parameters.appIcon
         log.i("icon path: " + iconPath)
-        self.titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.aboutButton], []])
+        self.titleBar = TitleBar(self, icon=iconPath, title=title, brothers=[], widgets=[[self.skinButton, self.languageCombobox, self.aboutButton], []])
         CustomTitleBarWindowMixin.__init__(self, titleBar=self.titleBar, init = True)
 
         # root layout
@@ -361,7 +361,6 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         tabConerLayoutRight.setContentsMargins(0, 0, 0, 0)
         tabConerWidgetRight.setLayout(tabConerLayoutRight)
         tabConerLayoutRight.addWidget(self.pluginsSelector)
-        tabConerLayoutRight.addWidget(self.languageCombobox)
         tabConerLayoutRight.addWidget(self.encodingCombobox)
         tabConerLayoutRight.addWidget(self.functionalButton)
         self.tabWidget.setCornerWidget(tabConerWidget, Qt.TopLeftCorner)
@@ -397,7 +396,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.languageCombobox.currentIndexChanged.connect(self.onLanguageChanged)
         self.encodingCombobox.currentIndexChanged.connect(lambda: self.bindVar(self.encodingCombobox, self.config, "encoding"))
         self.functionalButton.clicked.connect(self.toggleFunctional)
-        self.skinButton.clicked.connect(self.skinChange)
+        self.skinButton.currentIndexChanged.connect(self.skinChange)
         self.aboutButton.clicked.connect(self.showAbout)
         # main
         self.tabWidget.currentChanged.connect(self.onSwitchTab)
@@ -584,6 +583,12 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         except Exception:
             idx = 0
         self.languageCombobox.setCurrentIndex(idx)
+        # skin
+        try:
+            idx = utils_ui.get_skins().index(self.config["skin"])
+        except Exception:
+            idx = 0
+        self.skinButton.setCurrentIndex(idx)
         # encoding
         self.encodingCombobox.setCurrentIndex(self.supportedEncoding.index(self.config["encoding"]))
 
@@ -648,14 +653,12 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             parameters.strStyleShowHideButtonLeft.replace("$DataPath", self.DataPath))
 
     def skinChange(self):
-        if self.config["skin"] == "light": # light
-            file = open(self.DataPath + '/assets/qss/style-dark.qss', "r", encoding="utf-8")
-            self.config["skin"] = "dark"
-        else: # elif self.config["skin"] == 2: # dark
-            file = open(self.DataPath + '/assets/qss/style.qss', "r", encoding="utf-8")
-            self.config["skin"] = "light"
+        idx = self.skinButton.currentIndex()
+        skin = utils_ui.get_skins()[idx]
+        file = open(self.DataPath + '/assets/qss/style-{}.qss'.format(skin), "r", encoding="utf-8")
         self.app.setStyleSheet(file.read().replace("$DataPath", self.DataPath))
-        utils_ui.setSkin(self.config["skin"])
+        utils_ui.setSkin(skin)
+        self.config["skin"] = skin
 
     def showAbout(self):
         help = helpAbout.HelpInfo()
@@ -756,10 +759,7 @@ def main():
         # path = os.path.join(mainWindow.DataPath, "assets", "fonts", "JosefinSans-Regular.ttf")
         # load_fonts([path])
         log.i("data path:"+mainWindow.DataPath)
-        if(mainWindow.config["skin"] == "light") :# light skin
-            file = open(mainWindow.DataPath+'/assets/qss/style.qss',"r", encoding="utf-8")
-        else: #elif mainWindow.config == "dark": # dark skin
-            file = open(mainWindow.DataPath + '/assets/qss/style-dark.qss', "r", encoding="utf-8")
+        file = open(mainWindow.DataPath+'/assets/qss/style-{}.qss'.format(mainWindow.config["skin"]),"r", encoding="utf-8")
         qss = file.read().replace("$DataPath",mainWindow.DataPath)
         app.setStyleSheet(qss)
         t = threading.Thread(target=mainWindow.autoUpdateDetect)

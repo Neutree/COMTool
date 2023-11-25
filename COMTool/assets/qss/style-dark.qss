@@ -76,75 +76,60 @@ QWidget {
 .TitleBar .close:hover {
     background-color: #df2f25;
 }
-#menuItem {
+.menuItem {
     min-height:27px;
     height:27px;
     min-width:27px;
     width:27px;
     border-radius: 5px;
-    background-color: #212121;
+    background-color: transparent;
 }
-.menuItem1 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
+.menuItem:hover {
+    background-color: transparent;
+}
+#menuItem1 {
     margin-right:10px;
     border-image: url("$DataPath/assets/arrow-left.png")
 }
-.menuItem1:hover {
+#menuItem1:hover {
     border-image: url("$DataPath/assets/arrow-left-white.png")
 }
-.menuItem2 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
+#menuItem2 {
     margin-right:10px;
+    min-height:27px;
+    min-width:27px;
     border-image: url("$DataPath/assets/skin.png")
 }
-.menuItem2:hover {
+#menuItem2:hover {
     border-image: url("$DataPath/assets/skin-white.png")
 }
-.menuItem3 {
+#menuItem3 {
     min-height:27px;
-    height:27px;
     min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
     border-image: url("$DataPath/assets/help.png")
 }
-.menuItem3:hover {
+#menuItem3:hover {
     border-image: url("$DataPath/assets/help-white.png")
 }
-.menuItem4 {
+#menuItemLang {
+    margin-right:10px;
     min-height:27px;
-    height:27px;
     min-width:27px;
-    width:27px;
-    border-radius: 5px;
+    border-image: url("$DataPath/assets/language.png")
+}
+#menuItemLang:hover {
+    border-image: url("$DataPath/assets/language-white.png")
+}
+#menuItem4 {
+    min-height:27px;
+    min-width:27px;
     margin-right:0px;
     border-image: url("$DataPath/assets/arrow-right.png")
 }
-.menuItem4:hover {
-    margin-right:0px;
+#menuItem4:hover {
     border-image: url("$DataPath/assets/arrow-right-white.png")
 }
-.menuItem5 {
-    min-height:27px;
-    height:27px;
-    min-width:27px;
-    width:27px;
-    border-radius: 5px;
-    margin-right:10px;
-    border-image: url("$DataPath/assets/wave.png")
-}
-.menuItem5:hover {
-    border-image: url("$DataPath/assets/wave-white.png")
-}
+
 .settingWidget QComboBox{
     width:60px;
     min-width:60px;

@@ -490,13 +490,16 @@ class _Combobox(QComboBox):
 class ButtonCombbox(QWidget):
     activated = pyqtSignal(int)
     currentIndexChanged = pyqtSignal()
-    def __init__(self, text="", icon = None, btnClass="smallBtn") -> None:
+    def __init__(self, text="", icon = None, btnClass="smallBtn", btnId=None) -> None:
         super().__init__()
         layout = QHBoxLayout()
         layout.setContentsMargins(2,2,2,2)
         self.setLayout(layout)
         self.button = QPushButton(text)
-        self.button.setProperty("class", btnClass)
+        if btnClass:
+            self.button.setProperty("class", btnClass)
+        if btnId:
+            self.button.setObjectName(btnId)
         if icon:
             utils_ui.setButtonIcon(self.button, icon)
         self.list = _Combobox()
