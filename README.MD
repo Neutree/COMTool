@@ -240,6 +240,12 @@ ls
 ```
 
 > It's better to create a virtual environment before pack to decrease the size of binary
+> `pip install virtualenv`
+> `virtualenv venv`
+> `source venv/bin/activate` # linux
+> `venv/Scripts/activate` # windows
+> If you encounter `running scripts is disabled on this system`, you can temporarily allow the current terminal to execute scripts `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`
+> Then `pip install pyinstaller` and `python pack.py`
 
 
 ## Development

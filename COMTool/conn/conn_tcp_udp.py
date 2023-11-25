@@ -536,7 +536,8 @@ class TCP_UDP(COMM):
                     buffer += data
                 if flush or (buffer and (time.time() - t > 0.001)): # no new data in 0.1ms
                     try:
-                        self.onReceived(buffer)
+                        if buffer:
+                            self.onReceived(buffer)
                     except Exception as e:
                         print("-- error in onReceived callback:", e)
                     buffer = b''
@@ -568,13 +569,14 @@ class TCP_UDP(COMM):
                     self.showSwitchSignal.emit(ConnectionStatus.LOSE)
                     time.sleep(self.config["auto_reconnect_interval"])
         # server mode remove client
-        remote_str = f'{remote_addr[0]}:{remote_addr[1]}'
-        if remote_str in self.serverModeClientsConns:
-            print(f"-- client {remote_str} disconnect")
-            self.updateClientsSignal.emit(False, remote_addr)
-            if remote_str == self.serverModeSelectedClient:
-                self.serverModeSelectedClient = None
-            self.serverModeClientsConns.pop(remote_str)
+        if remote_addr:
+            remote_str = f'{remote_addr[0]}:{remote_addr[1]}'
+            if remote_str in self.serverModeClientsConns:
+                print(f"-- client {remote_str} disconnect")
+                self.updateClientsSignal.emit(False, remote_addr)
+                if remote_str == self.serverModeSelectedClient:
+                    self.serverModeSelectedClient = None
+                self.serverModeClientsConns.pop(remote_str)
         print("-- receiveDataProcess exit")
 
     def send(self, data : bytes):

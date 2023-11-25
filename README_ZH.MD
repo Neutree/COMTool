@@ -238,6 +238,12 @@ ls
 ```
 
 > 打包前最好创建一个虚拟环境，这样打包出来的可执行文件会小很多
+> `pip install virtualenv`
+> `virtualenv venv`
+> `source venv/bin/activate` # linux
+> `venv/Scripts/activate` # windows
+> 如果遇到 `因为在此系统上禁止运行脚本`, 可以临时允许当前终端执行脚本 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`
+> 然后`pip install pyinstaller`，`python pack.py`。
 
 ## 开发
 
