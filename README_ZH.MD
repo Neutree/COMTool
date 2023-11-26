@@ -111,15 +111,24 @@ reboot #must reboot to take effect
 ### 树莓派
 
 
-只需打开终端，输入以下命令：
+打开终端，先用包管理器安装依赖：
+
+```shell
+sudo apt install git python3-pyqt5 python3-numpy
 ```
-sudo apt install git
+
+> 先用包管理器安装 pyqt5 numpy 等包更容易安装。
+> 后面如果 `pip` 安装过程中某个包遇到了错误，也可以先尝试用系统自带的包管理器安装对应的包。
+> 找到包名的技巧就是用`sudo apt-cache search 包名 | grep 包名` 来搜索包名，然后安装
+
+然后用 `pip` 安装剩下的包：
+```
 git clone https://github.com/Neutree/COMTool.git --depth=1
 cd COMTool
-pip3 install .
+pip3 install . --verbose
 # 或者
 # python setup.py bdist_wheel
-# sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl
+# sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl --verbose
 ```
 
 * 如果不想使用`sudo`命令自动软件，则需要将当前用户添加到`dialout`组
@@ -213,6 +222,13 @@ python setup.py bdist_wheel
 pip install dist/COMTool-*.*.*-py3-none-any.whl
 comtool
 ```
+
+* 如果 `pip` 安装过程中遇到了错误，比如最容易出错的`pyqt5`，也可以先尝试用系统自带的包管理器安装对应的包，比如
+```
+sudo apt install python3-pyqt5 python3-numpy
+```
+> 要知道包名的技巧就是用`sudo apt-cache search 包名 | grep 包名` 来搜索包名，然后安装
+
 
 * 如果不想使用`sudo`命令自动软件，则需要将当前用户添加到`dialout`组
 ```shell

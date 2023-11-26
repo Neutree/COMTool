@@ -3,6 +3,7 @@ try:
     import parameters
 except ImportError:
     from COMTool import version, parameters
+import platform
 
 log = parameters.log
 
@@ -51,7 +52,7 @@ class AutoUpdate:
         latest = version.Version()
         try:
             headers = {
-                "User-Agent": f"comtool_v{version.major}.{version.minor}.{version.dev}"
+                "User-Agent": f"comtool_v{version.major}.{version.minor}.{version.dev}-{platform.platform()}"
             }
             page = requests.post(self.releaseApiUrl2, headers=headers)
             if page.status_code != 200:

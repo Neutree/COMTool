@@ -12,12 +12,12 @@ with open(path.join(here, 'README.MD'), encoding='utf-8') as f:
     long_description = f.read()
 
 systemPlatform = platform.platform()
+if platform.python_version_tuple()[0] != "3":
+    raise Exception("python3 is required, but python{} is used, use `pip3 install` or `python3 -m pip install` command instead".format(platform.python_version()))
     
 if "Linux" in systemPlatform and "arm" in systemPlatform :
-    print("platform is arm linux: will install lib first")
-    ret = os.system("sudo apt install python3 python3-pip python3-pyqt5")
-    if ret != 0:
-        raise Exception("install python3 pyqt5 failed")
+    print("\n\nplatform is arm linux: It's recommended to install some packages by `sudo apt install`, for example: `sudo apt install python3-pyqt5 python3-numpy")
+    print("And if some package download or install failed, you can download the wheel file and install by `pip install ****.whl` mannually first\n\n")
     ret = os.system("sudo pip3 install --upgrade pyserial requests Babel qtawesome paramiko pyte pyperclip coloredlogs pyqtgraph")
     if ret != 0:
         raise Exception("install packages failed")

@@ -114,15 +114,25 @@ reboot #must reboot to take effect
 ### Rasberry Pi
 
 
-just open terminal, type the command below:
+Open terminal, install dependencies with package manager:
+
+```shell
+sudo apt install git python3-pyqt5 python3-numpy
 ```
-sudo apt install git
+
+> Use package manager to install pyqt5 numpy etc. This way makes install easier.
+> If you meet some error when install with `pip`, you can try to install with package manager first.
+> To find the package name, the trick is to use `sudo apt-cache search package_name | grep package_name` to search package name, then install it.
+
+
+Then install other packages with `pip`:
+```
 git clone https://github.com/Neutree/COMTool.git --depth=1
 cd COMTool
-pip3 install .
-# or
+pip3 install . --verbose
+# 或者
 # python setup.py bdist_wheel
-# sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl
+# sudo pip3 install dist/COMTool-*.*.*-py3-none-any.whl --verbose
 ```
 
 * Add current user to dialout group to avoid `sudo` command
@@ -215,6 +225,12 @@ python setup.py bdist_wheel
 pip install dist/COMTool-*.*.*-py3-none-any.whl
 comtool
 ```
+
+* If encounter error when install with `pip`, you can try to install with package manager first, then install with `pip` again. e.g.
+```
+sudo apt install python3-pyqt5 python3-numpy cython3
+```
+> To find the package name, the trick is to use `sudo apt-cache search package_name | grep package_name` to search package name, then install it.
 
 * By the way, you should add current user to dialout group to avoid `sudo` command
 ```shell
