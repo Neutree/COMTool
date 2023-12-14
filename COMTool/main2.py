@@ -473,13 +473,25 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         item = self.getCurrentItem()
         self.tabWidget.removeTab(idx)
         parent = item.widget.parent()
-        item.widget.setWindowFlag(Qt.Window)
+        item.widget.setWindowFlag(Qt.Window) # this method is not stable in QT, do not use it
+        # item.widget.setParent(None)
         item.widget.setWindowTitle(item.name)
-        item.widget.closeEvent = lambda event: self.recoverTab(item, parent)
+        item.widget.closeEvent = lambda event: self.onPluginWindowClose(item, parent)
         item.widget.show()
 
+    def onPluginWindowClose(self, item, parent):
+        self.recoverTab(item, parent)
+
     def recoverTab(self, item, parent):
+        def add(i):
+            self.tabWidget.insertTab(i, item.widget, item.name)
+            self.tabWidget.setCurrentIndex(i)
+            item.widget.setWindowFlag(Qt.Window, False)
+            # item.widget.setParent(parent)
+            status = item.plugin.getConnStatus()
+            self.setTabIcon(status, i)
         # prevent close and add this widget to tab
+        insertIdx = self.tabWidget.count()
         idx = self.items.index(item)
         for i in range(self.tabWidget.count()):
             widget = self.tabWidget.widget(i)
@@ -488,12 +500,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
                     idx2 = self.items.index(_item)
                     break
             if idx2 > idx:
-                self.tabWidget.insertTab(i, item.widget, item.name)
-                self.tabWidget.setCurrentIndex(i)
-                item.widget.setWindowFlag(Qt.Window, False)
-                status = item.plugin.getConnStatus()
-                self.setTabIcon(status, i)
+                insertIdx = i
                 break
+        add(insertIdx)
 
 
     def updateStyle(self, widget):
