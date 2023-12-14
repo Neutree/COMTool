@@ -313,7 +313,9 @@ QLineEdit {
 
 QCheckBox {
 }
-
+QCheckBox:disabled {
+    color: gray;
+}
 QCheckBox::indicator {
     width: 13px;
     height: 13px;

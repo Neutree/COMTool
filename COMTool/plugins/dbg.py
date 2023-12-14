@@ -98,6 +98,7 @@ class Plugin(Plugin_Base):
             "sendEscape" : False,
             "customSendItems" : [],
             "sendHistoryList" : [],
+            "receiveEscape" : False,
         }
         for k in default:
             if not k in self.config:
@@ -164,6 +165,8 @@ class Plugin(Plugin_Base):
         self.receiveSettingsColor = QCheckBox(_("Color"))
         self.receiveSettingsColor.setToolTip(_("Enable unix terminal color support, e.g. \\33[31;43mhello\\33[0m"))
         self.receiveSettingsWrap = QCheckBox(_("Display wrap"))
+        self.receiveEscape = QCheckBox(_("Escape"))
+        self.receiveEscape.setToolTip(_("Enable escape characters support like \\t \\r \\n \\x01 \\001"))
         self.receiveSettingsWrap.setToolTip(_("When content in a line is too long, always auto wrap to show, and no scroll bar"))
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsAscii,1,0,1,1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsHex,1,1,1,1)
@@ -172,6 +175,7 @@ class Plugin(Plugin_Base):
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsTimestamp, 3, 0, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsColor, 3, 1, 1, 1)
         serialReceiveSettingsLayout.addWidget(self.receiveSettingsWrap, 4, 0, 1, 1)
+        serialReceiveSettingsLayout.addWidget(self.receiveEscape, 4, 1, 1, 1)
         serialReceiveSettingsGroupBox.setLayout(serialReceiveSettingsLayout)
         serialReceiveSettingsGroupBox.setAlignment(Qt.AlignHCenter)
         layout.addWidget(serialReceiveSettingsGroupBox)
@@ -218,8 +222,8 @@ class Plugin(Plugin_Base):
         # event
         self.receiveSettingsTimestamp.clicked.connect(self.onTimeStampClicked)
         self.receiveSettingsAutoLinefeed.clicked.connect(self.onAutoLinefeedClicked)
-        self.receiveSettingsAscii.clicked.connect(lambda : self.bindVar(self.receiveSettingsAscii, self.config, "receiveAscii"))
-        self.receiveSettingsHex.clicked.connect(lambda : self.bindVar(self.receiveSettingsHex, self.config, "receiveAscii", invert = True))
+        self.receiveSettingsAscii.clicked.connect(lambda : self.switchRxMode(True))
+        self.receiveSettingsHex.clicked.connect(lambda : self.switchRxMode(False))
         self.sendSettingsHex.clicked.connect(self.onSendSettingsHexClicked)
         self.sendSettingsAscii.clicked.connect(self.onSendSettingsAsciiClicked)
         self.sendSettingsRecord.clicked.connect(self.onRecordSendClicked)
@@ -231,7 +235,18 @@ class Plugin(Plugin_Base):
         self.sendSettingsScheduled.textChanged.connect(lambda: self.bindVar(self.sendSettingsScheduled, self.config, "sendScheduledTime", vtype=int, vErrorMsg=_("Timed send value error, must be integer"), emptyDefault = "300"))
         self.sendSettingsScheduledCheckBox.clicked.connect(lambda: self.bindVar(self.sendSettingsScheduledCheckBox, self.config, "sendScheduled"))
         self.receiveSettingsWrap.clicked.connect(self.onSettingWrap)
+        self.receiveEscape.clicked.connect(lambda: self.bindVar(self.receiveEscape, self.config, "receiveEscape"))
         return widget
+
+    def switchRxMode(self, ascii):
+        if ascii:
+            self.receiveSettingsAscii.setChecked(True)
+            self.config["receiveAscii"] = True
+            self.receiveEscape.setDisabled(False)
+        else:
+            self.receiveSettingsHex.setChecked(True)
+            self.config["receiveAscii"] = False
+            self.receiveEscape.setDisabled(True)
 
 
     def onWidgetFunctional(self, parent):
@@ -319,6 +334,7 @@ class Plugin(Plugin_Base):
     def onUiInitDone(self):
         paramObj = self.config
         self.receiveSettingsHex.setChecked(not paramObj["receiveAscii"])
+        self.receiveEscape.setDisabled(not self.config["receiveAscii"])
         self.receiveSettingsAutoLinefeed.setChecked(paramObj["receiveAutoLinefeed"])
         try:
             interval = int(paramObj["receiveAutoLindefeedTime"])
@@ -800,10 +816,14 @@ class Plugin(Plugin_Base):
     def getColoredText(self, data_bytes, decoding=None):
         plainText, coloredText, remain = self._texSplitByColor(data_bytes)
         if decoding:
-            plainText = plainText.decode(encoding=decoding, errors="ignore")
+            plainText = str(plainText)
+            # plainText = plainText.decode(encoding=decoding, errors="ignore")
             decodedColoredText = []
             for color, bg, text in coloredText:
-                decodedColoredText.append([color, bg, text.decode(encoding=decoding, errors="ignore")])
+                if self.config["receiveEscape"]:
+                    decodedColoredText.append([color, bg, str(text)[2:-1]])
+                else:
+                    decodedColoredText.append([color, bg, text.decode(encoding=decoding, errors="ignore")])
             coloredText = decodedColoredText
         return plainText, coloredText, remain
 
@@ -867,7 +887,10 @@ class Plugin(Plugin_Base):
                     hexstr = True
                 # show as string, and don't need to render color
                 elif not self.config["color"]:
-                    data = buffer.decode(encoding=self.configGlobal["encoding"], errors="ignore")
+                    if self.config["receiveEscape"]:
+                        data = str(buffer)[2:-1]
+                    else:
+                        data = buffer.decode(encoding=self.configGlobal["encoding"], errors="ignore")
                     # self.lastShowTail for separated \r\n, prevent show two linefeed
                     # if last msg endswith "\r", and this msg startswith "\n", don't show "\n", if you have different thought, add issue to github
                     if self.lastShowTail == "\r" and data[0] == "\n":
