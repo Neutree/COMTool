@@ -758,6 +758,7 @@ def main():
     '''
     ret = 1
     try:
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
         app = QApplication(sys.argv)
         splash = Splash(app)
         eventFilter = EventFilter()
