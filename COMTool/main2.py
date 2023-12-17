@@ -43,7 +43,7 @@ except ImportError:
     from COMTool.pluginItems import PluginItem
     from .widgets import TitleBar, CustomTitleBarWindowMixin, EventFilter, ButtonCombbox, HelpWidget
 
-from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins
+from PyQt5.QtCore import pyqtSignal, Qt, QRect, QMargins, ,QCoreApplication
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
                              QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QTabWidget, QMenu, QSplashScreen)
@@ -758,6 +758,7 @@ def main():
     '''
     ret = 1
     try:
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
         app = QApplication(sys.argv)
         splash = Splash(app)
         eventFilter = EventFilter()
