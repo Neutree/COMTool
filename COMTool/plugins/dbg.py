@@ -53,7 +53,6 @@ class Plugin(Plugin_Base):
     receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
     receiveProgressStop = False
     receivedData = []
-    lock = threading.Lock()
     sendRecord = []
     lastColor = None
     lastBg = None
@@ -74,6 +73,7 @@ class Plugin(Plugin_Base):
 
     def onInit(self, config):
         super().onInit(config)
+        self.lock = threading.Lock()
         self.keyControlPressed = False
         self.isScheduledSending = False
         self.config = config
