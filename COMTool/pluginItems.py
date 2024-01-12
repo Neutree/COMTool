@@ -300,6 +300,7 @@ class PluginItem:
                 continue
 
     def onDel(self):
+        self.receiveProgressStop = True
         if self.isAddConn:
             for conn in self.conns:
                 conn.onDel()

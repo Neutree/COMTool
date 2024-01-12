@@ -935,3 +935,7 @@ class Plugin(Plugin_Base):
             if logData:
                 self.onLog(logData)
 
+
+    def onDel(self):
+        self.receiveProgressStop = True
+

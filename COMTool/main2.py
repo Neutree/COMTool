@@ -467,6 +467,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
             if _item["name"] == item.name:
                 self.config["items"].remove(_item)
                 break
+        item.onDel()
         self.items.remove(item)
 
     def onTabDoubleClicked(self, idx):
