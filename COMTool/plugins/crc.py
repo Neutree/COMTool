@@ -56,12 +56,13 @@ auchCRCLo = [
     0x43, 0x83, 0x41, 0x81, 0x80, 0x40
 ]
 
-def crc16(array):
+def crc16(array, crc=0x0000):
     '''
-        crc16 IBM
+        crc16 IBM if crc is 0x0000
+        crc16 MODBUS if crc is 0xffff
     '''
-    crchi = 0x00
-    crclo = 0x00
+    crchi = crc >> 8
+    crclo = crc & 0xff
     for i in range(0, len(array)):
         crcindex = crchi ^ array[i]
         crchi = crclo ^ auchCRCHi[crcindex]

@@ -7,15 +7,36 @@ import os
 protocols_dir = os.path.join(parameters.dataPath, "protocols")
 
 default = '''
-def decode(data):
+def decode(data:bytes) -> bytes:
     return data
 
-def encode(data):
+def encode(data:bytes) -> bytes:
     return data
 '''
 
+add_crc16 = '''
+
+def decode(data:bytes) -> bytes:
+    return data
+
+def encode(data:bytes) -> bytes:
+    crc_bytes = pack("<H", crc.crc16(data))
+    return data + crc_bytes
+'''
+
+add_sum = '''
+def decode(data:bytes) -> bytes:
+    return data
+
+def encode(data:bytes) -> bytes:
+    return data + bytes([sum(a) % 256])
+'''
+
+
 defaultProtocols = {
     "default": default,
+    "add_crc16": add_crc16,
+    "add_sum": add_sum,
 }
 ignoreList = ["maix-smart"]
 
