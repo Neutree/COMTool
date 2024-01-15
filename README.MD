@@ -388,3 +388,11 @@ And used these open source projects as libraries:
 * [pyte](https://github.com/selectel/pyte): [LGPL 3.0](https://github.com/selectel/pyte/blob/master/LICENSE)
 * [paramiko](https://github.com/paramiko/paramiko): [LGPL 2.1](https://github.com/paramiko/paramiko/blob/main/LICENSE)
 * [pyperclip](https://github.com/asweigart/pyperclip): [BSD-3-Clause](https://github.com/asweigart/pyperclip/blob/master/LICENSE.txt)
+
+## Donate
+
+If this project helps you, you can buy me a cup of coffee
+
+![](./COMTool/assets/donate_wechat.jpg) ![](./COMTool/assets/donate_alipay.jpg)
+
+

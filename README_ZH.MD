@@ -385,3 +385,9 @@ python i18n.py finish
 * [paramiko](https://github.com/paramiko/paramiko): [LGPL 2.1](https://github.com/paramiko/paramiko/blob/main/LICENSE)
 * [pyperclip](https://github.com/asweigart/pyperclip): [BSD-3-Clause](https://github.com/asweigart/pyperclip/blob/master/LICENSE.txt)
 
+## 赞赏
+
+如果项目帮助到你了，可以请作者喝杯下午茶～
+
+![](./COMTool/assets/donate_wechat.jpg) ![](./COMTool/assets/donate_alipay.jpg)
+
