@@ -340,8 +340,8 @@ class Plugin(Plugin_Base):
             interval = int(paramObj["receiveAutoLindefeedTime"])
             paramObj["receiveAutoLindefeedTime"] = interval
         except Exception:
-            interval = parameters.Parameters.receiveAutoLindefeedTime
-        self.receiveSettingsAutoLinefeedTime.setText(str(interval) if interval > 0 else str(parameters.Parameters.receiveAutoLindefeedTime))
+            interval = 200
+        self.receiveSettingsAutoLinefeedTime.setText(str(interval))
         self.receiveSettingsTimestamp.setChecked(paramObj["showTimestamp"])
         self.receiveSettingsWrap.setChecked(paramObj["wrap"])
         self.sendSettingsHex.setChecked(not paramObj["sendAscii"])
@@ -350,8 +350,8 @@ class Plugin(Plugin_Base):
             interval = int(paramObj["sendScheduledTime"])
             paramObj["sendScheduledTime"] = interval
         except Exception:
-            interval = parameters.Parameters.sendScheduledTime
-        self.sendSettingsScheduled.setText(str(interval) if interval > 0 else str(parameters.Parameters.sendScheduledTime))
+            interval = 300
+        self.sendSettingsScheduled.setText(str(interval))
         self.sendSettingsCRLF.setChecked(paramObj["useCRLF"])
         self.sendSettingsAppendNewLine.setChecked(paramObj["sendAutoNewline"])
         self.sendSettingsRecord.setChecked(paramObj["recordSend"])
