@@ -24,7 +24,7 @@ except Exception:
 from PyQt5.QtCore import pyqtSignal,Qt, QRect, QMargins
 from PyQt5.QtWidgets import (QApplication, QWidget,QPushButton,QMessageBox,QDesktopWidget,QMainWindow,
                              QVBoxLayout,QHBoxLayout,QGridLayout,QTextEdit,QLabel,QRadioButton,QCheckBox,
-                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea)
+                             QLineEdit,QGroupBox,QSplitter,QFileDialog, QScrollArea, QSpinBox)
 from PyQt5.QtGui import QIcon,QFont,QTextCursor,QPixmap,QColor
 import qtawesome as qta # https://github.com/spyder-ide/qtawesome
 import os, threading, time, re
@@ -50,7 +50,7 @@ class Plugin(Plugin_Base):
     id = "dbg"
     name = _("Send Receive")
     #
-    receiveUpdateSignal = pyqtSignal(str, list, str) # head, content, encoding
+    receiveUpdateSignal = pyqtSignal(str, list, str, bool) # head, content, encoding, isSend
     receiveProgressStop = False
     receivedData = []
     sendRecord = []
@@ -73,7 +73,8 @@ class Plugin(Plugin_Base):
 
     def onInit(self, config):
         super().onInit(config)
-        self.lock = threading.Lock()
+        self.lock_wait_rx = threading.Lock()
+        self.lock_op_rx_buff = threading.Lock()
         self.keyControlPressed = False
         self.isScheduledSending = False
         self.config = config
@@ -99,6 +100,7 @@ class Plugin(Plugin_Base):
             "customSendItems" : [],
             "sendHistoryList" : [],
             "receiveEscape" : False,
+            "fontSize": 10
         }
         for k in default:
             if not k in self.config:
@@ -257,9 +259,15 @@ class Plugin(Plugin_Base):
         self.openFileButton = QPushButton(_("Open File"))
         self.sendFileButton = QPushButton(_("Send File"))
         self.clearHistoryButton = QPushButton(_("Clear History"))
+        self.fontSizeLayout = QHBoxLayout()
+        self.fontSizeLabel = QLabel(_("Font Size"))
+        self.fontSizeInput = QSpinBox()
+        self.fontSizeInput.setRange(1, 100)  # Set range for font size
+        self.fontSizeLayout.addWidget(self.fontSizeLabel)
+        self.fontSizeLayout.addWidget(self.fontSizeInput)
         self.addButton = QPushButton("")
         utils_ui.setButtonIcon(self.addButton, "fa.plus")
-        self.fileSendGroupBox = QGroupBox(_("Sendding File"))
+        self.fileSendGroupBox = QGroupBox(_("Send File"))
         fileSendGridLayout = QGridLayout()
         fileSendGridLayout.addWidget(self.filePathWidget, 0, 0, 1, 1)
         fileSendGridLayout.addWidget(self.openFileButton, 0, 1, 1, 1)
@@ -309,6 +317,7 @@ class Plugin(Plugin_Base):
         logFileWrapper.addLayout(logFileLayout)
         logFileWrapper.addWidget(self.saveLogAutoNew)
         self.logFileGroupBox.setLayout(logFileWrapper)
+        sendFunctionalLayout.addLayout(self.fontSizeLayout)
         sendFunctionalLayout.addWidget(self.logFileGroupBox)
         sendFunctionalLayout.addWidget(self.fileSendGroupBox)
         sendFunctionalLayout.addWidget(self.clearHistoryButton)
@@ -324,6 +333,7 @@ class Plugin(Plugin_Base):
         self.openFileButton.clicked.connect(self.selectFile)
         self.addButton.clicked.connect(self.customSendAdd)
         self.clearHistoryButton.clicked.connect(self.clearHistory)
+        self.fontSizeInput.valueChanged.connect(self.changeFontSize)
         self.funcParent = parent
         return self.funcWidget
 
@@ -334,8 +344,9 @@ class Plugin(Plugin_Base):
     def onUiInitDone(self):
         paramObj = self.config
         self.receiveSettingsHex.setChecked(not paramObj["receiveAscii"])
-        self.receiveEscape.setDisabled(not self.config["receiveAscii"])
+        self.receiveEscape.setDisabled(not paramObj["receiveAscii"])
         self.receiveSettingsAutoLinefeed.setChecked(paramObj["receiveAutoLinefeed"])
+        self.receiveEscape.setChecked(paramObj["receiveEscape"])
         try:
             interval = int(paramObj["receiveAutoLindefeedTime"])
             paramObj["receiveAutoLindefeedTime"] = interval
@@ -370,10 +381,20 @@ class Plugin(Plugin_Base):
         # send items
         for text in paramObj["customSendItems"]:
             self.insertSendItem(text, load=True)
+        self.fontSizeInput.setValue(paramObj["fontSize"])  # Default font size
 
         self.receiveProcess = threading.Thread(target=self.receiveDataProcess)
         self.receiveProcess.setDaemon(True)
         self.receiveProcess.start()
+
+    def changeFontSize(self, size):
+        font = self.receiveArea.currentFont()
+        font.setPointSize(size)
+        self.receiveArea.setFont(font)
+        font = self.sendArea.currentFont()
+        font.setPointSize(size)
+        self.sendArea.setFont(font)
+        self.config["fontSize"] = size
 
     def onSendSettingsHexClicked(self):
         self.config["sendAscii"] = False
@@ -647,7 +668,7 @@ class Plugin(Plugin_Base):
                         head = "\n" + head
                     if head.strip() != '=>':
                         head = '{}: '.format(head.rstrip())
-                    self.receiveUpdateSignal.emit(head, [sendStr], self.configGlobal["encoding"])
+                    self.receiveUpdateSignal.emit(head, [sendStr], self.configGlobal["encoding"], True)
                     self.sendRecord.insert(0, head + sendStr)
                 self.send(data_bytes=data, callback = self.onSent)
                 self.justSent = True # flag for receive thread
@@ -685,14 +706,14 @@ class Plugin(Plugin_Base):
             print("[Error] onSendData: ", e)
             self.hintSignal.emit("error", _("Error"), _("get data error") + ": " + str(e))
 
-    def updateReceivedDataDisplay(self, head : str, datas : list, encoding):
+    def updateReceivedDataDisplay(self, head : str, datas : list, encoding : str, isSend : bool):
         if datas:
             curScrollValue = self.receiveArea.verticalScrollBar().value()
             self.receiveArea.moveCursor(QTextCursor.End)
             endScrollValue = self.receiveArea.verticalScrollBar().value()
             cursor = self.receiveArea.textCursor()
             format = cursor.charFormat()
-            font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', 10)
+            font = QFont('Menlo,Consolas,Bitstream Vera Sans Mono,Courier New,monospace, Microsoft YaHei', self.config["fontSize"])
             format.setFont(font)
             if not self.defaultColor:
                 self.defaultColor = format.foreground()
@@ -700,8 +721,9 @@ class Plugin(Plugin_Base):
                 self.defaultBg = format.background()
             if head:
                 format.setForeground(self.defaultColor)
-                cursor.setCharFormat(format)
                 format.setBackground(self.defaultBg)
+                if isSend:
+                    format.setFontWeight(QFont.Bold)
                 cursor.setCharFormat(format)
                 cursor.insertText(head)
             for data in datas:
@@ -813,17 +835,17 @@ class Plugin(Plugin_Base):
             colorStrs = [[self.lastColor, self.lastBg, text]]
         return plaintext, colorStrs, remain
 
-    def getColoredText(self, data_bytes, decoding=None):
+    def getColoredText(self, data_bytes, decoding=None, to_bytes_str = True):
         plainText, coloredText, remain = self._texSplitByColor(data_bytes)
         if decoding:
-            plainText = str(plainText)
-            # plainText = plainText.decode(encoding=decoding, errors="ignore")
+            if to_bytes_str:
+                plainText = str(plainText)[2:-1]
+            else:
+                plainText = plainText.decode(encoding=decoding, errors="ignore")
             decodedColoredText = []
             for color, bg, text in coloredText:
-                if self.config["receiveEscape"]:
-                    decodedColoredText.append([color, bg, str(text)[2:-1]])
-                else:
-                    decodedColoredText.append([color, bg, text.decode(encoding=decoding, errors="ignore")])
+                content = str(text)[2:-1] if to_bytes_str else text.decode(encoding=decoding, errors="ignore")
+                decodedColoredText.append([color, bg, content])
             coloredText = decodedColoredText
         return plainText, coloredText, remain
 
@@ -833,9 +855,9 @@ class Plugin(Plugin_Base):
         if showAsHex:
             return True, utils.hexlify(data, ' ').decode(encoding=encoding), dataColored
         try:
-            dataPlain, dataColore, remain = self.getColoredText(data, self.configGlobal["encoding"])
+            dataPlain, dataColored, remain = self.getColoredText(data, self.configGlobal["encoding"], self.config["receiveEscape"])
             if remain:
-                dataPlain += remain.decode(encoding=self.configGlobal["encoding"], errors="ignore")
+                dataPlain += str(remain)[2:-1] if self.config["receiveEscape"] else remain.decode(encoding=self.configGlobal["encoding"], errors="ignore")
         except Exception:
             dataPlain = utils.hexlify(data, ' ').decode(encoding=encoding)
             isHexString = True
@@ -846,10 +868,12 @@ class Plugin(Plugin_Base):
         self.statusBar.clear()
 
     def onReceived(self, data : bytes):
+        self.lock_op_rx_buff.acquire()
         self.receivedData.append(data)
+        self.lock_op_rx_buff.release()
         self.statusBar.addRx(len(data))
-        if self.lock.locked():
-            self.lock.release()
+        if self.lock_wait_rx.locked():
+            self.lock_wait_rx.release()
 
     def receiveDataProcess(self):
         self.receiveProgressStop = False
@@ -858,17 +882,24 @@ class Plugin(Plugin_Base):
         logData = None
         buffer = b''
         remain = b''
+        self.lock_wait_rx.acquire()
         while(not self.receiveProgressStop):
             logData = None
             head = ""
-            self.lock.acquire()
-            new = b"".join(self.receivedData)
-            buffer += new
-            self.receivedData = []
+            # ok means got new data
+            ok = self.lock_wait_rx.acquire(timeout=max(0.001, self.config["receiveAutoLindefeedTime"] / 1000))
+            if (not ok) and len(buffer) == 0:
+                continue
+            if ok:
+                self.lock_op_rx_buff.acquire()
+                new = b"".join(self.receivedData)
+                buffer += new
+                self.receivedData = []
+                self.lock_op_rx_buff.release()
             # timeout, add new line
             # self.justSent means just sent data, need show head
-            if time.time() - timeLastReceive > self.config["receiveAutoLindefeedTime"] / 1000 or self.justSent:
-                if self.config["showTimestamp"] or self.config["receiveAutoLinefeed"]:
+            if time.time() - timeLastReceive > self.config["receiveAutoLindefeedTime"] / 1000 or (self.config["recordSend"] and self.justSent):
+                if self.config["receiveAutoLinefeed"]:
                     if self.config["useCRLF"]:
                         head += "\r\n"
                     else:
@@ -904,7 +935,7 @@ class Plugin(Plugin_Base):
                 # show as string, and need to render color, wait for \n or until timeout to ensure color flag in buffer
                 else:
                     if time.time() - timeLastReceive >  self.config["receiveAutoLindefeedTime"] / 1000 or b'\n' in buffer:
-                        data, colorData, remain = self.getColoredText(buffer, self.configGlobal["encoding"])
+                        data, colorData, remain = self.getColoredText(buffer, self.configGlobal["encoding"], to_bytes_str = self.config["receiveEscape"])
                         buffer = remain
                 # add time receive head
                 # get data from buffer, now render
@@ -925,7 +956,7 @@ class Plugin(Plugin_Base):
                         if (self.config["recordSend"] or self.config["showTimestamp"]) and not head.endswith("<= "):
                             head = head[:-1] + ": "
                         new_line = False
-                    self.receiveUpdateSignal.emit(head, [colorData], self.configGlobal["encoding"])
+                    self.receiveUpdateSignal.emit(head, [colorData], self.configGlobal["encoding"], False)
                     logData = head + data
             if len(new) > 0:
                 timeLastReceive = time.time()
