@@ -160,7 +160,7 @@ if __name__ == "__main__":
             print(windows_out)
         elif os_name.startswith("macos"):
             macos_version = os_name.split("-")[1]
-            if macos_version.isdigit() and int(macos_version) <= 14:
+            if macos_version.isdigit() and int(macos_version) < 14:
                 macos_out_new = macos_out.replace("macos", "macos_x64")
             else:   # github actions macos-latest is using M1 chip
                 macos_out_new = macos_out.replace("macos", "macos_arm64")
