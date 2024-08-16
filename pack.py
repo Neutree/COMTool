@@ -159,10 +159,13 @@ if __name__ == "__main__":
                 windows_out = windows_out_new
             print(windows_out)
         elif os_name.startswith("macos"):
-            if os_name != "macos-latest":
-                macos_out_new = macos_out.replace("macos", os_name.replace("-", "_"))
-                os.rename(macos_out, macos_out_new)
-                macos_out = macos_out_new
+            macos_version = os_name.split("-")[1]
+            if macos_version.isdigit() and int(macos_version) <= 14:
+                macos_out_new = macos_out.replace("macos", "macos_x64")
+            else:   # github actions macos-latest is using M1 chip
+                macos_out_new = macos_out.replace("macos", "macos_arm64")
+            os.rename(macos_out, macos_out_new)
+            macos_out = macos_out_new
             print(macos_out)
         else:
             sys.exit(1)
