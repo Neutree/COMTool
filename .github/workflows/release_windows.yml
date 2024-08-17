@@ -14,7 +14,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    name: test pack task
+    name: release and upload assets task
     # The type of runner that the job will run on
     strategy:
       matrix:
