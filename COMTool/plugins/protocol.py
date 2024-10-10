@@ -11,7 +11,7 @@ try:
     from Combobox import ComboBox
     from i18n import _
     from widgets import TextEdit, PlainTextEdit
-    import utils_ui
+    import utils, utils_ui
     from widgets import statusBar
     from widgets import EditRemarDialog
 except ImportError:
@@ -75,6 +75,7 @@ class Plugin(Plugin_Base):
             "version": 1,
             "sendAscii" : True,
             "useCRLF" : False,
+            "sendRecord" : False,
             "sendEscape" : True,
             "code": defaultProtocols.copy(),
             "currCode": "default",
@@ -266,18 +267,22 @@ class Plugin(Plugin_Base):
         self.sendSettingsCRLF = QCheckBox(_("<CRLF>"))
         self.sendSettingsCRLF.setToolTip(_("Select to send \\r\\n instead of \\n"))
         self.sendSettingsCRLF.setChecked(False)
+        self.sendSettingsRecord = QCheckBox(_("Record"))
+        self.sendSettingsRecord.setToolTip(_("Record send data"))
         self.sendSettingsEscape= QCheckBox(_("Escape"))
         self.sendSettingsEscape.setToolTip(_("Enable escape characters support like \\t \\r \\n \\x01 \\001"))
         serialSendSettingsLayout.addWidget(self.sendSettingsAscii,0,0,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsHex,0,1,1,1)
         serialSendSettingsLayout.addWidget(self.sendSettingsCRLF, 1, 0, 1, 1)
         serialSendSettingsLayout.addWidget(self.sendSettingsEscape, 1, 1, 1, 1)
+        serialSendSettingsLayout.addWidget(self.sendSettingsRecord, 2, 0, 1, 1)
 
         rootLayout.addWidget(sendGroup)
         rootLayout.addWidget(setingGroup)
         # event
         self.sendSettingsAscii.clicked.connect(lambda : self.bindVar(self.sendSettingsAscii, self.config, "sendAscii", bool))
         self.sendSettingsHex.clicked.connect(lambda : self.bindVar(self.sendSettingsHex, self.config, "sendAscii", bool, invert=True))
+        self.sendSettingsRecord.clicked.connect(lambda : self.bindVar(self.sendSettingsRecord, self.config, "sendRecord", bool))
         self.sendSettingsCRLF.clicked.connect(lambda : self.bindVar(self.sendSettingsCRLF, self.config, "useCRLF", bool))
         self.sendSettingsEscape.clicked.connect(lambda : self.bindVar(self.sendSettingsEscape, self.config, "sendEscape", bool))
         self.saveCodeBtn.clicked.connect(self.saveCode)
@@ -301,6 +306,7 @@ class Plugin(Plugin_Base):
         self.config["customSendItems"] = newItems
         self.sendSettingsAscii.setChecked(self.config["sendAscii"])
         self.sendSettingsHex.setChecked(not self.config["sendAscii"])
+        self.sendSettingsRecord.setChecked(self.config["sendRecord"])
         self.sendSettingsCRLF.setChecked(self.config["useCRLF"])
         self.sendSettingsEscape.setChecked(self.config["sendEscape"])
         self.showReceiveDataSignal.connect(self.showReceivedData)
@@ -471,11 +477,24 @@ class Plugin(Plugin_Base):
             plugin.onReceived(data)
         if type(data) != str:
             data = self.decodeReceivedData(data, self.configGlobal["encoding"], not self.config["sendAscii"], self.config["sendEscape"])
-        self.showReceiveDataSignal.emit(data + "\n")
+        if self.config["sendRecord"]:
+            head = '<= '
+            self.showReceiveDataSignal.emit(head + data + "\n")
+        else:
+            self.showReceiveDataSignal.emit(data + "\n")  
 
     def sendData(self, data_bytes=None):
         try:
             data_bytes = self.encodeMethod(data_bytes)
+            if self.config["sendRecord"]:
+                head = '=> '
+                if not self.config["sendAscii"]:
+                    head += "[HEX] "
+                    sendStr = utils.hexlify(data_bytes, ' ').decode(encoding=self.configGlobal["encoding"])
+                else:
+                    head += "[ASCII] "
+                    sendStr = data_bytes.decode(encoding=self.configGlobal["encoding"])
+                self.showReceiveDataSignal.emit(head + sendStr + "\n")
         except Exception as e:
             self.hintSignal.emit("error", _("Error"), _("Run encode error") + " " + str(e))
             return
