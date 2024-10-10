@@ -29,7 +29,7 @@ def decode(data:bytes) -> bytes:
     return data
 
 def encode(data:bytes) -> bytes:
-    return data + bytes([sum(a) % 256])
+    return data + bytes([sum(data) % 256])
 '''
 
 
