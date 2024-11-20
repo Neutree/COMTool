@@ -71,7 +71,9 @@ frame = graph_protocol.plot_pack(name, x, y, header= b'\\xAA\\xCC\\xEE\\xBB')
  * $[line name],[x],[y]&lt;,checksum&gt;\\n
  *   ''' + _('"$" means start of frame, end with "\\n" "," means separator') + ''',
  *   ''' + _('checksum is optional, checksum is sum of all bytes in frame except ",checksum".') + '''
+ *   ''' + _('[x] is optional') + '''
  *   ''' + _('e.g.') + '''
+ *     "$roll,2.0\\n"
  *     "$roll,1.0,2.0\\n"
  *     "$pitch,1.0,2.0\\r\\n"
  *     "$pitch,1.0,2.0,179\\n" (179 = sum(b"$pitch,1.0,2.0") % 256)
@@ -79,6 +81,7 @@ frame = graph_protocol.plot_pack(name, x, y, header= b'\\xAA\\xCC\\xEE\\xBB')
 int plot_pack_ascii(uint8_t *buff, int buff_len, const char *name, float x, float y)
 {
     snprintf(buff, buff_len, "$%s,%f,%f", name, x, y);
+    //snprintf(buff, buff_len, "$%s,%f", name, y);
     // add checksum
     int sum = 0;
     for (int i = 0; i &lt; strlen(buff); i++)

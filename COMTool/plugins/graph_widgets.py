@@ -46,6 +46,7 @@ class Graph_Plot(Graph_Widget_Base):
         self.setLayout(self.layout)
         self.plotWin = pg.GraphicsLayoutWidget()
         self.plotWin.setMinimumHeight(200)
+        self.default_x = 0;
         pg.setConfigOptions(antialias=True)
         rmBtn = QPushButton(_("Remove"))
         clearBtn = QPushButton(_("Clear"))
@@ -215,9 +216,11 @@ class Graph_Plot(Graph_Widget_Base):
         '''
             @data bytes, protocol:
                          $[line name],[x],[y]<,checksum>\n
+                         or $[line name],[y]
                          "$" means start of frame, "," means separator,
                             checksum is optional, checksum is sum of all bytes in frame except ",checksum".
                          e.g.
+                            "$roll,2.0\n"
                             "$roll,1.0,2.0\n"
                             "$pitch,1.0,2.0\r\n"
                             "$pitch,1.0,2.0,179\n" , the 179 = sum(ord(c) for c in "$pitch,1.0,2.0") % 256
@@ -245,12 +248,17 @@ class Graph_Plot(Graph_Widget_Base):
         frame = self.rawData[1:idx] # pitch,1.0,2.0  pitch,1.0,2.0,179
         self.rawData = self.rawData[idx + 1:]
         items = frame.split(b",")
-        if len(items) != 3 and len(items) != 4:
+        if len(items) != 2 and len(items) != 3 and len(items) != 4:
             print("-- format error, frame item len(%s, should 3 or 4) error: %s" % (len(items), frame))
             return False, self.data
         try:
-            x = float(items[1])
-            y = float(items[2])
+            if len(items) == 2:
+                x = float(self.default_x)
+                y = float(items[1])
+                self.default_x += 1
+            else:
+                x = float(items[1])
+                y = float(items[2])
         except Exception:
             print("-- x or y format error, frame: %s" % frame)
             return False, self.data
