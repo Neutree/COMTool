@@ -186,7 +186,10 @@ class Plugin_Base(QObject):
         if not data:
             return b''
         if usrCRLF:
-            data = data.replace("\n", "\r\n")
+            if data.endswith("\n"):
+                data = data.replace("\n", "\r\n")
+            else:
+                data = data + "\r\n"
         if isHexStr:
             if usrCRLF:
                 data = data.replace("\r\n", " ")
