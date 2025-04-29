@@ -27,7 +27,7 @@ else:
                       'pyserial>=3.4',
                       'requests',
                       'Babel',
-                      'qtawesome>=1.1.1',
+                      'qtawesome>=1.1.1,<=1.3.1',
                       'paramiko',
                       'pyte',
                       'pyperclip',
