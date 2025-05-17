@@ -40,6 +40,7 @@ class TCP_UDP(COMM):
     id = "tcp_udp"
     name = "TCP UDP"
     showSwitchSignal = pyqtSignal(ConnectionStatus)
+    showLocalIPandPortSignal = pyqtSignal(str)
     updateTargetSignal = pyqtSignal(str)
     updateClientsSignal = pyqtSignal(bool, tuple)
     def onInit(self, config):
@@ -108,6 +109,8 @@ class TCP_UDP(COMM):
         self.modeLabel = QLabel(_("Mode"))
         self.targetLabel = QLabel(_("Target"))
         self.targetCombobox = ComboBox()
+        self.selfIPandPortLabel = QLabel(_("Local"))
+        self.selfIPandPort = QLineEdit()
         self.targetCombobox.setEditable(True)
         self.portLabel = QLabel(_("Port"))
         self.portLabel.hide()
@@ -141,14 +144,16 @@ class TCP_UDP(COMM):
         self.serialSettingsLayout.addWidget(modeWidget, 1, 1, 1, 2)
         self.serialSettingsLayout.addWidget(self.targetLabel, 2, 0)
         self.serialSettingsLayout.addWidget(self.targetCombobox, 2, 1, 1, 2)
-        self.serialSettingsLayout.addWidget(self.portLabel, 3, 0)
-        self.serialSettingsLayout.addWidget(self.porttEdit, 3, 1, 1, 2)
-        self.serialSettingsLayout.addWidget(self.clientsCombobox, 4, 0, 1, 2)
-        self.serialSettingsLayout.addWidget(self.disconnetClientBtn, 4, 2, 1, 1)
-        self.serialSettingsLayout.addWidget(self.autoReconnetLable, 5, 0, 1, 1)
-        self.serialSettingsLayout.addWidget(self.autoReconnect, 5, 1, 1, 1)
-        self.serialSettingsLayout.addWidget(self.autoReconnectIntervalEdit, 5, 2, 1, 1)
-        self.serialSettingsLayout.addWidget(self.serialOpenCloseButton, 6, 0, 1, 3)
+        self.serialSettingsLayout.addWidget(self.selfIPandPortLabel, 3, 0)
+        self.serialSettingsLayout.addWidget(self.selfIPandPort,3,1,1,2)
+        self.serialSettingsLayout.addWidget(self.portLabel, 4, 0)
+        self.serialSettingsLayout.addWidget(self.porttEdit, 4, 1, 1, 2)
+        self.serialSettingsLayout.addWidget(self.clientsCombobox, 5, 0, 1, 2)
+        self.serialSettingsLayout.addWidget(self.disconnetClientBtn, 5, 2, 1, 1)
+        self.serialSettingsLayout.addWidget(self.autoReconnetLable, 6, 0, 1, 1)
+        self.serialSettingsLayout.addWidget(self.autoReconnect, 6, 1, 1, 1)
+        self.serialSettingsLayout.addWidget(self.autoReconnectIntervalEdit, 6, 2, 1, 1)
+        self.serialSettingsLayout.addWidget(self.serialOpenCloseButton, 7, 0, 1, 3)
         serialSetting.setLayout(self.serialSettingsLayout)
         self.widgetConfMap["protocol"]       = [self.protoclTcpRadioBtn, self.protoclUdpRadioBtn]
         self.widgetConfMap["mode"]    = self.modeClientRadioBtn
@@ -164,6 +169,7 @@ class TCP_UDP(COMM):
         self.serialOpenCloseButton.clicked.connect(self.openCloseSerial)
         self.porttEdit.textChanged.connect(self.onPortChanged)
         self.showSwitchSignal.connect(self.showSwitch)
+        self.showLocalIPandPortSignal.connect(self.selfIPandPort.setText)
         self.updateTargetSignal.connect(self.updateTarget)
         self.updateClientsSignal.connect(self.updateClients)
         self.protoclTcpRadioBtn.clicked.connect(lambda: self.changeProtocol("tcp"))
@@ -188,6 +194,8 @@ class TCP_UDP(COMM):
             else:
                 self.targetCombobox.show()
                 self.targetLabel.show()
+                self.selfIPandPortLabel.show()
+                self.selfIPandPort.show()
                 self.porttEdit.show()
                 self.portLabel.show()
                 self.clientsCombobox.hide()
@@ -208,6 +216,8 @@ class TCP_UDP(COMM):
             if mode == "server":
                 self.targetCombobox.hide()
                 self.targetLabel.hide()
+                self.selfIPandPortLabel.hide()
+                self.selfIPandPort.hide()
                 self.porttEdit.show()
                 self.portLabel.show()
                 self.clientsCombobox.show()
@@ -218,6 +228,8 @@ class TCP_UDP(COMM):
             else:
                 self.targetCombobox.show()
                 self.targetLabel.show()
+                self.selfIPandPortLabel.show()
+                self.selfIPandPort.show()
                 self.porttEdit.hide()
                 self.portLabel.hide()
                 self.clientsCombobox.hide()
@@ -339,6 +351,7 @@ class TCP_UDP(COMM):
     def openCloseSerialProcess(self):
         if self.isOpened:
             print("-- disconnect")
+            # self.selfIPandPort.setText("")
             try:
                 # set status first to prevent auto reconnect
                 self.status = ConnectionStatus.CLOSED
@@ -360,6 +373,7 @@ class TCP_UDP(COMM):
             except Exception as e:
                 print("openCloseSerialProcess", e)
                 pass
+            self.showLocalIPandPortSignal.emit("")
             self.onConnectionStatus.emit(self.status, "")
             self.showSwitchSignal.emit(self.status)
         else:
@@ -376,8 +390,14 @@ class TCP_UDP(COMM):
                         self.conn.connect(target)
                         self.status = ConnectionStatus.CONNECTED
                         print("-- connect success")
+                        # 获取客户端的 IP 地址和端口号
+                        client_ip, client_port = self.conn.getsockname()
+                        # self.selfIPandPort.setText(f"{client_ip}:{client_port}")
+                        self.showLocalIPandPortSignal.emit(f"{client_ip}:{client_port}")
+                        print(f"Client IP: {client_ip}, Client Port: {client_port}")
                         self.receiveProcess = threading.Thread(target=self.receiveDataProcess, args=(self.conn, ))
                         self.receiveProcess.setDaemon(True)
+
                         self.receiveProcess.start()
                     else:
                         print("-- server mode, wait client connect")
