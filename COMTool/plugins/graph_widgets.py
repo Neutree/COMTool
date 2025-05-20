@@ -321,7 +321,7 @@ class Graph_Plot(Graph_Widget_Base):
 class Graph_Button(Graph_Widget_Base):
     class Button(QWidget):
         def __init__(self, rmCallback, addCallback, clickCallback, changeCallback,
-                     value=("", "hello", "hello", "fa.circle", [])):
+                     value=("", "hello", "hello", "fa6s.circle", [])):
             super().__init__()
             if not value[0]:
                 self.id = str(int(time.time() * 1000))
@@ -346,9 +346,9 @@ class Graph_Button(Graph_Widget_Base):
             self.addBtn.setProperty("class", "smallBtn3")
             self.rmBtn.setProperty("class", "smallBtn3")
             self.editBtn.setProperty("class", "smallBtn3")
-            utils_ui.setButtonIcon(self.addBtn, "fa.plus")
-            utils_ui.setButtonIcon(self.rmBtn, "fa.minus")
-            utils_ui.setButtonIcon(self.editBtn, "fa.edit")
+            utils_ui.setButtonIcon(self.addBtn, "fa6s.plus")
+            utils_ui.setButtonIcon(self.rmBtn, "fa6s.minus")
+            utils_ui.setButtonIcon(self.editBtn, "fa5s.edit")
             if self.icon:
                 utils_ui.setButtonIcon(self.button, self.icon)
             if self.shortcut:
