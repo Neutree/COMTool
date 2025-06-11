@@ -97,7 +97,7 @@ class Plugin(Plugin_Base):
                 },{
                     "text": "\\x01\\x01\\x01\\x01\\x01\\x01",
                     "remark": "ok",
-                    "icon": "fa.circle-o",
+                    "icon": "fa6.circle",
                     "shortcut": [[16777220, "Return"]]
                 },{
                     "text": "\\x01\\x02\\x02\\x02\\x02\\x01",
@@ -159,7 +159,7 @@ class Plugin(Plugin_Base):
         clearModeWidget.setLayout(layoutClearMode)
         utils_ui.setButtonIcon(self.clearBtn, "mdi6.broom")
         self.addButton = QPushButton("")
-        utils_ui.setButtonIcon(self.addButton, "fa.plus")
+        utils_ui.setButtonIcon(self.addButton, "fa6s.plus")
         self.customSendScroll = QScrollArea()
         self.customSendScroll.setMinimumHeight(parameters.customSendItemHeight + 20)
         self.customSendScroll.setWidgetResizable(True)
@@ -397,7 +397,7 @@ class Plugin(Plugin_Base):
         else:
             send = QPushButton("")
         if (not "icon" in item) or not item["icon"]:
-            item["icon"] = "fa.send"
+            item["icon"] = "fa6s.paper-plane"
         if not "shortcut" in item:
             item["shortcut"] = []
         utils_ui.setButtonIcon(send, item["icon"])
@@ -413,7 +413,7 @@ class Plugin(Plugin_Base):
             self.sendCustomItem(self.config["customSendItems"][idx])
         send.clicked.connect(lambda: sendCustomData(self.customSendItemsLayout.indexOf(itemWidget)))
         delete = QPushButton("")
-        utils_ui.setButtonIcon(delete, "fa.close")
+        utils_ui.setButtonIcon(delete, "fa5s.window-close")
         delete.setProperty("class", "deleteBtn")
         layout.addWidget(cmd)
         layout.addWidget(send)

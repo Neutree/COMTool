@@ -223,9 +223,9 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
 
     def setTabIcon(self, status:ConnectionStatus, i:int):
         if status == ConnectionStatus.CONNECTED:
-            self.tabWidget.setTabIcon(i, qta.icon("fa.circle", color="#4caf50"))
+            self.tabWidget.setTabIcon(i, qta.icon("fa6s.circle", color="#4caf50"))
         elif status == ConnectionStatus.LOSE:
-            self.tabWidget.setTabIcon(i, qta.icon("fa.circle", color="orange"))
+            self.tabWidget.setTabIcon(i, qta.icon("fa6s.circle", color="orange"))
         else:
             self.tabWidget.setTabIcon(i, QIcon())
 
@@ -328,7 +328,7 @@ class MainWindow(CustomTitleBarWindowMixin, QMainWindow):
         self.aboutButton.setObjectName("menuItem3")
         self.functionalButton.setObjectName("menuItem4")
         # plugins slector
-        self.pluginsSelector = ButtonCombbox(icon="fa.plus", btnClass="smallBtn2")
+        self.pluginsSelector = ButtonCombbox(icon="fa6s.plus", btnClass="smallBtn2")
         self.pluginsSelector.addItem(self.loadPluginStr)
         self.pluginsSelector.activated.connect(self.onPluginSelectorChanged)
 
