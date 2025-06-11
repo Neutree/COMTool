@@ -21,7 +21,8 @@ hidden_imports = [
 
 linux_out = "comtool_ubuntu_v{}.tar.xz".format(version.__version__)
 macos_out = "comtool_macos_v{}.dmg".format(version.__version__)
-windows_out = "comtool_windows_v{}.7z".format(version.__version__)
+windows_out_7z = "comtool_windows_v{}.7z".format(version.__version__)
+windows_out_zip = "comtool.zip"
 
 def zip(out, path):
     out = os.path.abspath(out)
@@ -135,8 +136,8 @@ def pack():
         print("files in dist dir:", os.listdir("dist"))
         shutil.copyfile("./dist/comtool 0.0.0.dmg", macos_out)
     elif sys.platform.startswith("win32"):
-        # zip(windows_out, "dist/comtool")
-        zip_7z(windows_out, "dist/comtool")
+        zip(windows_out_zip, "dist/comtool")
+        # zip_7z(windows_out_7z, "dist/comtool")
     else:
         cmd = "cd dist && tar -Jcf {} comtool/ && mv {} ../ && cd ..".format(linux_out, linux_out)
         ret = os.system(cmd)
