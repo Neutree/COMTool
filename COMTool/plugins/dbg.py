@@ -634,10 +634,16 @@ class Plugin(Plugin_Base):
 
     def scheduledSend(self):
         self.isScheduledSending = True
-        while self.config["sendScheduled"]:
+        interval = self.config["sendScheduledTime"]
+        last_change_interval_time = time.time()
+        change_interval_delay = 2 # 2s to take effect after change interval
+        while self.config["sendScheduled"] and interval > 0:
             self.onSendData()
             try:
-                time.sleep(self.config["sendScheduledTime"]/1000)
+                time.sleep(interval/1000)
+                if self.config["sendScheduledTime"] != interval and time.time() - last_change_interval_time > change_interval_delay:
+                    last_change_interval_time = time.time()
+                    interval = self.config["sendScheduledTime"]
             except Exception:
                 self.hintSignal.emit("error", _("Error"), _("Time format error"))
         self.isScheduledSending = False
