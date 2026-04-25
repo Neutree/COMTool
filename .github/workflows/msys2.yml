@@ -1,0 +1,74 @@
+
+name: msys2
+on: push
+jobs:
+  Deploy-on-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            base-devel
+            git
+            mingw-w64-ucrt-x86_64-python-pip
+            mingw-w64-ucrt-x86_64-nsis
+            mingw-w64-ucrt-x86_64-nsis-nsisunz
+            mingw-w64-ucrt-x86_64-gcc
+            zip
+            unzip
+            p7zip
+            mingw-w64-ucrt-x86_64-python-pyqt5
+            python-setuptools
+            mingw-w64-ucrt-x86_64-python-pyserial
+            mingw-w64-ucrt-x86_64-python-requests
+            mingw-w64-ucrt-x86_64-python-babel
+            mingw-w64-ucrt-x86_64-python-qtawesome
+            mingw-w64-ucrt-x86_64-python-paramiko
+            mingw-w64-ucrt-x86_64-python-pyperclip
+            mingw-w64-ucrt-x86_64-python-pyqtgraph
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Running pyinstaller without pack.py
+        run: |
+          APP=comtool
+          if [ ! -d venv ]; then
+            python3 -m venv --system-site-packages venv
+            . venv/bin/activate
+            python3 -m pip install --upgrade pip
+            PYINSTALLER_COMPILE_BOOTLOADER=1 PYI_STATIC_ZLIB=1 python3 -m pip install -r requirements.txt
+            python3 -m pip install git+https://github.com/pyinstaller/pyinstaller.git
+          else
+            . venv/bin/activate
+          fi
+
+          python3 -m pip install wheel pyinstaller-hooks-contrib
+          python3 setup.py sdist bdist_wheel
+          python3 pack.py 
+          # python3 -m PyInstaller $APP.spec -y
+          # echo "Preparing app..."
+          # cd dist/$APP
+          # zip -r $APP.zip *
+          # mv $APP.zip ../..
+          # cd ../..
+          echo $(du -sk dist/$APP | cut -f 1) > INSTALLSIZE
+          echo $(uname -m) > ARCH
+          echo "Running makensis..."
+          makensis $APP.nsi
+          
+          python3 -m PyInstaller $APP-portable.spec
+          echo "Preparing app..."
+          version=$(cat VERSION)
+          mv dist/$APP.exe ./$APP-$version-$(uname -m)-portable.exe
+      - name: List files
+        run: ls -R
+      - name: Upload output files
+        uses: actions/upload-artifact@v3
+        with:
+          name: EXE
+          path: comtool*.exe
+          retention-days: 5      
