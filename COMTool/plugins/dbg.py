@@ -809,12 +809,12 @@ class Plugin(Plugin_Base):
             text = text[:-2]
             remain = b'\x1b['
         else: # ****\x1b[****, ****\x1b[****;****m
-            idx = -2
-            idx_remain = -1
-            while 1:
-                idx = text.find(b"\x1b[", len(text) - 10 + idx + 2) # \x1b[00;00m]
-                if idx < 0:
-                    break
+            # find the last "\x1b[" within the tail window; using a bounded
+            # search instead of an advancing loop, since for short buffers
+            # (len <= 8) the old loop start could clamp and never advance,
+            # causing an infinite loop that kept the GIL and froze the UI
+            idx = text.rfind(b"\x1b[", max(0, len(text) - 10))
+            if idx >= 0:
                 remain = text[idx:]
                 idx_remain = idx
             if len(remain) > 0:
